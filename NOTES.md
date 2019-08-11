@@ -260,3 +260,8 @@ $ curl -H "Content-Type: application/json" --request POST --data '{ "attributeId
 
 ## Extend tutorial
 
+commit project
+
+```shell
+$ git add . && git commit -am "finished tutorial"
+```
