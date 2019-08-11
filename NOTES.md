@@ -3,8 +3,9 @@
 ## Links
 
 - [Convector with NestJS](https://medium.com/swlh/convector-with-nestjs-7e660322d927)
+- [Final Example](https://github.com/mahcr/convector-example-people-attributes)
 
-## Clone Repo
+## Clone Worldsibu Repository
 
 ```shell
 $ git clone https://github.com/worldsibu/convector-example-people-attributes.git
@@ -85,7 +86,6 @@ v8.16.0
 
 8. Install the smart contract packages that are going to be consumed by NestJS
 
-
 ```shell
 $ npx lerna add participant-cc --scope server --no-bootstrap
 $ npx lerna add person-cc --scope server --no-bootstrap
@@ -95,6 +95,8 @@ $ npx lerna add person-cc --scope server --no-bootstrap
 > (There is a problem between Jest used by NestJS and Mocha used by Convector)
 
 9. And lastly `npm install`
+
+10. Commit project with `git add . && git commit -am "first commit"`
 
 ## What are we going to build?
 
@@ -131,5 +133,130 @@ Assume that a network participant is the **government**, a person is you and an 
 The government is in charge of **registering your birth day and issue a born certificate** that you’ll store.
 But for some reason your name have a typo (I’m sorry for you 😂) in the certificate and only the county court (another network participant that is not the government) can help you. The county court can **fix your name but not create another person**.
 
-## Start Code It
+## Start Code It: Modules, Controlllers and Services
+
+```shell
+# enter nestjs dir
+cd packages/server
+# create the participant module and register it in the app module automatically.
+$ nest generate module participant
+```
+
+> Every command run using the Nest CLI is going to automatically register the feature (provider, module, pipe, etc) to the **scope module** if it exists otherwise it will be added to the app module.
+
+```shell
+# create the controller:
+$ nest generate controller participant
+$ nest generate service participant
+```
+
+we can see that `ParticipantController` was added to `ParticipantModule` (scope module)
+
+```typescript
+@Module({
+  controllers: [ParticipantController]
+})
+```
+
+Let’s do very quick the same for person but this time we’re going to create a service for this module:
+
+```shell
+$ nest generate module person
+$ nest generate controller person
+$ nest generate service person
+```
+
+## Config/ Environment
+
+create two files in `src` folder: `env.ts` and `convector.ts`
+
+config package.json to use `env-cmd -f .env`
+
+```json
+"start": "env-cmd -f .env ...",
+"start:dev": "env-cmd -f .env...",
+"start:debug": "env-cmd -f .env ...",
+"start:prod": "env-cmd -f .env ...",
+```
+
+create `packages/server/.env` with
+
+```config
+PORT=3000
+```
+
+add `.env` to `.gitignore` with `echo packages/server/.env >> .gitignore`
+
+Now, what we need to do is start migrating the logic. All the code related to the communication with convector and any other heavy calculation to our services and the controllers are going to be in charge of exposing the endpoints and pass down the data to the services.
+
+## Create files
+
+- `packages/server/src/participant/participant.controller.ts`
+- `packages/server/src/participant/participant.service.ts`
+- `packages/server/src/person/person.controller.ts`
+
+## Run Convector and Test
+
+Let’s run the same commands used in the back-end tutorial:
+
+1. Make sure that Docker is running.
+2. Go to the root and run:
+
+```shell
+# Start a local blockchain
+$ npm run env:restart
+[hurley] - Ran network restart script
+[hurley] - ************ Success!
+[hurley] - Complete network deployed at /home/mario/hyperledger-fabric-network
+[hurley] - Setup:
+        - Organizations: 2
+            * org1
+            * org2
+        - Users per organization: user1
+            * admin
+            * user1
+        - Channels deployed: 1
+            * ch1
+
+[hurley] - You can find the network topology (ports, names) here: /home/mario/hyperledger-fabric-network/docker-compose.yaml
+
+# log fabric orderer container
+CONTAINER_ID=$(docker ps | awk '/hyperledger\/fabric-orderer/ { print $1 }')
+$ sudo docker container logs -f $CONTAINER_ID
+
+# install the chaincode
+$ npm run cc:start -- person
+Instantiated Chaincode at org1
+
+# start your web server
+$ npx lerna run start:dev --scope server --stream
+
+# seed some participants, in first invoke wait some seconds more
+$ npx hurl invoke person participant_register gov "Big Government" -u admin
+$ npx hurl invoke person participant_register mit "MIT" -u user1 -o org1
+$ npx hurl invoke person participant_register naba "National Bank" -u user1 -o org2
+
+# test endpoints
+$ curl http://localhost:3000/participant/gov
+{"_id":"gov","_identities":[{"fingerprint":"81:C9:69:95:9E:12:BE:5A:98:DE:10:3B:4A:8B:80:03:9F:3E:33:E6","status":true}],"_msp":"org1MSP","_name":"Big Government","_type":"io.worldsibu.examples.participant"}
+
+$ curl http://localhost:3000/participant/mit
+{"_id":"mit","_identities":[{"fingerprint":"6F:8E:B9:AF:1E:32:E7:9F:53:8D:28:07:79:0F:9D:39:D1:62:08:45","status":true}],"_msp":"org1MSP","_name":"MIT","_type":"io.worldsibu.examples.participant"}
+
+# run a few transactions
+# Add a new person
+$ curl -H "Content-Type: application/json" --request POST --data '{ "id":"1-00200-2222-1", "name":"John Doe" }' http://localhost:3000/person
+{"type":"Buffer","data":[]}
+
+# Add a new attribute
+$ curl -H "Content-Type: application/json" --request POST --data '{ "attributeId":"birth-year", "content": 1993 }' http://localhost:3000/person/1-00200-2222-1/add-attribute
+{"id":"1-00200-2222-1","type":"io.worldsibu.person","name":"John Doe","attributes":[{"certifierID":"gov","content":1993,"id":"birth-year","issuedDate":1565561317567,"type":"io.worldsibu.attribute"}]}
+
+# orderer logs
+2019-08-11 21:54:02.746 UTC [comm.grpc.server] 1 -> INFO 015 streaming call completed {"grpc.start_time": "2019-08-11T21:54:02.738Z", "grpc.service": "orderer.AtomicBroadcast", "grpc.method": "Broadcast", "grpc.peer_address": "172.23.0.1:45590", "grpc.code": "OK", "grpc.call_duration": "8.294983ms"}
+2019-08-11 21:55:04.935 UTC [comm.grpc.server] 1 -> INFO 016 streaming call completed {"grpc.start_time": "2019-08-11T21:55:04.931Z", "grpc.service": "orderer.AtomicBroadcast", "grpc.method": "Broadcast", "grpc.peer_address": "172.23.0.1:45890", "grpc.code": "OK", "grpc.call_duration": "4.081646ms"}
+2019-08-11 21:55:37.822 UTC [comm.grpc.server] 1 -> INFO 017 streaming call completed {"grpc.start_time": "2019-08-11T21:55:37.817Z", "grpc.service": "orderer.AtomicBroadcast", "grpc.method": "Broadcast", "grpc.peer_address": "172.23.0.1:46062", "grpc.code": "OK", "grpc.call_duration": "4.932098ms"}
+```
+
+## Extend tutorial
 

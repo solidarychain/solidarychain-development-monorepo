@@ -4,5 +4,11 @@
     // The following will hide the js and map files in the editor
     "**/*.js": true,
     "**/*.map": true
-  }
+  },
+  "cSpell.words": [
+    "chaincode",
+    "hyperledger",
+    "nestjs",
+    "worldsibu"
+  ]
 }

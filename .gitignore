@@ -3,4 +3,4 @@
 .history/
 dist/
 chaincode-person/
-log/
+log/packages/server/.env
