@@ -1,0 +1,6 @@
+**/node_modules/
+.trash
+.history/
+dist/
+chaincode-person/
+log/
