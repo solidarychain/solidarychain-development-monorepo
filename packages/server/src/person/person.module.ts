@@ -5,6 +5,6 @@ import { AppService } from '../app.service';
 
 @Module({
   controllers: [PersonController],
-  providers: [PersonService, AppService]
+  providers: [PersonService],
 })
 export class PersonModule {}

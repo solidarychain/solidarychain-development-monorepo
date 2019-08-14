@@ -445,28 +445,43 @@ ReferenceError: You are trying to `import` a file after the Jest environment has
 
 ### error 3
 
- FAIL  src/person/person.controller.spec.ts
-  ● Person Controller › should be defined
+```
+FAIL  src/person/person.controller.spec.ts
+● Person Controller › should be defined
 
-    Nest can't resolve dependencies of the PersonController (?). Please make sure that the argument at index [0] is available in the _RootTestModule context.
+  Nest can't resolve dependencies of the PersonController (?). Please make sure that the argument at index [0] is available in the _RootTestModule context.
 
-      at Injector.lookupComponentInExports (../../../node_modules/@nestjs/core/injector/injector.js:183:19)
+    at Injector.lookupComponentInExports (../../../node_modules/@nestjs/core/injector/injector.js:183:19)
 
-  ● Person Controller › should be defined
+● Person Controller › should be defined
 
-    expect(received).toBeDefined()
+  expect(received).toBeDefined()
 
-    Received: undefined
+  Received: undefined
 
-      14 | 
-      15 |   it('should be defined', () => {
-    > 16 |     expect(controller).toBeDefined();
-         |                        ^
-      17 |   });
-      18 | });
-      19 | 
+    14 |
+    15 |   it('should be defined', () => {
+  > 16 |     expect(controller).toBeDefined();
+        |                        ^
+    17 |   });
+    18 | });
+    19 |
 
-      at Object.it (person/person.controller.spec.ts:16:24)
+    at Object.it (person/person.controller.spec.ts:16:24)
+```
+
+Fix: was adding missing `providers: [PersonService]` on `packages/server/src/person/person.controller.spec.ts`
+
+```typescript
+beforeEach(async () => {
+  const module: TestingModule = await Test.createTestingModule({
+    controllers: [PersonController],
+    providers: [PersonService],
+  }).compile();
+
+  controller = module.get<PersonController>(PersonController);
+});
+```
 
 ## ToDo
 
