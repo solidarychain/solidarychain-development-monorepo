@@ -423,26 +423,6 @@ add `"node"` to `packages/server/package.json`
   ]
 ```
 
-### Error 2
-
-Error: Nest can't resolve dependencies of the ItemsController (?). Please make sure that the argument at index [0] is available in the _RootTestModule context.
-
-occur when add `constructor(private readonly itemsService: ItemsService) {}` to `ItemsService`
-
-Note: You will have to install `class-validator` and `class-transformer` modules. To do so, just type on the terminal inside your project's directory and restart the server.
-
-```shell
-# fix
-$ npx lerna add class-validator class-transformer --scope server
-# require to clean and boostrap
-$ npx lerna clean && npx lerna bootstrap
-# launch tests
-$ npm run test
-...
-ReferenceError: You are trying to `import` a file after the Jest environment has been torn down.
-...
-```
-
 ### error 3
 
 ```
@@ -482,10 +462,3 @@ beforeEach(async () => {
   controller = module.get<PersonController>(PersonController);
 });
 ```
-
-## ToDo
-
-+ can't duplicate same attribute ex can have 2 birth-date's ?
-
-+ add tests
-+ debug smartContract
