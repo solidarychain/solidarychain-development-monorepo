@@ -8,6 +8,17 @@
 ## Commands
 
 ```shell
+# run test
+$ npm test
+
+# lift hyperledger
+npm run env:restart
+
+# deploy smart contract
+npm run cc:start -- person
+
+
+
 # run dev
 npx lerna run start:dev --scope server --stream
 # debug
@@ -16,7 +27,12 @@ npx lerna run start:debug --scope server --stream
 
 ## Uris and Endpoints
 
-- <http://localhost:5084/_utils/#database/>
+### Tools
+
+- [Fauxton](http://localhost:5084/_utils/#database/)
+
+### Endpoints
+
 - <http://localhost:3000/participant/>
 - <http://localhost:3000/person/>
 
@@ -325,20 +341,22 @@ Installed template views
 ## Fire All Requests
 
 ```shell
-# get participant person (chain)
-$ curl http://localhost:3000/participant/gov | jq
-
 # create participant (chain)
+$ npx hurl invoke person participant_register red "Red Cross"
 $ curl -X POST \
   http://localhost:3000/participant \
   -H 'Content-Type: application/json' \
   -d '{
-    "id":"sol",
-    "name": "Solidarity Organization"
+    "id":"red",
+    "name": "Red Cross"
   }'
 
+# get participant person (chain)
+$ npx hurl invoke person participant_get red
+$ curl http://localhost:3000/participant/red | jq
 
-# create person (chain)
+# create person (chain) : REQUIRED to use admin user (belongs to org1/gov)
+$ npx hurl invoke person person_create '{"id":"1-100-104", "name": "1-100-104"}' -u admin
 $ curl -X POST \
   http://localhost:3000/person \
   -H 'Content-Type: application/json' \
@@ -348,29 +366,111 @@ $ curl -X POST \
   }'
 
 # get person (chain)
+$ npx hurl invoke person person_get 1-100-103
 $ curl http://localhost:3000/person/1-100-103 | jq
 
-# get all persons (worldstate/couchdb)
+# get all persons (worldState/couchdb)
+$ npx hurl invoke person person_getAll
 $ curl http://localhost:3000/person | jq
 
 # addAttribute
+$ npx hurl invoke person person_addAttribute 1-100-103 '{"id": "birth-year", "certifierID": "gov", "content": "1993", "issuedDate": 1554239270 }' -u admin
 $ curl -X POST \
   http://localhost:3000/person/1-100-103/add-attribute \
   -H 'Content-Type: application/json' \
   -d '{
-    "attributeId":"birth-date",
+    "attributeId":"birth-year",
     "content": "1971"
   }' | jq
 
 # getByAttribute
+$ npx hurl invoke person person_getByAttribute birth-year 1971
 $ curl -X POST \
-  http://localhost:3000/person/birth-date/get-attribute \
+  http://localhost:3000/person/birth-year/get-attribute \
   -H 'Content-Type: application/json' \
   -d '{
     "value": "1971"
   }' | jq
 ```
 
+## Test/Jest
+
+fix errors
+
+### Error 1
+
+```
+FAIL  src/participant/participant.controller.spec.ts
+● Test suite failed to run
+
+Cannot find module './build/Release/x509' from 'index.js'
+
+However, Jest was able to find:
+    'build/Release/x509.node'
+
+You might want to include a file extension in your import, or update your 'moduleFileExtensions', which is currently ['js', 'json', 'ts'].
+```
+
+add `"node"` to `packages/server/package.json`
+
+```json
+"jest": {
+  "moduleFileExtensions": [
+    "js",
+    "json",
+    "ts",
+    "node"
+  ]
+```
+
+### Error 2
+
+Error: Nest can't resolve dependencies of the ItemsController (?). Please make sure that the argument at index [0] is available in the _RootTestModule context.
+
+occur when add `constructor(private readonly itemsService: ItemsService) {}` to `ItemsService`
+
+Note: You will have to install `class-validator` and `class-transformer` modules. To do so, just type on the terminal inside your project's directory and restart the server.
+
+```shell
+# fix
+$ npx lerna add class-validator class-transformer --scope server
+# require to clean and boostrap
+$ npx lerna clean && npx lerna bootstrap
+# launch tests
+$ npm run test
+...
+ReferenceError: You are trying to `import` a file after the Jest environment has been torn down.
+...
+```
+
+### error 3
+
+ FAIL  src/person/person.controller.spec.ts
+  ● Person Controller › should be defined
+
+    Nest can't resolve dependencies of the PersonController (?). Please make sure that the argument at index [0] is available in the _RootTestModule context.
+
+      at Injector.lookupComponentInExports (../../../node_modules/@nestjs/core/injector/injector.js:183:19)
+
+  ● Person Controller › should be defined
+
+    expect(received).toBeDefined()
+
+    Received: undefined
+
+      14 | 
+      15 |   it('should be defined', () => {
+    > 16 |     expect(controller).toBeDefined();
+         |                        ^
+      17 |   });
+      18 | });
+      19 | 
+
+      at Object.it (person/person.controller.spec.ts:16:24)
+
 ## ToDo
 
-debug smartContract
++ can't duplicate same attribute ex can have 2 birth-date's ?
+
++ add tests
++ debug smartContract
