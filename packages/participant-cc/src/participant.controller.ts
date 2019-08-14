@@ -43,6 +43,7 @@ export class ParticipantController extends ConvectorController {
       throw new Error('Identity exists already, please call changeIdentity fn for updates');
     }
   }
+  
   @Invokable()
   public async changeIdentity(
     @Param(yup.string())
@@ -61,11 +62,11 @@ export class ParticipantController extends ConvectorController {
     }
 
     if (existing.msp != requesterMSP) {
-      throw new Error('Unathorized. MSPs do not match');
+      throw new Error('Unauthorized. MSPs do not match');
     }
 
     if (!isAdmin) {
-      throw new Error('Unathorized. Requester identity is not an admin');
+      throw new Error('Unauthorized. Requester identity is not an admin');
     }
 
     // Disable previous identities!
@@ -81,6 +82,7 @@ export class ParticipantController extends ConvectorController {
     });
     await existing.save();
   }
+
   @Invokable()
   public async get(
     @Param(yup.string())

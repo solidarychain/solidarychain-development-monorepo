@@ -5,9 +5,25 @@
 - [Convector with NestJS](https://medium.com/swlh/convector-with-nestjs-7e660322d927)
 - [Final Example](https://github.com/mahcr/convector-example-people-attributes)
 
+## Commands
+
+```shell
+# run dev
+npx lerna run start:dev --scope server --stream
+# debug
+npx lerna run start:debug --scope server --stream
+```
+
+## Uris and Endpoints
+
+- <http://localhost:5084/_utils/#database/>
+- <http://localhost:3000/participant/>
+- <http://localhost:3000/person/>
+
 ## Clone Worldsibu Repository
 
 ```shell
+# clone repo
 $ git clone https://github.com/worldsibu/convector-example-people-attributes.git
 $ cd convector-example-people-attributes
 ```
@@ -244,6 +260,7 @@ $ curl http://localhost:3000/participant/mit
 {"_id":"mit","_identities":[{"fingerprint":"6F:8E:B9:AF:1E:32:E7:9F:53:8D:28:07:79:0F:9D:39:D1:62:08:45","status":true}],"_msp":"org1MSP","_name":"MIT","_type":"io.worldsibu.examples.participant"}
 
 # run a few transactions
+
 # Add a new person
 $ curl -H "Content-Type: application/json" --request POST --data '{ "id":"1-00200-2222-1", "name":"John Doe" }' http://localhost:3000/person
 {"type":"Buffer","data":[]}
@@ -260,8 +277,100 @@ $ curl -H "Content-Type: application/json" --request POST --data '{ "attributeId
 
 ## Extend tutorial
 
-commit project
+### commit project
 
 ```shell
 $ git add . && git commit -am "finished tutorial"
 ```
+
+### add Types to `Participant` and `Person` Modules and Use it
+
+- `packages/server/src/participant/types/participant.ts`
+- `packages/server/src/participant/types/index.ts`
+- `packages/server/src/person/types/index.ts`
+- `packages/server/src/person/types/person.ts`
+
+### To Use CouchDB and don't DRY Initialization block in Controllers
+
+1. Create `initCouchDB` in `AppService` and add it to `constructor` this way it will be re-used in all controllers without any further changes
+
+```typescript
+@Injectable()
+export class AppService {
+
+  constructor() {
+    // init CouchDB before use it
+    this.initCouchDB();
+  }
+
+  initCouchDB() {
+    BaseStorage.current = new CouchDBStorage({
+      host: couchDBHost,
+      protocol: couchDBProtocol,
+      port: couchDBPort,
+    }, couchDBView);
+  }
+}
+```
+
+### Couch Views (Require to add to all nodes fabric-couchdb/ couchdb.peer0.org?.hurley.lab)
+
+```shell
+$ ./views/install.sh
+Installing template views
+{"ok":true,"id":"_design/person","rev":"1-a1afaedf5e49e4f592a3089e599b0f8f"}
+Installed template views
+```
+
+## Fire All Requests
+
+```shell
+# get participant person (chain)
+$ curl http://localhost:3000/participant/gov | jq
+
+# create participant (chain)
+$ curl -X POST \
+  http://localhost:3000/participant \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "id":"sol",
+    "name": "Solidarity Organization"
+  }'
+
+
+# create person (chain)
+$ curl -X POST \
+  http://localhost:3000/person \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "id":"1-100-104",
+    "name": "Jane Doe"
+  }'
+
+# get person (chain)
+$ curl http://localhost:3000/person/1-100-103 | jq
+
+# get all persons (worldstate/couchdb)
+$ curl http://localhost:3000/person | jq
+
+# addAttribute
+$ curl -X POST \
+  http://localhost:3000/person/1-100-103/add-attribute \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "attributeId":"birth-date",
+    "content": "1971"
+  }' | jq
+
+# getByAttribute
+$ curl -X POST \
+  http://localhost:3000/person/birth-date/get-attribute \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "value": "1971"
+  }' | jq
+```
+
+## ToDo
+
+debug smartContract

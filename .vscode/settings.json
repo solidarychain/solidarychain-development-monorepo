@@ -6,7 +6,10 @@
     "**/*.map": true
   },
   "cSpell.words": [
+    "EDOCMISSING",
+    "Invokable",
     "chaincode",
+    "couchdb",
     "hyperledger",
     "nestjs",
     "worldsibu"

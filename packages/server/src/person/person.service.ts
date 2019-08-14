@@ -1,17 +1,17 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Inject } from '@nestjs/common';
 import { Attribute, Person } from 'person-cc';
 import { PersonControllerBackEnd } from '../convector';
 import { couchDBView, identityId } from '../env';
 
 @Injectable()
 export class PersonService {
-
   public async getAll() {
     const viewUrl = '_design/person/_view/all';
     const queryOptions = { startKey: [''], endKey: [''] };
 
     try {
       const result = (await Person.query(Person, couchDBView, viewUrl, queryOptions)) as Person[];
+      // map item toJson
       return await Promise.all(result.map(item => item.toJSON()));
     } catch (err) {
       Logger.log(err);
@@ -23,7 +23,15 @@ export class PersonService {
     }
   }
 
-  public async addAttribute(id, attributeId, content) {
+  public async get(id: string): Promise<Person> {
+    try {
+      return new Person(await PersonControllerBackEnd.get(id));
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  public async addAttribute(id: string, attributeId: string, content: any) {
     const attribute = new Attribute(attributeId);
     attribute.certifierID = 'mit';
     attribute.content = {
@@ -46,4 +54,20 @@ export class PersonService {
     return personToReturn.toJSON();
   }
 
+  public async getByAttribute(id: string, value: any) {
+    try {
+      return await PersonControllerBackEnd.getByAttribute(id, value);
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  public async create(id: string, name: string) {
+    try {
+      const personToCreate = new Person({ id, name });
+      return await PersonControllerBackEnd.create(personToCreate);
+    } catch (err) {
+      throw err;
+    }
+  }
 }

@@ -43,4 +43,3 @@ export class Person extends ConvectorModel<Person> {
   @Validate(yup.array(Attribute.schema()))
   public attributes: Array<Attribute>;
 }
-
