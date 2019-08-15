@@ -2,6 +2,9 @@ import { Body, Controller, Get, HttpException, HttpStatus, Logger, Param, Post }
 import { Person } from 'person-cc';
 import { PersonControllerBackEnd } from '../convector';
 import { PersonService } from './person.service';
+import { CreatePersonDto } from './dto/CreatePersonDto';
+import { AddPersonAttributeDto } from './dto/AddPersonAttributeDto';
+import { GetPersonByAttributeDto } from './dto/GetPersonByAttributeDto';
 
 @Controller('person')
 export class PersonController {
@@ -21,7 +24,7 @@ export class PersonController {
   @Get('/:id')
   public async get(@Param() { id }) {
     try {
-      return  await this.personService.get(id);
+      return await this.personService.get(id);
     } catch (err) {
       Logger.error(JSON.stringify(err));
       const message: string = (err.responses[0]) ? err.responses[0].error.message : 'Internal';
@@ -30,11 +33,9 @@ export class PersonController {
   }
 
   @Post('/')
-  public async create(@Body() { id, name }) {
+  public async create(@Body() createPersonDto: CreatePersonDto) {
     try {
-      // const personToCreate = new Person({ id, name });
-      // return await PersonControllerBackEnd.create(personToCreate);
-      return this.personService.create(id, name);
+      return this.personService.create(createPersonDto.id, createPersonDto.name);
     } catch (err) {
       Logger.error(JSON.stringify(err));
       const message: string = (err.responses[0]) ? err.responses[0].error.message : 'Internal';
@@ -43,9 +44,9 @@ export class PersonController {
   }
 
   @Post('/:id/add-attribute')
-  public async addAttribute(@Param() { id }, @Body() { attributeId, content }) {
+  public async addAttribute(@Param() { id }, @Body() addPersonAttributeDto: AddPersonAttributeDto) {
     try {
-      return this.personService.addAttribute(id, attributeId, content);
+      return this.personService.addAttribute(id, addPersonAttributeDto.attributeId, addPersonAttributeDto.content);
     } catch (err) {
       Logger.error(JSON.stringify(err));
       throw new HttpException('Internal', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -53,9 +54,9 @@ export class PersonController {
   }
 
   @Post('/:id/get-attribute')
-  public async getByAttribute(@Param() { id }, @Body() { value }) {
+  public async getByAttribute(@Param() { id }, @Body() getPersonByAttributeDto: GetPersonByAttributeDto) {
     try {
-      return this.personService.getByAttribute(id, value);
+      return this.personService.getByAttribute(id, getPersonByAttributeDto.value);
     } catch (err) {
       Logger.error(JSON.stringify(err));
       throw new HttpException('Internal', HttpStatus.INTERNAL_SERVER_ERROR);

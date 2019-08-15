@@ -515,3 +515,118 @@ $ npx lerna run start:dev --scope server --stream
 open your browser and navigate to <http://localhost:3000/api>
 to download swagger JSON file, fire request to <http://localhost:3000/api-json>
 
+### Create DTO's
+
+now we need to create model/DTO's for all endpoints that have `@Body`
+
+`packages/server/src/participant/dto/CreateParticipantDto.ts`
+
+```typescript
+import { ApiModelProperty } from '@nestjs/swagger';
+
+export class CreateParticipantDto {
+  @ApiModelProperty()
+  readonly id: string;
+
+  @ApiModelProperty()
+  readonly name: string;
+}
+```
+
+`packages/server/src/person/dto/AddPersonAttributeDto.ts`
+
+```typescript
+import { ApiModelProperty } from '@nestjs/swagger';
+
+export class AddPersonAttributeDto {
+  @ApiModelProperty()
+  readonly id: string;
+
+  @ApiModelProperty()
+  readonly attributeId: string;
+
+  @ApiModelProperty()
+  readonly content: any;
+}
+```
+
+`packages/server/src/person/dto/CreatePersonDto.ts`
+
+```typescript
+import { ApiModelProperty } from '@nestjs/swagger';
+
+export class CreatePersonDto {
+  @ApiModelProperty()
+  readonly id: string;
+
+  @ApiModelProperty()
+  readonly name: string;
+}
+```
+
+`packages/server/src/person/dto/GetPersonByAttributeDto.ts`
+
+```typescript
+import { ApiModelProperty } from '@nestjs/swagger';
+
+export class GetPersonByAttributeDto {
+  @ApiModelProperty()
+  readonly value: any;
+}
+```
+
+now replace json objects ex { id, name } with DTO's
+
+`packages/server/src/participant/participant.controller.ts`
+
+```typescript
+import { RegisterParticipantDto } from './dto/RegisterParticipantDto';
+...
+@Post()
+public async register(@Body() registerParticipantDto: RegisterParticipantDto): Promise<void> {
+  try {
+    return await ParticipantControllerBackEnd.register(registerParticipantDto.id, registerParticipantDto.name);
+  } catch (err) {
+    Logger.error(JSON.stringify(err));
+    throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
+  }
+}
+```
+
+`packages/server/src/person/person.controller.ts`
+
+```typescript
+@Post('/')
+public async create(@Body() createPersonDto: CreatePersonDto) {
+  try {
+    return this.personService.create(createPersonDto.id, createPersonDto.name);
+  } catch (err) {
+    Logger.error(JSON.stringify(err));
+    const message: string = (err.responses[0]) ? err.responses[0].error.message : 'Internal';
+    throw new HttpException(message, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+}
+
+@Post('/:id/add-attribute')
+public async addAttribute(@Param() { id }, @Body() addPersonAttributeDto: AddPersonAttributeDto) {
+  try {
+    return this.personService.addAttribute(id, addPersonAttributeDto.attributeId, addPersonAttributeDto.content);
+  } catch (err) {
+    Logger.error(JSON.stringify(err));
+    throw new HttpException('Internal', HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+}
+
+@Post('/:id/get-attribute')
+public async getByAttribute(@Param() { id }, @Body() getPersonByAttributeDto: GetPersonByAttributeDto) {
+  try {
+    return this.personService.getByAttribute(id, getPersonByAttributeDto.value);
+  } catch (err) {
+    Logger.error(JSON.stringify(err));
+    throw new HttpException('Internal', HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+}
+```
+
+## Add HTTPS to Server
+
