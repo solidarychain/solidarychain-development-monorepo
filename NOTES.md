@@ -12,17 +12,15 @@
 $ npm test
 
 # lift hyperledger
-npm run env:restart
+$ npm run env:restart
 
 # deploy smart contract
-npm run cc:start -- person
-
-
+$ npm run cc:start -- person
 
 # run dev
-npx lerna run start:dev --scope server --stream
+$ npx lerna run start:dev --scope server --stream
 # debug
-npx lerna run start:debug --scope server --stream
+$ npx lerna run start:debug --scope server --stream
 ```
 
 ## Uris and Endpoints
@@ -35,6 +33,14 @@ npx lerna run start:debug --scope server --stream
 
 - <http://localhost:3000/participant/>
 - <http://localhost:3000/person/>
+
+## Fixs
+
+if have problems after install packages with chaincodes, like problems boot server, just rebuild chaincode first
+
+```shell
+$ npx lerna run build --scope participant-cc
+```
 
 ## Clone Worldsibu Repository
 
@@ -462,3 +468,50 @@ beforeEach(async () => {
   controller = module.get<PersonController>(PersonController);
 });
 ```
+
+## Implement Swagger Docs
+
+### Install dependencies
+
+```shell
+# install the required packages
+$ lerna add @nestjs/swagger --scope server --no-bootstrap
+$ lerna add swagger-ui-express --scope server --no-bootstrap
+$ lerna bootstrap --scope server
+```
+
+### Initialize the Swagger using SwaggerModule
+
+- [Nest.JS OpenAPI (Swagger)](https://docs.nestjs.com/recipes/swagger)
+
+add to `main.ts`
+
+```typescript
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+...
+async function bootstrap() {
+  const app = await NestFactory.create(ApplicationModule);
+
+  const options = new DocumentBuilder()
+    .setTitle('Cats example')
+    .setDescription('The cats API description')
+    .setVersion('1.0')
+    .addTag('cats')
+    .build();
+  const document = SwaggerModule.createDocument(app, options);
+  SwaggerModule.setup('api', app, document);
+
+  await app.listen(3000);
+}
+...
+```
+
+```shell
+# boot server and test api docs
+$ npx lerna run start:dev --scope server --stream
+
+```
+
+open your browser and navigate to <http://localhost:3000/api>
+to download swagger JSON file, fire request to <http://localhost:3000/api-json>
+

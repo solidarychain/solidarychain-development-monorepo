@@ -33,3 +33,9 @@ export const couchDBView = process.env.COUCHDB_VIEW || 'ch1_person';
 export const couchDBProtocol = process.env.COUCHDB_PROTOCOL || 'http';
 export const couchDBHost = process.env.COUCHDB_HOST || 'localhost';
 export const couchDBPort = process.env.COUCHDB_PORT || 5084;
+
+// swaggerModule
+export const swaggerModuleTitle = process.env.SWAGGER_MODULE_TITLE || 'Person ChainCode';
+export const swaggerModuleDescription = process.env.SWAGGER_MODULE_DESCRIPTION = 'Convector Person ChainCode API';
+export const swaggerModuleVersion = process.env.SWAGGER_MODULE_VERSION = '1.0';
+export const swaggerModuleTag = process.env.SWAGGER_MODULE_TAG = 'person';

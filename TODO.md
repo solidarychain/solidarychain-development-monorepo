@@ -1,6 +1,7 @@
 ## ToDo
 
 - [ ] Swagger Docs
+- [ ] Https and CORS
 - [ ] Change README.md
 - [ ] Extract business rules to separate file to implement UI
 - [X] Create GitLab Repo for project 'NodeNestJsHyperLedgerConvectorRestStarter'
