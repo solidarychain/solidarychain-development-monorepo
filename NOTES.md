@@ -16,6 +16,9 @@ $ npm run env:restart
 
 # deploy smart contract
 $ npm run cc:start -- person
+# upgrade smart contract
+$ npm run cc:upgrade -- person 1.1
+# note: after deploy/upgrade wait a few second/minutes in first invoke
 
 # run dev
 $ npx lerna run start:dev --scope server --stream
@@ -36,10 +39,14 @@ $ npx lerna run start:debug --scope server --stream
 
 ## Fixs
 
-if have problems after install packages with chaincodes, like problems boot server, just rebuild chaincode first
+if have problems after install packages and with chaincodes, ex with `lerna bootstrap`
+`'participant-cc@^0.1.0' is not in the npm registry`, just rebuild chaincode first, and next `lerna bootstrap`
 
 ```shell
 $ npx lerna run build --scope participant-cc
+lerna success run Ran npm script 'build' in 1 package in 3.2s:
+lerna success - participant-cc
+$ lerna bootstrap
 ```
 
 ## Clone Worldsibu Repository
@@ -477,6 +484,9 @@ beforeEach(async () => {
 # install the required packages
 $ lerna add @nestjs/swagger --scope server --no-bootstrap
 $ lerna add swagger-ui-express --scope server --no-bootstrap
+# required for models
+$ lerna add class-validator --scope server --no-bootstrap
+$ lerna add class-transformer --scope server --no-bootstrap
 $ lerna bootstrap --scope server
 ```
 
@@ -519,12 +529,12 @@ to download swagger JSON file, fire request to <http://localhost:3000/api-json>
 
 now we need to create model/DTO's for all endpoints that have `@Body`
 
-`packages/server/src/participant/dto/CreateParticipantDto.ts`
+`packages/server/src/participant/dto/register-participant.dto.ts`
 
 ```typescript
 import { ApiModelProperty } from '@nestjs/swagger';
 
-export class CreateParticipantDto {
+export class RegisterParticipantDto {
   @ApiModelProperty()
   readonly id: string;
 
@@ -533,7 +543,7 @@ export class CreateParticipantDto {
 }
 ```
 
-`packages/server/src/person/dto/AddPersonAttributeDto.ts`
+`packages/server/src/person/dto/add-person-attribute.dto.ts`
 
 ```typescript
 import { ApiModelProperty } from '@nestjs/swagger';
@@ -550,7 +560,7 @@ export class AddPersonAttributeDto {
 }
 ```
 
-`packages/server/src/person/dto/CreatePersonDto.ts`
+`packages/server/src/person/dto/create-person.dto.ts`
 
 ```typescript
 import { ApiModelProperty } from '@nestjs/swagger';
@@ -564,7 +574,7 @@ export class CreatePersonDto {
 }
 ```
 
-`packages/server/src/person/dto/GetPersonByAttributeDto.ts`
+`packages/server/src/person/dto/get-person-by-attribute.dto.ts`
 
 ```typescript
 import { ApiModelProperty } from '@nestjs/swagger';
@@ -580,15 +590,18 @@ now replace json objects ex { id, name } with DTO's
 `packages/server/src/participant/participant.controller.ts`
 
 ```typescript
-import { RegisterParticipantDto } from './dto/RegisterParticipantDto';
+import { RegisterParticipantDto } from './dto';
 ...
 @Post()
-public async register(@Body() registerParticipantDto: RegisterParticipantDto): Promise<void> {
+@ApiOperation({ title: 'Register Participant' })
+@ApiResponse({ status: 201, description: 'The record has been successfully created.', type: RegisterParticipantDto })
+@ApiResponse({ status: 400, description: 'Bad request' })
+public async register(@Body() participantDto: RegisterParticipantDto): Promise<void> {
   try {
-    return await ParticipantControllerBackEnd.register(registerParticipantDto.id, registerParticipantDto.name);
+    return await ParticipantControllerBackEnd.register(participantDto.id, participantDto.name);
   } catch (err) {
     Logger.error(JSON.stringify(err));
-    throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
+    throw new HttpException(`Bad request: ${err.message}`, HttpStatus.BAD_REQUEST);
   }
 }
 ```

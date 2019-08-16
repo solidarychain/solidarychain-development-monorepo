@@ -7,7 +7,7 @@ import { CouchDBStorage } from '@worldsibu/convector-storage-couchdb';
 export class AppService {
 
   constructor() {
-    // init CouchDB before use it
+    // init CouchDB
     this.initCouchDB();
   }
 

@@ -1,12 +1,16 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Res, HttpStatus } from '@nestjs/common';
 import { AppService } from './app.service';
+import { swaggerApiPath } from './env';
+import express = require('express');
+import { ApiExcludeEndpoint } from '@nestjs/swagger';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly appService: AppService) { }
 
   @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @ApiExcludeEndpoint()
+  redirectToApi(@Res() response: express.Response) {
+    response.redirect(swaggerApiPath, HttpStatus.PERMANENT_REDIRECT);
   }
 }

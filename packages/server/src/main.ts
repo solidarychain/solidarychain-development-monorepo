@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { swaggerModuleTitle, swaggerModuleDescription, swaggerModuleVersion, swaggerModuleTag } from './env';
+import { swaggerModuleTitle, swaggerModuleDescription, swaggerModuleVersion, swaggerModuleTagPerson, swaggerApiPath } from './env';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -11,10 +11,10 @@ async function bootstrap() {
     .setTitle(swaggerModuleTitle)
     .setDescription(swaggerModuleDescription)
     .setVersion(swaggerModuleVersion)
-    .addTag(swaggerModuleTag)
+    .addTag(swaggerModuleTagPerson)
     .build();
   const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup(swaggerApiPath, app, document);
 
   await app.listen(3000);
 }

@@ -1,12 +1,11 @@
 import { Body, Controller, Get, HttpException, HttpStatus, Logger, Param, Post } from '@nestjs/common';
-import { Person } from 'person-cc';
-import { PersonControllerBackEnd } from '../convector';
+import { ApiUseTags } from '@nestjs/swagger';
+import { swaggerModuleTagPerson } from '../env';
+import { AddPersonAttributeDto, CreatePersonDto, GetPersonByAttributeDto } from './dto';
 import { PersonService } from './person.service';
-import { CreatePersonDto } from './dto/CreatePersonDto';
-import { AddPersonAttributeDto } from './dto/AddPersonAttributeDto';
-import { GetPersonByAttributeDto } from './dto/GetPersonByAttributeDto';
 
 @Controller('person')
+@ApiUseTags(swaggerModuleTagPerson)
 export class PersonController {
 
   constructor(public personService: PersonService) { }
