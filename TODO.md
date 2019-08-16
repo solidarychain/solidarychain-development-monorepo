@@ -2,6 +2,8 @@
 
 - [W] Swagger Docs
   - [ ] Finish all `@ApiOperation` and `@ApiResponse`
+  - [ ] Add JWT to Api
+  - [ ] Root show Read Me or Redirect to React FrontEnd
 - [ ] Create Endpoint GetAll Participants
 - [ ] Change `io.worldsibu.examples.participant` to `io.worldsibu.participant` (must renew ledger)
 - [ ] Https and CORS
