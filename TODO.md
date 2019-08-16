@@ -2,8 +2,9 @@
 
 - [W] Swagger Docs
   - [ ] Finish all `@ApiOperation` and `@ApiResponse`
-  - [ ] Add JWT to Api
+  - [ ] Add JWT to Api, and Login User (User must be created by organization, can be attributed to oauth2 account like gmail)
   - [ ] Root show Read Me or Redirect to React FrontEnd
+- [ ] env.ts refactor to be used has `e.SWAGGER_MODULE_TITLE`
 - [ ] Create Endpoint GetAll Participants
 - [ ] Change `io.worldsibu.examples.participant` to `io.worldsibu.participant` (must renew ledger)
 - [ ] Https and CORS

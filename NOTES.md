@@ -1,9 +1,14 @@
 # NOTES
 
-## Links
+This is a simple NestJs starter, based on above links, I only extended it with a few things like swagger api, https, jwt, and other stuff, thanks m8s
 
+## Links Used
+
+- [WorldSibu Awesome Convector Suite](https://worldsibu.tech/about/)
+- [WorldSibu Awesome Convector Suite : Tutorial - Getting Started](https://docs.worldsibu.com/article/99-tutorial-getting-started)
 - [Convector with NestJS](https://medium.com/swlh/convector-with-nestjs-7e660322d927)
 - [Final Example](https://github.com/mahcr/convector-example-people-attributes)
+- [NestJS Swagger](https://docs.nestjs.com/recipes/swagger)
 
 ## Commands
 
@@ -306,13 +311,13 @@ $ curl -H "Content-Type: application/json" --request POST --data '{ "attributeId
 
 ## Extend tutorial
 
-### commit project
+### Commit project
 
 ```shell
 $ git add . && git commit -am "finished tutorial"
 ```
 
-### add Types to `Participant` and `Person` Modules and Use it
+### add Types to `Participant` and `Person` Modules and Use it [DEPRECATED]
 
 - `packages/server/src/participant/types/participant.ts`
 - `packages/server/src/participant/types/index.ts`
@@ -494,38 +499,69 @@ $ lerna bootstrap --scope server
 
 - [Nest.JS OpenAPI (Swagger)](https://docs.nestjs.com/recipes/swagger)
 
-add to `main.ts`
+add to `packages/server/src/env.ts`
+
+```typescript
+export const swaggerModuleTitle = process.env.SWAGGER_MODULE_TITLE || 'Person ChainCode';
+export const swaggerModuleDescription = process.env.SWAGGER_MODULE_DESCRIPTION = 'Convector Person ChainCode API';
+export const swaggerModuleVersion = process.env.SWAGGER_MODULE_VERSION = '1.0';
+export const swaggerApiPath = process.env.SWAGGER_API_PATH = 'api';
+export const swaggerModuleTagPerson = process.env.SWAGGER_MODULE_TAG_PERSON = 'person';
+export const swaggerModuleTagParticipant = process.env.SWAGGER_MODULE_TAG_PERSON = 'participant';
+```
+
+add to `packages/server/src/main.ts`
 
 ```typescript
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 ...
 async function bootstrap() {
-  const app = await NestFactory.create(ApplicationModule);
+  const app = await NestFactory.create(AppModule);
 
+  // initialize SwaggerModule
   const options = new DocumentBuilder()
-    .setTitle('Cats example')
-    .setDescription('The cats API description')
-    .setVersion('1.0')
-    .addTag('cats')
+    .setTitle(swaggerModuleTitle)
+    .setDescription(swaggerModuleDescription)
+    .setVersion(swaggerModuleVersion)
+    .addTag(swaggerModuleTagPerson)
     .build();
   const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup(swaggerApiPath, app, document);
 
   await app.listen(3000);
 }
 ...
 ```
 
+### Redirect root to Api
+
+change default `@Get` controller in `packages/server/src/app.controller.ts` to
+
+```typescript
+@Controller()
+export class AppController {
+  constructor(private readonly appService: AppService) { }
+
+  @Get()
+  @ApiExcludeEndpoint()
+  redirectToApi(@Res() response: express.Response) {
+    response.redirect(swaggerApiPath, HttpStatus.PERMANENT_REDIRECT);
+  }
+}
+```
+
+### Test Swagger Api and Redirect
+
 ```shell
 # boot server and test api docs
 $ npx lerna run start:dev --scope server --stream
-
 ```
 
-open your browser and navigate to <http://localhost:3000/api>
+open your browser and navigate to <http://localhost:3000/api/>
 to download swagger JSON file, fire request to <http://localhost:3000/api-json>
+test redirect navigate to <http://localhost:3000> this will redirect to <http://localhost:3000/api/>
 
-### Create DTO's
+### Create Swagger DTO's
 
 now we need to create model/DTO's for all endpoints that have `@Body`
 
@@ -533,12 +569,15 @@ now we need to create model/DTO's for all endpoints that have `@Body`
 
 ```typescript
 import { ApiModelProperty } from '@nestjs/swagger';
+import { IsString } from 'class-validator';
 
 export class RegisterParticipantDto {
   @ApiModelProperty()
+  @IsString()
   readonly id: string;
 
   @ApiModelProperty()
+  @IsString()
   readonly name: string;
 }
 ```
@@ -547,12 +586,11 @@ export class RegisterParticipantDto {
 
 ```typescript
 import { ApiModelProperty } from '@nestjs/swagger';
+import { IsString } from 'class-validator';
 
 export class AddPersonAttributeDto {
   @ApiModelProperty()
-  readonly id: string;
-
-  @ApiModelProperty()
+  @IsString()
   readonly attributeId: string;
 
   @ApiModelProperty()
@@ -564,12 +602,15 @@ export class AddPersonAttributeDto {
 
 ```typescript
 import { ApiModelProperty } from '@nestjs/swagger';
+import { IsString } from 'class-validator';
 
 export class CreatePersonDto {
   @ApiModelProperty()
+  @IsString()
   readonly id: string;
 
   @ApiModelProperty()
+  @IsString()
   readonly name: string;
 }
 ```
@@ -593,9 +634,6 @@ now replace json objects ex { id, name } with DTO's
 import { RegisterParticipantDto } from './dto';
 ...
 @Post()
-@ApiOperation({ title: 'Register Participant' })
-@ApiResponse({ status: 201, description: 'The record has been successfully created.', type: RegisterParticipantDto })
-@ApiResponse({ status: 400, description: 'Bad request' })
 public async register(@Body() participantDto: RegisterParticipantDto): Promise<void> {
   try {
     return await ParticipantControllerBackEnd.register(participantDto.id, participantDto.name);
@@ -641,5 +679,37 @@ public async getByAttribute(@Param() { id }, @Body() getPersonByAttributeDto: Ge
 }
 ```
 
-## Add HTTPS to Server
+### Global constant file
 
+create a `packages/server/src/constants.ts` file to prevent DRY/hard-code strings
+
+ex
+
+```typescript
+// api : https status
+const API_RESPONSE_BAD_REQUEST: string = 'Bad Request';
+const API_RESPONSE_CREATED: string = 'The record has been successfully created';
+const API_RESPONSE_INTERNAL_SERVER_ERROR: string = 'Internal server error';
+...
+```
+
+> Note: view source code files
+
+### Swagger : @ApiResponse decorators
+
+add `packages/server/src/participant/participant.controller.ts` and `packages/server/src/person/person.controller.ts`
+
+ex
+
+```typescript
+  @Get()
+  @ApiOperation({ title: r.API_RESPONSE_GET_PARTICIPANT })
+  @ApiOkResponse({ description: r.API_RESPONSE_FOUND_RECORDS })
+  @ApiBadRequestResponse({ description: r.API_RESPONSE_BAD_REQUEST })
+  public async getAll() {
+    ...
+```
+
+> Note: view source code files
+
+## Add HTTPS to Server

@@ -1,56 +1,51 @@
 import { Body, Controller, Get, HttpException, HttpStatus, Logger, Param, Post } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiUseTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiUseTags, ApiOkResponse, ApiBadRequestResponse, ApiCreatedResponse } from '@nestjs/swagger';
 import { Participant } from 'participant-cc';
 import { ParticipantControllerBackEnd } from '../convector';
 import { swaggerModuleTagParticipant } from '../env';
 import { RegisterParticipantDto } from './dto';
+import { restrings as r } from '../constants';
 
-@Controller('/participant')
+@Controller(swaggerModuleTagParticipant)
 @ApiUseTags(swaggerModuleTagParticipant)
 export class ParticipantController {
 
   @Get()
-  @ApiOperation({ title: 'Get all Participants' })
-  @ApiResponse({
-    status: 200,
-    description: 'The found records',
-    type: RegisterParticipantDto,
-  })
+  @ApiOperation({ title: r.API_RESPONSE_GET_PARTICIPANT })
+  @ApiOkResponse({ description: r.API_RESPONSE_FOUND_RECORDS })
+  @ApiBadRequestResponse({ description: r.API_RESPONSE_BAD_REQUEST })
   public async getAll() {
     try {
       return ParticipantControllerBackEnd.getAll();
     } catch (err) {
       Logger.error(JSON.stringify(err));
-      throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
+      throw new HttpException(r.API_RESPONSE_BAD_REQUEST, HttpStatus.BAD_REQUEST);
     }
   }
 
-  @Get(':id')
-  @ApiOperation({ title: 'Get Participant' })
-  @ApiResponse({
-    status: 200,
-    description: 'The found record',
-    type: RegisterParticipantDto,
-  })
+  @Get('/:id')
+  @ApiOperation({ title: r.API_RESPONSE_GET_PARTICIPANT })
+  @ApiOkResponse({ description: r.API_RESPONSE_FOUND_RECORD })
+  @ApiBadRequestResponse({ description: r.API_RESPONSE_BAD_REQUEST })
   public async get(@Param('id') id: string): Promise<Participant> {
     try {
       return await ParticipantControllerBackEnd.get(id);
     } catch (err) {
       Logger.error(JSON.stringify(err));
-      throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
+      throw new HttpException(r.API_RESPONSE_BAD_REQUEST, HttpStatus.BAD_REQUEST);
     }
   }
 
   @Post()
-  @ApiOperation({ title: 'Register Participant' })
-  @ApiResponse({ status: 201, description: 'The record has been successfully created.', type: RegisterParticipantDto })
-  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiOperation({ title: r.API_RESPONSE_REGISTER_PARTICIPANT })
+  @ApiCreatedResponse({ description: r.API_RESPONSE_CREATED, type: RegisterParticipantDto })
+  @ApiBadRequestResponse({ description: r.API_RESPONSE_BAD_REQUEST })
   public async register(@Body() participantDto: RegisterParticipantDto): Promise<void> {
     try {
       return await ParticipantControllerBackEnd.register(participantDto.id, participantDto.name);
     } catch (err) {
       Logger.error(JSON.stringify(err));
-      throw new HttpException(`Bad request: ${err.message}`, HttpStatus.BAD_REQUEST);
+      throw new HttpException(`${r.API_RESPONSE_BAD_REQUEST}: ${err.message}`, HttpStatus.BAD_REQUEST);
     }
   }
 }
