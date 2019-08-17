@@ -1,5 +1,5 @@
 import { Body, Controller, Get, HttpException, HttpStatus, Logger, Param, Post } from '@nestjs/common';
-import { ApiUseTags, ApiOperation, ApiOkResponse, ApiBadRequestResponse, ApiInternalServerErrorResponse } from '@nestjs/swagger';
+import { ApiUseTags, ApiOperation, ApiOkResponse, ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { swaggerModuleTagPerson } from '../env';
 import { AddPersonAttributeDto, CreatePersonDto, GetPersonByAttributeDto } from './dto';
 import { PersonService } from './person.service';
@@ -13,6 +13,7 @@ export class PersonController {
   constructor(public personService: PersonService) { }
 
   @Get('/')
+  @ApiBearerAuth()
   @ApiOperation({ title: r.API_RESPONSE_GET_ALL_PERSONS })
   @ApiOkResponse({ description: r.API_RESPONSE_FOUND_RECORDS })
   @ApiBadRequestResponse({ description: r.API_RESPONSE_BAD_REQUEST })

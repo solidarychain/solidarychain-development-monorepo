@@ -4,11 +4,20 @@ This is a simple NestJs starter, based on above links, I only extended it with a
 
 ## Links Used
 
+### WorldSibu
+
 - [WorldSibu Awesome Convector Suite](https://worldsibu.tech/about/)
 - [WorldSibu Awesome Convector Suite : Tutorial - Getting Started](https://docs.worldsibu.com/article/99-tutorial-getting-started)
+
+### Medium
+
 - [Convector with NestJS](https://medium.com/swlh/convector-with-nestjs-7e660322d927)
 - [Final Example](https://github.com/mahcr/convector-example-people-attributes)
+
+### Nest Js
+
 - [NestJS Swagger](https://docs.nestjs.com/recipes/swagger)
+- [NestJS HTTPS](https://docs.nestjs.com/faq/multiple-servers)
 
 ## Commands
 
@@ -51,7 +60,7 @@ if have problems after install packages and with chaincodes, ex with `lerna boot
 $ npx lerna run build --scope participant-cc
 lerna success run Ran npm script 'build' in 1 package in 3.2s:
 lerna success - participant-cc
-$ lerna bootstrap
+$ npx lerna bootstrap
 ```
 
 ## Clone Worldsibu Repository
@@ -487,12 +496,12 @@ beforeEach(async () => {
 
 ```shell
 # install the required packages
-$ lerna add @nestjs/swagger --scope server --no-bootstrap
-$ lerna add swagger-ui-express --scope server --no-bootstrap
+$ npx lerna add @nestjs/swagger --scope server --no-bootstrap
+$ npx lerna add swagger-ui-express --scope server --no-bootstrap
 # required for models
-$ lerna add class-validator --scope server --no-bootstrap
-$ lerna add class-transformer --scope server --no-bootstrap
-$ lerna bootstrap --scope server
+$ npx lerna add class-validator --scope server --no-bootstrap
+$ npx lerna add class-transformer --scope server --no-bootstrap
+$ npx lerna bootstrap --scope server
 ```
 
 ### Initialize the Swagger using SwaggerModule
@@ -713,3 +722,175 @@ ex
 > Note: view source code files
 
 ## Add HTTPS to Server
+
+```shell
+# install dependencies required to use ExpressAdapter
+$ npx lerna add @nestjs/platform-express --scope server --no-bootstrap
+```
+
+> use let's encrypt certificates, or self-signed, here we use self-signed for a fictitious domain `convector.sample.com`
+
+```shell
+# create dir to store self-signed certificates
+$ mkdir packages/server/config -p && cd packages/server/config
+# set/change domain
+$ FICTITIOUS_DOMAIN=convector.sample.com
+$ FILENAME_CERT=server.crt
+$ FILENAME_KEY=server.key
+# generate certificate
+$ openssl genrsa -out $FILENAME_KEY 2048
+$ openssl req -new -x509 -key $FILENAME_KEY -out $FILENAME_CERT -days 3650 -subj /CN=$FICTITIOUS_DOMAIN
+# check a certificate and return information about it
+$ openssl x509 -in $FILENAME_CERT -text -noout
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number:
+            b6:4f:d4:4e:06:98:ec:ce
+    Signature Algorithm: sha256WithRSAEncryption
+        Issuer: CN = convector.sample.com
+        Validity
+            Not Before: Aug 16 15:33:23 2019 GMT
+            Not After : Aug 13 15:33:23 2029 GMT
+        Subject: CN = convector.sample.com
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (2048 bit)
+                Modulus:
+                    00:aa:d1:4b:20:07:53:ee:ae:f8:e1:c3:6c:d7:a0:
+                    e8:75:0b:ee:1d:b1:42:ca:0f:17:11:4b:0f:a8:75:
+                    01:21:32:f0:24:b0:32:c8:6e:5d:2c:3d:4a:15:d7:
+# check the SSL key and verify the consistency
+$ openssl rsa -in $FILENAME_KEY -check
+RSA key ok
+writing RSA key
+# check Validity
+$ openssl x509 -in server.crt -text -noout | grep "Not After"
+Not After : Aug 13 17:15:39 2029 GMT
+```
+
+> if want to certificate use FQDN domain ex <https://convector.sample.com:3000>, edit hosts and add FQDN
+
+```shell
+$ sudo nano /etc/hosts
+# add
+127.0.0.1       convector.sample.com
+```
+
+now we can use <https://convector.sample.com:3000>
+https://localhost:3443/api/
+
+one last change, change swagger scheme to https with `.setSchemes('https')` in `packages/server/src/main.ts`
+
+```typescript
+const options = new DocumentBuilder()
+  .setTitle(swaggerModuleTitle)
+  .setDescription(swaggerModuleDescription)
+  .setVersion(swaggerModuleVersion)
+  .addTag(swaggerModuleTagPerson)
+  .setSchemes('https')
+  .build();
+```
+
+### Add Redirect Middleware (HTTP to HTTPS)
+
+`packages/server/src/middleware/redirect-middleware.ts`
+
+```typescript
+import { NextFunction, Request, Response } from 'express';
+import { httpsPort } from '../env';
+
+// custom redirect middleware
+export const redirectMiddleware = (req: Request, res: Response, next: NextFunction) => {
+  if (!/https/.test(req.protocol)) {
+    const redirectUrl = `https://${req.hostname}:${httpsPort}${req.originalUrl}`;
+    res.redirect(redirectUrl);
+  } else {
+    return next();
+  }
+};
+```
+
+add `app.use(redirectMiddleware);` to `packages/server/src/main.ts`
+
+```typescript
+...
+async function bootstrap() {
+  ...
+  const app = await NestFactory.create(
+    AppModule,
+    new ExpressAdapter(server),
+  );
+  // middleware: redirect
+  app.use(redirectMiddleware);
+```
+
+### Test Https and HTTP to HTTPS Redirect
+
+```shell
+# launch server
+$ npx lerna run start:debug --scope server --stream
+```
+
+now test http to https redirect, and https
+
+### Enable CORS
+
+add cors to `packages/server/src/main.ts`
+
+```typescript
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  ...
+  // enable cors
+  app.enableCors();
+  ...
+```
+
+
+
+
+## Authentication
+
+https://docs.nestjs.com/techniques/authentication
+
+// ACCESS_TOKEN="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG4iLCJzdWIiOjEsImlhdCI6MTU2NjA3MjgxOCwiZXhwIjoxNTY2MDcyODc4fQ.wVNlGvKV5-CIzzAnNRpESgpX5Hrvw5TOgptEQPm6EeU"
+// curl -X POST http://localhost:3001/api/login -d '{ "username": "john", "password": "changeme"}' -H 'Content-Type: application/json'
+// curl -X GET http://localhost:3001/api/me -H "Authorization: Bearer ${ACCESS_TOKEN}"
+
+
+
+$ # GET /api/me
+$ curl http://localhost:3000/api/me
+$ # result -> {"statusCode":401,"error":"Unauthorized"}
+$ # POST /api/login
+$ curl -X POST http://localhost:3000/api/login -d '{"username": "john", "password": "changeme"}' -H "Content-Type: application/json"
+$ # result -> {"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2Vybm... }
+$ # GET /api/me using access_token returned from previous step as bearer code
+$ curl http://localhost:3000/api/me -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2Vybm..."
+$ # result -> {"userId":1,"username":"john"}
+
+
+
+
+
+
+
+
+
+
+
+
+
+### Enable CSRF
+
+```shell
+# install the required packages
+$ npx lerna add csurf --scope server
+```
+
+add csrf to `packages/server/src/main.ts`
+
+import * as csurf from 'csurf';
+// somewhere in your initialization file
+app.use(csurf());
