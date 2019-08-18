@@ -41,5 +41,6 @@ export const swaggerModuleTitle = process.env.SWAGGER_MODULE_TITLE || 'Person Ch
 export const swaggerModuleDescription = process.env.SWAGGER_MODULE_DESCRIPTION = 'Convector Person ChainCode API';
 export const swaggerModuleVersion = process.env.SWAGGER_MODULE_VERSION = '1.0';
 export const swaggerApiPath = process.env.SWAGGER_API_PATH = 'api';
+export const swaggerModuleTagAuth = process.env.SWAGGER_MODULE_TAG_AUTH = 'auth';
 export const swaggerModuleTagPerson = process.env.SWAGGER_MODULE_TAG_PERSON = 'person';
 export const swaggerModuleTagParticipant = process.env.SWAGGER_MODULE_TAG_PERSON = 'participant';

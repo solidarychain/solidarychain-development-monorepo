@@ -2,11 +2,10 @@ import { Logger } from '@nestjs/common';
 import { FabricControllerAdapter } from '@worldsibu/convector-adapter-fabric';
 import { ClientFactory } from '@worldsibu/convector-core';
 import * as fs from 'fs';
-import { ParticipantController, Participant } from 'participant-cc';
-import { PersonController } from 'person-cc';
+import { Participant, ParticipantController } from 'participant-cc';
 import { join, resolve } from 'path';
-
-import { keyStore, identityName, channel, chaincode, networkProfile, identityId } from './env';
+import { PersonController } from 'person-cc';
+import { chaincode, channel, identityId, identityName, keyStore, networkProfile } from './env';
 
 const adapter = new FabricControllerAdapter({
   txTimeout: 300000,

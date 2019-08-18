@@ -53,8 +53,8 @@ $ npx lerna run start:debug --scope server --stream
 
 ## Fixs
 
-if have problems after install packages and with chaincodes, ex with `lerna bootstrap`
-`'participant-cc@^0.1.0' is not in the npm registry`, just rebuild chaincode first, and next `lerna bootstrap`
+if have problems after install packages with `lerna add` and with chaincodes, ex with `lerna bootstrap`
+and have error not found chaincode package on npm registry like `'participant-cc@^0.1.0' is not in the npm registry`, just rebuild chaincode, and next `lerna bootstrap`
 
 ```shell
 $ npx lerna run build --scope participant-cc
@@ -501,7 +501,7 @@ $ npx lerna add swagger-ui-express --scope server --no-bootstrap
 # required for models
 $ npx lerna add class-validator --scope server --no-bootstrap
 $ npx lerna add class-transformer --scope server --no-bootstrap
-$ npx lerna bootstrap --scope server
+$ npx lerna bootstrap
 ```
 
 ### Initialize the Swagger using SwaggerModule
@@ -777,8 +777,7 @@ $ sudo nano /etc/hosts
 127.0.0.1       convector.sample.com
 ```
 
-now we can use <https://convector.sample.com:3000>
-https://localhost:3443/api/
+now we can use <https://convector.sample.com:3443> or <https://localhost:3443/api/>
 
 one last change, change swagger scheme to https with `.setSchemes('https')` in `packages/server/src/main.ts`
 
@@ -847,50 +846,583 @@ async function bootstrap() {
   ...
 ```
 
+## [Authentication](https://docs.nestjs.com/techniques/authentication)
 
+- [NestJs: Authentication](https://docs.nestjs.com/techniques/authentication)
 
-
-## Authentication
-
-https://docs.nestjs.com/techniques/authentication
-
-// ACCESS_TOKEN="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG4iLCJzdWIiOjEsImlhdCI6MTU2NjA3MjgxOCwiZXhwIjoxNTY2MDcyODc4fQ.wVNlGvKV5-CIzzAnNRpESgpX5Hrvw5TOgptEQPm6EeU"
-// curl -X POST http://localhost:3001/api/login -d '{ "username": "john", "password": "changeme"}' -H 'Content-Type: application/json'
-// curl -X GET http://localhost:3001/api/me -H "Authorization: Bearer ${ACCESS_TOKEN}"
-
-
-
-$ # GET /api/me
-$ curl http://localhost:3000/api/me
-$ # result -> {"statusCode":401,"error":"Unauthorized"}
-$ # POST /api/login
-$ curl -X POST http://localhost:3000/api/login -d '{"username": "john", "password": "changeme"}' -H "Content-Type: application/json"
-$ # result -> {"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2Vybm... }
-$ # GET /api/me using access_token returned from previous step as bearer code
-$ curl http://localhost:3000/api/me -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2Vybm..."
-$ # result -> {"userId":1,"username":"john"}
-
-
-
-
-
-
-
-
-
-
-
-
-
-### Enable CSRF
+use passport strategy called passport-local that implements a username/password authentication mechanism, which suits our needs for this portion of our use case.
 
 ```shell
 # install the required packages
-$ npx lerna add csurf --scope server
+$ npx lerna add @nestjs/passport --scope server --no-bootstrap
+$ npx lerna add passport --scope server --no-bootstrap
+$ npx lerna add passport-local --scope server --no-bootstrap
+$ npx lerna add @types/passport-local  --scope server --dev --no-bootstrap
+$ npx lerna bootstrap
 ```
 
-add csrf to `packages/server/src/main.ts`
+start by generating an `AuthModule` and in it, an `AuthService`
 
-import * as csurf from 'csurf';
-// somewhere in your initialization file
-app.use(csurf());
+```shell
+# create auth module and service
+$ cd packages/server/
+$ nest g module auth
+$ nest g service auth
+$ cd ../..
+```
+
+as we implement the `AuthService`, we'll find it useful to encapsulate user operations in a `UsersService`, so let's generate that module and service now:
+
+```shell
+# create users module and service
+$ cd packages/server/
+$ nest g module users
+$ nest g service users
+$ cd ../..
+```
+
+replace the default contents of these generated files as shown below.
+
+`packages/server/src/users/users.service.ts`
+
+```typescript
+import { Injectable } from '@nestjs/common';
+
+export type User = any;
+
+@Injectable()
+export class UsersService {
+  private readonly users: User[];
+
+  constructor() {
+    this.users = [
+      {
+        userId: 1,
+        username: 'john',
+        password: 'changeme',
+      },
+      {
+        userId: 2,
+        username: 'chris',
+        password: 'secret',
+      },
+      {
+        userId: 3,
+        username: 'maria',
+        password: 'guess',
+      },
+    ];
+  }
+
+  async findOne(username: string): Promise<User | undefined> {
+    return this.users.find(user => user.username === username);
+  }
+}
+```
+
+add `exports: [UsersService],` to `packages/server/src/users/users.module.ts`
+
+```typescript
+import { Module } from '@nestjs/common';
+import { UsersService } from './users.service';
+
+@Module({
+  providers: [UsersService],
+  exports: [UsersService],
+})
+
+export class UsersModule { }
+```
+
+`AuthService` has the job of retrieving a user and verifying the password. We create a `validateUser()` method for this purpose
+
+`packages/server/src/auth/auth.service.ts`
+
+```typescript
+import { Injectable } from '@nestjs/common';
+import { UsersService } from '../users/users.service';
+
+@Injectable()
+export class AuthService {
+  constructor(private readonly usersService: UsersService) { }
+
+  async validateUser(username: string, pass: string): Promise<any> {
+    const user = await this.usersService.findOne(username);
+    if (user && user.password === pass) {
+      const { password, ...result } = user;
+      return result;
+    }
+    return null;
+  }
+}
+```
+
+update our `AuthModule` to import the `UsersModule`
+
+`packages/server/src/auth/auth.module.ts`
+
+```typescript
+import { Module } from '@nestjs/common';
+import { AuthService } from './auth.service';
+import { UsersModule } from '../users/users.module';
+
+@Module({
+  imports: [UsersModule],
+  providers: [AuthService],
+})
+
+export class AuthModule { }
+```
+
+### Authentication: [Implementing Passport local](https://docs.nestjs.com/techniques/authentication#implementing-passport-local)
+
+implement our Passport local authentication strategy. Create a file called `local.strategy.ts` in the auth folder, and add the following code:
+
+`packages/server/src/auth/local.strategy.ts`
+
+```typescript
+import { Strategy } from 'passport-local';
+import { PassportStrategy } from '@nestjs/passport';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { AuthService } from './auth.service';
+
+@Injectable()
+export class LocalStrategy extends PassportStrategy(Strategy) {
+  constructor(private readonly authService: AuthService) {
+    super();
+  }
+
+  async validate(username: string, password: string): Promise<any> {
+    const user = await this.authService.validateUser(username, password);
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+    return user;
+  }
+}
+```
+
+configure our `AuthModule` to use the Passport features we just defined. Update `auth.module.ts` to look like this:
+
+`packages/server/src/auth/auth.module.ts`
+
+```typescript
+import { Module } from '@nestjs/common';
+import { AuthService } from './auth.service';
+import { UsersModule } from '../users/users.module';
+import { PassportModule } from '@nestjs/passport';
+import { LocalStrategy } from './local.strategy';
+
+@Module({
+  imports: [UsersModule, PassportModule],
+  providers: [AuthService, LocalStrategy],
+})
+
+export class AuthModule { }
+```
+
+### Authentication: [Built-in Passport Guards](https://docs.nestjs.com/techniques/authentication#built-in-passport-guards)
+
+Login route
+
+implement a bare-bones `/api/login` route, and apply the built-in Guard to initiate the passport-local flow.
+
+add `/api/login` to `packages/server/src/app.controller.ts`
+
+```typescript
+import { Controller, Get, HttpStatus, Post, Request, Res, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { ApiExcludeEndpoint } from '@nestjs/swagger';
+import { AppService } from './app.service';
+import { swaggerApiPath } from './env';
+import express = require('express');
+
+@Controller()
+export class AppController {
+  constructor(private readonly appService: AppService) { }
+
+  @Get()
+  @ApiExcludeEndpoint()
+  redirectToApi(@Res() response: express.Response) {
+    response.redirect(swaggerApiPath, HttpStatus.PERMANENT_REDIRECT);
+  }
+
+  @UseGuards(AuthGuard('local'))
+  @Post(`/${swaggerApiPath}/login`)
+  @ApiUseTags(swaggerModuleTagAuth)
+  async login(@Request() req) {
+    return req.user;
+  }
+}
+```
+
+with `@UseGuards(AuthGuard('local'))` we are using an `AuthGuard` that `@nestjs/passport` automatically provisioned for us when we extended the `passport-local` strategy...
+
+launch server and test `/api/login` with a static user ex john/changeme
+
+```shell
+$ curl -k -X POST https://localhost:3443/api/login -d '{ "username": "john", "password": "changeme"}' -H 'Content-Type: application/json'
+
+{"userId":1,"username":"john"}
+```
+
+### Authentication: [JWT functionality](https://docs.nestjs.com/techniques/authentication#jwt-functionality)
+
+- Allow users to authenticate with username/password, returning a JWT for use in subsequent calls to protected API endpoints. We're well on our way to meeting this requirement. To complete it, we'll need to write the code that issues a JWT.
+- Create API routes which are protected based on the presence of a valid JWT as a bearer TOKEN
+
+```shell
+# install the required packages
+$ npx lerna add @nestjs/jwt --scope server --no-bootstrap
+$ npx lerna add passport-jwt --scope server --no-bootstrap
+$ npx lerna add @types/passport-jwt  --scope server --no-bootstrap --dev
+$ npx lerna bootstrap
+```
+
+> The `@nest/jwt` package (see more [here](https://github.com/nestjs/jwt)) is a utility package that helps with **JWT manipulation**.
+> The `passport-jwt` package is the Passport package that **implements the JWT strategy** and `@types/passport-jwt` provides the TypeScript type definitions.
+
+update `packages/server/src/auth/auth.service.ts` with `/api/login` route
+
+```typescript
+import { Injectable } from '@nestjs/common';
+import { UsersService } from '../users/users.service';
+import { JwtService } from '@nestjs/jwt';
+
+@Injectable()
+export class AuthService {
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
+  ) { }
+
+  async validateUser(username: string, pass: string): Promise<any> {
+    const user = await this.usersService.findOne(username);
+    if (user && user.password === pass) {
+      const { password, ...result } = user;
+      return result;
+    }
+    return null;
+  }
+
+  async login(user: any) {
+    // note: we choose a property name of sub to hold our userId value to be consistent with JWT standards
+    const payload = { username: user.username, sub: user.userId };
+    return {
+      // generate JWT from a subset of the user object properties
+      accessToken: this.jwtService.sign(payload),
+    };
+  }
+}
+```
+
+update the `AuthModule` to import the new dependencies and configure the `JwtModule`
+
+add `packages/server/src/auth/constants.ts`
+
+```typescript
+const jwtSecret = process.env.JWT_SECRET = 'secretKey';
+const jwtExpiresIn = process.env.JWT_EXPIRES_IN = '60s';
+
+export const jwtConstants = {
+  secret: jwtSecret,
+  expiresIn: jwtExpiresIn,
+};
+```
+
+add to `.env` `JWT_SECRET` env variable ex `JWT_SECRET=uKxHrE431MRgYoI8G6JKePsKhQ71kdZX`
+
+now update `packages/server/src/auth/auth.module.ts` with
+
+```typescript
+import { Module } from '@nestjs/common';
+import { AuthService } from './auth.service';
+import { LocalStrategy } from './local.strategy';
+import { UsersModule } from '../users/users.module';
+import { PassportModule } from '@nestjs/passport';
+import { JwtModule } from '@nestjs/jwt';
+import { jwtConstants } from './constants';
+
+@Module({
+  imports: [
+    UsersModule,
+    // configure the JwtModule using register(), passing configuration object
+    PassportModule,
+    JwtModule.register({
+      secret: jwtConstants.secret,
+      signOptions: { expiresIn: jwtConstants.expiresIn },
+    }),
+  ],
+  providers: [AuthService, LocalStrategy],
+  exports: [AuthService],
+})
+
+export class AuthModule { }
+```
+
+update the `/api/login` route to return a JWT `return this.authService.login(req.user);`
+
+```typescript
+  ...
+  @Post('login')
+  async login(@Request() req) {
+    return this.authService.login(req.user);
+  }
+}
+```
+
+test routes using cURL again. You can test with any of the user objects hard-coded in the UsersService.
+
+```shell
+$ # POST to /api/login
+$ curl -k -X POST https://localhost:3443/api/login -d '{"username": "john", "password": "changeme"}' -H "Content-Type: application/json"{"accessToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX..."}
+```
+
+### Authentication: [Implementing Passport JWT](https://docs.nestjs.com/techniques/authentication#implementing-passport-jwt)
+
+We can now address our final requirement: protecting endpoints by requiring a valid JWT be present on the request.
+Passport can help us here too. It provides the `passport-jwt` strategy for securing RESTful endpoints with JSON Web Tokens.
+Start by creating a file called `jwt.strategy.ts` in the `auth` folder, and add the following code:
+
+add interface `packages/server/src/auth/types/jwt-payload.interface.ts`
+
+```typescript
+export interface JwtPayload {
+  exp: number;
+  iat: number;
+  sub: string | number;
+  username: number;
+}
+```
+
+`packages/server/src/auth/jwt.strategy.ts`
+
+```typescript
+import { ExtractJwt, Strategy } from 'passport-jwt';
+import { PassportStrategy } from '@nestjs/passport';
+import { Injectable } from '@nestjs/common';
+import { jwtConstants } from './constants';
+
+@Injectable()
+export class JwtStrategy extends PassportStrategy(Strategy) {
+  // strategy requires some initialization
+  constructor() {
+    super({
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ignoreExpiration: false,
+      secretOrKey: jwtConstants.secret,
+    });
+  }
+
+  async validate(payload: JwtPayload) {
+    return {
+      userId: payload.sub,
+      username: payload.username,
+    };
+  }
+}
+```
+
+Add the new `JwtStrategy` as a provider in the `AuthModule`
+
+```typescript
+import { JwtStrategy } from './jwt.strategy';
+...
+providers: [AuthService, LocalStrategy, JwtStrategy]
+...
+```
+
+### Authentication: [Implement protected route and JWT strategy guards](https://docs.nestjs.com/techniques/authentication#implement-protected-route-and-jwt-strategy-guards)
+
+implement protected route and its associated Guard.
+
+update `packages/server/src/app.controller.ts` adding `/me` routte
+
+```typescript
+  ...
+  @UseGuards(AuthGuard('jwt'))
+  @ApiUseTags(swaggerModuleTagAuth)
+  @Get(`/${swaggerApiPath}/me`)
+  getProfile(@Request() req) {
+    return req.user;
+  }
+}
+```
+
+test the routes using cURL.
+
+```shell
+$ # GET /api/me
+$ curl -k -X GET https://localhost:3443/api/me
+# {"statusCode":401,"error":"Unauthorized"}
+# POST /api/login
+$ curl -k -X POST https://localhost:3443/api/login -d '{"username": "john", "password": "changeme"}' -H "Content-Type: application/json"
+# {"accessToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2Vybm... }
+# GET /api/me using accessToken returned from previous step as bearer code
+$ JWT=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG4iLCJzdWIiOjEsImlhdCI6MTU2NjE1NTUzMiwiZXhwIjoxNTY2MTU5MTMyfQ.odYGDW2O_DTXKaz3l3oikhAtDgUSmxdWvjIqPODCicU
+$ curl -k -X GET https://localhost:3443/api/me -H "Authorization: Bearer ${JWT}"
+# {"userId":1,"username":"john"}
+```
+
+### Authentication: [Default strategy](https://docs.nestjs.com/techniques/authentication#default-strategy)
+
+We need to do this because we've introduced two Passport strategies (`passport-local` and `passport-jwt`), both of which supply implementations of various Passport components. Passing the name disambiguates which implementation we're linking to. When multiple strategies are included in an application, **we can declare a default strategy so that we no longer have to pass the name in the `@AuthGuard` decorator** if using that default strategy. 
+Here's how to register a default strategy when importing the `PassportModule`. This code would go in the `AuthModule`:
+
+add `PassportModule.register({ defaultStrategy: 'jwt' }` to `packages/server/src/auth/auth.module.ts` imports
+
+```typescript
+...
+@Module({
+  imports: [
+    PassportModule.register({ defaultStrategy: 'jwt' }),
+    UsersModule,
+    JwtModule.register({
+      secret: jwtConstants.secret,
+      signOptions: { expiresIn: jwtConstants.expiresIn },
+    }),
+  ],
+ ...
+```
+
+to use `defaultStrategy` we need to add `PassportModule.register({ defaultStrategy: 'jwt' })` to every import module where you want to use default strategy.
+else we have an erro 500 when try to use `@UseGuards(AuthGuard())` in modules where we dont't add it to import
+
+add to `packages/server/src/participant/participant.module.ts` and `packages/server/src/person/person.module.ts`
+
+```typescript
+@Module({
+  ...
+  imports: [
+    PassportModule.register({ defaultStrategy: 'jwt' }),
+  ],
+})
+```
+
+for more info about issue read [@nestjs/jwt - Cannot read property 'challenge' of undefined](https://github.com/nestjs/nest/issues/1031)
+
+### Authentication: Guards, BearerAuth and Response decorators
+
+add jwt Guards, BearerAuth and Unauthorized Response decorator to all routes
+
+`packages/server/src/app.controller.ts`
+`packages/server/src/person/person.controller.ts`
+`packages/server/src/participant/participant.controller.ts`
+
+```typescript
+@ApiBearerAuth()
+@UseGuards(AuthGuard())
+...
+@ApiUnauthorizedResponse({ description: r.API_RESPONSE_UNAUTHORIZED })
+```
+
+### Authentication: Finish App controller Login and Profile routes
+
+first add some DTO's
+
+`packages/server/src/auth/dto/index.ts`
+
+```typescript
+export * from './login-user.dto';
+```
+
+`packages/server/src/auth/dto/login-user.dto.ts`
+
+```typescript
+import { ApiModelProperty } from '@nestjs/swagger';
+import { IsString, IsNotEmpty } from 'class-validator';
+
+export class LoginUserDto {
+  @ApiModelProperty()
+  @IsString()
+  @IsNotEmpty()
+  readonly username: string;
+
+  @ApiModelProperty()
+  @IsString()
+  @IsNotEmpty()
+  readonly password: string;
+}
+```
+
+`packages/server/src/auth/dto/login-user-response.dto.ts`
+
+```typescript
+import { ApiModelProperty } from '@nestjs/swagger';
+import { IsString } from 'class-validator';
+
+export class LoginUserResponseDto {
+  @ApiModelProperty()
+  @IsString()
+  readonly accessToken: string;
+}
+```
+
+`packages/server/src/auth/dto/get-profile-response.dto.ts`
+
+```typescript
+import { ApiModelProperty } from '@nestjs/swagger';
+import { IsString, IsNotEmpty } from 'class-validator';
+
+export class GetProfileResponseDto {
+  @ApiModelProperty()
+  @IsString()
+  @IsNotEmpty()
+  readonly userId: string;
+
+  @ApiModelProperty()
+  @IsString()
+  @IsNotEmpty()
+  readonly username: string;
+}
+```
+
+add all decorators and dto's to routes in `packages/server/src/app.controller.ts`
+
+```typescript
+  ...
+  @Post(`/${swaggerApiPath}/login`)
+  @ApiUseTags(swaggerModuleTagAuth)
+  @UseGuards(AuthGuard('local'))
+  @ApiOperation({ title: r.API_OPERATION_AUTH_LOGIN })
+  @ApiCreatedResponse({ description: r.API_RESPONSE_LOGIN, type: LoginUserResponseDto })
+  @ApiInternalServerErrorResponse({ description: r.API_RESPONSE_INTERNAL_SERVER_ERROR })
+  @ApiUnauthorizedResponse({ description: r.API_RESPONSE_UNAUTHORIZED })
+  async login(@Request() req, @Body() loginUserDto: LoginUserDto) {
+    return this.authService.login(req.user);
+  }
+
+  @Get(`/${swaggerApiPath}/me`)
+  @ApiUseTags(swaggerModuleTagAuth)
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
+  @ApiOperation({ title: r.API_OPERATION_GET_PROFILE })
+  @ApiOkResponse({ description: r.API_RESPONSE_GET_PROFILE, type: GetProfileResponseDto })
+  @ApiInternalServerErrorResponse({ description: r.API_RESPONSE_INTERNAL_SERVER_ERROR })
+  @ApiUnauthorizedResponse({ description: r.API_RESPONSE_UNAUTHORIZED })
+  getProfile(@Request() req) {
+    return req.user;
+  }
+}
+```
+
+note for: `@Body() createPersonDto` to `packages/server/src/app.controller.ts`, require to have the object in swagger parameters
+
+### Authentication: Test Swagger With Authentication
+
+1. enter <https://localhost:3443/api>
+2. expand auth swagger tag
+3. fire login request with `{ "username": "john", "password": "changeme" }`
+4. copy `accessToken` to clipboard
+5. click **authorize** button or **lock icon** and add 'Bearer PASTE-JWT-HERE'
+6. fire get profile request. or other protected resource
+
+done.....we have proptected api and use it in swagger
+
+> tip: if usign curl, and are using a self-signed certificate use `curl` with `-k` flag to -k or --insecure to allow insecure server connections when using SSL, else we have the classical response
+
+```
+curl failed to verify the legitimacy of the server and therefore could not
+establish a secure connection to it. To learn more about this situation and
+how to fix it, please visit the web page mentioned above.
+```

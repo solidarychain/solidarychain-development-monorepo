@@ -1,10 +1,11 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Logger, Param, Post } from '@nestjs/common';
-import { ApiUseTags, ApiOperation, ApiOkResponse, ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { Body, Controller, Get, HttpException, HttpStatus, Logger, Param, Post, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiOkResponse, ApiOperation, ApiUnauthorizedResponse, ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
+import { Person } from 'person-cc';
+import { restrings as r } from '../constants';
 import { swaggerModuleTagPerson } from '../env';
 import { AddPersonAttributeDto, CreatePersonDto, GetPersonByAttributeDto } from './dto';
 import { PersonService } from './person.service';
-import { restrings as r } from '../constants';
-import { Person } from 'person-cc';
 
 @Controller(swaggerModuleTagPerson)
 @ApiUseTags(swaggerModuleTagPerson)
@@ -14,9 +15,11 @@ export class PersonController {
 
   @Get('/')
   @ApiBearerAuth()
+  @UseGuards(AuthGuard())
   @ApiOperation({ title: r.API_RESPONSE_GET_ALL_PERSONS })
   @ApiOkResponse({ description: r.API_RESPONSE_FOUND_RECORDS })
   @ApiBadRequestResponse({ description: r.API_RESPONSE_BAD_REQUEST })
+  @ApiUnauthorizedResponse({ description: r.API_RESPONSE_UNAUTHORIZED })
   public getAll(): Promise<Person[]> {
     try {
       return (this.personService.getAll() as Promise<Person[]>);
@@ -27,10 +30,13 @@ export class PersonController {
   }
 
   @Get('/:id')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
   @ApiOperation({ title: r.API_RESPONSE_GET_PERSON })
   @ApiOkResponse({ description: r.API_RESPONSE_FOUND_RECORD })
   @ApiInternalServerErrorResponse({ description: r.API_RESPONSE_INTERNAL_SERVER_ERROR })
-    public async get(@Param('id') id: string): Promise<Person> {
+  @ApiUnauthorizedResponse({ description: r.API_RESPONSE_UNAUTHORIZED })
+  public async get(@Param('id') id: string): Promise<Person> {
     try {
       return await this.personService.get(id);
     } catch (err) {
@@ -41,9 +47,12 @@ export class PersonController {
   }
 
   @Post('/')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
   @ApiOperation({ title: r.API_RESPONSE_CREATE_PERSON })
   @ApiOkResponse({ description: r.API_RESPONSE_FOUND_RECORDS, type: CreatePersonDto })
   @ApiInternalServerErrorResponse({ description: r.API_RESPONSE_INTERNAL_SERVER_ERROR })
+  @ApiUnauthorizedResponse({ description: r.API_RESPONSE_UNAUTHORIZED })
   public async create(@Body() createPersonDto: CreatePersonDto): Promise<void> {
     try {
       return this.personService.create(createPersonDto.id, createPersonDto.name);
@@ -55,9 +64,12 @@ export class PersonController {
   }
 
   @Post('/:id/add-attribute')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
   @ApiOperation({ title: r.API_RESPONSE_ADD_PERSON_ATTRIBUTE })
   @ApiOkResponse({ description: r.API_RESPONSE_FOUND_RECORDS, type: AddPersonAttributeDto })
   @ApiInternalServerErrorResponse({ description: r.API_RESPONSE_INTERNAL_SERVER_ERROR })
+  @ApiUnauthorizedResponse({ description: r.API_RESPONSE_UNAUTHORIZED })
   public async addAttribute(@Param('id') id: string, @Body() addPersonAttributeDto: AddPersonAttributeDto): Promise<Person[]> {
     try {
       return (this.personService.addAttribute(id, addPersonAttributeDto.attributeId, addPersonAttributeDto.content) as Promise<Person[]>);
@@ -68,9 +80,12 @@ export class PersonController {
   }
 
   @Post('/:id/get-attribute')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
   @ApiOperation({ title: r.API_RESPONSE_ADD_PERSONS_BY_ATTRIBUTE })
   @ApiOkResponse({ description: r.API_RESPONSE_FOUND_RECORDS, type: GetPersonByAttributeDto })
   @ApiInternalServerErrorResponse({ description: r.API_RESPONSE_INTERNAL_SERVER_ERROR })
+  @ApiUnauthorizedResponse({ description: r.API_RESPONSE_UNAUTHORIZED })
   public async getByAttribute(@Param('id') id: string, @Body() getPersonByAttributeDto: GetPersonByAttributeDto): Promise<Person | Person[]> {
     try {
       return this.personService.getByAttribute(id, getPersonByAttributeDto.value);
