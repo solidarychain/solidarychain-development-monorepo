@@ -78,7 +78,7 @@ describe('Person', () => {
   it('should create a person', async () => {
     const personSample = new Person({
       id: personId,
-      name: 'Walter Montes'
+      name: 'Walter Montes',
     });
 
     await personCtrl.create(personSample);

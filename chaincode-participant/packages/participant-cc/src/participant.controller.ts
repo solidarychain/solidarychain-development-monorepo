@@ -98,6 +98,6 @@ export class ParticipantController extends ConvectorController {
 
   @Invokable()
   public async getAll(): Promise<FlatConvectorModel<Participant>[]> {
-    return (await Participant.getAll('io.worldsibu.participant')).map(participant => participant.toJSON() as any);
+    return (await Participant.getAll('io.worldsibu.examples.participant')).map(participant => participant.toJSON() as any);
   }
 }

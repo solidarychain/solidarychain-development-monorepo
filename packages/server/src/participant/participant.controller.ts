@@ -7,7 +7,7 @@ import { ParticipantControllerBackEnd } from '../convector';
 import { envVariables as e } from '../env';
 import { RegisterParticipantDto } from './dto';
 
-@Controller(e.swaggerModuleTagParticipant)
+@Controller(`${e.swaggerApiPath}/${e.swaggerModuleTagParticipant}`)
 @ApiUseTags(e.swaggerModuleTagParticipant)
 export class ParticipantController {
 

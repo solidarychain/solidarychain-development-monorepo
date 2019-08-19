@@ -2,6 +2,7 @@ import { Injectable, Logger, Inject } from '@nestjs/common';
 import { Attribute, Person } from 'person-cc';
 import { PersonControllerBackEnd } from '../convector';
 import { envVariables as e } from '../env';
+import { CreatePersonDto } from './dto';
 
 
 @Injectable()
@@ -63,9 +64,9 @@ export class PersonService {
     }
   }
 
-  public async create(id: string, name: string) {
+  public async create(createPersonDto: CreatePersonDto) {
     try {
-      const personToCreate = new Person({ id, name });
+      const personToCreate = new Person({ ...createPersonDto });
       return await PersonControllerBackEnd.create(personToCreate);
     } catch (err) {
       throw err;

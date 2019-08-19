@@ -12,6 +12,7 @@
     "couchdb",
     "hyperledger",
     "nestjs",
-    "worldsibu"
+    "worldsibu",
+    "xclip"
   ]
 }

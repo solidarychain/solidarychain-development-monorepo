@@ -27,6 +27,10 @@ $ npm test
 
 # lift hyperledger
 $ npm run env:restart
+# after restart hyperledger always seed ledger
+$ ./seed.sh
+# after restart hyperledger always create views
+$ ./views/install.sh
 
 # deploy smart contract
 $ npm run cc:start -- person
@@ -34,10 +38,17 @@ $ npm run cc:start -- person
 $ npm run cc:upgrade -- person 1.1
 # note: after deploy/upgrade wait a few second/minutes in first invoke
 
+# debug chain code
+$ npm run cc:start:debug -- person
+
 # run dev
 $ npx lerna run start:dev --scope server --stream
 # debug
 $ npx lerna run start:debug --scope server --stream
+
+# build chaincode
+$ npx lerna run build --scope person-cc
+$ npx lerna run build --scope participant-cc
 ```
 
 ## Uris and Endpoints
@@ -377,7 +388,6 @@ $ curl -X POST \
     "id":"red",
     "name": "Red Cross"
   }'
-
 # get participant person (chain)
 $ npx hurl invoke person participant_get red
 $ curl http://localhost:3000/participant/red | jq
@@ -535,8 +545,8 @@ async function bootstrap() {
   const options = new DocumentBuilder()
     .setTitle(e.swaggerModuleTitle)
     .setDescription(e.swaggerModuleDescription)
-    .setVersion(e.swaggerModuleVersion)
-    .addTag(e.swaggerModuleTagPerson)
+    // .addTag('person')
+    .addTag(`${e.swaggerApiPath}/${e.swaggerModuleTagPerson}`)
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup(e.swaggerApiPath, app, document);
@@ -787,10 +797,10 @@ one last change, change swagger scheme to https with `.setSchemes('https')` in `
 
 ```typescript
 const options = new DocumentBuilder()
-  .setTitle(swaggerModuleTitle)
-  .setDescription(swaggerModuleDescription)
-  .setVersion(swaggerModuleVersion)
-  .addTag(swaggerModuleTagPerson)
+  .setTitle(e.swaggerModuleTitle)
+  .setDescription(e.swaggerModuleDescription)
+  // .addTag('person')
+  .addTag(`${e.swaggerApiPath}/${e.swaggerModuleTagPerson}`)
   .setSchemes('https')
   .build();
 ```
@@ -1245,7 +1255,7 @@ update `packages/server/src/app.controller.ts` adding `/me` routte
 ```typescript
   ...
   @UseGuards(AuthGuard('jwt'))
-  @ApiUseTags(swaggerModuleTagAuth)
+  @ApiUseTags(`${e.swaggerApiPath}/${e.swaggerModuleTagAuth}`)
   @Get(`/${e.swaggerApiPath}/me`)
   getProfile(@Request() req) {
     return req.user;
@@ -1421,12 +1431,238 @@ note for: `@Body() createPersonDto` to `packages/server/src/app.controller.ts`, 
 5. click **authorize** button or **lock icon** and add 'Bearer PASTE-JWT-HERE'
 6. fire get profile request. or other protected resource
 
-done.....we have proptected api and use it in swagger
+done.....we have protected api and use it in swagger
 
-> tip: if usign curl, and are using a self-signed certificate use `curl` with `-k` flag to -k or --insecure to allow insecure server connections when using SSL, else we have the classical response
+> tip: if using curl with self-signed certificate use `-k`  or `--insecure` flag to allow for insecure server connections, else we have the classical response
 
 ```
 curl failed to verify the legitimacy of the server and therefore could not
 establish a secure connection to it. To learn more about this situation and
 how to fix it, please visit the web page mentioned above.
 ```
+
+## Change/Extend Person model to have authorization credentials
+
+this refactor requires change some files, to use new model properties firstName, lastName, userName, passWord and email
+
+start change person chaincode, adding a few property fields and replace `name` to `firstName`
+
+`packages/person-cc/src/person.model.ts`
+
+```typescript
+
+export class Person extends ConvectorModel<Person> {
+  @ReadOnly()
+  @Required()
+  public readonly type = 'io.worldsibu.person';
+
+  @Required()
+  @Validate(yup.string())
+  public firstName: string;
+
+  @Required()
+  @Validate(yup.string())
+  public lastName: string;
+
+  @Required()
+  @Validate(yup.string())
+  public userName: string;
+
+  @Required()
+  @Validate(yup.string()
+    .min(8, 'Password is too short - should be 8 chars minimum.')
+    .matches(/[1-9a-zA-Z]/, 'Password can only contain Latin letters and numbers.')
+  )
+  public passWord: string;
+
+  @Required()
+  @Validate(yup.string()
+    .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i, 'Invalid email')
+  )
+  public email: string;
+
+  @Validate(yup.array(Attribute.schema()))
+  public attributes: Array<Attribute>;
+}
+```
+
+change person controller to use `CreatePersonDto`
+
+`packages/server/src/person/person.controller.ts`
+
+replace id, name arguments
+
+```typescript
+public async create(@Body() createPersonDto: CreatePersonDto): Promise<void> {
+  try {
+    return this.personService.create(createPersonDto.id, createPersonDto.name);
+```
+
+with `CreatePersonDto`
+
+```typescript
+public async create(@Body() createPersonDto: CreatePersonDto): Promise<void> {
+  try {
+    return this.personService.create(createPersonDto);
+```
+
+next do the same in, replace `personService.create` arguments signature from id, name to use `CreatePersonDto`
+
+`packages/server/src/person/person.service.ts`
+
+```typescript
+public async create(id: string, name: string) {
+  try {
+    const personToCreate = new Person({ id, name });
+    return await PersonControllerBackEnd.create(personToCreate);
+  } catch (err) {
+    throw err;
+  }
+}
+```
+
+change to
+
+```typescript
+public async create(createPersonDto: CreatePersonDto) {
+  try {
+    const personToCreate = new Person({ ...createPersonDto });
+    return await PersonControllerBackEnd.create(personToCreate);
+  } catch (err) {
+    throw err;
+  }
+}
+```
+
+to finish refactor, we must change `person.spec.ts` tests, change occurences of id, name, to id, firstName, lastName
+
+`packages/person-cc/tests/person.spec.ts`
+
+```typescript
+...
+  it('should try to create a person but no government identity has been registered', async () => {
+    const personSample = new Person({
+      id: personId,
+      firstName: 'Walter',
+      lastName: 'Montes',
+    });
+...
+  it('should create a person', async () => {
+    const personSample = new Person({
+      id: personId,
+      firstName: 'Walter',
+      lastName: 'Montes',
+    });
+
+    ...
+
+    expect(justSavedModel.firstName).to.exist;
+    expect(justSavedModel.lastName).to.exist;
+  });
+...
+  it('should try to create a person but the MIT cannot', async () => {
+    const personSample = new Person({
+      id: personId + '1111',
+      firstName: 'Walter',
+      lastName: 'Montes'
+    });  
+```
+
+change `seed.sh` to reflect new model
+
+```shell
+echo "Creating participant: Big Government"
+npx hurl invoke person participant_register gov "Big Government" -u admin
+
+echo "Creating participant: MIT"
+npx hurl invoke person participant_register mit "MIT" -u user1 -o org1
+
+echo "Creating participant: National Bank"
+npx hurl invoke person participant_register naba "National Bank" -u user1 -o org2
+
+echo "Creating person: John Doe"
+npx hurl invoke person person_create "{ \"id\": \"1-100-100\", \"firstName\": \"John\", \"lastName\": \"Doe\", \"userName\": \"johndoe\", \"passWord\": \"12345678\", \"email\": \"john.doe@mail.com\"}" -u admin
+
+echo "Adding attribute 'birth-year' as the Big Government identity"
+npx hurl invoke person person_addAttribute "1-100-100" "{\"id\": \"birth-year\", \"certifierID\": \"gov\", \"content\": \"1993\", \"issuedDate\": 1554239270 }" -u admin
+
+npx hurl invoke person person_create "{ \"id\": \"1-100-101\", \"firstName\": \"Jane\", \"lastName\": \"Doe\", \"userName\": \"janedoe\", \"passWord\": \"12345678\", \"email\": \"jane.doe@mail.com\"}" -u admin
+npx hurl invoke person person_addAttribute "1-100-101" "{\"id\": \"birth-year\", \"certifierID\": \"gov\", \"content\": \"1993\", \"issuedDate\": 1554239270 }" -u admin
+
+npx hurl invoke person person_create "{ \"id\": \"1-100-102\", \"firstName\": \"Dick\", \"lastName\": \"Doe\", \"userName\": \"dickdoe\", \"passWord\": \"12345678\", \"email\": \"dick.doe@mail.com\"}" -u admin
+npx hurl invoke person person_addAttribute "1-100-102" "{\"id\": \"birth-year\", \"certifierID\": \"gov\", \"content\": \"1988\", \"issuedDate\": 1554239270 }" -u admin
+```
+
+## Renew and Deploy new upgraded ChainCode after chaincode model Changes
+
+to prevent problems with model changes, we must renew hyperledger stack, and upgrade new chaincode with person model updated
+
+```shell
+# restart hyperledger fabric
+$ npm run env:restart
+# build chainCode
+# deploy smart contract
+$ npm run cc:start -- person
+Instantiated Chaincode at org1
+# seed ledger with new seed.sh with new model properties
+$ ./seed.sh
+# after restart hyperledger always create views
+$ ./views/install.sh
+Installing template views
+{"ok":true,"id":"_design/person","rev":"1-a1afaedf5e49e4f592a3089e599b0f8f"}
+Installed template views
+# create on more person with hurley. note: after deploy/upgrade wait a few second/minutes in first invoke
+$ npx hurl invoke person person_create "{ \"id\": \"1-100-103\", \"firstName\": \"Pete\", \"lastName\": \"Doe\", \"userName\": \"pete\", \"passWord\": \"12345678\", \"email\": \"pete.doe@example.com\"}" -u admin
+# invoke ledger to get all persons
+$ npx hurl invoke person person_getAll
+```
+
+everything seems working has expected, now we will test chaincode from server requests
+
+```shell
+# boot rest server
+$ npx lerna run start:debug --scope server --stream
+# login to get fresh accessToken and assign it to env variable with same name $accessToken (require jq installed)
+$ $( curl -k -X POST https://localhost:3443/api/login -d '{ "username": "john", "password": "changeme"}' -H 'Content-Type: application/json' | jq -r 'keys[] as $k | "export \($k)=\(.[$k])"' )
+# copy accessToken to clipboard to use in swagger or ignore and use curl with $accessToken (required xclip installed)
+$ echo $accessToken | xclip -se c
+# show last userId from ledger, to use in create person request incrementing id ex.: "1-100-103", we use next incremented id "1-100-104"
+$ curl -k -X GET https://localhost:3443/api/person -H "accept: application/json" -H "Authorization: Bearer ${accessToken}" | jq '.[-1].id'
+"1-100-103"
+# create person in ledger with curl
+$ curl -k -X POST "https://localhost:3443/api/person" \
+  -H "accept: application/json" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer ${accessToken}" \
+  -d "{ \"id\": \"1-100-104\", \"firstName\": \"Jack\", \"lastName\": \"Doe\", \"userName\": \"jack\", \"passWord\": \"12345678\", \"email\": \"jack.doe@example.com\"}"
+{"type":"Buffer","data":[]}
+# request all persons to check everything is ok
+$ curl -k -X GET "https://localhost:3443/api/person" \
+  -H "accept: application/json" \
+  -H "Authorization: Bearer ${accessToken}" | jq
+```
+
+> Note: if above error occurs request users, it seems **we forgot to create couchdb indexs** with `./views/install.sh`, install views and try again
+
+```shell
+server: {
+server:   "code": "EDOCMISSING",
+server:   "body": {
+server:     "error": "not_found",
+server:     "reason": "missing"
+server:   }
+server: }
+```
+
+
+# $ npx lerna run build --scope person-cc
+# $ npx lerna run build --scope participant-cc
+
+# upgrade smart contract, change version accordingly
+$ npm run cc:upgrade -- person 1.1
+Upgraded Chaincode at org1
+
+## Encrypt passwords with BCrypt
+
+
+

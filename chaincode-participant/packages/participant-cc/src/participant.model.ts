@@ -21,7 +21,7 @@ export class x509Identities extends ConvectorModel<x509Identities>{
 
 export class Participant extends ConvectorModel<Participant> {
   @ReadOnly()
-  public readonly type = 'io.worldsibu.participant';
+  public readonly type = 'io.worldsibu.examples.participant';
 
   @ReadOnly()
   @Required()

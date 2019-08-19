@@ -7,7 +7,7 @@ import { envVariables as e } from '../env';
 import { AddPersonAttributeDto, CreatePersonDto, GetPersonByAttributeDto } from './dto';
 import { PersonService } from './person.service';
 
-@Controller(e.swaggerModuleTagPerson)
+@Controller(`${e.swaggerApiPath}/${e.swaggerModuleTagPerson}`)
 @ApiUseTags(e.swaggerModuleTagPerson)
 export class PersonController {
 
@@ -19,6 +19,7 @@ export class PersonController {
   @ApiOperation({ title: r.API_OPERATION_GET_ALL_PERSONS })
   @ApiOkResponse({ description: r.API_RESPONSE_FOUND_RECORDS })
   @ApiBadRequestResponse({ description: r.API_RESPONSE_BAD_REQUEST })
+  @ApiInternalServerErrorResponse({ description: r.API_RESPONSE_INTERNAL_SERVER_ERROR })  
   @ApiUnauthorizedResponse({ description: r.API_RESPONSE_UNAUTHORIZED })
   public getAll(): Promise<Person[]> {
     try {
@@ -55,7 +56,7 @@ export class PersonController {
   @ApiUnauthorizedResponse({ description: r.API_RESPONSE_UNAUTHORIZED })
   public async create(@Body() createPersonDto: CreatePersonDto): Promise<void> {
     try {
-      return this.personService.create(createPersonDto.id, createPersonDto.name);
+      return this.personService.create(createPersonDto);
     } catch (err) {
       Logger.error(JSON.stringify(err));
       const message: string = (err.responses[0]) ? err.responses[0].error.message : r.API_RESPONSE_INTERNAL_SERVER_ERROR;
