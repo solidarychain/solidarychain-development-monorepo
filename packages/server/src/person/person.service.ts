@@ -1,7 +1,8 @@
 import { Injectable, Logger, Inject } from '@nestjs/common';
 import { Attribute, Person } from 'person-cc';
 import { PersonControllerBackEnd } from '../convector';
-import { couchDBView, identityId } from '../env';
+import { envVariables as e } from '../env';
+
 
 @Injectable()
 export class PersonService {
@@ -10,7 +11,7 @@ export class PersonService {
     const queryOptions = { startKey: [''], endKey: [''] };
 
     try {
-      const result = (await Person.query(Person, couchDBView, viewUrl, queryOptions)) as Person[];
+      const result = (await Person.query(Person, e.couchDBView, viewUrl, queryOptions)) as Person[];
       // map item toJson
       return await Promise.all(result.map(item => item.toJSON()));
     } catch (err) {
@@ -46,7 +47,7 @@ export class PersonService {
     attributeToAdd.issuedDate = Date.now();
 
     // Get the identity the server is using right now
-    attributeToAdd.certifierID = identityId;
+    attributeToAdd.certifierID = e.identityId;
 
     await PersonControllerBackEnd.addAttribute(id, attributeToAdd);
 

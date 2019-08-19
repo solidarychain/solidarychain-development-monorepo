@@ -3,7 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { swaggerApiPath, swaggerModuleDescription, swaggerModuleTagPerson, swaggerModuleTitle, swaggerModuleVersion, httpPort, httpsPort } from './env';
+import { envVariables as e } from './env';
 import { redirectMiddleware } from './middleware/redirect-middleware';
 // node module
 import * as fs from 'fs';
@@ -26,36 +26,30 @@ async function bootstrap() {
   );
   // enable cors
   app.enableCors();
-  // enable csrf
-  // app.use(csurf({ cookie: true }));
   // redirect middleware
   app.use(redirectMiddleware);
-  // custom cors
-  // this.expressApp.use(allowCrossDomainMiddleware);
-  // tokenGuard
-  // this.expressApp.use(tokenGuardMiddleware);
 
   // initialize SwaggerModule
   const options = new DocumentBuilder()
-    .setTitle(swaggerModuleTitle)
-    .setDescription(swaggerModuleDescription)
-    .setVersion(swaggerModuleVersion)
-    .addTag(swaggerModuleTagPerson)
+    .setTitle(e.swaggerModuleTitle)
+    .setDescription(e.swaggerModuleDescription)
+    .setVersion(e.swaggerModuleVersion)
+    .addTag(e.swaggerModuleTagPerson)
     .setSchemes('https')
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup(swaggerApiPath, app, document);
+  SwaggerModule.setup(e.swaggerApiPath, app, document);
 
   // init app
   await app.init();
 
   // boostrap servers
-  http.createServer(server).listen(httpPort, () => {
-    Logger.log(`HTTP Server running on port [${httpPort}]`);
+  http.createServer(server).listen(e.httpPort, () => {
+    Logger.log(`HTTP Server running on port [${e.httpPort}]`);
   });
-  https.createServer(httpsOptions, server).listen(httpsPort, () => {
-    Logger.log(`HTTPS Server running on port [${httpsPort}]`);
+  https.createServer(httpsOptions, server).listen(e.httpsPort, () => {
+    Logger.log(`HTTPS Server running on port [${e.httpsPort}]`);
   });
 }
 bootstrap();

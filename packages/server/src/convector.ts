@@ -5,15 +5,15 @@ import * as fs from 'fs';
 import { Participant, ParticipantController } from 'participant-cc';
 import { join, resolve } from 'path';
 import { PersonController } from 'person-cc';
-import { chaincode, channel, identityId, identityName, keyStore, networkProfile } from './env';
+import { envVariables as e } from './env';
 
 const adapter = new FabricControllerAdapter({
   txTimeout: 300000,
-  user: identityName,
-  channel,
-  chaincode,
-  keyStore: resolve(__dirname, keyStore),
-  networkProfile: resolve(__dirname, networkProfile),
+  user: e.identityName,
+  channel: e.channel,
+  chaincode: e.chaincode,
+  keyStore: resolve(__dirname, e.keyStore),
+  networkProfile: resolve(__dirname, e.networkProfile),
 });
 
 export const initAdapter = adapter.init();
@@ -25,7 +25,7 @@ export const PersonControllerBackEnd = ClientFactory(PersonController, adapter);
  */
 export async function InitServerIdentity() {
   await initAdapter;
-  const res = await ParticipantControllerBackEnd.get(identityId);
+  const res = await ParticipantControllerBackEnd.get(e.identityId);
   try {
     const serverIdentity = new Participant(res).toJSON();
 
@@ -40,7 +40,7 @@ export async function InitServerIdentity() {
   }
 }
 
-const contextPath = join(keyStore + '/' + identityName);
+const contextPath = join(e.keyStore + '/' + e.identityName);
 fs.readFile(contextPath, 'utf8', async (err, data) => {
   if (err) {
     throw new Error(`Context in ${contextPath} doesn't exist. Make sure that path resolves to your key stores folder`);

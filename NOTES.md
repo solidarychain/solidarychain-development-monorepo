@@ -351,7 +351,7 @@ export class AppService {
       host: couchDBHost,
       protocol: couchDBProtocol,
       port: couchDBPort,
-    }, couchDBView);
+    }, e.couchDBView);
   }
 }
 ```
@@ -511,12 +511,16 @@ $ npx lerna bootstrap
 add to `packages/server/src/env.ts`
 
 ```typescript
-export const swaggerModuleTitle = process.env.SWAGGER_MODULE_TITLE || 'Person ChainCode';
-export const swaggerModuleDescription = process.env.SWAGGER_MODULE_DESCRIPTION = 'Convector Person ChainCode API';
-export const swaggerModuleVersion = process.env.SWAGGER_MODULE_VERSION = '1.0';
-export const swaggerApiPath = process.env.SWAGGER_API_PATH = 'api';
-export const swaggerModuleTagPerson = process.env.SWAGGER_MODULE_TAG_PERSON = 'person';
-export const swaggerModuleTagParticipant = process.env.SWAGGER_MODULE_TAG_PERSON = 'participant';
+  ...
+  // swaggerModule
+  swaggerModuleTitle: process.env.SWAGGER_MODULE_TITLE || 'Person ChainCode',
+  swaggerModuleDescription: process.env.SWAGGER_MODULE_DESCRIPTION || 'Convector Person ChainCode API',
+  swaggerModuleVersion: process.env.SWAGGER_MODULE_VERSION || '1.0',
+  swaggerApiPath: process.env.SWAGGER_API_PATH || 'api',
+  swaggerModuleTagAuth: process.env.SWAGGER_MODULE_TAG_AUTH || 'auth',
+  swaggerModuleTagPerson: process.env.SWAGGER_MODULE_TAG_PERSON || 'person',
+  swaggerModuleTagParticipant: process.env.SWAGGER_MODULE_TAG_PERSON || 'participant',
+};
 ```
 
 add to `packages/server/src/main.ts`
@@ -529,13 +533,13 @@ async function bootstrap() {
 
   // initialize SwaggerModule
   const options = new DocumentBuilder()
-    .setTitle(swaggerModuleTitle)
-    .setDescription(swaggerModuleDescription)
-    .setVersion(swaggerModuleVersion)
-    .addTag(swaggerModuleTagPerson)
+    .setTitle(e.swaggerModuleTitle)
+    .setDescription(e.swaggerModuleDescription)
+    .setVersion(e.swaggerModuleVersion)
+    .addTag(e.swaggerModuleTagPerson)
     .build();
   const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup(swaggerApiPath, app, document);
+  SwaggerModule.setup(e.swaggerApiPath, app, document);
 
   await app.listen(3000);
 }
@@ -554,7 +558,7 @@ export class AppController {
   @Get()
   @ApiExcludeEndpoint()
   redirectToApi(@Res() response: express.Response) {
-    response.redirect(swaggerApiPath, HttpStatus.PERMANENT_REDIRECT);
+    response.redirect(e.swaggerApiPath, HttpStatus.PERMANENT_REDIRECT);
   }
 }
 ```
@@ -797,12 +801,12 @@ const options = new DocumentBuilder()
 
 ```typescript
 import { NextFunction, Request, Response } from 'express';
-import { httpsPort } from '../env';
+import { envVariables as e } from './env';
 
 // custom redirect middleware
 export const redirectMiddleware = (req: Request, res: Response, next: NextFunction) => {
   if (!/https/.test(req.protocol)) {
-    const redirectUrl = `https://${req.hostname}:${httpsPort}${req.originalUrl}`;
+    const redirectUrl = `https://${req.hostname}:${e.httpsPort}${req.originalUrl}`;
     res.redirect(redirectUrl);
   } else {
     return next();
@@ -1034,7 +1038,7 @@ import { Controller, Get, HttpStatus, Post, Request, Res, UseGuards } from '@nes
 import { AuthGuard } from '@nestjs/passport';
 import { ApiExcludeEndpoint } from '@nestjs/swagger';
 import { AppService } from './app.service';
-import { swaggerApiPath } from './env';
+import { envVariables as e } from './env';
 import express = require('express');
 
 @Controller()
@@ -1044,12 +1048,12 @@ export class AppController {
   @Get()
   @ApiExcludeEndpoint()
   redirectToApi(@Res() response: express.Response) {
-    response.redirect(swaggerApiPath, HttpStatus.PERMANENT_REDIRECT);
+    response.redirect(e.swaggerApiPath, HttpStatus.PERMANENT_REDIRECT);
   }
 
   @UseGuards(AuthGuard('local'))
-  @Post(`/${swaggerApiPath}/login`)
-  @ApiUseTags(swaggerModuleTagAuth)
+  @Post(`/${e.swaggerApiPath}/login`)
+  @ApiUseTags(e.swaggerModuleTagAuth)
   async login(@Request() req) {
     return req.user;
   }
@@ -1242,7 +1246,7 @@ update `packages/server/src/app.controller.ts` adding `/me` routte
   ...
   @UseGuards(AuthGuard('jwt'))
   @ApiUseTags(swaggerModuleTagAuth)
-  @Get(`/${swaggerApiPath}/me`)
+  @Get(`/${e.swaggerApiPath}/me`)
   getProfile(@Request() req) {
     return req.user;
   }
@@ -1381,8 +1385,8 @@ add all decorators and dto's to routes in `packages/server/src/app.controller.ts
 
 ```typescript
   ...
-  @Post(`/${swaggerApiPath}/login`)
-  @ApiUseTags(swaggerModuleTagAuth)
+  @Post(`/${e.swaggerApiPath}/login`)
+  @ApiUseTags(e.swaggerModuleTagAuth)
   @UseGuards(AuthGuard('local'))
   @ApiOperation({ title: r.API_OPERATION_AUTH_LOGIN })
   @ApiCreatedResponse({ description: r.API_RESPONSE_LOGIN, type: LoginUserResponseDto })
@@ -1392,8 +1396,8 @@ add all decorators and dto's to routes in `packages/server/src/app.controller.ts
     return this.authService.login(req.user);
   }
 
-  @Get(`/${swaggerApiPath}/me`)
-  @ApiUseTags(swaggerModuleTagAuth)
+  @Get(`/${e.swaggerApiPath}/me`)
+  @ApiUseTags(e.swaggerModuleTagAuth)
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
   @ApiOperation({ title: r.API_OPERATION_GET_PROFILE })

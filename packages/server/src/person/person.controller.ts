@@ -1,14 +1,14 @@
 import { Body, Controller, Get, HttpException, HttpStatus, Logger, Param, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiOkResponse, ApiOperation, ApiUnauthorizedResponse, ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiInternalServerErrorResponse, ApiOkResponse, ApiOperation, ApiUnauthorizedResponse, ApiUseTags } from '@nestjs/swagger';
 import { Person } from 'person-cc';
-import { restrings as r } from '../constants';
-import { swaggerModuleTagPerson } from '../env';
+import { appConstants as r } from '../constants';
+import { envVariables as e } from '../env';
 import { AddPersonAttributeDto, CreatePersonDto, GetPersonByAttributeDto } from './dto';
 import { PersonService } from './person.service';
 
-@Controller(swaggerModuleTagPerson)
-@ApiUseTags(swaggerModuleTagPerson)
+@Controller(e.swaggerModuleTagPerson)
+@ApiUseTags(e.swaggerModuleTagPerson)
 export class PersonController {
 
   constructor(public personService: PersonService) { }
@@ -16,7 +16,7 @@ export class PersonController {
   @Get('/')
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
-  @ApiOperation({ title: r.API_RESPONSE_GET_ALL_PERSONS })
+  @ApiOperation({ title: r.API_OPERATION_GET_ALL_PERSONS })
   @ApiOkResponse({ description: r.API_RESPONSE_FOUND_RECORDS })
   @ApiBadRequestResponse({ description: r.API_RESPONSE_BAD_REQUEST })
   @ApiUnauthorizedResponse({ description: r.API_RESPONSE_UNAUTHORIZED })
@@ -32,7 +32,7 @@ export class PersonController {
   @Get('/:id')
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
-  @ApiOperation({ title: r.API_RESPONSE_GET_PERSON })
+  @ApiOperation({ title: r.API_OPERATION_GET_PERSON })
   @ApiOkResponse({ description: r.API_RESPONSE_FOUND_RECORD })
   @ApiInternalServerErrorResponse({ description: r.API_RESPONSE_INTERNAL_SERVER_ERROR })
   @ApiUnauthorizedResponse({ description: r.API_RESPONSE_UNAUTHORIZED })
@@ -49,7 +49,7 @@ export class PersonController {
   @Post('/')
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
-  @ApiOperation({ title: r.API_RESPONSE_CREATE_PERSON })
+  @ApiOperation({ title: r.API_OPERATION_CREATE_PERSON })
   @ApiOkResponse({ description: r.API_RESPONSE_FOUND_RECORDS, type: CreatePersonDto })
   @ApiInternalServerErrorResponse({ description: r.API_RESPONSE_INTERNAL_SERVER_ERROR })
   @ApiUnauthorizedResponse({ description: r.API_RESPONSE_UNAUTHORIZED })
@@ -66,7 +66,7 @@ export class PersonController {
   @Post('/:id/add-attribute')
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
-  @ApiOperation({ title: r.API_RESPONSE_ADD_PERSON_ATTRIBUTE })
+  @ApiOperation({ title: r.API_OPERATION_ADD_PERSON_ATTRIBUTE })
   @ApiOkResponse({ description: r.API_RESPONSE_FOUND_RECORDS, type: AddPersonAttributeDto })
   @ApiInternalServerErrorResponse({ description: r.API_RESPONSE_INTERNAL_SERVER_ERROR })
   @ApiUnauthorizedResponse({ description: r.API_RESPONSE_UNAUTHORIZED })
@@ -82,7 +82,7 @@ export class PersonController {
   @Post('/:id/get-attribute')
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
-  @ApiOperation({ title: r.API_RESPONSE_ADD_PERSONS_BY_ATTRIBUTE })
+  @ApiOperation({ title: r.API_OPERATION_ADD_PERSONS_BY_ATTRIBUTE })
   @ApiOkResponse({ description: r.API_RESPONSE_FOUND_RECORDS, type: GetPersonByAttributeDto })
   @ApiInternalServerErrorResponse({ description: r.API_RESPONSE_INTERNAL_SERVER_ERROR })
   @ApiUnauthorizedResponse({ description: r.API_RESPONSE_UNAUTHORIZED })
