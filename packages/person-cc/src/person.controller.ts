@@ -10,6 +10,7 @@ import {
 import { Participant } from 'participant-cc';
 
 import { Person, Attribute } from './person.model';
+import { hashPassword } from './utils';
 
 @Controller('person')
 export class PersonController extends ConvectorController<ChaincodeTx> {
@@ -36,6 +37,11 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
       throw new Error(`Just the government - ID=gov - can create people - requesting organization was ${this.sender}`);
     }
 
+    // hashPassword
+    debugger;
+    person.passWord = hashPassword(person.passWord);
+
+    debugger;
     await person.save();
   }
   @Invokable()

@@ -4,7 +4,6 @@ import { PersonControllerBackEnd } from '../convector';
 import { envVariables as e } from '../env';
 import { CreatePersonDto } from './dto';
 
-
 @Injectable()
 export class PersonService {
   public async getAll() {

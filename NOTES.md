@@ -27,19 +27,31 @@ $ npm test
 
 # lift hyperledger
 $ npm run env:restart
-# after restart hyperledger always seed ledger
-$ ./seed.sh
-# after restart hyperledger always create views
-$ ./views/install.sh
 
 # deploy smart contract
 $ npm run cc:start -- person
 # upgrade smart contract
 $ npm run cc:upgrade -- person 1.1
 # note: after deploy/upgrade wait a few second/minutes in first invoke
+# package chain code: force build chaincode-person folders
+$ npm run cc:package -- person org1
+
+# after restart hyperledger always seed ledger
+$ npm run seed
+# or
+$ ./seed.sh
+# after restart hyperledger always create views
+$ ./views/install.sh
 
 # debug chain code
 $ npm run cc:start:debug -- person
+# debug container
+$ sudo docker container ls | grep "person-1.1"
+4385db3a1e90
+$ sudo docker container logs -f 4385db3a1e90
+# TODO: to confirm
+# if error occur use target debug version
+$ npm run cc:start:debug -- person 1.1
 
 # run dev
 $ npx lerna run start:dev --scope server --stream
@@ -1605,7 +1617,7 @@ $ npm run env:restart
 $ npm run cc:start -- person
 Instantiated Chaincode at org1
 # seed ledger with new seed.sh with new model properties
-$ ./seed.sh
+$ npm run seed
 # after restart hyperledger always create views
 $ ./views/install.sh
 Installing template views
@@ -1642,7 +1654,7 @@ $ curl -k -X GET "https://localhost:3443/api/person" \
   -H "Authorization: Bearer ${accessToken}" | jq
 ```
 
-> Note: if above error occurs request users, it seems **we forgot to create couchdb indexs** with `./views/install.sh`, install views and try again
+> Note: if above error occurs in server log, when request users, it because **we forgot to create couchdb indexs**, install views with `./views/install.sh` and try again
 
 ```shell
 server: {
@@ -1654,15 +1666,71 @@ server:   }
 server: }
 ```
 
+## Start to encrypt passwords with BCrypt
 
-# $ npx lerna run build --scope person-cc
-# $ npx lerna run build --scope participant-cc
+```shell
+# install required dependencies
+$ npx lerna add bcrypt --scope person-cc --no-bootstrap
+$ npx lerna add @types/bcrypt --scope person-cc --no-bootstrap
+$ npx lerna add bcrypt --scope server --no-bootstrap
+$ npx lerna add @types/bcrypt --scope server --no-bootstrap
+$ npx lerna bootstrap
+```
 
-# upgrade smart contract, change version accordingly
+add bcrypt util to hash password `packages/person-cc/src/utils.ts`. we encrypt passwords in chainCode, this way works in all modes, with chainCode hurley invokes and with curl/requests to server.
+
+```typescript
+import * as bcrypt from 'bcrypt';
+
+const bcryptSaltRounds: number = 10;
+
+export const hashPassword = (passWord: string): string => {
+  return bcrypt.hashSync(passWord, bcryptSaltRounds);
+};
+```
+
+```shell
+# upgrade smart contract
 $ npm run cc:upgrade -- person 1.1
+Installed Chaincode person version 1.1  at org2
+Upgrading Chaincode person version 1.1 at org1 for channel ch1
+It may take a few minutes depending on the chaincode dependencies
 Upgraded Chaincode at org1
+# create another user
+$ npx hurl invoke person person_create "{ \"id\": \"1-100-105\", \"firstName\": \"Luke\", \"lastName\": \"Doe\", \"userName\": \"luke\", \"passWord\": \"12345678\", \"email\": \"luke.doe@example.com\"}" -u admin
+# invoke ledger to get all persons
+$ npx hurl invoke person person_get 1-100-105
+[hurley] - Result: {"_email":"luke.doe@example.com","_firstName":"Luke","_id":"1-100-105","_lastName":"Doe","_passWord":"$2b$10$pitp5NpCT62QTLGi.xpvZe6/BgCjxeBbUJBWAMBokdP2rWAtJGqkW","_type":"io.worldsibu.person","_userName":"luke"}
+# done we have bcrypt'ed the passwords
+{
+  "_id": "1-100-105",
+  "_rev": "1-bf7ead9f4b1c63c5f3d34d2d71de8f3c",
+  "email": "luke.doe@example.com",
+  "firstName": "Luke",
+  "id": "1-100-105",
+  "lastName": "Doe",
+  "passWord": "$2b$10$pitp5NpCT62QTLGi.xpvZe6/BgCjxeBbUJBWAMBokdP2rWAtJGqkW",
+  "type": "io.worldsibu.person",
+  "userName": "luke",
+  "~version": "\u0000CgMBFAA="
+}
+```
 
-## Encrypt passwords with BCrypt
+## Implement UsersService with ledger Persons/Users authentication
+
+First we start to remove moked users and replace it with ledger persons, next we validate bcrypted passwords.
 
 
+export const checkUserPassword = async (username: string, password: string): Promise<boolean> => {
+  //... fetch user from a db etc.
+  // const match = await bcrypt.compare(password, user.passwordHash);
+  // if (match) {
+  //   //login
+  // }
+  // //
+  return Promise.resolve(false);
+};
+
+
+remove moked users from user.service
 

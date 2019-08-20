@@ -25,6 +25,8 @@
     "@nestjs/passport": "^6.1.0",
     "@nestjs/platform-express": "^6.0.0",
     "@nestjs/swagger": "^3.1.0",
+    "@types/bcrypt": "^3.0.0",
+    "bcrypt": "^3.0.6",
     "class-transformer": "^0.2.3",
     "class-validator": "^0.10.0",
     "participant-cc": "^0.1.0",
