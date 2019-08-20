@@ -37,13 +37,11 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
       throw new Error(`Just the government - ID=gov - can create people - requesting organization was ${this.sender}`);
     }
 
-    // hashPassword
-    debugger;
+    // hashPassword before save model
     person.passWord = hashPassword(person.passWord);
-
-    debugger;
     await person.save();
   }
+
   @Invokable()
   public async addAttribute(
     @Param(yup.string())
@@ -95,7 +93,6 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     } else {
       person.attributes.push(attribute);
     }
-
     await person.save();
   }
 
@@ -113,7 +110,8 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
 
   @Invokable()
   public async getAll(): Promise<FlatConvectorModel<Person>[]> {
-    return (await Person.getAll('io.worldsibu.person')).map(person => person.toJSON() as any);
+    return (await Person.getAll('io.worldsibu.person'))
+    .map(person => person.toJSON() as any);
   }
 
   @Invokable()
@@ -123,7 +121,6 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     @Param(yup.mixed())
     value: any
   ) {
-
     return await Person.query(Person, {
       'selector': {
         'attributes': {
