@@ -1,5 +1,7 @@
 {
   "files.exclude": {
+    ".trash/": true,
+    ".src/": true,
     "**/node_modules/": true,
     // The following will hide the js and map files in the editor
     "**/*.js": true,
@@ -10,7 +12,9 @@
     "Invokable",
     "chaincode",
     "couchdb",
+    "firstname",
     "hyperledger",
+    "lastname",
     "nestjs",
     "worldsibu",
     "xclip"

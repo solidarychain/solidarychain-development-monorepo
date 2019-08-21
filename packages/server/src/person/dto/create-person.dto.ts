@@ -8,19 +8,19 @@ export class CreatePersonDto {
 
   @ApiModelProperty()
   @IsString()
-  readonly firstName: string;
+  readonly firstname: string;
 
   @ApiModelProperty()
   @IsString()
-  readonly lastName: string;
+  readonly lastname: string;
 
   @ApiModelProperty()
   @IsString()
-  readonly userName: string;
+  readonly username: string;
 
   @ApiModelProperty()
   @IsString()
-  readonly passWord: string;
+  readonly password: string;
 
   @ApiModelProperty()
   @IsString()

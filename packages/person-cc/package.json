@@ -14,6 +14,7 @@
     "test": "npm run build && mocha -r ts-node/register tests/*.spec.ts --reporter spec"
   },
   "dependencies": {
+    "@convector-rest-sample/common": "0.1.0",
     "@types/bcrypt": "^3.0.0",
     "@worldsibu/convector-core": "~1.3.0",
     "@worldsibu/convector-platform-fabric": "~1.3.0",

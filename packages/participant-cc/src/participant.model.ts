@@ -1,15 +1,12 @@
+import { appConstants as c } from '@convector-rest-sample/common';
+import { ConvectorModel, FlatConvectorModel, ReadOnly, Required, Validate } from '@worldsibu/convector-core';
 import * as yup from 'yup';
-import {
-  ConvectorModel,
-  ReadOnly,
-  Required,
-  Validate,
-  FlatConvectorModel
-} from '@worldsibu/convector-core';
 
 export class x509Identities extends ConvectorModel<x509Identities>{
   @ReadOnly()
-  public readonly type = 'io.worldsibu.examples.x509identity';
+  // TODO:
+  // public readonly type = 'io.worldsibu.examples.x509identity';
+  public readonly type = c.CONVECTOR_MODEL_PATH_X509IDENTITY;
 
   @Validate(yup.boolean())
   @Required()
@@ -21,7 +18,9 @@ export class x509Identities extends ConvectorModel<x509Identities>{
 
 export class Participant extends ConvectorModel<Participant> {
   @ReadOnly()
-  public readonly type = 'io.worldsibu.examples.participant';
+  // TODO:
+  // public readonly type = 'io.worldsibu.examples.participant';
+  public readonly type = c.CONVECTOR_MODEL_PATH_PARTICIPANT;
 
   @ReadOnly()
   @Required()

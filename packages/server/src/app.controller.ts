@@ -19,6 +19,7 @@ export class AppController {
     response.redirect(e.swaggerApiPath, HttpStatus.PERMANENT_REDIRECT);
   }
 
+  // @Body Dto using only to help swagger to have request parameters with Dto props
   @Post(`/${e.swaggerApiPath}/login`)
   @ApiUseTags(e.swaggerModuleTagAuth)
   // implicit using authGuard local (non defaultStrategy)
@@ -28,6 +29,7 @@ export class AppController {
   @ApiInternalServerErrorResponse({ description: c.API_RESPONSE_INTERNAL_SERVER_ERROR })
   @ApiUnauthorizedResponse({ description: c.API_RESPONSE_UNAUTHORIZED })
   async login(@Request() req, @Body() loginUserDto: LoginUserDto) {
+    // return { accessToken } object, or { Unauthorized object } in case of login fail
     return this.authService.login(req.user);
   }
 

@@ -7,15 +7,15 @@ const API_RESPONSE_UNAUTHORIZED: string = 'Unauthorized';
 const API_RESPONSE_FOUND_RECORD: string = 'The found record';
 const API_RESPONSE_FOUND_RECORDS: string = 'The found records';
 // api: model participants
-const API_OPERATION_GET_PARTICIPANT: string  = 'Get Participant';
-const API_OPERATION_GET_ALL_PARTICIPANTS: string  = 'Get all Participants';
-const API_OPERATION_REGISTER_PARTICIPANT: string  = 'Register Participant';
+const API_OPERATION_GET_PARTICIPANT: string = 'Get Participant';
+const API_OPERATION_GET_ALL_PARTICIPANTS: string = 'Get all Participants';
+const API_OPERATION_REGISTER_PARTICIPANT: string = 'Register Participant';
 // api: model persons
-const API_OPERATION_GET_PERSON: string  = 'Get Person';
-const API_OPERATION_GET_ALL_PERSONS: string  = 'Get all Persons';
-const API_OPERATION_CREATE_PERSON: string  = 'Register Person';
-const API_OPERATION_ADD_PERSON_ATTRIBUTE: string  = 'Add person attribute';
-const API_OPERATION_ADD_PERSONS_BY_ATTRIBUTE: string  = 'Get person(s) by attribute';
+const API_OPERATION_GET_PERSON: string = 'Get Person';
+const API_OPERATION_GET_ALL_PERSONS: string = 'Get all Persons';
+const API_OPERATION_CREATE_PERSON: string = 'Register Person';
+const API_OPERATION_ADD_PERSON_ATTRIBUTE: string = 'Add person attribute';
+const API_OPERATION_ADD_PERSONS_BY_ATTRIBUTE: string = 'Get person(s) by attribute';
 // api: auth
 const API_OPERATION_AUTH_LOGIN: string = 'Login user';
 const API_OPERATION_GET_PROFILE: string = 'Get user profile';

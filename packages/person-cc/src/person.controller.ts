@@ -1,15 +1,8 @@
-import * as yup from 'yup';
+import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
-import {
-  Controller,
-  ConvectorController,
-  Invokable,
-  Param,
-  FlatConvectorModel
-} from '@worldsibu/convector-core';
 import { Participant } from 'participant-cc';
-
-import { Person, Attribute } from './person.model';
+import * as yup from 'yup';
+import { Attribute, Person } from './person.model';
 import { hashPassword } from './utils';
 
 @Controller('person')
@@ -38,7 +31,7 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     }
 
     // hashPassword before save model
-    person.passWord = hashPassword(person.passWord);
+    person.password = hashPassword(person.password);
     await person.save();
   }
 
@@ -110,7 +103,7 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
 
   @Invokable()
   public async getAll(): Promise<FlatConvectorModel<Person>[]> {
-    return (await Person.getAll('io.worldsibu.person'))
+    return (await Person.getAll('io.worldsibu.example.person'))
     .map(person => person.toJSON() as any);
   }
 
@@ -129,6 +122,19 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
             'content': value
           }
         }
+      }
+    });
+  }
+
+  @Invokable()
+  public async getByUsername(
+    @Param(yup.string())
+    username: string,
+  ) {
+    return await Person.query(Person, {
+      'selector': {
+        type: 'io.worldsibu.example.person',
+        username
       }
     });
   }

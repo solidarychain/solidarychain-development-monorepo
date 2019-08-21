@@ -53,9 +53,9 @@ $ sudo docker container logs -f 4385db3a1e90
 # if error occur use target debug version
 $ npm run cc:start:debug -- person 1.1
 
-# run dev
+# run dev server
 $ npx lerna run start:dev --scope server --stream
-# debug
+# debug dev server
 $ npx lerna run start:debug --scope server --stream
 
 # build chaincode
@@ -333,7 +333,7 @@ $ curl -H "Content-Type: application/json" --request POST --data '{ "id":"1-0020
 
 # Add a new attribute
 $ curl -H "Content-Type: application/json" --request POST --data '{ "attributeId":"birth-year", "content": 1993 }' http://localhost:3000/person/1-00200-2222-1/add-attribute
-{"id":"1-00200-2222-1","type":"io.worldsibu.person","name":"John Doe","attributes":[{"certifierID":"gov","content":1993,"id":"birth-year","issuedDate":1565561317567,"type":"io.worldsibu.attribute"}]}
+{"id":"1-00200-2222-1","type":"io.worldsibu.person","name":"John Doe","attributes":[{"certifierID":"gov","content":1993,"id":"birth-year","issuedDate":1565561317567,"type":"io.worldsibu.example.attribute"}]}
 
 # orderer logs
 2019-08-11 21:54:02.746 UTC [comm.grpc.server] 1 -> INFO 015 streaming call completed {"grpc.start_time": "2019-08-11T21:54:02.738Z", "grpc.service": "orderer.AtomicBroadcast", "grpc.method": "Broadcast", "grpc.peer_address": "172.23.0.1:45590", "grpc.code": "OK", "grpc.call_duration": "8.294983ms"}
@@ -1455,9 +1455,9 @@ how to fix it, please visit the web page mentioned above.
 
 ## Change/Extend Person model to have authorization credentials
 
-this refactor requires change some files, to use new model properties firstName, lastName, userName, passWord and email
+this refactor requires change some files, to use new model properties firstname, lastname, username, password and email
 
-start change person chaincode, adding a few property fields and replace `name` to `firstName`
+start change person chaincode, adding a few property fields and replace `name` to `firstname`
 
 `packages/person-cc/src/person.model.ts`
 
@@ -1466,26 +1466,26 @@ start change person chaincode, adding a few property fields and replace `name` t
 export class Person extends ConvectorModel<Person> {
   @ReadOnly()
   @Required()
-  public readonly type = 'io.worldsibu.person';
+  public readonly type = 'io.worldsibu.example.person';
 
   @Required()
   @Validate(yup.string())
-  public firstName: string;
+  public firstname: string;
 
   @Required()
   @Validate(yup.string())
-  public lastName: string;
+  public lastname: string;
 
   @Required()
   @Validate(yup.string())
-  public userName: string;
+  public username: string;
 
   @Required()
   @Validate(yup.string()
     .min(8, 'Password is too short - should be 8 chars minimum.')
     .matches(/[1-9a-zA-Z]/, 'Password can only contain Latin letters and numbers.')
   )
-  public passWord: string;
+  public password: string;
 
   @Required()
   @Validate(yup.string()
@@ -1546,7 +1546,7 @@ public async create(createPersonDto: CreatePersonDto) {
 }
 ```
 
-to finish refactor, we must change `person.spec.ts` tests, change occurences of id, name, to id, firstName, lastName
+to finish refactor, we must change `person.spec.ts` tests, change occurences of id, name, to id, firstname, lastname
 
 `packages/person-cc/tests/person.spec.ts`
 
@@ -1555,28 +1555,28 @@ to finish refactor, we must change `person.spec.ts` tests, change occurences of 
   it('should try to create a person but no government identity has been registered', async () => {
     const personSample = new Person({
       id: personId,
-      firstName: 'Walter',
-      lastName: 'Montes',
+      firstname: 'Walter',
+      lastname: 'Montes',
     });
 ...
   it('should create a person', async () => {
     const personSample = new Person({
       id: personId,
-      firstName: 'Walter',
-      lastName: 'Montes',
+      firstname: 'Walter',
+      lastname: 'Montes',
     });
 
     ...
 
-    expect(justSavedModel.firstName).to.exist;
-    expect(justSavedModel.lastName).to.exist;
+    expect(justSavedModel.firstname).to.exist;
+    expect(justSavedModel.lastname).to.exist;
   });
 ...
   it('should try to create a person but the MIT cannot', async () => {
     const personSample = new Person({
       id: personId + '1111',
-      firstName: 'Walter',
-      lastName: 'Montes'
+      firstname: 'Walter',
+      lastname: 'Montes'
     });  
 ```
 
@@ -1593,15 +1593,15 @@ echo "Creating participant: National Bank"
 npx hurl invoke person participant_register naba "National Bank" -u user1 -o org2
 
 echo "Creating person: John Doe"
-npx hurl invoke person person_create "{ \"id\": \"1-100-100\", \"firstName\": \"John\", \"lastName\": \"Doe\", \"userName\": \"johndoe\", \"passWord\": \"12345678\", \"email\": \"john.doe@mail.com\"}" -u admin
+npx hurl invoke person person_create "{ \"id\": \"1-100-100\", \"firstname\": \"John\", \"lastname\": \"Doe\", \"username\": \"johndoe\", \"password\": \"12345678\", \"email\": \"john.doe@mail.com\"}" -u admin
 
 echo "Adding attribute 'birth-year' as the Big Government identity"
 npx hurl invoke person person_addAttribute "1-100-100" "{\"id\": \"birth-year\", \"certifierID\": \"gov\", \"content\": \"1993\", \"issuedDate\": 1554239270 }" -u admin
 
-npx hurl invoke person person_create "{ \"id\": \"1-100-101\", \"firstName\": \"Jane\", \"lastName\": \"Doe\", \"userName\": \"janedoe\", \"passWord\": \"12345678\", \"email\": \"jane.doe@mail.com\"}" -u admin
+npx hurl invoke person person_create "{ \"id\": \"1-100-101\", \"firstname\": \"Jane\", \"lastname\": \"Doe\", \"username\": \"janedoe\", \"password\": \"12345678\", \"email\": \"jane.doe@mail.com\"}" -u admin
 npx hurl invoke person person_addAttribute "1-100-101" "{\"id\": \"birth-year\", \"certifierID\": \"gov\", \"content\": \"1993\", \"issuedDate\": 1554239270 }" -u admin
 
-npx hurl invoke person person_create "{ \"id\": \"1-100-102\", \"firstName\": \"Dick\", \"lastName\": \"Doe\", \"userName\": \"dickdoe\", \"passWord\": \"12345678\", \"email\": \"dick.doe@mail.com\"}" -u admin
+npx hurl invoke person person_create "{ \"id\": \"1-100-102\", \"firstname\": \"Dick\", \"lastname\": \"Doe\", \"username\": \"dickdoe\", \"password\": \"12345678\", \"email\": \"dick.doe@mail.com\"}" -u admin
 npx hurl invoke person person_addAttribute "1-100-102" "{\"id\": \"birth-year\", \"certifierID\": \"gov\", \"content\": \"1988\", \"issuedDate\": 1554239270 }" -u admin
 ```
 
@@ -1624,7 +1624,7 @@ Installing template views
 {"ok":true,"id":"_design/person","rev":"1-a1afaedf5e49e4f592a3089e599b0f8f"}
 Installed template views
 # create on more person with hurley. note: after deploy/upgrade wait a few second/minutes in first invoke
-$ npx hurl invoke person person_create "{ \"id\": \"1-100-103\", \"firstName\": \"Pete\", \"lastName\": \"Doe\", \"userName\": \"pete\", \"passWord\": \"12345678\", \"email\": \"pete.doe@example.com\"}" -u admin
+$ npx hurl invoke person person_create "{ \"id\": \"1-100-103\", \"firstname\": \"Pete\", \"lastname\": \"Doe\", \"username\": \"pete\", \"password\": \"12345678\", \"email\": \"pete.doe@example.com\"}" -u admin
 # invoke ledger to get all persons
 $ npx hurl invoke person person_getAll
 ```
@@ -1646,7 +1646,7 @@ $ curl -k -X POST "https://localhost:3443/api/person" \
   -H "accept: application/json" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer ${accessToken}" \
-  -d "{ \"id\": \"1-100-104\", \"firstName\": \"Jack\", \"lastName\": \"Doe\", \"userName\": \"jack\", \"passWord\": \"12345678\", \"email\": \"jack.doe@example.com\"}"
+  -d "{ \"id\": \"1-100-104\", \"firstname\": \"Jack\", \"lastname\": \"Doe\", \"username\": \"jack\", \"password\": \"12345678\", \"email\": \"jack.doe@example.com\"}"
 {"type":"Buffer","data":[]}
 # request all persons to check everything is ok
 $ curl -k -X GET "https://localhost:3443/api/person" \
@@ -1684,8 +1684,8 @@ import * as bcrypt from 'bcrypt';
 
 const bcryptSaltRounds: number = 10;
 
-export const hashPassword = (passWord: string): string => {
-  return bcrypt.hashSync(passWord, bcryptSaltRounds);
+export const hashPassword = (password: string): string => {
+  return bcrypt.hashSync(password, bcryptSaltRounds);
 };
 ```
 
@@ -1697,28 +1697,28 @@ Upgrading Chaincode person version 1.1 at org1 for channel ch1
 It may take a few minutes depending on the chaincode dependencies
 Upgraded Chaincode at org1
 # create another user
-$ npx hurl invoke person person_create "{ \"id\": \"1-100-105\", \"firstName\": \"Luke\", \"lastName\": \"Doe\", \"userName\": \"luke\", \"passWord\": \"12345678\", \"email\": \"luke.doe@example.com\"}" -u admin
+$ npx hurl invoke person person_create "{ \"id\": \"1-100-105\", \"firstname\": \"Luke\", \"lastname\": \"Doe\", \"username\": \"luke\", \"password\": \"12345678\", \"email\": \"luke.doe@example.com\"}" -u admin
 # invoke ledger to get all persons
 $ npx hurl invoke person person_get 1-100-105
-[hurley] - Result: {"_email":"luke.doe@example.com","_firstName":"Luke","_id":"1-100-105","_lastName":"Doe","_passWord":"$2b$10$pitp5NpCT62QTLGi.xpvZe6/BgCjxeBbUJBWAMBokdP2rWAtJGqkW","_type":"io.worldsibu.person","_userName":"luke"}
+[hurley] - Result: {"_email":"luke.doe@example.com","_firstname":"Luke","_id":"1-100-105","_lastname":"Doe","_password":"$2b$10$pitp5NpCT62QTLGi.xpvZe6/BgCjxeBbUJBWAMBokdP2rWAtJGqkW","_type":"io.worldsibu.person","_username":"luke"}
 # done we have bcrypt'ed the passwords
 {
   "_id": "1-100-105",
   "_rev": "1-bf7ead9f4b1c63c5f3d34d2d71de8f3c",
   "email": "luke.doe@example.com",
-  "firstName": "Luke",
+  "firstname": "Luke",
   "id": "1-100-105",
-  "lastName": "Doe",
-  "passWord": "$2b$10$pitp5NpCT62QTLGi.xpvZe6/BgCjxeBbUJBWAMBokdP2rWAtJGqkW",
+  "lastname": "Doe",
+  "password": "$2b$10$pitp5NpCT62QTLGi.xpvZe6/BgCjxeBbUJBWAMBokdP2rWAtJGqkW",
   "type": "io.worldsibu.person",
-  "userName": "luke",
+  "username": "luke",
   "~version": "\u0000CgMBFAA="
 }
 ```
 
 ## Implement UsersService with ledger Persons/Users authentication
 
-First we start to remove moked users and replace it with ledger persons, next we validate bcrypted passwords.
+First we start to remove moked users and replace it with ledger persons, next we validate login bcrypted passwords.
 
 
 export const checkUserPassword = async (username: string, password: string): Promise<boolean> => {
@@ -1731,6 +1731,278 @@ export const checkUserPassword = async (username: string, password: string): Pro
   return Promise.resolve(false);
 };
 
+## Create common Package to share stuff
 
-remove moked users from user.service
+start create a lerna package for typescript, with transpiled javascript code
 
+`packages/common/tsconfig.json`
+
+```json
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "."
+  },
+  "include": [
+    "./src/**/*"
+  ]
+}
+```
+
+`packages/common/package.json`
+
+```json
+{
+  "name": "@convector-rest-sample/common",
+  "version": "0.1.0",
+  "main": "dist/src/index",
+  "types": "dist/src/index",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "npm run clean && tsc",
+    "clean": "rm -rf ./dist",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "typescript": "3.4.3"
+  }
+}
+```
+
+> Note: the paths `"main": "dist/src/index"` and `"types": "dist/src/index"` are important and must point to location of the index file, if we use a wrong path, we get errors using the package
+
+create the index to export package files
+
+`packages/common/src/index.ts`
+
+```typescript
+export * from './constants';
+```
+
+`packages/common/src/constants.ts`
+
+```typescript
+// convector model
+const CONVECTOR_MODEL_PATH_PREFIX: string = 'io.worldsibu.examples';
+const CONVECTOR_MODEL_PATH_PARTICIPANT: string = `${CONVECTOR_MODEL_PATH_PREFIX}.participant`;
+const CONVECTOR_MODEL_PATH_PERSON: string = `${CONVECTOR_MODEL_PATH_PREFIX}.person`;
+const CONVECTOR_MODEL_PATH_ATTRIBUTE: string = `${CONVECTOR_MODEL_PATH_PREFIX}.attribute`;
+const CONVECTOR_MODEL_PATH_X509IDENTITY: string = `${CONVECTOR_MODEL_PATH_PREFIX}.x509identity`;
+
+export const appConstants = {
+  CONVECTOR_MODEL_PATH_PARTICIPANT,
+  CONVECTOR_MODEL_PATH_PERSON,
+  CONVECTOR_MODEL_PATH_ATTRIBUTE,
+  CONVECTOR_MODEL_PATH_X509IDENTITY,
+};
+```
+
+now add the common package to all packages in monorepo
+
+```shell
+# add to all packages (without scope)
+$ npx lerna add @convector-rest-sample/common@0.1.0
+# to prevent some problems always use same version has in local package
+# clean and bootstrap
+$ npx lerna clean -y && npx lerna bootstrap
+```
+
+optional can use `--scope` to add only to desired packages
+
+```shell
+# add to all packages (with scope)
+$ npx lerna add @convector-rest-sample/common@0.1.0 --scope server --no-bootstrap
+$ npx lerna add @convector-rest-sample/common@0.1.0 --scope participant-cc --no-bootstrap
+$ npx lerna add @convector-rest-sample/common@0.1.0 --scope person-cc --no-bootstrap
+# clean and bootstrap
+$ npx lerna clean -y && npx lerna bootstrap --hoist
+```
+
+now test `@convector-rest-sample/common` in server, add this lines to top of `packages/server/src/app.ts`
+to confirm that everything is working has expected
+
+```typescript
+import { appConstants as c } from '@convector-rest-sample/common';
+debugger;
+Logger.log(JSON.stringify(c, undefined, 2));
+debugger;
+```
+
+now launch server with debugger, and inspect `c` object or view log result
+
+```shell
+$ npx lerna run start:debug --scope server --stream
+```
+
+if outputs appConstants we are ready to go, and common package works has expected
+
+### Use common package inside ChainCode
+
+To use common package inside chaincode, is very tricky, and I lost a few hours to get it work, thanks to Walter and Diego from WorldSibu I get it.
+The problem is that currently, in convector there is no easy way to use packages, that are not controllers, for this to work we must create a fake controller in `@convector-rest-sample/common` to put it to work
+
+first install required controller dependency
+
+```shell
+# install dependency
+$ npx lerna add @worldsibu/convector-core --scope @convector-rest-sample/common
+```
+
+next we must create a fake controller in `packages/common/src/common.controller.ts`
+
+```typescript
+import { Controller, Invokable } from '@worldsibu/convector-core';
+
+@Controller('common')
+export class CommonController {
+  @Invokable()
+  public async greeting() {
+    return 'Hello from CommonController';
+  }
+}
+```
+
+dont't forget add `export * from './common.controller';` to `packages/common/src/index.ts` to export controller
+
+```typescript
+export * from './constants';
+export * from './common.controller';
+```
+
+after that we must change `chaincode.config.json` to add the fake controller, this is a hell of a hack, we use a fake controller to force the `@convector-rest-sample/common` to be copied inside `chaincode-person` dir, without this, the `@convector-rest-sample/common` is not copied and we have a broken chain code when we try deploy it with `cc:start` or `cc:upgrade` it always show the annoying error `npm ERR! 404 Not Found: @convector-rest-sample/common@0.1.0`
+
+first change `chaincode.config.json`, if don't have it, copy `org1.person.config.json` to `chaincode.config.json`
+
+in my case I have only the legacy files `org1.participant.config.json`, `org1.person.config.json`, `org2.participant.config.json` and `org2.person.config.json`, this files can be deleted (Diego tip)
+
+ok, move on add another controller above `person-cc`
+
+```json
+{
+  "name": "person-cc",
+  ...
+},
+{
+  "name": "@convector-rest-sample/common",
+  "version": "file:./packages/common",
+  "controller": "CommonController"
+}
+```
+
+Note: this is another tricky part, the `name` is the package name, like the one we use in imports, `version` is the path location inside of our build `chaincode-person`
+
+before build chaincode we must change our models to use the new common constants from `@convector-rest-sample/common` ex `c.CONVECTOR_MODEL_PATH_X509IDENTITY`
+
+`packages/participant-cc/src/participant.model.ts`
+
+```typescript
+import { appConstants as c } from '@convector-rest-sample/common';
+...
+export class x509Identities extends ConvectorModel<x509Identities>{
+  @ReadOnly()
+  public readonly type = c.CONVECTOR_MODEL_PATH_X509IDENTITY;
+  ...
+export class Participant extends ConvectorModel<Participant> {
+  @ReadOnly()
+  public readonly type = c.CONVECTOR_MODEL_PATH_PARTICIPANT;
+  ...
+```
+
+`packages/person-cc/src/person.model.ts`
+
+```typescript
+import { appConstants as c } from '@convector-rest-sample/common';
+...
+export class Attribute extends ConvectorModel<Attribute>{
+  @ReadOnly()
+  @Required()
+  public readonly type = c.CONVECTOR_MODEL_PATH_ATTRIBUTE;
+  ...
+export class Person extends ConvectorModel<Person> {
+  @ReadOnly()
+  @Required()
+  public readonly type = 'io.worldsibu.example.person';
+  ...
+```
+
+now we can `cc:package` the chaincode `chaincode-person`, this will package the chaincode with our `@convector-rest-sample/common` inside it with packages `person-cc` and `participant-cc` using our `@convector-rest-sample/common` constants
+
+```shell
+# first remove chaincode (optional)
+$ rm chaincode-person -r
+# now manually invoke package command
+$ npm run cc:package -- person org1
+```
+
+after package our chaincode is advised to check if common package is copied to `chaincode-person` folder to the right path
+
+```shell
+$ ls -la chaincode-person/packages
+chaincode-person/packages/@convector-rest-sample
+chaincode-person/packages/participant-cc
+chaincode-person/packages/person-cc
+```
+
+another good practice is check if inside `chaincode-person` folder, in file `chaincode-person/package.json`, if our `@convector-rest-sample/common` was added to `dependencies`, in above json block we can see it's add line `"@convector-rest-sample/common": "file:./package/@convector-rest-sample/common"`, this is created based on our changes in `chaincode.config.json` remember, when we add the fake controller
+
+```shell
+"dependencies": {
+  "@theledger/fabric-chaincode-utils": "^4.0.1",
+  "@worldsibu/convector-core": "^1.3.3",
+  "@worldsibu/convector-storage-stub": "^1.3.3",
+  "reflect-metadata": "^0.1.12",
+  "tslib": "^1.9.0",
+  "participant-cc": "file:./packages/participant-cc",
+  "person-cc": "file:./packages/person-cc",
+  "@convector-rest-sample/common": "file:./packages/@convector-rest-sample/common"
+},
+```
+
+done now we can deploy our chaincode with `cc:start` or `cc:upgrade`
+
+to check that everything is fine from start, we restart our stack, and start from the beginning, warning it destroy all data, if don't want to destroy data use `cc:upgrade`
+
+```shell
+$ npm run env:restart
+$ npm run cc:start -- person
+# seed ledger
+$ npm run seed
+# create couchdb  views
+$ ./views/install.sh
+# invoke person_create
+$ npx hurl invoke person person_create "{ \"id\": \"1-100-103\", \"firstname\": \"Pete\", \"lastname\": \"Doe\", \"username\": \"pete\", \"password\": \"12345678\", \"email\": \"pete.doe@example.com\"}" -u admin
+# invoke some stuff (wait for first invoke finish)
+$ npx hurl invoke person person_getAll
+```
+
+done, if we check couchdb `1-100-103` person, we can check that is using type `"type": "io.worldsibu.examples.person"` that comes from our constants in our `@convector-rest-sample/common`
+
+for future changes in chaincode, upgrade it with
+
+```shell
+$ npm run cc:upgrade -- person 1.1
+```
+
+another thing that I tried to hack it, is using `npm scripts` but it won't work because we need the modified `chaincode-person/package.json` with `"@convector-rest-sample/common": "file:./packages/@convector-rest-sample/common"` in the `dependencies`
+
+I leave it here maybe can be useful for other kind of stuff
+
+```json
+{
+  "scripts": {
+    ...
+    "cc:package": "f() { npm run lerna:build; chaincode-manager --update --config ./$2.$1.config.json --output ./chaincode-$1 package; npm run copy:indexes -- $1; npm run copy:package:common -- $1; }; f",
+    ...
+    "copy:package:common": "f () { mkdir -p ./chaincode-$1/node_modules/@convector-rest-sample/; cp -r ./packages/common/ ./chaincode-$1/node_modules/@convector-rest-sample/; }; f"
+    ...
+```
+
+to finish we can remove this files, now we use the config file `chaincode.config.json`
+
+```shell
+# remove legacy files
+rm org1.participant.config.json org1.person.config.json org2.person.config.json org2.participant.config.json
+```

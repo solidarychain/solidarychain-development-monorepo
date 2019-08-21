@@ -1,4 +1,4 @@
-import { Injectable, Logger, Inject } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Attribute, Person } from 'person-cc';
 import { PersonControllerBackEnd } from '../convector';
 import { envVariables as e } from '../env';

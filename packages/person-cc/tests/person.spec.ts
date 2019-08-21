@@ -60,8 +60,8 @@ describe('Person', () => {
   it('should try to create a person but no government identity has been registered', async () => {
     const personSample = new Person({
       id: personId,
-      firstName: 'Walter',
-      lastName: 'Montes',
+      firstname: 'Walter',
+      lastname: 'Montes',
     });
 
     await expect(personCtrl.create(personSample)).to.be.eventually
@@ -79,16 +79,16 @@ describe('Person', () => {
   it('should create a person', async () => {
     const personSample = new Person({
       id: personId,
-      firstName: 'Walter',
-      lastName: 'Montes',
+      firstname: 'Walter',
+      lastname: 'Montes',
     });
 
     await personCtrl.create(personSample);
 
     const justSavedModel = await adapter.getById<Person>(personSample.id);
 
-    expect(justSavedModel.firstName).to.exist;
-    expect(justSavedModel.lastName).to.exist;
+    expect(justSavedModel.firstname).to.exist;
+    expect(justSavedModel.lastname).to.exist;
   });
 
   it('should add a birth-year attribute through the gov identity', async () => {
@@ -123,8 +123,8 @@ describe('Person', () => {
   it('should try to create a person but the MIT cannot', async () => {
     const personSample = new Person({
       id: personId + '1111',
-      firstName: 'Walter',
-      lastName: 'Montes'
+      firstname: 'Walter',
+      lastname: 'Montes'
     });
 
     await expect(personCtrl.create(personSample)).to.be.eventually

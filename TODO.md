@@ -16,7 +16,8 @@
   
   (User must be created by organization, can be attributed to oauth2 account like gmail)
 
-- [ ] Change `io.worldsibu.examples.participant` to `io.worldsibu.participant` (must renew ledger)
+- [ ] Change `io.worldsibu.examples.*` to `io.worldsibu.*` (must renew ledger)
+  - [ ] use vars from common package
 - [ ] Change README.md
 - [ ] Extract business rules to separate file to implement UI
 - [ ] Add tests from couchdb tutorial
