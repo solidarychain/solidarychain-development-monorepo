@@ -5,8 +5,6 @@ import * as yup from 'yup';
 export class Attribute extends ConvectorModel<Attribute>{
   @ReadOnly()
   @Required()
-  // TODO:
-  // public readonly type = 'io.worldsibu.example.attribute';
   public readonly type = c.CONVECTOR_MODEL_PATH_ATTRIBUTE;
 
   @Required()
@@ -31,8 +29,6 @@ export class Attribute extends ConvectorModel<Attribute>{
 export class Person extends ConvectorModel<Person> {
   @ReadOnly()
   @Required()
-  // TODO:
-  // public readonly type = 'io.worldsibu.example.person';
   public readonly type = c.CONVECTOR_MODEL_PATH_PERSON;
 
   @Required()
@@ -56,7 +52,7 @@ export class Person extends ConvectorModel<Person> {
 
   @Required()
   @Validate(yup.string()
-    .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i, 'Invalid email')
+  .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i, 'Invalid email')
   )
   public email: string;
 

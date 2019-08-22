@@ -1716,6 +1716,14 @@ $ npx hurl invoke person person_get 1-100-105
 }
 ```
 
+
+
+
+
+
+
+
+
 ## Implement UsersService with ledger Persons/Users authentication
 
 First we start to remove moked users and replace it with ledger persons, next we validate login bcrypted passwords.
@@ -1731,9 +1739,29 @@ export const checkUserPassword = async (username: string, password: string): Pro
   return Promise.resolve(false);
 };
 
-## Create common Package to share stuff
 
-start create a lerna package for typescript, with transpiled javascript code
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Create common Package to share stuff `@convector-rest-sample/common`
+
+> this post belongs to a github project that have a `nest.js` server, but currently is not created, when I have the link I update this post
+
+- [Stack Overflow Link](https://stackoverflow.com/questions/57617080/how-to-create-a-common-package-to-share-common-logic-in-convector-packages/57617109#57617109)
+
+first we start to create a lerna package for typescript, by hand
+
+### Create lerna common package `@convector-rest-sample/common`
 
 `packages/common/tsconfig.json`
 
@@ -1824,11 +1852,12 @@ $ npx lerna clean -y && npx lerna bootstrap --hoist
 now test `@convector-rest-sample/common` in server, add this lines to top of `packages/server/src/app.ts`
 to confirm that everything is working has expected
 
+> Note: if don't have a server, skip this step right to **Use common package inside ChainCode** section
+
 ```typescript
 import { appConstants as c } from '@convector-rest-sample/common';
 debugger;
 Logger.log(JSON.stringify(c, undefined, 2));
-debugger;
 ```
 
 now launch server with debugger, and inspect `c` object or view log result
@@ -1844,7 +1873,7 @@ if outputs appConstants we are ready to go, and common package works has expecte
 To use common package inside chaincode, is very tricky, and I lost a few hours to get it work, thanks to Walter and Diego from WorldSibu I get it.
 The problem is that currently, in convector there is no easy way to use packages, that are not controllers, for this to work we must create a fake controller in `@convector-rest-sample/common` to put it to work
 
-first install required controller dependency
+first install required controller dependency in our `@convector-rest-sample/common`, this is required ut use `{ Controller, Invokable }`
 
 ```shell
 # install dependency
@@ -1865,7 +1894,7 @@ export class CommonController {
 }
 ```
 
-dont't forget add `export * from './common.controller';` to `packages/common/src/index.ts` to export controller
+don't forget to add `export * from './common.controller';` to `packages/common/src/index.ts` to export controller
 
 ```typescript
 export * from './constants';
@@ -1874,27 +1903,41 @@ export * from './common.controller';
 
 after that we must change `chaincode.config.json` to add the fake controller, this is a hell of a hack, we use a fake controller to force the `@convector-rest-sample/common` to be copied inside `chaincode-person` dir, without this, the `@convector-rest-sample/common` is not copied and we have a broken chain code when we try deploy it with `cc:start` or `cc:upgrade` it always show the annoying error `npm ERR! 404 Not Found: @convector-rest-sample/common@0.1.0`
 
-first change `chaincode.config.json`, if don't have it, copy `org1.person.config.json` to `chaincode.config.json`
+first change `chaincode.config.json`
 
-in my case I have only the legacy files `org1.participant.config.json`, `org1.person.config.json`, `org2.participant.config.json` and `org2.person.config.json`, this files can be deleted (Diego tip)
+> Tip: if don't have it in project, copy `org1.person.config.json` to `chaincode.config.json` and move on....
 
-ok, move on add another controller above `person-cc`
+in my case I have only the legacy files `org1.participant.config.json`, `org1.person.config.json`, `org2.participant.config.json` and `org2.person.config.json`
+
+> this files can be deleted (Diego tip)
+
+ok let's change `chaincode.config.json` and add another controller above `person-cc`
 
 ```json
-{
-  "name": "person-cc",
-  ...
-},
-{
-  "name": "@convector-rest-sample/common",
-  "version": "file:./packages/common",
-  "controller": "CommonController"
-}
+"controllers": [
+  {
+    "name": "participant-cc",
+    "version": "file:./packages/participant-cc",
+    "controller": "ParticipantController"
+  },
+  {
+    "name": "person-cc",
+    "version": "file:./packages/person-cc",
+    "controller": "PersonController"
+  },
+  // BO : ADD THIS
+  {
+    "name": "@convector-rest-sample/common",
+    "version": "file:./packages/common",
+    "controller": "CommonController"
+  }
+  // EO : ADD THIS
+],
 ```
 
-Note: this is another tricky part, the `name` is the package name, like the one we use in imports, `version` is the path location inside of our build `chaincode-person`
+> Note: this is another clever tricky part, the `name` is the **package name**, like the one we use in imports, `version` is the **path location** inside of our build `chaincode-person`
 
-before build chaincode we must change our models to use the new common constants from `@convector-rest-sample/common` ex `c.CONVECTOR_MODEL_PATH_X509IDENTITY`
+before build chaincode we must change our models to use the new common constants from `@convector-rest-sample/common` ex `c.CONVECTOR_MODEL_PATH_X509IDENTITY`, currently this common package only use simple constants, to keep it simple, the point is created common logic for all the packages, rest-server, front-end, packages-cc, cli-tools, etc
 
 `packages/participant-cc/src/participant.model.ts`
 
@@ -1946,9 +1989,9 @@ chaincode-person/packages/participant-cc
 chaincode-person/packages/person-cc
 ```
 
-another good practice is check if inside `chaincode-person` folder, in file `chaincode-person/package.json`, if our `@convector-rest-sample/common` was added to `dependencies`, in above json block we can see it's add line `"@convector-rest-sample/common": "file:./package/@convector-rest-sample/common"`, this is created based on our changes in `chaincode.config.json` remember, when we add the fake controller
+another good practice is check if inside `chaincode-person` folder, in file `chaincode-person/package.json`, if our `@convector-rest-sample/common` was added to `dependencies`, in above json block we can see `cc:package` script add line `"@convector-rest-sample/common": "file:./package/@convector-rest-sample/common"`, this is created based on our changes in `chaincode.config.json` remember, when we add the fake controller
 
-```shell
+```json
 "dependencies": {
   "@theledger/fabric-chaincode-utils": "^4.0.1",
   "@worldsibu/convector-core": "^1.3.3",
@@ -1957,15 +2000,20 @@ another good practice is check if inside `chaincode-person` folder, in file `cha
   "tslib": "^1.9.0",
   "participant-cc": "file:./packages/participant-cc",
   "person-cc": "file:./packages/person-cc",
+  // BO: magic line here
   "@convector-rest-sample/common": "file:./packages/@convector-rest-sample/common"
+  // EO: magic line here
 },
 ```
 
 done now we can deploy our chaincode with `cc:start` or `cc:upgrade`
 
-to check that everything is fine from start, we restart our stack, and start from the beginning, warning it destroy all data, if don't want to destroy data use `cc:upgrade`
+> Tip: if is first time use `cc:start`, if not use `cc:package`
+
+to check that everything is fine from start, we restart our hyperledger stack, and start from the beginning, **warning it destroy all data**, if don't want to destroy data don't fire `npm run env:restart` and use `cc:upgrade`, more above
 
 ```shell
+# this recreate environment and destroy all data
 $ npm run env:restart
 $ npm run cc:start -- person
 # seed ledger
@@ -1978,17 +2026,24 @@ $ npx hurl invoke person person_create "{ \"id\": \"1-100-103\", \"firstname\": 
 $ npx hurl invoke person person_getAll
 ```
 
-done, if we check couchdb `1-100-103` person, we can check that is using type `"type": "io.worldsibu.examples.person"` that comes from our constants in our `@convector-rest-sample/common`
+done, everything is working has expected and we have a `@convector-rest-sample/common` package implemented.
 
-for future changes in chaincode, upgrade it with
+if we check couchdb `1-100-103` person, we can check that is using type `"type": "io.worldsibu.examples.person"` that comes from our constants in our `@convector-rest-sample/common`, proving that it gets its value from `@convector-rest-sample/common`, believe me, if it won't wont find `@convector-rest-sample/common` it crash.....simple
+
+for future changes in chaincode, upgrade it with above command
 
 ```shell
+# upgrade chaincode
 $ npm run cc:upgrade -- person 1.1
 ```
 
-another thing that I tried to hack it, is using `npm scripts` but it won't work because we need the modified `chaincode-person/package.json` with `"@convector-rest-sample/common": "file:./packages/@convector-rest-sample/common"` in the `dependencies`
+we are done........
 
-I leave it here maybe can be useful for other kind of stuff
+### Use scripts to copy other files to chaincode
+
+another thing that I tried to hack before find the solution, is using `npm scripts` but it won't work because we need the modified `chaincode-person/package.json` with `"@convector-rest-sample/common": "file:./packages/@convector-rest-sample/common"` in the `dependencies`, but I try it......
+
+leave it here, maybe can be useful for other kind of stuff, like copy other type of stuff
 
 ```json
 {
@@ -2000,7 +2055,26 @@ I leave it here maybe can be useful for other kind of stuff
     ...
 ```
 
-to finish we can remove this files, now we use the config file `chaincode.config.json`
+> note for `npm run copy:package:common -- $1;` in `"cc:package"`, and `cp -r ./packages/common/ ./chaincode-$1/node_modules/@convector-rest-sample/; };` in `"copy:package:common"`, it works, but won't modify `chaincode-person/package.json` with lines
+
+```json
+"dependencies": {
+  "@theledger/fabric-chaincode-utils": "^4.0.1",
+  "@worldsibu/convector-core": "^1.3.3",
+  "@worldsibu/convector-storage-stub": "^1.3.3",
+  "reflect-metadata": "^0.1.12",
+  "tslib": "^1.9.0",
+  "participant-cc": "file:./packages/participant-cc",
+  "person-cc": "file:./packages/person-cc",
+  // BO: magic line here
+  "@convector-rest-sample/common": "file:./packages/@convector-rest-sample/common"
+  // EO: magic line here
+}
+```
+
+### Clean Up
+
+to finish we can remove the legacy files `org1.participant.config.json org1.person.config.json org2.person.config.json org2.participant.config.json`, now we use the config file `chaincode.config.json` (thanks for the tip Diego)
 
 ```shell
 # remove legacy files

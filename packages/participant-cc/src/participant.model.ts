@@ -4,8 +4,6 @@ import * as yup from 'yup';
 
 export class x509Identities extends ConvectorModel<x509Identities>{
   @ReadOnly()
-  // TODO:
-  // public readonly type = 'io.worldsibu.examples.x509identity';
   public readonly type = c.CONVECTOR_MODEL_PATH_X509IDENTITY;
 
   @Validate(yup.boolean())
@@ -18,8 +16,6 @@ export class x509Identities extends ConvectorModel<x509Identities>{
 
 export class Participant extends ConvectorModel<Participant> {
   @ReadOnly()
-  // TODO:
-  // public readonly type = 'io.worldsibu.examples.participant';
   public readonly type = c.CONVECTOR_MODEL_PATH_PARTICIPANT;
 
   @ReadOnly()
