@@ -33,16 +33,16 @@ export class PersonService {
     }
   }
 
-  public async getByUsername(username: string): Promise<Person> {
-    try {
-      const user = await PersonControllerBackEnd.getByUsername(username);
-      // create Person model
-      const userModel = new Person((user[0]));
-      return userModel;
-    } catch (err) {
-      throw err;
+    public async getByUsername(username: string): Promise<Person> {
+      try {
+        const user = await PersonControllerBackEnd.getByUsername(username);
+        // create Person model
+        const userModel = new Person((user[0]));
+        return userModel;
+      } catch (err) {
+        throw err;
+      }
     }
-  }
 
   public async addAttribute(id: string, attributeId: string, content: any) {
     const attribute = new Attribute(attributeId);
