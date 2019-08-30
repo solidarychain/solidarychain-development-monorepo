@@ -3,18 +3,28 @@
 		"path": "$ROOTPATH$/NOTES.md",
 		"bookmarks": [
 			{
-				"line": 46,
+				"line": 48,
 				"column": 0,
 				"label": ""
 			},
 			{
-				"line": 58,
+				"line": 57,
 				"column": 51,
 				"label": ""
 			},
 			{
-				"line": 1637,
+				"line": 1644,
 				"column": 54,
+				"label": ""
+			}
+		]
+	},
+	{
+		"path": "$ROOTPATH$/packages/person-cc/src/person.controller.ts",
+		"bookmarks": [
+			{
+				"line": 143,
+				"column": 29,
 				"label": ""
 			}
 		]

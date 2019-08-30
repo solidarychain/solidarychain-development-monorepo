@@ -9,20 +9,24 @@
 - [D] Create Endpoint GetAll Participants
 - [D] Https and CORS
 - [D] Create GitLab Repository for project `NodeNestJsHyperLedgerConvectorRestStarter`
-- [ ] Static Content: Root show Read Me or Redirect to React FrontEnd
-
+- [D] Change `io.worldsibu.examples.*` to `io.worldsibu.*` (must renew ledger)
+  - [D] use vars from common package
 - [ ] Ledger authentication, ex users are created in a ledger by one organization, that creates user and its password, store users auth on ledger on couchdb
-  - `packages/server/src/auth/jwt.strategy.ts` For example, we could do a database lookup in our validate() method to extract more information about the user, resulting in a more enriched user object being available in our Request. This is also the place we may decide to do further token validation, such as looking up the userId in a list of revoked tokens, enabling us to perform token revocation
-  
+  - `packages/server/src/auth/jwt.strategy.ts` For example, we could do a database lookup in our validate() method to extract more information about the user, resulting in a more enriched user object being available in our Request. This is also the place we may decide to do further token validation, such as looking up the userId in a list of revoked tokens, enabling us to perform token revocation  
   (User must be created by organization, can be attributed to oauth2 account like gmail)
+  [X] User must belong to one organization, else usernames can collide in same Ledger, store Participant relation in Person.Participant
+    [ ] Create 2 or more users with same username, but in different Participants
 
-- [ ] Change `io.worldsibu.examples.*` to `io.worldsibu.*` (must renew ledger)
-  - [ ] use vars from common package
 - [ ] Change README.md
-- [ ] Extract business rules to separate file to implement UI
-- [ ] Add tests from couchdb tutorial
-- [ ] Debug SmartContract
-- [ ] Explore the Blocks <https://docs.worldsibu.com/article/92-explore-blocks>
-- [ ] CouchDb UserService <https://docs.worldsibu.com/article/101-tutorial-advanced-couchdb#direct-couchdb>
 - [ ] Branch/TAG final REST project, and fork it to start TypeGraphQL
+
+- [ ] Debug SmartContract
+- [ ] Static Content: Redirect to front end. Root show Read Me or Redirect to React FrontEnd
+- [ ] Extract business rules to separate file to implement UI
+- [ ] Add more tests, ex add from couchdb tutorial
+- [ ] Add Explore the Blocks <https://docs.worldsibu.com/article/92-explore-blocks>
+- [ ] CouchDb UserService <https://docs.worldsibu.com/article/101-tutorial-advanced-couchdb#direct-couchdb>
 - [ ] Nest.js/GraphQL with AuthGuards
+
+add filter Participant
+nao e o gov e a entidade q esta a rolar ligada ao blockchain

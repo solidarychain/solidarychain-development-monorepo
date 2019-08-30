@@ -6,6 +6,7 @@ import { CreatePersonDto } from './dto';
 
 @Injectable()
 export class PersonService {
+
   public async getAll() {
     const viewUrl = '_design/person/_view/all';
     const queryOptions = { startKey: [''], endKey: [''] };
@@ -27,6 +28,17 @@ export class PersonService {
   public async get(id: string): Promise<Person> {
     try {
       return new Person(await PersonControllerBackEnd.get(id));
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  public async getByUsername(username: string): Promise<Person> {
+    try {
+      const user = await PersonControllerBackEnd.getByUsername(username);
+      // create Person model
+      const userModel = new Person((user[0]));
+      return userModel;
     } catch (err) {
       throw err;
     }

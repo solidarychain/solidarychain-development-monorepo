@@ -1,9 +1,10 @@
+import { appConstants as c } from '@convector-rest-sample/common';
 import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
 import { Participant } from 'participant-cc';
 import * as yup from 'yup';
 import { Attribute, Person } from './person.model';
-import { hashPassword } from './utils';
+import { getParticipantByIdentity, hashPassword } from './utils';
 
 @Controller('person')
 export class PersonController extends ConvectorController<ChaincodeTx> {
@@ -12,12 +13,31 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     @Param(Person)
     person: Person
   ) {
-    let exists = await Person.getOne(person.id);
+    // get host participant from fingerprint
+    const participant: Participant = await getParticipantByIdentity(this.sender);
+    if (!!participant && !participant.id) {
+      throw new Error('There is no participant with that identity');
+    }
+
+    const exists = await Person.getOne(person.id);
     if (!!exists && exists.id) {
       throw new Error('There is a person registered with that Id already');
     }
-    let gov = await Participant.getOne('gov');
 
+    const existsUsername = await Person.query(Person, {
+      'selector': {
+        type: c.CONVECTOR_MODEL_PATH_PERSON,
+        username: person.username,
+        participant: {
+          id: participant.id
+        }
+      }
+    });
+    if (!!existsUsername && exists.id) {
+      throw new Error('There is a person registered with that username already');
+    }
+
+    let gov = await Participant.getOne('gov');
     if (!gov || !gov.identities) {
       throw new Error('No government identity has been registered yet');
     }
@@ -30,8 +50,11 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
       throw new Error(`Just the government - ID=gov - can create people - requesting organization was ${this.sender}`);
     }
 
+    // add participant
+    person.participant = gov;
     // hashPassword before save model
     person.password = hashPassword(person.password);
+
     await person.save();
   }
 
@@ -103,8 +126,8 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
 
   @Invokable()
   public async getAll(): Promise<FlatConvectorModel<Person>[]> {
-    return (await Person.getAll('io.worldsibu.example.person'))
-    .map(person => person.toJSON() as any);
+    return (await Person.getAll(c.CONVECTOR_MODEL_PATH_PERSON))
+      .map(person => person.toJSON() as any);
   }
 
   @Invokable()
@@ -131,11 +154,23 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     @Param(yup.string())
     username: string,
   ) {
-    return await Person.query(Person, {
+    // get host participant from fingerprint
+    const participant: Participant = await getParticipantByIdentity(this.sender);
+    // TODO:
+    console.log('participant', JSON.stringify(participant, undefined, 2));
+
+    const existing = await Person.query(Person, {
       'selector': {
-        type: 'io.worldsibu.example.person',
-        username
+        type: c.CONVECTOR_MODEL_PATH_PERSON,
+        username,
+        participant: {
+          id: participant.id
+        }
       }
     });
+    if (!existing || !existing[0].id) {
+      throw new Error(`No person exists with that username ${username}`);
+    }
+    return existing;
   }
 }

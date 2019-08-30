@@ -47,4 +47,7 @@ export const envVariables: any = {
   swaggerModuleTagAuth: process.env.SWAGGER_MODULE_TAG_AUTH || 'auth',
   swaggerModuleTagPerson: process.env.SWAGGER_MODULE_TAG_PERSON || 'person',
   swaggerModuleTagParticipant: process.env.SWAGGER_MODULE_TAG_PERSON || 'participant',
+
+  // authService : true: moked users array, false: or ledger person(users) authentication
+  authServiceUseMokedUsers: process.env.AUTH_SERVICE_USE_MOKED_USERS || true,
 };

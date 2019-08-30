@@ -1,16 +1,8 @@
-import * as yup from 'yup';
-
-import {
-  Controller,
-  ConvectorController,
-  Invokable,
-  Param,
-  BaseStorage,
-  FlatConvectorModel
-} from '@worldsibu/convector-core';
-
-import { Participant } from './participant.model';
+import { appConstants as c } from '@convector-rest-sample/common';
+import { BaseStorage, Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ClientIdentity } from 'fabric-shim';
+import * as yup from 'yup';
+import { Participant } from './participant.model';
 
 @Controller('participant')
 export class ParticipantController extends ConvectorController {
@@ -81,6 +73,7 @@ export class ParticipantController extends ConvectorController {
       fingerprint: newIdentity,
       status: true
     });
+    
     await existing.save();
   }
 
@@ -98,6 +91,6 @@ export class ParticipantController extends ConvectorController {
 
   @Invokable()
   public async getAll(): Promise<FlatConvectorModel<Participant>[]> {
-    return (await Participant.getAll('io.worldsibu.examples.participant')).map(participant => participant.toJSON() as any);
+    return (await Participant.getAll(c.CONVECTOR_MODEL_PATH_PARTICIPANT)).map(participant => participant.toJSON() as any);
   }
 }

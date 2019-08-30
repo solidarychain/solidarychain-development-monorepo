@@ -1,4 +1,5 @@
-// WIP: require to share common packages without controllers
+// Warn if changes model, change views to ex
+// "map": "function(doc) {if (doc.type.toUpperCase() === 'io.worldsibu.examples.person'...
 
 // convector model
 const CONVECTOR_MODEL_PATH_PREFIX: string = 'io.worldsibu.examples';

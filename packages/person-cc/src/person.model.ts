@@ -1,6 +1,7 @@
 import { appConstants as c } from '@convector-rest-sample/common';
-import { ConvectorModel, Default, ReadOnly, Required, Validate } from '@worldsibu/convector-core';
+import { ConvectorModel, Default, ReadOnly, Required, Validate, FlatConvectorModel } from '@worldsibu/convector-core';
 import * as yup from 'yup';
+import { Participant } from 'participant-cc';
 
 export class Attribute extends ConvectorModel<Attribute>{
   @ReadOnly()
@@ -58,4 +59,12 @@ export class Person extends ConvectorModel<Person> {
 
   @Validate(yup.array(Attribute.schema()))
   public attributes: Array<Attribute>;
+
+  @Default(['USER'])
+  @Validate(yup.array().of(yup.string()))
+  public roles: Array<String>;
+
+  @Required()
+  @Validate(Participant.schema())
+  public participant: FlatConvectorModel<Participant>;
 }

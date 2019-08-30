@@ -2,6 +2,7 @@
   "files.exclude": {
     ".trash/": true,
     ".src/": true,
+    ".bak/": true,
     "**/node_modules/": true,
     // The following will hide the js and map files in the editor
     "**/*.js": true,
@@ -10,6 +11,7 @@
   "cSpell.words": [
     "EDOCMISSING",
     "Invokable",
+    "Moked",
     "chaincode",
     "couchdb",
     "firstname",

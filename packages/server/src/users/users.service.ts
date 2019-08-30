@@ -1,10 +1,9 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
 import { PersonService } from '../person/person.service';
+import { envVariables as e } from '../env';
+import { appConstants as c } from '../constants';
 
 export type User = any;
-
-// enable this to use moke users array, default to ledger person users
-const useMokeUsers = false;
 
 @Injectable()
 export class UsersService {
@@ -13,17 +12,17 @@ export class UsersService {
   constructor(private readonly personService: PersonService) {
     this.users = [
       {
-        userId: 1,
+        id: 1,
         username: 'john',
         password: 'changeme',
       },
       {
-        userId: 2,
+        id: 2,
         username: 'chris',
         password: 'secret',
       },
       {
-        userId: 3,
+        id: 3,
         username: 'maria',
         password: 'guess',
       },
@@ -31,17 +30,16 @@ export class UsersService {
   }
 
   async findOne(username: string): Promise<User | undefined> {
-    // use above moke users array
-    // if (useMokeUsers) {
+    if (e.authServiceUseMokedUsers === 'true') {
       return this.users.find(user => user.username === username);
-    // } else {
-    //   try {
-    //     return await this.personService.get(id);
-    //   } catch (err) {
-    //     Logger.error(JSON.stringify(err));
-    //     const message: string = (err.responses[0]) ? err.responses[0].error.message : r.API_RESPONSE_INTERNAL_SERVER_ERROR;
-    //     throw new HttpException(message, HttpStatus.INTERNAL_SERVER_ERROR);
-    //   }
-    // }
+    } else {
+      try {
+        return await this.personService.getByUsername(username);
+      } catch (err) {
+        Logger.error(JSON.stringify(err));
+        const message: string = (err.responses[0]) ? err.responses[0].error.message : c.API_RESPONSE_INTERNAL_SERVER_ERROR;
+        throw new HttpException(message, HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+    }
   }
 }

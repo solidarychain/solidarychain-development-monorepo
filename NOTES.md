@@ -2,6 +2,8 @@
 
 This is a simple NestJs starter, based on above links, I only extended it with a few things like swagger api, https, jwt, and other stuff, thanks m8s
 
+IMPORTANT NOTE: used node `v8.16.0` without issues
+
 ## Links Used
 
 ### WorldSibu
@@ -45,10 +47,7 @@ $ ./views/install.sh
 
 # debug chain code
 $ npm run cc:start:debug -- person
-# debug container
-$ sudo docker container ls | grep "person-1.1"
-4385db3a1e90
-$ sudo docker container logs -f 4385db3a1e90
+
 # TODO: to confirm
 # if error occur use target debug version
 $ npm run cc:start:debug -- person 1.1
@@ -61,6 +60,14 @@ $ npx lerna run start:debug --scope server --stream
 # build chaincode
 $ npx lerna run build --scope person-cc
 $ npx lerna run build --scope participant-cc
+
+# invoke some stuff
+npx hurl invoke person person_get 1-100-100
+
+# debug container
+$ sudo docker container ls | grep "person-1.1"
+4385db3a1e90
+$ sudo docker container logs -f 4385db3a1e90
 ```
 
 ## Uris and Endpoints
@@ -333,7 +340,7 @@ $ curl -H "Content-Type: application/json" --request POST --data '{ "id":"1-0020
 
 # Add a new attribute
 $ curl -H "Content-Type: application/json" --request POST --data '{ "attributeId":"birth-year", "content": 1993 }' http://localhost:3000/person/1-00200-2222-1/add-attribute
-{"id":"1-00200-2222-1","type":"io.worldsibu.person","name":"John Doe","attributes":[{"certifierID":"gov","content":1993,"id":"birth-year","issuedDate":1565561317567,"type":"io.worldsibu.example.attribute"}]}
+{"id":"1-00200-2222-1","type":"io.worldsibu.person","name":"John Doe","attributes":[{"certifierID":"gov","content":1993,"id":"birth-year","issuedDate":1565561317567,"type":"io.worldsibu.examples.attribute"}]}
 
 # orderer logs
 2019-08-11 21:54:02.746 UTC [comm.grpc.server] 1 -> INFO 015 streaming call completed {"grpc.start_time": "2019-08-11T21:54:02.738Z", "grpc.service": "orderer.AtomicBroadcast", "grpc.method": "Broadcast", "grpc.peer_address": "172.23.0.1:45590", "grpc.code": "OK", "grpc.call_duration": "8.294983ms"}
@@ -742,7 +749,7 @@ ex
   @ApiOkResponse({ description: r.API_RESPONSE_FOUND_RECORDS })
   @ApiBadRequestResponse({ description: r.API_RESPONSE_BAD_REQUEST })
   public async getAll() {
-    ...
+  ...
 ```
 
 > Note: view source code files
@@ -1466,7 +1473,7 @@ start change person chaincode, adding a few property fields and replace `name` t
 export class Person extends ConvectorModel<Person> {
   @ReadOnly()
   @Required()
-  public readonly type = 'io.worldsibu.example.person';
+  public readonly type = 'io.worldsibu.examples.person';
 
   @Required()
   @Validate(yup.string())
@@ -1716,43 +1723,6 @@ $ npx hurl invoke person person_get 1-100-105
 }
 ```
 
-
-
-
-
-
-
-
-
-## Implement UsersService with ledger Persons/Users authentication
-
-First we start to remove moked users and replace it with ledger persons, next we validate login bcrypted passwords.
-
-
-export const checkUserPassword = async (username: string, password: string): Promise<boolean> => {
-  //... fetch user from a db etc.
-  // const match = await bcrypt.compare(password, user.passwordHash);
-  // if (match) {
-  //   //login
-  // }
-  // //
-  return Promise.resolve(false);
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## Create common Package to share stuff `@convector-rest-sample/common`
 
 > this post belongs to a github project that have a `nest.js` server, but currently is not created, when I have the link I update this post
@@ -1967,7 +1937,7 @@ export class Attribute extends ConvectorModel<Attribute>{
 export class Person extends ConvectorModel<Person> {
   @ReadOnly()
   @Required()
-  public readonly type = 'io.worldsibu.example.person';
+  public readonly type = 'io.worldsibu.examples.person';
   ...
 ```
 
@@ -2080,3 +2050,272 @@ to finish we can remove the legacy files `org1.participant.config.json org1.pers
 # remove legacy files
 rm org1.participant.config.json org1.person.config.json org2.person.config.json org2.participant.config.json
 ```
+
+Note: don't forget to update `packages.json` `"cc:package"` with new `./chaincode.config.json` file, replace `$2.$1.config.json` with `chaincode.config.json`
+
+`package.json`
+
+```json
+"cc:package": "f() { npm run lerna:build; chaincode-manager --update --config ./chaincode.config.json --output ./chaincode-$1 package; npm run copy:indexes -- $1; }; f",
+```
+
+## Implement UsersService with ledger Persons/Users authentication
+
+to start implement users authentication with chaincode, and to test it with moked array of users in `users.service.ts` we create a configuration variable in `env.ts` to use moked or chaincode users.
+
+`env.ts`
+
+```typescript
+// authService : true: moked users array, false: or ledger person(users) authentication
+authServiceUseMokedUsers: process.env.AUTH_SERVICE_USE_MOKED_USERS || true
+```
+
+add to `.env` `AUTH_SERVICE_USE_MOKED_USERS=false` to use ledger authentication
+
+next we extend `Person` model with properties for `roles`, `participant`, participant is useful to link users to participants/organizations, this way we can have duplicated usernames for different organizations, this way users don't collide
+
+`packages/person-cc/src/person.model.ts`
+
+```typescript
+...
+import { Participant } from 'participant-cc';
+...
+export class Person extends ConvectorModel<Person> {
+  ...
+
+  @Default(['USER'])
+  @Validate(yup.array().of(yup.string()))
+  public roles: Array<String>;
+
+  @Required()
+  @Validate(Participant.schema())
+  public participant: FlatConvectorModel<Participant>;
+}
+```
+
+next add `getParticipantByIdentity` function to utils, useful to get current participant from identity inside convector controllers, for more info read [How can I get participant/organization inside convector controllers?](https://stackoverflow.com/questions/57641763/how-can-i-get-participant-organization-inside-convector-controllers)
+
+`packages/person-cc/src/utils.ts`
+
+```typescript
+import { appConstants as c } from '@convector-rest-sample/common';
+...
+import { Participant } from 'participant-cc';
+...
+export const getParticipantByIdentity = async (fingerprint: string): Promise<Participant> => {
+  const participant: Participant | Participant[] = await Participant.query(Participant, {
+    selector: {
+      type: c.CONVECTOR_MODEL_PATH_PARTICIPANT,
+      identities: {
+        $elemMatch: {
+          fingerprint,
+          status: true
+        }
+      }
+    }
+  });
+
+  if (!!participant && !participant[0].id) {
+    throw new Error('Cant find a participant with that fingerprint');
+  }
+  return participant[0];
+}
+```
+
+next we move to `PersonController` to extend `create` method with new `participant` property, and implement a `getByUsername` chaincode method to get `Person` from username in our chaincode methods, useful for logins that use username
+
+`packages/person-cc/src/person.controller.ts`
+
+```typescript
+import { appConstants as c } from '@convector-rest-sample/common';
+...
+import { getParticipantByIdentity, hashPassword } from './utils';
+
+@Controller('person')
+export class PersonController extends ConvectorController<ChaincodeTx> {
+  @Invokable()
+  public async create(
+    @Param(Person)
+    person: Person
+  ) {
+    // get host participant from fingerprint
+    const participant: Participant = await getParticipantByIdentity(this.sender);
+    if (!!participant && !participant.id) {
+      throw new Error('There is no participant with that identity');
+    }
+
+    const exists = await Person.getOne(person.id);
+    if (!!exists && exists.id) {
+      throw new Error('There is a person registered with that Id already');
+    }
+
+    const existsUsername = await Person.query(Person, {
+      'selector': {
+        type: c.CONVECTOR_MODEL_PATH_PERSON,
+        username: person.username,
+        participant: {
+          id: participant.id
+        }
+      }
+    });
+    if (!!existsUsername && exists.id) {
+      throw new Error('There is a person registered with that username already');
+    }
+
+    let gov = await Participant.getOne('gov');
+    if (!gov || !gov.identities) {
+      throw new Error('No government identity has been registered yet');
+    }
+    const govActiveIdentity = gov.identities.find(identity => identity.status === true);
+
+    if (!govActiveIdentity) {
+      throw new Error('No active identity found for participant');
+    }
+    if (this.sender !== govActiveIdentity.fingerprint) {
+      throw new Error(`Just the government - ID=gov - can create people - requesting organization was ${this.sender}`);
+    }
+
+    // add participant
+    person.participant = gov;
+    // hashPassword before save model
+    person.password = hashPassword(person.password);
+
+    await person.save();
+  }
+  ...
+
+  @Invokable()
+  public async getByUsername(
+    @Param(yup.string())
+    username: string,
+  ) {
+    // get host participant from fingerprint
+    const participant: Participant = await getParticipantByIdentity(this.sender);
+    console.log('participant', JSON.stringify(participant, undefined, 2));
+
+    const existing = await Person.query(Person, {
+      'selector': {
+        type: c.CONVECTOR_MODEL_PATH_PERSON,
+        username,
+        participant: {
+          id: participant.id
+        }
+      }
+    });
+    if (!existing || !existing[0].id) {
+      throw new Error(`No person exists with that username ${username}`);
+    }
+    return existing;
+  }
+}
+```
+
+we are done with `PersonController` moving forward to `PersonService` to implement `getByUsername` method, to comunicate with chaincode method with same name, implemented above
+
+`packages/server/src/person/person.service.ts`
+
+```typescript
+...
+public async getByUsername(username: string): Promise<Person> {
+  try {
+    const user = await PersonControllerBackEnd.getByUsername(username);
+    // create Person model
+    const userModel = new Person((user[0]));
+    return userModel;
+  } catch (err) {
+    throw err;
+  }
+}
+...
+```
+
+change `findOne` method on `UsersService` to use both methods moked users and ledger, based on config `AUTH_SERVICE_USE_MOKED_USERS` environment variable
+
+`packages/server/src/users/users.service.ts`
+
+```typescript
+async findOne(username: string): Promise<User | undefined> {
+  if (e.authServiceUseMokedUsers === 'true') {
+    return this.users.find(user => user.username === username);
+  } else {
+    try {
+      return await this.personService.getByUsername(username);
+    } catch (err) {
+      Logger.error(JSON.stringify(err));
+      const message: string = (err.responses[0]) ? err.responses[0].error.message : c.API_RESPONSE_INTERNAL_SERVER_ERROR;
+      throw new HttpException(message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+}
+```
+
+to finish authentication we update `AuthService` `validateUser` method
+
+`packages/server/src/auth/auth.service.ts`
+
+```typescript
+@Injectable()
+export class AuthService {
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
+  ) { }
+
+  // called by LocalStrategy
+  async validateUser(username: string, pass: string): Promise<any> {
+    const user = await this.usersService.findOne(username);
+    let authorized: boolean;
+    if (e.authServiceUseMokedUsers === 'true') {
+      authorized = (user && user.password === pass);
+    } else {
+      authorized = this.bcryptValidate(pass, (user as Person).password);
+    }
+
+    if (authorized) {
+      // protect expose password property to outside
+      // use spread operator to assign password to password, and all the other user props to result
+      // required .toJSON()
+      const { password, ...result } = user.toJSON();
+      return result;
+    }
+    return null;
+  }
+
+  // called by appController
+  async login(user: any) {
+    // note: we choose a property name of sub to hold our userId value to be consistent with JWT standards
+    const payload = { sub: user.id, username: user.username };
+    return {
+      // generate JWT from a subset of the user object properties
+      accessToken: this.jwtService.sign(payload),
+    };
+  }
+
+  bcryptValidate = (password: string, hashPassword: string): boolean => {
+    return bcrypt.compareSync(password, hashPassword);
+  }
+}
+```
+
+now we can start testing the new network authentication
+
+WIP
+
+npx hurl invoke person person_create "{ \"id\": \"1-100-103\", \"firstname\": \"Pete\", \"lastname\": \"Doe\", \"username\": \"pete\", \"password\": \"12345678\", \"email\": \"pete.doe@example.com\"}" -u admin
+
+npx hurl invoke person person_create "{\"id\":\"1-100-103\",\"firstname\":\"Pete\",\"lastname\":\"Doe\",\"username\":\"pete\",\"password\":\"12345678\",\"email\":\"pete.doe@example.com\",\"participant\":\"gov\",\"roles\":[\"USER\"]}" -u admin
+
+{
+  "id": "1-100-103",
+  "firstname": "Pete",
+  "lastname": "Doe",
+  "username": "pete",
+  "password": "12345678",
+  "email": "pete.doe@example.com",
+  "participant": "gov",
+  "roles": [
+    "USER","ADMIN"
+  ]
+}
+
+{\"id\":\"1-100-103\",\"firstname\":\"Pete\",\"lastname\":\"Doe\",\"username\":\"pete\",\"password\":\"12345678\",\"email\":\"pete.doe@example.com\",\"participant\":\"gov\",\"roles\":[\"USER\"]}
