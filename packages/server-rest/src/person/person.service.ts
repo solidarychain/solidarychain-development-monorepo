@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Attribute, Person } from 'person-cc';
+import { Attribute, Person } from '@convector-sample/person-cc';
 import { PersonControllerBackEnd } from '../convector';
 import { envVariables as e } from '../env';
 import { CreatePersonDto } from './dto';

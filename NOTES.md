@@ -62,7 +62,7 @@ $ npx lerna run build --scope person-cc
 $ npx lerna run build --scope participant-cc
 
 # invoke some stuff
-npx hurl invoke person person_get 1-100-100
+$ npx hurl invoke person person_get 1-100-100
 
 # debug container
 $ sudo docker container ls | grep "person-1.1"

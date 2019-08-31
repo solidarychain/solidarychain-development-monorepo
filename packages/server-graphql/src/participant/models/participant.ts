@@ -1,4 +1,5 @@
 import { Field, ID, ObjectType } from 'type-graphql';
+import { x509Identities } from './x509Identities';
 
 // TODO: add yup validation
 
@@ -19,5 +20,6 @@ export class Participant {
   public msp: string;
 
   // @Validate(yup.array(x509Identities.schema()))
-  // public identities: Array<FlatConvectorModel<x509Identities>>;
+  @Field(type => [x509Identities])
+  public identities: x509Identities[];
 }

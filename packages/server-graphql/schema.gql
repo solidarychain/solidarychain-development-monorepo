@@ -51,6 +51,7 @@ type Participant {
   id: ID!
   name: String!
   msp: String!
+  identities: [x509Identities!]!
 }
 
 type Person {
@@ -86,4 +87,10 @@ type Subscription {
   recipeAdded: Recipe!
   personAdded: Person!
   participantAdded: Participant!
+}
+
+type x509Identities {
+  id: ID
+  status: Boolean!
+  fingerprint: String!
 }

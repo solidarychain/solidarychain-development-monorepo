@@ -13,7 +13,7 @@ export class PersonService {
     return {} as any;
   }
 
-  async findAll(recipesArgs: PersonArgs): Promise<Person[]> {
+  async findAll(participantArgs: PersonArgs): Promise<Person[]> {
     return [] as Person[];
   }
 

@@ -4,10 +4,6 @@ import { homedir } from 'os';
 const identityOrg: string = process.env.ORG || 'org1';
 
 export const envVariables: any = {
-  // http/s server
-  httpPort: process.env.HTTP_SERVER_PORT || 3000,
-  httpsPort: process.env.HTTPS_SERVER_PORT || 8443,
-
   // chaincode: the name of the smart contract. This is given when you installed it with hurl install <name> <language>
   chaincode: process.env.CHAINCODE || 'person',
   // channel: by default a channel (ledger) is created for you with Hurley. Its name is ch1 and each subsequent channel will follow that
@@ -38,18 +34,4 @@ export const envVariables: any = {
   couchDBProtocol: process.env.COUCHDB_PROTOCOL || 'http',
   couchDBHost: process.env.COUCHDB_HOST || 'localhost',
   couchDBPort: process.env.COUCHDB_PORT || 5084,
-
-  /* REST
-  // swaggerModule
-  swaggerModuleTitle: process.env.SWAGGER_MODULE_TITLE || 'Person ChainCode',
-  swaggerModuleDescription: process.env.SWAGGER_MODULE_DESCRIPTION || 'Convector Person ChainCode API',
-  swaggerModuleVersion: process.env.SWAGGER_MODULE_VERSION || '1.0',
-  swaggerApiPath: process.env.SWAGGER_API_PATH || 'api',
-  swaggerModuleTagAuth: process.env.SWAGGER_MODULE_TAG_AUTH || 'auth',
-  swaggerModuleTagPerson: process.env.SWAGGER_MODULE_TAG_PERSON || 'person',
-  swaggerModuleTagParticipant: process.env.SWAGGER_MODULE_TAG_PERSON || 'participant',
-
-  // authService : true: moked users array, false: or ledger person(users) authentication
-  authServiceUseMokedUsers: process.env.AUTH_SERVICE_USE_MOKED_USERS || true,
-  */
 };

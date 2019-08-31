@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { envVariables as e } from '../env';
 import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
-import { Person } from 'person-cc';
+import { Person } from '@convector-sample/person-cc';
 
 @Injectable()
 export class AuthService {

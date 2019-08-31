@@ -1,7 +1,7 @@
 import { Body, Controller, Get, HttpException, HttpStatus, Logger, Param, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBadRequestResponse, ApiBearerAuth, ApiInternalServerErrorResponse, ApiOkResponse, ApiOperation, ApiUnauthorizedResponse, ApiUseTags } from '@nestjs/swagger';
-import { Person } from 'person-cc';
+import { Person } from '@convector-sample/person-cc';
 import { appConstants as c } from '../constants';
 import { envVariables as e } from '../env';
 import { AddPersonAttributeDto, CreatePersonDto, GetPersonByAttributeDto } from './dto';

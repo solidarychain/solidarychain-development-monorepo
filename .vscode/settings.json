@@ -3,9 +3,10 @@
     ".trash/": true,
     ".src/": true,
     ".bak/": true,
+    "**/dist/": true,
     "**/node_modules/": true,
     // The following will hide the js and map files in the editor
-    "**/*.js": true,
+    // "**/*.js": true,
     "**/*.map": true
   },
   "cSpell.words": [

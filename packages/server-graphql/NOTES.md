@@ -21,6 +21,10 @@ $ npx lerna add graphql-type-json --scope @convector-sample/server-graphql
 
 ## JSON Scalar Type
 
+to use `any` in grapl we must implement a custom scalar type or use the [graphql-type-json](https://github.com/taion/graphql-type-json) package
+
+- [Dynamic (Unique) Objects in GraphQl](https://stackoverflow.com/questions/33819658/dynamic-unique-objects-in-graphql)
+
 ```typescript
 import { GraphQLJSONObject } from 'graphql-type-json';
 
@@ -33,4 +37,3 @@ export class Attribute {
 ## Todo
 
 Add Yup Validations
-
