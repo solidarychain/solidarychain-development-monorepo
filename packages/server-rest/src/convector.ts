@@ -2,7 +2,7 @@ import { Logger } from '@nestjs/common';
 import { FabricControllerAdapter } from '@worldsibu/convector-adapter-fabric';
 import { ClientFactory } from '@worldsibu/convector-core';
 import * as fs from 'fs';
-import { Participant, ParticipantController } from 'participant-cc';
+import { Participant, ParticipantController } from '@convector-sample/participant-cc';
 import { join, resolve } from 'path';
 import { PersonController } from 'person-cc';
 import { envVariables as e } from './env';

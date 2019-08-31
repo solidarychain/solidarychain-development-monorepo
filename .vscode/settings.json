@@ -12,6 +12,7 @@
     "EDOCMISSING",
     "Invokable",
     "Moked",
+    "QLJSON",
     "chaincode",
     "couchdb",
     "firstname",

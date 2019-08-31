@@ -3,12 +3,42 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+type Attribute {
+  id: ID!
+  content: JSONObject!
+  issuedDate: Float!
+  expiresDate: Date!
+  expired: Boolean
+  certifierID: String!
+}
+
 """Date custom scalar type"""
 scalar Date
+
+"""
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject
 
 type Mutation {
   addRecipe(newRecipeData: NewRecipeInput!): Recipe!
   removeRecipe(id: String!): Boolean!
+  addPerson(newPersonData: NewPersonInput!): Person!
+  removePerson(id: String!): Boolean!
+  addParticipant(newParticipantData: NewParticipantInput!): Participant!
+  removeParticipant(id: String!): Boolean!
+}
+
+input NewParticipantInput {
+  title: String!
+  description: String
+  ingredients: [String!]!
+}
+
+input NewPersonInput {
+  title: String!
+  description: String
+  ingredients: [String!]!
 }
 
 input NewRecipeInput {
@@ -17,9 +47,31 @@ input NewRecipeInput {
   ingredients: [String!]!
 }
 
+type Participant {
+  id: ID!
+  name: String!
+  msp: String!
+}
+
+type Person {
+  id: ID!
+  firstname: String!
+  lastname: String!
+  username: String!
+  password: String!
+  email: String!
+  attributes: [Attribute!]!
+  roles: [String!]
+  participant: Participant!
+}
+
 type Query {
   recipe(id: String!): Recipe!
   recipes(skip: Int = 0, take: Int = 25): [Recipe!]!
+  person(id: String!): Person!
+  persons(skip: Int = 0, take: Int = 25): [Person!]!
+  participant(id: String!): Participant!
+  participants(skip: Int = 0, take: Int = 25): [Participant!]!
 }
 
 type Recipe {
@@ -32,4 +84,6 @@ type Recipe {
 
 type Subscription {
   recipeAdded: Recipe!
+  personAdded: Person!
+  participantAdded: Participant!
 }

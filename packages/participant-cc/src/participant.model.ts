@@ -1,4 +1,4 @@
-import { appConstants as c } from '@convector-rest-sample/common';
+import { appConstants as c } from '@convector-sample/common';
 import { ConvectorModel, FlatConvectorModel, ReadOnly, Required, Validate } from '@worldsibu/convector-core';
 import * as yup from 'yup';
 

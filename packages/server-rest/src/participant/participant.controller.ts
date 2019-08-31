@@ -1,7 +1,7 @@
 import { Body, Controller, Get, HttpException, HttpStatus, Logger, Param, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiUnauthorizedResponse, ApiUseTags } from '@nestjs/swagger';
-import { Participant } from 'participant-cc';
+import { Participant } from '@convector-sample/participant-cc';
 import { appConstants as c } from '../constants';
 import { ParticipantControllerBackEnd } from '../convector';
 import { envVariables as e } from '../env';

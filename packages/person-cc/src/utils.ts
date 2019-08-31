@@ -1,6 +1,6 @@
-import { appConstants as c } from '@convector-rest-sample/common';
 import * as bcrypt from 'bcrypt';
-import { Participant } from 'participant-cc';
+import { appConstants as c } from '@convector-sample/common';
+import { Participant } from '@convector-sample/participant-cc';
 
 const bcryptSaltRounds: number = 10;
 

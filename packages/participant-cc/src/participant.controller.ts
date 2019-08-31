@@ -1,4 +1,4 @@
-import { appConstants as c } from '@convector-rest-sample/common';
+import { appConstants as c } from '@convector-sample/common';
 import { BaseStorage, Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ClientIdentity } from 'fabric-shim';
 import * as yup from 'yup';

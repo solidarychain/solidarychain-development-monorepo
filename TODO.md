@@ -17,6 +17,7 @@
   [X] User must belong to one organization, else usernames can collide in same Ledger, store Participant relation in Person.Participant
     [ ] Create 2 or more users with same username, but in different Participants
 
+- [ ] Refactor `@convector-rest-sample/common` to other name (remove rest for ex to work with graphql and rest)
 - [ ] Change README.md
 - [ ] Branch/TAG final REST project, and fork it to start TypeGraphQL
 

@@ -7,7 +7,7 @@ import * as chai from 'chai';
 import { expect } from 'chai';
 import 'mocha';
 import * as chaiAsPromised from 'chai-as-promised';
-import { ParticipantController, Participant } from 'participant-cc';
+import { ParticipantController, Participant } from '@convector-sample/participant-cc';
 
 import { Person, PersonController, Attribute } from '../src';
 

@@ -1,5 +1,5 @@
 {
-  "name": "attributesDb",
+  "name": "@convector-sample/lerna-monorepo",
   "version": "0.1.0",
   "description": "Bootstrap project for Chaincodes attributesDb",
   "files": [

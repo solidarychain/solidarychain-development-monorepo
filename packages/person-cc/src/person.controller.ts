@@ -1,7 +1,7 @@
-import { appConstants as c } from '@convector-rest-sample/common';
+import { appConstants as c } from '@convector-sample/common';
 import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
-import { Participant } from 'participant-cc';
+import { Participant } from '@convector-sample/participant-cc';
 import * as yup from 'yup';
 import { Attribute, Person } from './person.model';
 import { getParticipantByIdentity, hashPassword } from './utils';
