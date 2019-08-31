@@ -4,14 +4,18 @@ import { Field, InputType } from 'type-graphql';
 @InputType()
 export class NewParticipantInput {
   @Field()
-  @MaxLength(30)
-  title: string;
+  @MaxLength(12)
+  id: string;
 
-  @Field({ nullable: true })
-  @IsOptional()
-  @Length(30, 255)
-  description?: string;
+  @Field()
+  @Length(3, 100)
+  name: string;
 
-  @Field(type => [String])
-  ingredients: string[];
+  // @Field({ nullable: true })
+  // @IsOptional()
+  // @Length(30, 255)
+  // description?: string;
+
+  // @Field(type => [String])
+  // ingredients: string[];
 }

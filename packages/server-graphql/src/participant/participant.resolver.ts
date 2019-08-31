@@ -31,13 +31,9 @@ export class ParticipantResolver {
     @Args('newParticipantData') newParticipantData: NewParticipantInput,
   ): Promise<Participant> {
     const participant = await this.participantService.create(newParticipantData);
+    // fire subscription
     pubSub.publish('participantAdded', { participantAdded: participant });
     return participant;
-  }
-
-  @Mutation(returns => Boolean)
-  async removeParticipant(@Args('id') id: string) {
-    return this.participantService.remove(id);
   }
 
   @Subscription(returns => Participant)

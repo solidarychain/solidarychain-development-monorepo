@@ -10,7 +10,12 @@ import { Participant as ParticipantConvectorModel } from '@convector-sample/part
 @Injectable()
 export class ParticipantService {
   async create(data: NewParticipantInput): Promise<Participant> {
-    return {} as any;
+    try {
+      await ParticipantControllerBackEnd.register(data.id, data.name);
+      return this.findOneById(data.id);
+    } catch (error) {
+      throw error;
+    }
   }
 
   async findOneById(id: string): Promise<Participant> {
@@ -29,17 +34,17 @@ export class ParticipantService {
   async findAll(participantArgs: ParticipantArgs): Promise<Participant[]> {
     try {
       const fabricModel: Array<FlatConvectorModel<Participant>> = await ParticipantControllerBackEnd.getAll();
-      // map fabric model to graphql Promise<Participant[]>
-      const convectorModel = await fabricModel.map((participant: Participant) => participant as Participant);
-      return convectorModel;
-      return [new Participant()];
+      // require to map fabric model to graphql Participant[]
+      return (participantArgs)
+        ? fabricModel.splice(participantArgs.skip, participantArgs.take) as Participant[]
+        : fabricModel as Participant[];
     } catch (error) {
       Logger.error(JSON.stringify(error));
       throw error;
     }
   }
 
-  async remove(id: string): Promise<boolean> {
-    return true;
-  }
+  // async remove(id: string): Promise<boolean> {
+  //   return true;
+  // }
 }

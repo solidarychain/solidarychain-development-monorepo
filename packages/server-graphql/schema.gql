@@ -26,13 +26,11 @@ type Mutation {
   addPerson(newPersonData: NewPersonInput!): Person!
   removePerson(id: String!): Boolean!
   addParticipant(newParticipantData: NewParticipantInput!): Participant!
-  removeParticipant(id: String!): Boolean!
 }
 
 input NewParticipantInput {
-  title: String!
-  description: String
-  ingredients: [String!]!
+  id: String!
+  name: String!
 }
 
 input NewPersonInput {
