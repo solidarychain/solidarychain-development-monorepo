@@ -59,7 +59,6 @@ type Person {
   firstname: String!
   lastname: String!
   username: String!
-  password: String!
   email: String!
   attributes: [Attribute!]!
   roles: [String!]
