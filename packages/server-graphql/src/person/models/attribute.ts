@@ -9,25 +9,25 @@ export class Attribute {
   id: string;
 
   // @Required()
-  @Field(type => GraphQLJSONObject)
-  public content: any;
+  @Field(type => GraphQLJSONObject, { nullable: true })
+  public content?: any;
 
   // @Required()
   // @ReadOnly()
   // @Validate(yup.number())
-  @Field()
-  public issuedDate: number;
+  @Field({ nullable: true })
+  public issuedDate?: number;
 
-  @Field()
-  public expiresDate: Date;
+  @Field({ nullable: true })
+  public expiresDate?: Date;
 
   // @Default(false)
   // @Validate(yup.boolean())
   @Field({ nullable: true })
-  public expired: boolean;
+  public expired?: boolean;
 
   // @Required()
   // @Validate(yup.string())
-  @Field()
-  public certifierID: string;
+  @Field({ nullable: true })
+  public certifierID?: string;
 }

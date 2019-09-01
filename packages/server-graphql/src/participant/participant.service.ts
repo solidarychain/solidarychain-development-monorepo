@@ -1,11 +1,10 @@
-import { Logger } from '@nestjs/common';
-import { Injectable } from '@nestjs/common';
+import { Participant as ParticipantConvectorModel } from '@convector-sample/participant-cc';
+import { Injectable, Logger } from '@nestjs/common';
+import { FlatConvectorModel } from '@worldsibu/convector-core-model';
+import { ParticipantControllerBackEnd } from '../convector';
 import { NewParticipantInput } from './dto/new-participant.input';
 import { ParticipantArgs } from './dto/participant.args';
 import { Participant } from './models/participant';
-import { ParticipantControllerBackEnd } from '../convector';
-import { FlatConvectorModel } from '@worldsibu/convector-core-model';
-import { Participant as ParticipantConvectorModel } from '@convector-sample/participant-cc';
 
 @Injectable()
 export class ParticipantService {
@@ -43,8 +42,4 @@ export class ParticipantService {
       throw error;
     }
   }
-
-  // async remove(id: string): Promise<boolean> {
-  //   return true;
-  // }
 }

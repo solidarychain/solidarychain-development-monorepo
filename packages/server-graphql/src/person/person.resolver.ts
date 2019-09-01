@@ -35,11 +35,6 @@ export class PersonResolver {
     return person;
   }
 
-  @Mutation(returns => Boolean)
-  async removePerson(@Args('id') id: string) {
-    return this.personService.remove(id);
-  }
-
   @Subscription(returns => Person)
   personAdded() {
     return pubSub.asyncIterator('personAdded');

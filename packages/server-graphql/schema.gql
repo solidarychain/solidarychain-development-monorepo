@@ -5,11 +5,11 @@
 
 type Attribute {
   id: ID!
-  content: JSONObject!
-  issuedDate: Float!
-  expiresDate: Date!
+  content: JSONObject
+  issuedDate: Float
+  expiresDate: Date
   expired: Boolean
-  certifierID: String!
+  certifierID: String
 }
 
 """Date custom scalar type"""
@@ -24,7 +24,6 @@ type Mutation {
   addRecipe(newRecipeData: NewRecipeInput!): Recipe!
   removeRecipe(id: String!): Boolean!
   addPerson(newPersonData: NewPersonInput!): Person!
-  removePerson(id: String!): Boolean!
   addParticipant(newParticipantData: NewParticipantInput!): Participant!
 }
 
@@ -34,9 +33,12 @@ input NewParticipantInput {
 }
 
 input NewPersonInput {
-  title: String!
-  description: String
-  ingredients: [String!]!
+  id: String!
+  firstname: String!
+  lastname: String!
+  username: String!
+  password: String!
+  email: String!
 }
 
 input NewRecipeInput {

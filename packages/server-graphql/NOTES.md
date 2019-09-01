@@ -34,6 +34,11 @@ export class Attribute {
   public content: any;
 ```
 
+"message": "JSONObject cannot represent non-object value: 1993"
+
+$ npx hurl invoke person participant_changeIdentity great newIdentity -u admin
+{ Error: transaction returned with failure: {"name":"Error","status":500,"message":"Unauthorized. Requester identity is not an admin"}
+
 ## Todo
 
 Add Yup Validations
