@@ -4,16 +4,30 @@
 
 DONt forget to build common package, if change something
 
-$ npx lerna run build --scope @convector-sample/common  --stream
+```shell
+# build
+$ npx lerna run build --scope @convector-sample/common --stream
+```
 
+```shell
+# start dev|debug
 $ npx lerna run start:dev --scope @convector-sample/server-graphql --stream
 $ npx lerna run start:debug --scope @convector-sample/server-graphql --stream
+```
 
 <http://localhost:3000/graphql>
 
+```shell
+# add dependencies
 $ npx lerna add participant-cc --scope @convector-sample/server-graphql
 $ npx lerna add person-cc --scope @convector-sample/server-graphql
 $ npx lerna add common --scope @convector-sample/server-graphql
+```
+
+## TypeGraphQL Notes
+
+all input types required to have names @Args('getByAttributeInput') argument, else it crash with strange errors
+@Args('getByAttributeInput') getByAttributeInput: GetByAttributeInput
 
 ## JSON Scalar Type
 
@@ -47,9 +61,10 @@ after, test with more than on attribute with
 # add some attributes
 $ npx hurl invoke person person_addAttribute 1-100-101 '{"id": "graduated-year", "certifierID": "gov", "content": "1999", "issuedDate": 1554239270 }' -u admin
 $ npx hurl invoke person person_addAttribute 1-100-101 '{"id": "marriage-year", "certifierID": "gov", "content": "2012", "issuedDate": 1554239270 }' -u admin
-
 ```
-## 
+
+## Add all Other Query/Mutations
 
 $ npx hurl invoke person participant_changeIdentity great newIdentity -u admin
 { Error: transaction returned with failure: {"name":"Error","status":500,"message":"Unauthorized. Requester identity is not an admin"}
+

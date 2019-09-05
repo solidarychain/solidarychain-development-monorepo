@@ -127,6 +127,7 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
   @Invokable()
   public async getAll(): Promise<FlatConvectorModel<Person>[]> {
     return (await Person.getAll(c.CONVECTOR_MODEL_PATH_PERSON))
+      // TODO: change any to Person
       .map(person => person.toJSON() as any);
   }
 

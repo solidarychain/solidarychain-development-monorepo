@@ -32,11 +32,11 @@ export class ParticipantService {
 
   async findAll(participantArgs: ParticipantArgs): Promise<Participant[]> {
     try {
-      const fabricModel: Array<FlatConvectorModel<Participant>> = await ParticipantControllerBackEnd.getAll();
+      const convectorModel: Array<FlatConvectorModel<Participant>> = await ParticipantControllerBackEnd.getAll();
       // require to map fabric model to graphql Participant[]
       return (participantArgs)
-        ? fabricModel.splice(participantArgs.skip, participantArgs.take) as Participant[]
-        : fabricModel as Participant[];
+        ? convectorModel.splice(participantArgs.skip, participantArgs.take) as Participant[]
+        : convectorModel as Participant[];
     } catch (error) {
       Logger.error(JSON.stringify(error));
       throw error;

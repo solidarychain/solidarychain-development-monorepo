@@ -15,6 +15,11 @@ type Attribute {
 """Date custom scalar type"""
 scalar Date
 
+input GetByAttributeInput {
+  id: String!
+  value: JSONObject
+}
+
 """
 The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -70,6 +75,7 @@ type Query {
   recipes(skip: Int = 0, take: Int = 25): [Recipe!]!
   person(id: String!): Person!
   persons(skip: Int = 0, take: Int = 25): [Person!]!
+  getByAttribute(skip: Int = 0, take: Int = 25, getByAttributeInput: GetByAttributeInput!): [Person!]!
   participant(id: String!): Participant!
   participants(skip: Int = 0, take: Int = 25): [Participant!]!
 }
