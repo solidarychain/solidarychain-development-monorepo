@@ -20,11 +20,11 @@ export class ParticipantService {
   async findOneById(id: string): Promise<Participant> {
     try {
       // get fabric model with _props
-      const participant: Participant = await ParticipantControllerBackEnd.get(id);
-      // convert fabric model to convector module _props
-      const participantModel = new ParticipantConvectorModel(participant).toJSON();
+      const fabricModel: Participant = await ParticipantControllerBackEnd.get(id);
+      // convert fabric model to convector model (remove _props)
+      const convectorModel = new ParticipantConvectorModel(fabricModel).toJSON();
       // trick: must return convector model as a graphql model, to prevent property conversion problems
-      return (participantModel as Participant);
+      return (convectorModel as Participant);
     } catch (error) {
       throw error;
     }

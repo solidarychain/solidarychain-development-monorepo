@@ -34,7 +34,7 @@ export async function InitServerIdentity() {
   await initAdapter;
   const res = await ParticipantControllerBackEnd.get(e.identityId);
   try {
-    // convert fabric model to convector module _props
+    // convert fabric model to convector model (remove _props)
     const serverIdentity = new Participant(res).toJSON();
 
     if (!serverIdentity || !serverIdentity.id) {

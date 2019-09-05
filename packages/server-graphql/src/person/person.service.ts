@@ -22,15 +22,15 @@ export class PersonService {
   async findOneById(id: string): Promise<Person> {
     try {
       // get fabric model with _props
-      const person: any = await PersonControllerBackEnd.get(id);
-      // convert fabric model to convector module _props
-      const personModel: PersonConvectorModel = new PersonConvectorModel(person);
+      const fabricModel: any = await PersonControllerBackEnd.get(id);
+      // convert fabric model to convector model (remove _props)
+      const convectorModel: PersonConvectorModel = new PersonConvectorModel(fabricModel);
       // convert attributes content to object { data: content }
-      if (Array.isArray(personModel.attributes)) {
-        personModel.attributes = this.convertAttributes(personModel);
+      if (Array.isArray(convectorModel.attributes)) {
+        convectorModel.attributes = this.convertAttributes(convectorModel);
       }
       // trick: must return convector model as a graphql model, to prevent property conversion problems
-      return (personModel as any) as Person;
+      return (convectorModel as any) as Person;
     } catch (error) {
       throw error;
     }
@@ -58,13 +58,14 @@ export class PersonService {
     }
   }
 
+  // TODO: create a function
   // TODO: add pagination args
   // TODO convertAttributes works with array or non array of fabric and convector <GENERIC> type, don't DRY THIS MAN!!!!!!!!
   async getByAttribute({ id, value }: GetByAttributeInput, personArgs: PersonArgs): Promise<Person | Person[]> {
     try {
       const fabricModel: PersonConvectorModel | PersonConvectorModel[] = await PersonControllerBackEnd.getByAttribute(id, value.data);
       if (Array.isArray(fabricModel)) {
-        // convert fabric model to convector module _props
+        // convert fabric model to convector model (remove _props)
         const convectorModel: PersonConvectorModel[] = fabricModel.map((e: PersonConvectorModel) => new PersonConvectorModel(e));
         // convert attributes content to object { data: content }
         convectorModel.forEach((e: PersonConvectorModel) => {
