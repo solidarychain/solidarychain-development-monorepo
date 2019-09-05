@@ -4,7 +4,7 @@ import { FlatConvectorModel } from '@worldsibu/convector-core';
 import { PersonControllerBackEnd } from '../convector';
 import { NewPersonInput } from './dto/new-person.input';
 import { PersonArgs } from './dto/person.args';
-import { Person } from './models/person';
+import { Person } from './models/person.model';
 
 @Injectable()
 export class PersonService {
@@ -12,7 +12,7 @@ export class PersonService {
     try {
       const personToCreate = new PersonConvectorModel({ ...data });
       await PersonControllerBackEnd.create(personToCreate);
-      return this.findOneById(data.id);
+      return await this.findOneById(data.id);
     } catch (error) {
       throw error;
     }
@@ -24,8 +24,10 @@ export class PersonService {
       const person: any = await PersonControllerBackEnd.get(id);
       // convert fabric model to convector module _props
       const personModel: PersonConvectorModel = new PersonConvectorModel(person);
-      // convert attributes
-      personModel.attributes = this.convertAttributes(personModel);
+      // convert attributes content to object { data: content }
+      if (Array.isArray(personModel.attributes)) {
+        personModel.attributes = this.convertAttributes(personModel);
+      }
       // trick: must return convector model as a graphql model, to prevent property conversion problems
       return (personModel as any) as Person;
     } catch (error) {
@@ -36,10 +38,14 @@ export class PersonService {
   async findAll(personArgs: PersonArgs): Promise<Person[]> {
     try {
       const fabricModel: Array<FlatConvectorModel<PersonConvectorModel[]>> = await PersonControllerBackEnd.getAll();
+      // convert attributes content to object { data: content }
       fabricModel.forEach((e: PersonConvectorModel) => {
-        const modifiedAttributes = this.convertAttributes(e);
-        // apply modifiedAttributes to current person
-        e.attributes = [...modifiedAttributes] as AttributeConvectorModel[];
+        // only convert attributes if have attributes array
+        if (Array.isArray(e.attributes)) {
+          const modifiedAttributes = this.convertAttributes(e);
+          // apply modifiedAttributes to current person
+          e.attributes = [...modifiedAttributes] as AttributeConvectorModel[];
+        }
       });
       // require to map fabric model to graphql Person[]
       return (personArgs)

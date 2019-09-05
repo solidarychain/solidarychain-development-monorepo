@@ -4,7 +4,7 @@ import { FlatConvectorModel } from '@worldsibu/convector-core-model';
 import { ParticipantControllerBackEnd } from '../convector';
 import { NewParticipantInput } from './dto/new-participant.input';
 import { ParticipantArgs } from './dto/participant.args';
-import { Participant } from './models/participant';
+import { Participant } from './models/participant.model';
 
 @Injectable()
 export class ParticipantService {

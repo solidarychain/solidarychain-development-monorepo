@@ -60,7 +60,7 @@ type Person {
   lastname: String!
   username: String!
   email: String!
-  attributes: [Attribute!]!
+  attributes: [Attribute!]
   roles: [String!]
   participant: Participant!
 }

@@ -159,7 +159,7 @@ v8.16.0
 
 ## SetUp
 
-1. Install/Update Hurley which will help us to set up a testing network `npm i -g @worldsibu/hurley`
+1. Install/Update Hurley which will help us to set up a testing network `sudo npm i -g @worldsibu/hurley`
 
 2. Install/Update the NestJS CLI by running `npm install -g @nestjs/cli`
 
@@ -1600,7 +1600,7 @@ echo "Creating participant: National Bank"
 npx hurl invoke person participant_register naba "National Bank" -u user1 -o org2
 
 echo "Creating person: John Doe"
-npx hurl invoke person person_create "{ \"id\": \"1-100-100\", \"firstname\": \"John\", \"lastname\": \"Doe\", \"username\": \"johndoe\", \"password\": \"12345678\", \"email\": \"john.doe@mail.com\"}" -u admin
+npx hurl invoke person person_create "{ \"id\": \"1-100-100\", \"firstname\": \"John\", \"lastname\": \"Doe\", \"username\": \"johndoe\", \"password\": \"person\", \"email\": \"john.doe@mail.com\"}" -u admin
 
 echo "Adding attribute 'birth-year' as the Big Government identity"
 npx hurl invoke person person_addAttribute "1-100-100" "{\"id\": \"birth-year\", \"certifierID\": \"gov\", \"content\": \"1993\", \"issuedDate\": 1554239270 }" -u admin
@@ -2303,7 +2303,7 @@ WIP
 
 npx hurl invoke person person_create "{ \"id\": \"1-100-103\", \"firstname\": \"Pete\", \"lastname\": \"Doe\", \"username\": \"pete\", \"password\": \"12345678\", \"email\": \"pete.doe@example.com\"}" -u admin
 
-npx hurl invoke person person_create "{\"id\":\"1-100-103\",\"firstname\":\"Pete\",\"lastname\":\"Doe\",\"username\":\"pete\",\"password\":\"12345678\",\"email\":\"pete.doe@example.com\",\"participant\":\"gov\",\"roles\":[\"USER\"]}" -u admin
+npx hurl invoke person person_create "{\"id\": \"1-100-103\",\"firstname\":\"Pete\",\"lastname\":\"Doe\",\"username\": \"pete\",\"password\": \"12345678\",\"email\": \"pete.doe@example.com\",\"roles\": [\"USER\",\"ADMIN\"]}" -u admin
 
 {
   "id": "1-100-103",
@@ -2312,10 +2312,7 @@ npx hurl invoke person person_create "{\"id\":\"1-100-103\",\"firstname\":\"Pete
   "username": "pete",
   "password": "12345678",
   "email": "pete.doe@example.com",
-  "participant": "gov",
   "roles": [
     "USER","ADMIN"
   ]
 }
-
-{\"id\":\"1-100-103\",\"firstname\":\"Pete\",\"lastname\":\"Doe\",\"username\":\"pete\",\"password\":\"12345678\",\"email\":\"pete.doe@example.com\",\"participant\":\"gov\",\"roles\":[\"USER\"]}

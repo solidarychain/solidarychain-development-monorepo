@@ -1,6 +1,6 @@
 import { IsOptional, Length, MaxLength, IsEmail } from 'class-validator';
 import { Field, InputType } from 'type-graphql';
-import { Attribute } from '../models/attribute';
+import { Attribute } from '../models/attribute.model';
 
 @InputType()
 export class NewPersonInput {

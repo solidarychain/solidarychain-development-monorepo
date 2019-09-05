@@ -1,7 +1,7 @@
 // tslint:disable: max-classes-per-file
 import { Field, ID, ObjectType } from 'type-graphql';
-import { Attribute } from './attribute';
-import { Participant } from '../../participant/models/participant';
+import { Attribute } from './attribute.model';
+import { Participant } from '../../participant/models/participant.model';
 
 // TODO: add yup validation
 
@@ -43,8 +43,8 @@ export class Person {
   public email: string;
 
   // @Validate(yup.array(Attribute.schema()))
-  @Field(type => [Attribute])
-  public attributes: Attribute[];
+  @Field(type => [Attribute], { nullable: true })
+  public attributes?: Attribute[];
 
   // @Default(['USER'])
   // @Validate(yup.array().of(yup.string()))

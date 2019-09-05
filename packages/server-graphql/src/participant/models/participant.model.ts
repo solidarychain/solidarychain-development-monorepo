@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType } from 'type-graphql';
-import { x509Identities } from './x509Identities';
+import { x509Identities } from './x509Identities.model';
 
 // TODO: add yup validation
 

@@ -3,7 +3,7 @@ import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'apollo-server-express';
 import { NewPersonInput } from './dto/new-person.input';
 import { PersonArgs } from './dto/person.args';
-import { Person } from './models/person';
+import { Person } from './models/person.model';
 import { PersonService } from './person.service';
 
 const pubSub = new PubSub();

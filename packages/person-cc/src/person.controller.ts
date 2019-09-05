@@ -156,8 +156,6 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
   ) {
     // get host participant from fingerprint
     const participant: Participant = await getParticipantByIdentity(this.sender);
-    // TODO:
-    // console.log('participant', JSON.stringify(participant, undefined, 2));
     const existing = await Person.query(Person, {
       'selector': {
         type: c.CONVECTOR_MODEL_PATH_PERSON,

@@ -1,5 +1,7 @@
 # ToDo
 
+## Rest API
+
 - [D] Swagger Docs
   - [D] Finish all `@ApiOperation` and `@ApiResponse`
   - [D] Add JWT to Api, and Login User with moked UserService
@@ -31,3 +33,31 @@
 
 add filter Participant
 nao e o gov e a entidade q esta a rolar ligada ao blockchain
+
+## GraphQL API
+
+use new ts-node....
+Add Yup Validations
+
+[ ] roles array?
+  add user with roles array
+  invoke and graphql / rest
+
+all methods cc
+  participant
+    [X] register
+    [ ] changeIdentity
+    [X] get
+    [X] getAll
+  person
+    [X] create
+    [ ] addAttribute
+    [X] get
+    [X] getAll
+    [ ] getByAttribute
+    [ ] getByUsername
+  
+login mutation > jwt
+authentication/authorization
+
+receive transactionid, to store in neo4j
