@@ -19,29 +19,6 @@ export class PersonService {
     }
   }
 
-  // async findOneById(id: string): Promise<Person> {
-  //   try {
-  //     // get fabric model with _props
-  //     const fabricModel: any = await PersonControllerBackEnd.get(id);
-  //     // convert fabric model to convector model (remove _props)
-  //     const convectorModel: PersonConvectorModel = new PersonConvectorModel(fabricModel);
-  //     // convert attributes content to object { data: content }
-  //     if (Array.isArray(convectorModel.attributes)) {
-  //       convectorModel.attributes = this.convertAttributes(convectorModel);
-  //     }
-  //     // trick: must return convector model as a graphql model, to prevent property conversion problems
-  //     return (convectorModel as any) as Person;
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // }
-
-  // async findOneById(id: string): Promise<Person> {
-  //   // get fabric model with _props
-  //   const fabricModel: PersonConvectorModel = await PersonControllerBackEnd.get(id) as PersonConvectorModel;
-  //   return await this.findOne(fabricModel);
-  // }
-
   async findOneById(id: string): Promise<Person> {
     // get fabric model with _props
     const fabricModel: PersonConvectorModel = await PersonControllerBackEnd.get(id) as PersonConvectorModel;
@@ -87,54 +64,12 @@ export class PersonService {
   }
 
   /**
-   * shared method
-   * @param fabricModel
+   * shared findBy method
    */
-  // async findOne(fabricModel: PersonConvectorModel): Promise<Person> {
-  //   try {
-  //     // convert fabric model to convector model (remove _props)
-  //     const convectorModel: PersonConvectorModel = new PersonConvectorModel(fabricModel);
-  //     // convert attributes content to object { data: content }
-  //     if (Array.isArray(convectorModel.attributes)) {
-  //       convectorModel.attributes = this.convertAttributes(convectorModel);
-  //     }
-  //     // trick: must return convector model as a graphql model, to prevent property conversion problems
-  //     return (convectorModel as any) as Person;
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // }
-
-  // async findAll(personArgs: PersonArgs): Promise<Person[]> {
-  //   try {
-  //     const convectorModel: Array<FlatConvectorModel<PersonConvectorModel[]>> = await PersonControllerBackEnd.getAll();
-  //     // convert attributes content to object { data: content }
-  //     convectorModel.forEach((e: PersonConvectorModel) => {
-  //       // only convert attributes if have attributes array
-  //       if (Array.isArray(e.attributes)) {
-  //         const modifiedAttributes = this.convertAttributes(e);
-  //         // apply modifiedAttributes to current person
-  //         e.attributes = [...modifiedAttributes] as AttributeConvectorModel[];
-  //       }
-  //     });
-  //     // require to map fabric model to graphql Person[]
-  //     return (personArgs)
-  //       ? convectorModel.splice(personArgs.skip, personArgs.take) as Person[]
-  //       : convectorModel as Person[];
-  //   } catch (error) {
-  //     Logger.error(error);
-  //     throw error;
-  //   }
-  // }
-
-  // TODO convertAttributes works with array or non array of fabric and convector <GENERIC> type, don't DRY THIS MAN!!!!!!!!
-  // async findByAttribute({ id, value }: GetByAttributeInput, personArgs: PersonArgs): Promise<Person | Person[]> {
   async findBy(convectorModel: PersonConvectorModel | PersonConvectorModel[], personArgs: PersonArgs): Promise<Person | Person[]> {
     try {
-      // const fabricModel: PersonConvectorModel | PersonConvectorModel[] = await PersonControllerBackEnd.getByAttribute(id, value.data);
+      // working in array mode
       if (Array.isArray(convectorModel)) {
-        // // convert fabric model to convector model (remove _props)
-        // const convectorModel: PersonConvectorModel[] = fabricModel.map((e: PersonConvectorModel) => new PersonConvectorModel(e));
         // convert attributes content to object { data: content }
         convectorModel.forEach((e: PersonConvectorModel) => {
           // only convert attributes if have attributes array
@@ -149,8 +84,6 @@ export class PersonService {
           ? convectorModel.splice(personArgs.skip, personArgs.take) as unknown as Person[]
           : convectorModel as unknown as Person[];
       } else {
-        // // convert fabric model to convector model (remove _props)
-        // const convectorModel: PersonConvectorModel = new PersonConvectorModel(fabricModel);
         // only convert attributes if have attributes array
         if (Array.isArray(convectorModel.attributes)) {
           const modifiedAttributes = this.convertAttributes(convectorModel);
