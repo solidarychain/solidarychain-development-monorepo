@@ -14,10 +14,19 @@ export class PersonResolver {
   constructor(private readonly personService: PersonService) { }
 
   @Query(returns => Person)
-  async person(@Args('id') id: string): Promise<Person> {
+  async personById(@Args('id') id: string): Promise<Person> {
     const person = await this.personService.findOneById(id);
     if (!person) {
       throw new NotFoundException(id);
+    }
+    return person;
+  }
+
+  @Query(returns => Person)
+  async personByUsername(@Args('username') username: string): Promise<Person> {
+    const person = await this.personService.findOneByUsername(username);
+    if (!person) {
+      throw new NotFoundException(username);
     }
     return person;
   }
@@ -27,19 +36,12 @@ export class PersonResolver {
     return this.personService.findAll(personsArgs);
   }
 
-  // TODO:: test with more than one user
   @Query(returns => [Person])
-  async getByAttribute(
+  async personByAttribute(
     @Args('getByAttributeInput') getByAttributeInput: GetByAttributeInput,
     @Args() personsArgs: PersonArgs): Promise<Person | Person[]> {
-    return this.personService.getByAttribute(getByAttributeInput, personsArgs);
+    return this.personService.findByAttribute(getByAttributeInput, personsArgs);
   }
-
-  // TODO:
-  // @Query(returns => [Person])
-  // async getByUsername(@Args('username') username: string): Promise<Person> {
-  //   return this.personService.getByUsername(username);
-  // }
 
   @Mutation(returns => Person)
   async addPerson(

@@ -73,9 +73,10 @@ type Person {
 type Query {
   recipe(id: String!): Recipe!
   recipes(skip: Int = 0, take: Int = 25): [Recipe!]!
-  person(id: String!): Person!
+  personById(id: String!): Person!
+  personByUsername(username: String!): Person!
   persons(skip: Int = 0, take: Int = 25): [Person!]!
-  getByAttribute(skip: Int = 0, take: Int = 25, getByAttributeInput: GetByAttributeInput!): [Person!]!
+  personByAttribute(skip: Int = 0, take: Int = 25, getByAttributeInput: GetByAttributeInput!): [Person!]!
   participant(id: String!): Participant!
   participants(skip: Int = 0, take: Int = 25): [Participant!]!
 }
