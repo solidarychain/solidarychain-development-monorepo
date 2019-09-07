@@ -13,18 +13,8 @@
 				"label": ""
 			},
 			{
-				"line": 1646,
+				"line": 1680,
 				"column": 54,
-				"label": ""
-			}
-		]
-	},
-	{
-		"path": "$ROOTPATH$/packages/person-cc/src/person.controller.ts",
-		"bookmarks": [
-			{
-				"line": 143,
-				"column": 29,
 				"label": ""
 			}
 		]

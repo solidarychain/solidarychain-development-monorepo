@@ -78,12 +78,46 @@ sudo docker logs $(docker container ls | grep "person-1.1" | awk '{print $1}' | 
 
 - [Fauxton](http://localhost:5084/_utils/#database/)
 
+### Mango Queries
+
+> Use double quotes in fauxton else silent error, does nothing, or copy some values from result sets
+
+```json
+{
+  "selector": {
+    "type": "io.worldsibu.examples.participant",
+    "identities": {
+      "$elemMatch": {
+        "fingerprint": "C8:B1:6A:5D:67:77:44:99:C6:3F:59:7C:1D:A5:F1:29:40:AE:5B:C9",
+        "status": true
+      }
+    }
+  }
+}
+```
+
+```json
+{
+  "selector": {
+    "type": "io.worldsibu.examples.person",
+    "attributes": {
+      "$elemMatch": {
+        "id": "born-year",
+        "content": {
+          "data": "1971"
+        }
+      }
+    }
+  }
+}
+```
+
 ### Endpoints
 
 - <http://localhost:3000/participant/>
 - <http://localhost:3000/person/>
 
-## Fixs
+## Fix's
 
 if have problems after install packages with `lerna add` and with chaincodes, ex with `lerna bootstrap`
 and have error not found chaincode package on npm registry like `'participant-cc@^0.1.0' is not in the npm registry`, just rebuild chaincode, and next `lerna bootstrap`
@@ -2152,7 +2186,7 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     }
 
     const existsUsername = await Person.query(Person, {
-      'selector': {
+      selector: {
         type: c.CONVECTOR_MODEL_PATH_PERSON,
         username: person.username,
         participant: {
@@ -2196,7 +2230,7 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     console.log('participant', JSON.stringify(participant, undefined, 2));
 
     const existing = await Person.query(Person, {
-      'selector': {
+      selector: {
         type: c.CONVECTOR_MODEL_PATH_PERSON,
         username,
         participant: {

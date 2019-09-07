@@ -69,6 +69,8 @@ $ npx hurl invoke person person_addAttribute 1-100-101 '{"id": "marriage-year", 
 
 ## How to use content attribute
 
+https://stackoverflow.com/questions/57838092/how-to-use-convector-to-querie-couchdb-rich-queries-with-json-objects
+
 `packages/person-cc/src/person.model.ts`
 
 ```typescript
@@ -84,4 +86,26 @@ without `.nullable()` we get
 ```
 500,"message":"Error for field 'attributes' with val '[{\"certifierID\":\"gov\",\"content\":\"1993\",\"id\":\"birth-year\",\"phase2\":\"2013\",\"phase3\":\"2013\"},\"id\":\"reborn5-year\",\"issuedDate\":1554239270,
 \"type\":\"io.worldsibu.examples.attribute\"}]' [0].content must be a `object` type, but the final value was: `null` (cast from the value `\"1993\"`).\n If \"null\" is intended as an empty value be sure to mark the schema as `.nullable()`"}]. Sending ERROR message back to peer  
+```
+
+## Problem with RichQueries with Object
+
+```typescript
+return await Person.query(Person, {
+  selector: {
+    type: c.CONVECTOR_MODEL_PATH_PERSON,
+    attributes: {
+      $elemMatch: {
+        id: id,
+        content: value
+      }
+    }
+  }
+});
+```
+
+in docker logs we can view that value is content is sent has a string and not a object ex `"content":"{\"data\":\"1971\"}"`
+
+```json
+{"selector":{"type":"io.worldsibu.examples.person","attributes":{"$elemMatch":{"id":"born-year","content":"{\"data\":\"1971\"}"}}}}
 ```

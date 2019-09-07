@@ -10,5 +10,5 @@ export default class GetByAttributeInput {
   id: string;
 
   @Field(type => GraphQLJSONObject, { nullable: true })
-  value?: any;
+  content?: any;
 }

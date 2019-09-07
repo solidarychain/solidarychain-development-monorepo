@@ -25,7 +25,7 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     }
 
     const existsUsername = await Person.query(Person, {
-      'selector': {
+      selector: {
         type: c.CONVECTOR_MODEL_PATH_PERSON,
         username: person.username,
         participant: {
@@ -134,15 +134,17 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
   public async getByAttribute(
     @Param(yup.string())
     id: string,
-    @Param(yup.mixed())
+    // @Param(yup.mixed())
+    @Param(yup.object())    
     value: any
   ) {
     return await Person.query(Person, {
-      'selector': {
-        'attributes': {
-          '$elemMatch': {
-            'id': id,
-            'content': value
+      selector: {
+        type: c.CONVECTOR_MODEL_PATH_PERSON,
+        attributes: {
+          $elemMatch: {
+            id: id,
+            content: value
           }
         }
       }
@@ -157,7 +159,7 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     // get host participant from fingerprint
     const participant: Participant = await getParticipantByIdentity(this.sender);
     const existing = await Person.query(Person, {
-      'selector': {
+      selector: {
         type: c.CONVECTOR_MODEL_PATH_PERSON,
         username,
         participant: {

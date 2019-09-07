@@ -32,9 +32,9 @@ export default class PersonService {
     return model;
   }
 
-  async findByAttribute({ id, value }: GetByAttributeInput, personArgs: PersonArgs): Promise<Person | Person[]> {
+  async findByAttribute({ id, content }: GetByAttributeInput, personArgs: PersonArgs): Promise<Person | Person[]> {
     // get fabric model with _props
-    const fabricModel: PersonConvectorModel[] = await PersonControllerBackEnd.getByAttribute(id, value.data) as PersonConvectorModel[];
+    const fabricModel: PersonConvectorModel[] = await PersonControllerBackEnd.getByAttribute(id, content) as PersonConvectorModel[];
     // convert fabric model to convector model (remove _props)
     const convectorModel: PersonConvectorModel[] = fabricModel.map((e: PersonConvectorModel) => new PersonConvectorModel(e));
     // call common find method

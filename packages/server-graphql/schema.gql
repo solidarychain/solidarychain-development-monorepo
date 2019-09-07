@@ -26,7 +26,7 @@ scalar Date
 
 input GetByAttributeInput {
   id: String!
-  value: JSONObject
+  content: JSONObject
 }
 
 """
