@@ -53,7 +53,7 @@ export default class PersonResolver {
 
   @Mutation(returns => Person)
   async personNew(
-    @Args('newPersonData') newPersonData: NewPersonInput
+    @Args('newPersonData') newPersonData: NewPersonInput,
   ): Promise<Person> {
     const person = await this.personService.create(newPersonData);
     pubSub.publish('personAdded', { personAdded: person });

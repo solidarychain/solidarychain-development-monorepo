@@ -13,7 +13,7 @@
 				"label": ""
 			},
 			{
-				"line": 1644,
+				"line": 1646,
 				"column": 54,
 				"label": ""
 			}
@@ -23,7 +23,7 @@
 		"path": "$ROOTPATH$/packages/person-cc/src/person.controller.ts",
 		"bookmarks": [
 			{
-				"line": 144,
+				"line": 143,
 				"column": 29,
 				"label": ""
 			}

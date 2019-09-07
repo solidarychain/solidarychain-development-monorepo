@@ -1,8 +1,10 @@
 # NOTES
 
+https://stackblitz.com/edit/convector
+
 ## Start
 
-DONt forget to build common package, if change something
+DONt forget to build common package `@convector-sample/common`, if change something, but first restart server
 
 ```shell
 # build
@@ -65,10 +67,21 @@ $ npx hurl invoke person person_addAttribute 1-100-101 '{"id": "marriage-year", 
 
 ## Add all Other Query/Mutations
 
-## 
+## How to use content attribute
 
-unhandledPromiseRejectionWarning: Error: Cannot determine GraphQL input type for attribute
+`packages/person-cc/src/person.model.ts`
 
-https://github.com/MichalLytek/type-graphql/blob/master/docs/resolvers.md#input-types
+```typescript
+// Diego: I see, all properties need a @Validate() decorator else convector will ignore it
+// Required to use nullable(), else content must be a `object` type, but the final value was: `null`
+@Required()
+@Validate(yup.object().nullable())
+public content: any;
+```
 
-https://stackblitz.com/edit/convector
+without `.nullable()` we get
+
+```
+500,"message":"Error for field 'attributes' with val '[{\"certifierID\":\"gov\",\"content\":\"1993\",\"id\":\"birth-year\",\"phase2\":\"2013\",\"phase3\":\"2013\"},\"id\":\"reborn5-year\",\"issuedDate\":1554239270,
+\"type\":\"io.worldsibu.examples.attribute\"}]' [0].content must be a `object` type, but the final value was: `null` (cast from the value `\"1993\"`).\n If \"null\" is intended as an empty value be sure to mark the schema as `.nullable()`"}]. Sending ERROR message back to peer  
+```

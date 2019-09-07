@@ -69,7 +69,8 @@ export default class PersonService {
       const attributeConvectorModel: AttributeConvectorModel = new AttributeConvectorModel(
         { ...addPersonAttributeInput },
       );
-      // TODO: try to get content in spread above
+      // leave above line has a reminder, this is the hack to use content when it
+      // don't have a @Validate annotation, read comments on Attribute person-cc
       // attributeConvectorModel.content = addPersonAttributeInput.content;
       await PersonControllerBackEnd.addAttribute(personId, attributeConvectorModel);
       return await this.findOneById(personId);

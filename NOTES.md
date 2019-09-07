@@ -64,10 +64,12 @@ $ npx lerna run build --scope participant-cc
 # invoke some stuff
 $ npx hurl invoke person person_get 1-100-100
 
-# debug container
-$ sudo docker container ls | grep "person-1.1"
-4385db3a1e90
-$ sudo docker container logs -f 4385db3a1e90
+# debug container person-1.0, person-1.1...
+$ SEARCH_CONTAINER="person-1.1"
+$ sudo docker logs $(docker container ls | grep $SEARCH_CONTAINER | awk '{print $1}' | head -n 1) -f
+
+$ sudo docker container ls | grep "person-1.1" | awk '{print $1}'
+sudo docker logs $(docker container ls | grep "person-1.1" | awk '{print $1}' | head -n 1) -f
 ```
 
 ## Uris and Endpoints

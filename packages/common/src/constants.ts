@@ -1,4 +1,4 @@
-// Warn if changes model, change views to ex
+// Warn if changes model names, don't forget to change views ex
 // "map": "function(doc) {if (doc.type.toUpperCase() === 'io.worldsibu.examples.person'...
 
 // convector model
