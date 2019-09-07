@@ -1,13 +1,13 @@
 // tslint:disable: max-classes-per-file
-import { Field, ID, ObjectType } from 'type-graphql';
-import { Attribute } from './attribute.model';
-import { Participant } from '../../participant/models/participant.model';
 import { IsDefined } from 'class-validator';
+import { Field, ID, ObjectType } from 'type-graphql';
+import Participant from '../../participant/models/participant.model';
+import Attribute from './attribute.model';
 
 // TODO: add yup validation
 
 @ObjectType()
-export class Person {
+export default class Person {
   @Field(type => ID)
   @IsDefined()
   id: string;

@@ -3,7 +3,7 @@ import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, InputType } from 'type-graphql';
 
 @InputType()
-export class GetByAttributeInput {
+export default class GetByAttributeInput {
   @Field()
   @IsDefined()
   @MaxLength(125)

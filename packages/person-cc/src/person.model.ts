@@ -8,6 +8,9 @@ export class Attribute extends ConvectorModel<Attribute>{
   @Required()
   public readonly type = c.CONVECTOR_MODEL_PATH_ATTRIBUTE;
 
+  // TODO
+  // I see, all properties need a @Validate() decorator
+  @Validate(yup.object())
   @Required()
   public content: any;
 

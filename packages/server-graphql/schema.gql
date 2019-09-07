@@ -3,6 +3,15 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+input AddPersonAttributeInput {
+  id: ID!
+  content: JSONObject
+  issuedDate: Float
+  expiresDate: Date
+  expired: Boolean
+  certifierID: String
+}
+
 type Attribute {
   id: ID!
   content: JSONObject
@@ -28,8 +37,9 @@ scalar JSONObject
 type Mutation {
   addRecipe(newRecipeData: NewRecipeInput!): Recipe!
   removeRecipe(id: String!): Boolean!
-  addPerson(newPersonData: NewPersonInput!): Person!
-  addParticipant(newParticipantData: NewParticipantInput!): Participant!
+  personNew(newPersonData: NewPersonInput!): Person!
+  personAddAttribute(addPersonAttributeData: AddPersonAttributeInput!, personId: String!): Person!
+  participantNew(newParticipantData: NewParticipantInput!): Participant!
 }
 
 input NewParticipantInput {
@@ -77,7 +87,7 @@ type Query {
   personByUsername(username: String!): Person!
   persons(skip: Int = 0, take: Int = 25): [Person!]!
   personByAttribute(skip: Int = 0, take: Int = 25, getByAttributeInput: GetByAttributeInput!): [Person!]!
-  participant(id: String!): Participant!
+  participantById(id: String!): Participant!
   participants(skip: Int = 0, take: Int = 25): [Participant!]!
 }
 

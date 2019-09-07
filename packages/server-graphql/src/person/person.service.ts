@@ -1,24 +1,15 @@
-import { Person as PersonConvectorModel, Attribute as AttributeConvectorModel } from '@convector-sample/person-cc';
+import { Attribute as AttributeConvectorModel, Person as PersonConvectorModel } from '@convector-sample/person-cc';
 import { Injectable, Logger } from '@nestjs/common';
 import { FlatConvectorModel } from '@worldsibu/convector-core';
 import { PersonControllerBackEnd } from '../convector';
-import { NewPersonInput } from './dto/new-person.input';
-import { PersonArgs } from './dto/person.args';
-import { Person } from './models/person.model';
-import { GetByAttributeInput } from './dto/get-by-attribute.input';
+import GetByAttributeInput from './dto/get-by-attribute.input';
+import NewPersonInput from './dto/new-person.input';
+import PersonArgs from './dto/person.args';
+import Person from './models/person.model';
+import AddPersonAttributeInput from './dto/add-person-attribute.input';
 
 @Injectable()
-export class PersonService {
-  async create(data: NewPersonInput): Promise<Person> {
-    try {
-      const personToCreate = new PersonConvectorModel({ ...data });
-      await PersonControllerBackEnd.create(personToCreate);
-      return await this.findOneById(data.id);
-    } catch (error) {
-      throw error;
-    }
-  }
-
+export default class PersonService {
   async findOneById(id: string): Promise<Person> {
     // get fabric model with _props
     const fabricModel: PersonConvectorModel = await PersonControllerBackEnd.get(id) as PersonConvectorModel;
@@ -61,6 +52,30 @@ export class PersonService {
     const model: Person[] = await this.findBy(convectorModel, personArgs) as Person[];
     // return model
     return model;
+  }
+
+  async create(data: NewPersonInput): Promise<Person> {
+    try {
+      const personToCreate: PersonConvectorModel = new PersonConvectorModel({ ...data });
+      await PersonControllerBackEnd.create(personToCreate);
+      return await this.findOneById(data.id);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async personAddAttribute(personId: string, addPersonAttributeInput: AddPersonAttributeInput): Promise<Person> {
+    try {
+      const attributeConvectorModel: AttributeConvectorModel = new AttributeConvectorModel(
+        { ...addPersonAttributeInput },
+      );
+      // TODO: try to get content in spread above
+      // attributeConvectorModel.content = addPersonAttributeInput.content;
+      await PersonControllerBackEnd.addAttribute(personId, attributeConvectorModel);
+      return await this.findOneById(personId);
+    } catch (error) {
+      throw error;
+    }
   }
 
   /**

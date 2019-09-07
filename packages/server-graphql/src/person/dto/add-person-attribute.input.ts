@@ -1,9 +1,9 @@
-import { Field, ID, ObjectType } from 'type-graphql';
-import { GraphQLJSONObject } from 'graphql-type-json';
 import { IsDefined } from 'class-validator';
+import { GraphQLJSONObject } from 'graphql-type-json';
+import { Field, ID, InputType } from 'type-graphql';
 
-@ObjectType()
-export default class Attribute {
+@InputType()
+export default class AddPersonAttributeInput {
   @Field(type => ID)
   @IsDefined()
   id: string;

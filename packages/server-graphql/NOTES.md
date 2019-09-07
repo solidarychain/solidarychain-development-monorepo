@@ -65,6 +65,10 @@ $ npx hurl invoke person person_addAttribute 1-100-101 '{"id": "marriage-year", 
 
 ## Add all Other Query/Mutations
 
-$ npx hurl invoke person participant_changeIdentity great newIdentity -u admin
-{ Error: transaction returned with failure: {"name":"Error","status":500,"message":"Unauthorized. Requester identity is not an admin"}
+## 
 
+unhandledPromiseRejectionWarning: Error: Cannot determine GraphQL input type for attribute
+
+https://github.com/MichalLytek/type-graphql/blob/master/docs/resolvers.md#input-types
+
+https://stackblitz.com/edit/convector

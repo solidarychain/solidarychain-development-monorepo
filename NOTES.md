@@ -2301,6 +2301,9 @@ now we can start testing the new network authentication
 
 WIP
 
+$ npx hurl invoke person participant_changeIdentity great newIdentity -u admin
+{ Error: transaction returned with failure: {"name":"Error","status":500,"message":"Unauthorized. Requester identity is not an admin"}
+
 npx hurl invoke person person_create "{ \"id\": \"1-100-103\", \"firstname\": \"Pete\", \"lastname\": \"Doe\", \"username\": \"pete\", \"password\": \"12345678\", \"email\": \"pete.doe@example.com\"}" -u admin
 
 npx hurl invoke person person_create "{\"id\": \"1-100-103\",\"firstname\":\"Pete\",\"lastname\":\"Doe\",\"username\": \"pete\",\"password\": \"12345678\",\"email\": \"pete.doe@example.com\",\"roles\": [\"USER\",\"ADMIN\"]}" -u admin

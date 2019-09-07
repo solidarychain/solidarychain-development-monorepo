@@ -1,19 +1,21 @@
 import { NotFoundException } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'apollo-server-express';
-import { NewParticipantInput } from './dto/new-participant.input';
-import { ParticipantArgs } from './dto/participant.args';
-import { Participant } from './models/participant.model';
-import { ParticipantService } from './participant.service';
+import NewParticipantInput from './dto/new-participant.input';
+import ParticipantArgs from './dto/participant.args';
+import Participant from './models/participant.model';
+import ParticipantService from './participant.service';
 
 const pubSub = new PubSub();
 
 @Resolver(of => Participant)
-export class ParticipantResolver {
+export default class ParticipantResolver {
   constructor(private readonly participantService: ParticipantService) { }
 
   @Query(returns => Participant)
-  async participant(@Args('id') id: string): Promise<Participant> {
+  async participantById(
+    @Args('id') id: string,
+  ): Promise<Participant> {
     const participant = await this.participantService.findOneById(id);
     if (!participant) {
       throw new NotFoundException(id);
@@ -22,12 +24,14 @@ export class ParticipantResolver {
   }
 
   @Query(returns => [Participant])
-  participants(@Args() participantsArgs: ParticipantArgs): Promise<Participant[]> {
+  participants(
+    @Args() participantsArgs: ParticipantArgs,
+  ): Promise<Participant[]> {
     return this.participantService.findAll(participantsArgs);
   }
 
   @Mutation(returns => Participant)
-  async addParticipant(
+  async participantNew(
     @Args('newParticipantData') newParticipantData: NewParticipantInput,
   ): Promise<Participant> {
     const participant = await this.participantService.create(newParticipantData);

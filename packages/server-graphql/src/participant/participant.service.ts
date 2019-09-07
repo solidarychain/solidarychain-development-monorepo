@@ -2,12 +2,12 @@ import { Participant as ParticipantConvectorModel } from '@convector-sample/part
 import { Injectable, Logger } from '@nestjs/common';
 import { FlatConvectorModel } from '@worldsibu/convector-core-model';
 import { ParticipantControllerBackEnd } from '../convector';
-import { NewParticipantInput } from './dto/new-participant.input';
-import { ParticipantArgs } from './dto/participant.args';
-import { Participant } from './models/participant.model';
+import NewParticipantInput from './dto/new-participant.input';
+import ParticipantArgs from './dto/participant.args';
+import Participant from './models/participant.model';
 
 @Injectable()
-export class ParticipantService {
+export default class ParticipantService {
   async create(data: NewParticipantInput): Promise<Participant> {
     try {
       await ParticipantControllerBackEnd.register(data.id, data.name);
