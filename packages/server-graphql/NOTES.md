@@ -1,7 +1,5 @@
 # NOTES
 
-https://stackblitz.com/edit/convector
-
 ## Start
 
 DONt forget to build common package `@convector-sample/common`, if change something, but first restart server
@@ -26,10 +24,18 @@ $ npx lerna add person-cc --scope @convector-sample/server-graphql
 $ npx lerna add common --scope @convector-sample/server-graphql
 ```
 
+## Links
+
+- [Convector Slackbiz](https://stackblitz.com/edit/convector)
+- [Use ObjectType and InputType decorators together](https://github.com/MichalLytek/type-graphql/issues/62)
+
 ## TypeGraphQL Notes
 
-all input types required to have names @Args('getByAttributeInput') argument, else it crash with strange errors
+all input types required to have names `@Args('getByAttributeInput') argument`, else it crash with strange errors ex
+
+```typescript
 @Args('getByAttributeInput') getByAttributeInput: GetByAttributeInput
+```
 
 ## JSON Scalar Type
 
@@ -53,7 +59,7 @@ export class Attribute {
   public content: any;
 ```
 
-"message": "JSONObject cannot represent non-object value: 1993"
+`"message": "JSONObject cannot represent non-object value: 1993"`
 
 here we must convert "1993" into object ex `{ data: '1993' }` check function `convertAttributes`
 
@@ -69,7 +75,7 @@ $ npx hurl invoke person person_addAttribute 1-100-101 '{"id": "marriage-year", 
 
 ## How to use content attribute
 
-https://stackoverflow.com/questions/57838092/how-to-use-convector-to-querie-couchdb-rich-queries-with-json-objects
+- [How to use Convector to querie CouchDB Rich Queries with JSON Objects?](https://stackoverflow.com/questions/57838092/how-to-use-convector-to-querie-couchdb-rich-queries-with-json-objects)
 
 `packages/person-cc/src/person.model.ts`
 
@@ -109,3 +115,5 @@ in docker logs we can view that value is content is sent has a string and not a 
 ```json
 {"selector":{"type":"io.worldsibu.examples.person","attributes":{"$elemMatch":{"id":"born-year","content":"{\"data\":\"1971\"}"}}}}
 ```
+
+> read the SO post, link on top of notes
