@@ -34,11 +34,17 @@ The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](
 """
 scalar JSONObject
 
+input LoginPersonInput {
+  username: String!
+  password: String!
+}
+
 type Mutation {
   addRecipe(newRecipeData: NewRecipeInput!): Recipe!
   removeRecipe(id: String!): Boolean!
   personNew(newPersonData: NewPersonInput!): Person!
   personAddAttribute(addPersonAttributeData: AddPersonAttributeInput!, personId: String!): Person!
+  personLogin(loginPersonData: LoginPersonInput!): String!
   participantNew(newParticipantData: NewParticipantInput!): Participant!
 }
 
@@ -102,6 +108,7 @@ type Recipe {
 type Subscription {
   recipeAdded: Recipe!
   personAdded: Person!
+  personLogged: String!
   participantAdded: Participant!
 }
 

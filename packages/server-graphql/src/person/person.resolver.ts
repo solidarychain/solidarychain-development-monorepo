@@ -7,6 +7,7 @@ import Person from './models/person.model';
 import PersonService from './person.service';
 import GetByAttributeInput from './dto/get-by-attribute.input';
 import AddPersonAttributeInput from './dto/add-person-attribute.input';
+import LoginPersonInput from './dto/login-person.input';
 
 const pubSub = new PubSub();
 
@@ -60,7 +61,6 @@ export default class PersonResolver {
     return person;
   }
 
-  // TODO:
   @Mutation(returns => Person)
   async personAddAttribute(
     @Args('personId') personId: string,
@@ -70,18 +70,22 @@ export default class PersonResolver {
     return person;
   }
 
-  // TODO:
-  // @Mutation(returns => Person)
-  // async login(
-  //   @Args('newPersonData') newPersonData: NewPersonInput,
-  // ): Promise<Person> {
-  //   const person = await this.personService.create(newPersonData);
-  //   pubSub.publish('personAdded', { personAdded: person });
-  //   return person;
-  // }
+  @Mutation(returns => String)
+  async personLogin(
+    @Args('loginPersonData') loginPersonData: LoginPersonInput,
+  ): Promise<string> {
+    pubSub.publish('personLogged', { personLogged: loginPersonData.username });
+    return await this.personService.login(loginPersonData);
+  }
 
   @Subscription(returns => Person)
   personAdded() {
     return pubSub.asyncIterator('personAdded');
   }
+
+  @Subscription(returns => String)
+  personLogged() {
+    return pubSub.asyncIterator('personLogged');
+  }
+
 }

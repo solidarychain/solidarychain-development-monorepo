@@ -134,7 +134,7 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
   public async getByAttribute(
     @Param(yup.string())
     id: string,
-    // @Param(yup.mixed())
+    // @Param(yup.mixed()) this convert value to string
     @Param(yup.object())    
     value: any
   ) {

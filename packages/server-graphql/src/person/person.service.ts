@@ -7,6 +7,7 @@ import NewPersonInput from './dto/new-person.input';
 import PersonArgs from './dto/person.args';
 import Person from './models/person.model';
 import AddPersonAttributeInput from './dto/add-person-attribute.input';
+import LoginPersonInput from './dto/login-person.input';
 
 @Injectable()
 export default class PersonService {
@@ -59,6 +60,14 @@ export default class PersonService {
       const personToCreate: PersonConvectorModel = new PersonConvectorModel({ ...data });
       await PersonControllerBackEnd.create(personToCreate);
       return await this.findOneById(data.id);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async login(data: LoginPersonInput): Promise<string> {
+    try {
+      return '3ozutUzY09XA2IXAvxeTDs0lNbMvhID0UiPZYRGXG4GdsYuTG3kmbBhpEz3usg15';
     } catch (error) {
       throw error;
     }
