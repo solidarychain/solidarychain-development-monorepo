@@ -11,4 +11,4 @@ import ParticipantService from './participant.service';
   ],
 })
 
-export class ParticipantModule { }
+export default class ParticipantModule { }

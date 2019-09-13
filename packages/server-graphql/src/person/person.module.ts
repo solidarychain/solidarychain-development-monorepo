@@ -7,4 +7,4 @@ import PersonService from './person.service';
   providers: [PersonResolver, PersonService, DateScalar],
 })
 
-export class PersonModule { }
+export default class PersonModule { }
