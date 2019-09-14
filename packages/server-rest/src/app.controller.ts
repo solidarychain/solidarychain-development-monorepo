@@ -28,8 +28,6 @@ export class AppController {
   @ApiInternalServerErrorResponse({ description: c.API_RESPONSE_INTERNAL_SERVER_ERROR })
   @ApiUnauthorizedResponse({ description: c.API_RESPONSE_UNAUTHORIZED })
   async login(@Request() req): Promise<LoginUserResponseDto> {
-    // return { accessToken } object, or { Unauthorized object } in case of login fail
-    // TODO:
     return this.authService.login(req.user);
   }
 
