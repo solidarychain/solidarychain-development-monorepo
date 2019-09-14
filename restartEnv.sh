@@ -8,6 +8,10 @@ clear
 npm run env:restart
 # deploy smart contract
 npm run cc:start -- person
+
+# sleep 20 seconds
+sleep 20
+
 # seed ledger
 npm run seed
 # create views
@@ -17,7 +21,6 @@ npm run seed
 npx lerna run build --scope person-cc
 npx lerna run build --scope participant-cc
 
-# invoke some stuff
 # invoke some stuff
 npx hurl invoke person person_get 1-100-100
 

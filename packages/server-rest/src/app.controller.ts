@@ -1,11 +1,10 @@
-import { Body, Controller, Get, HttpStatus, Post, Request, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Post, Request, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiCreatedResponse, ApiExcludeEndpoint, ApiInternalServerErrorResponse, ApiOkResponse, ApiOperation, ApiUnauthorizedResponse, ApiUseTags } from '@nestjs/swagger';
 import * as express from 'express';
 import { AuthService } from './auth/auth.service';
 import { GetProfileResponseDto } from './auth/dto/get-profile-response.dto';
 import { LoginUserResponseDto } from './auth/dto/login-user-response.dto';
-import { LoginUserDto } from './auth/dto/login-user.dto';
 import { appConstants as c } from './constants';
 import { envVariables as e } from './env';
 
@@ -28,7 +27,7 @@ export class AppController {
   @ApiCreatedResponse({ description: c.API_RESPONSE_LOGIN, type: LoginUserResponseDto })
   @ApiInternalServerErrorResponse({ description: c.API_RESPONSE_INTERNAL_SERVER_ERROR })
   @ApiUnauthorizedResponse({ description: c.API_RESPONSE_UNAUTHORIZED })
-  async login(@Request() req, @Body() loginUserDto: LoginUserDto) {
+  async login(@Request() req): Promise<LoginUserResponseDto> {
     // return { accessToken } object, or { Unauthorized object } in case of login fail
     // TODO:
     return this.authService.login(req.user);

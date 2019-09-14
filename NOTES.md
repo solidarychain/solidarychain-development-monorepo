@@ -1636,7 +1636,7 @@ echo "Creating participant: National Bank"
 npx hurl invoke person participant_register naba "National Bank" -u user1 -o org2
 
 echo "Creating person: John Doe"
-npx hurl invoke person person_create "{ \"id\": \"1-100-100\", \"firstname\": \"John\", \"lastname\": \"Doe\", \"username\": \"johndoe\", \"password\": \"person\", \"email\": \"john.doe@mail.com\"}" -u admin
+npx hurl invoke person person_create "{ \"id\": \"1-100-100\", \"firstname\": \"John\", \"lastname\": \"Doe\", \"username\": \"johndoe\", \"password\": \"12345678\", \"email\": \"john.doe@mail.com\"}" -u admin
 
 echo "Adding attribute 'birth-year' as the Big Government identity"
 npx hurl invoke person person_addAttribute "1-100-100" "{\"id\": \"birth-year\", \"certifierID\": \"gov\", \"content\": \"1993\", \"issuedDate\": 1554239270 }" -u admin

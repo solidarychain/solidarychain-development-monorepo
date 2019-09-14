@@ -12,7 +12,6 @@
     "start:prod": "env-cmd -f .env node dist/main.js"
   },
   "dependencies": {
-    "@koakh/nestjs-auth-quick-config": "file:../NodeNestPackages/@koakh/nestjs-auth-quick-config",
     "@convector-sample/common": "^0.1.0",
     "@convector-sample/participant-cc": "^0.1.0",
     "@convector-sample/person-cc": "^0.1.0",

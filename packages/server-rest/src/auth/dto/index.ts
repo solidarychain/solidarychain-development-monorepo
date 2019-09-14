@@ -1,1 +1,2 @@
-export * from './login-user.dto';
+export * from './get-profile-response.dto';
+export * from './login-user-response.dto';

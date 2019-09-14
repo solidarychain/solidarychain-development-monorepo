@@ -9,5 +9,9 @@
     "sideBar.border": "#2f7c47",
     "editorGroup.border": "#2f7c47"
   },
-  "peacock.color": "#215732"
+  "peacock.color": "#215732",
+  "cSpell.words": [
+    "Moked",
+    "nestjs"
+  ]
 }
