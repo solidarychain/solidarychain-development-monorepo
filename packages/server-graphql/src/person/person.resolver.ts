@@ -13,8 +13,9 @@ const pubSub = new PubSub();
 
 @Resolver(of => Person)
 export default class PersonResolver {
-  constructor(private readonly personService: PersonService) { }
-
+  constructor(
+    private readonly personService: PersonService,
+  ) { }
   @Query(returns => Person)
   async personById(
     @Args('id') id: string,

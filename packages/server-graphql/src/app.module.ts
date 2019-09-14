@@ -4,7 +4,7 @@ import { RecipesModule } from './recipes/recipes.module';
 import ParticipantModule from './participant/participant.module';
 import PersonModule from './person/person.module';
 import PersonService from './person/person.service';
-import { AuthQuickConfigModule, UsersModule, AuthService, UsersService } from '@koakh/nestjs-auth-quick-config';
+// import { JsonWebTokenModule, EasyconfigModule } from '@koakh/nestjs-auth-quick-config';
 
 @Module({
   imports: [
@@ -18,13 +18,14 @@ import { AuthQuickConfigModule, UsersModule, AuthService, UsersService } from '@
       autoSchemaFile: 'schema.gql',
     }),
     // @koakh/nestjs-auth-quick-config
-    // UsersService,
-    // AuthService,
-    AuthQuickConfigModule.register({
-      jwtSecret: 'secretKey',
-      jwtExpiresIn: '1h',
-      getByUsername: (username: string) => 'admin',
-    }),
+    // AuthQuickConfigModule.register({
+    //   jwtSecret: 'secretKey',
+    //   jwtExpiresIn: '1h',
+    //   // TODO:
+    //   getByUsername: (username: string) => 'admin',
+    // }),
+    // the trick is import the module, not the service here
+    // AuthModule,
   ],
 })
 

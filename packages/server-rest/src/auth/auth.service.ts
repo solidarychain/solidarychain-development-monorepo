@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+// import { JwtService } from '@nestjs/jwt';
 import { envVariables as e } from '../env';
 import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
@@ -9,7 +9,7 @@ import { Person } from '@convector-sample/person-cc';
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
-    private readonly jwtService: JwtService,
+    // private readonly jwtService: JwtService,
   ) { }
 
   // called by LocalStrategy
@@ -39,7 +39,9 @@ export class AuthService {
     const payload = { sub: user.id, username: user.username };
     return {
       // generate JWT from a subset of the user object properties
-      accessToken: this.jwtService.sign(payload),
+      // TODO:
+      // accessToken: this.jwtService.sign(payload),
+      accessToken: 'token here',
     };
   }
 

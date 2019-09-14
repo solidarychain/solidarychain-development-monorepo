@@ -15,7 +15,6 @@
     "@convector-sample/common": "^0.1.0",
     "@convector-sample/participant-cc": "^0.1.0",
     "@convector-sample/person-cc": "^0.1.0",
-    "@koakh/nestjs-auth-quick-config": "^0.1.2",
     "@nestjs/common": "^6.5.3",
     "@nestjs/core": "6.5.3",
     "@nestjs/graphql": "6.4.2",
@@ -27,7 +26,7 @@
     "graphql-subscriptions": "1.1.0",
     "graphql-type-json": "^0.3.0",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "6.5.2",
+    "rxjs": "^6.3.3",
     "type-graphql": "0.17.4",
     "typescript": "3.5.3"
   },
