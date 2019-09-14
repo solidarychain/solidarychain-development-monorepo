@@ -40,8 +40,6 @@ input LoginPersonInput {
 }
 
 type Mutation {
-  addRecipe(newRecipeData: NewRecipeInput!): Recipe!
-  removeRecipe(id: String!): Boolean!
   participantNew(newParticipantData: NewParticipantInput!): Participant!
   personNew(newPersonData: NewPersonInput!): Person!
   personAddAttribute(addPersonAttributeData: AddPersonAttributeInput!, personId: String!): Person!
@@ -60,12 +58,6 @@ input NewPersonInput {
   username: String!
   password: String!
   email: String!
-}
-
-input NewRecipeInput {
-  title: String!
-  description: String
-  ingredients: [String!]!
 }
 
 type Participant {
@@ -87,8 +79,6 @@ type Person {
 }
 
 type Query {
-  recipe(id: String!): Recipe!
-  recipes(skip: Int = 0, take: Int = 25): [Recipe!]!
   participantById(id: String!): Participant!
   participants(skip: Int = 0, take: Int = 25): [Participant!]!
   personById(id: String!): Person!
@@ -97,16 +87,7 @@ type Query {
   personByAttribute(skip: Int = 0, take: Int = 25, getByAttributeInput: GetByAttributeInput!): [Person!]!
 }
 
-type Recipe {
-  id: ID!
-  title: String!
-  description: String
-  creationDate: Date!
-  ingredients: [String!]!
-}
-
 type Subscription {
-  recipeAdded: Recipe!
   participantAdded: Participant!
   personAdded: Person!
   personLogged: String!

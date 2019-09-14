@@ -2355,3 +2355,37 @@ npx hurl invoke person person_create "{\"id\": \"1-100-103\",\"firstname\":\"Pet
     "USER","ADMIN"
   ]
 }
+
+## Clean up and solve problem of `@babel/.highlight.DELETE@latest` when use lerna bootstrap
+
+```
+npm ERR! 404 Not Found - GET https://registry.npmjs.org/@babel%2f.highlight.DELETE - Not found
+npm ERR! 404
+npm ERR! 404  '@babel/.highlight.DELETE@latest' is not in the npm registry.
+```
+
+```shell
+# clean up
+$ npx lerna clean
+$ rm -r node_modules
+$ npm i
+$ npx lerna bootstrap
+```
+
+## Solve custom nestjs packages dependencies
+
+```shell
+$ npx lerna add ./packages-nestjs/@koakh/nestjs-auth-quick-config --scope @convector-sample/server-graphql
+lerna notice cli v3.16.4
+lerna info filter [ '@convector-sample/server-graphql' ]
+lerna ERR! TypeError: Invalid comparator: /media/mario/Storage/Development/BlockChain/Convector/@koakh/nestjs-easyconfig
+lerna ERR!     at Comparator.parse (/media/mario/Storage/Development/BlockChain/Convector/
+```
+
+> somehow its is giving probles with old package, `npm ERR! Could not install from "../@koakh/nestjs-easyconfig" as it does not contain a package.json file.`
+
+somehow every `package.json` of packages remains with that lost line
+
+`"undefined": "/media/mario/Storage/Development/BlockChain/Convector/@koakh/nestjs-easyconfig"`
+
+must remove it from every packages/**/package.json project

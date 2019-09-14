@@ -16,6 +16,7 @@ touch packages/server-graphql/node_modules/${FILE_EXCLUDE}
 touch packages/server-rest/node_modules/${FILE_EXCLUDE}
 
 tar -zcvf $FILE \
-	--exclude-tag-all=$FILE_EXCLUDE \
+  --exclude-tag-all=$FILE_EXCLUDE \
   --exclude='FILE|DIR' \
-  .
+  ../NodeNestPackages \
+  ../NodeNestJsHyperLedgerConvectorRestStarter
