@@ -4,12 +4,12 @@ import { PubSub } from 'apollo-server-express';
 import NewParticipantInput from './dto/new-participant.input';
 import ParticipantArgs from './dto/participant.args';
 import Participant from './models/participant.model';
-import ParticipantService from './participant.service';
+import { ParticipantService } from './participant.service';
 
 const pubSub = new PubSub();
 
 @Resolver(of => Participant)
-export default class ParticipantResolver {
+export class ParticipantResolver {
   constructor(private readonly participantService: ParticipantService) { }
 
   @Query(returns => Participant)

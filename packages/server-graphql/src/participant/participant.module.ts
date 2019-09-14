@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import DateScalar from '../common/scalars/date.scalar';
-import ParticipantResolver from './participant.resolver';
-import ParticipantService from './participant.service';
+import { ParticipantResolver } from './participant.resolver';
+import { ParticipantService } from './participant.service';
 
 @Module({
   providers: [
@@ -11,4 +11,4 @@ import ParticipantService from './participant.service';
   ],
 })
 
-export default class ParticipantModule { }
+export class ParticipantModule { }

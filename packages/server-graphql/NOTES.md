@@ -10,8 +10,8 @@ $ npx lerna run build --scope @convector-sample/common --stream
 ```
 
 ```shell
-# start dev|debug
-$ npx lerna run start:dev --scope @convector-sample/server-graphql --stream
+# start debug
+$ npx lerna run start:debug --scope @convector-sample/server-rest --stream
 $ npx lerna run start:debug --scope @convector-sample/server-graphql --stream
 ```
 
@@ -22,6 +22,17 @@ $ npx lerna run start:debug --scope @convector-sample/server-graphql --stream
 $ npx lerna add participant-cc --scope @convector-sample/server-graphql
 $ npx lerna add person-cc --scope @convector-sample/server-graphql
 $ npx lerna add common --scope @convector-sample/server-graphql
+```
+
+## GraphQL project use server-rest auth and users module
+
+required to create symbolic links, else we have a lots of problems with dist and builds if we try to back dirs
+
+```shell
+# sym link auth and user modules
+$ cd packages/server-graphql/src
+$ ln -s ../../server-rest/src/auth/
+$ ln -s ../../server-rest/src/users/
 ```
 
 ## Links

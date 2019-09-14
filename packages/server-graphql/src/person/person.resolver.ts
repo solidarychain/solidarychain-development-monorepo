@@ -1,10 +1,10 @@
-import { NotFoundException } from '@nestjs/common';
+import { NotFoundException, Logger } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'apollo-server-express';
 import NewPersonInput from './dto/new-person.input';
 import PersonArgs from './dto/person.args';
 import Person from './models/person.model';
-import PersonService from './person.service';
+import { PersonService } from './person.service';
 import GetByAttributeInput from './dto/get-by-attribute.input';
 import AddPersonAttributeInput from './dto/add-person-attribute.input';
 import LoginPersonInput from './dto/login-person.input';
@@ -12,7 +12,7 @@ import LoginPersonInput from './dto/login-person.input';
 const pubSub = new PubSub();
 
 @Resolver(of => Person)
-export default class PersonResolver {
+export class PersonResolver {
   constructor(
     private readonly personService: PersonService,
   ) { }
@@ -76,7 +76,9 @@ export default class PersonResolver {
     @Args('loginPersonData') loginPersonData: LoginPersonInput,
   ): Promise<string> {
     pubSub.publish('personLogged', { personLogged: loginPersonData.username });
-    return await this.personService.login(loginPersonData);
+    const response = await this.personService.login(loginPersonData);
+    Logger.log(response);
+    return response;
   }
 
   @Subscription(returns => Person)

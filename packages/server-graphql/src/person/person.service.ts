@@ -10,7 +10,7 @@ import AddPersonAttributeInput from './dto/add-person-attribute.input';
 import LoginPersonInput from './dto/login-person.input';
 
 @Injectable()
-export default class PersonService {
+export class PersonService {
 
   async findOneById(id: string): Promise<Person> {
     // get fabric model with _props
@@ -68,8 +68,10 @@ export default class PersonService {
 
   async login(data: LoginPersonInput): Promise<string> {
     try {
-      const result = 'token here';
-      return result;
+      // const result = await this.authService.login(data.username);
+      // tslint:disable-next-line: max-line-length
+      const result = {accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxLTEwMC0xMDAiLCJ1c2VybmFtZSI6ImpvaG5kb2UiLCJpYXQiOjE1Njg1MDA0ODksImV4cCI6MTU2ODUwNDA4OX0.U-0O5xKIx5v7g9IKKpAnWwJRjBpA4-j56dZyHg9dvHs'};
+      return result.accessToken;
     } catch (error) {
       throw error;
     }

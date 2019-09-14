@@ -7,7 +7,7 @@ import ParticipantArgs from './dto/participant.args';
 import Participant from './models/participant.model';
 
 @Injectable()
-export default class ParticipantService {
+export class ParticipantService {
   async create(data: NewParticipantInput): Promise<Participant> {
     try {
       await ParticipantControllerBackEnd.register(data.id, data.name);

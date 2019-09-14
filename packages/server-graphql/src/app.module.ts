@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
-import ParticipantModule from './participant/participant.module';
-import PersonModule from './person/person.module';
+import { ParticipantModule } from './participant/participant.module';
+import { PersonModule } from './person/person.module';
 
 @Module({
   imports: [
