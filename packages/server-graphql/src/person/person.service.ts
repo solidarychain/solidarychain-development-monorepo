@@ -1,16 +1,19 @@
 import { Attribute as AttributeConvectorModel, Person as PersonConvectorModel } from '@convector-sample/person-cc';
 import { Injectable, Logger } from '@nestjs/common';
 import { FlatConvectorModel } from '@worldsibu/convector-core';
+import { AuthService } from '../auth/auth.service';
+import AccessToken from '../common/types/access-token';
 import { PersonControllerBackEnd } from '../convector';
+import AddPersonAttributeInput from './dto/add-person-attribute.input';
 import GetByAttributeInput from './dto/get-by-attribute.input';
+import LoginPersonInput from './dto/login-person.input';
 import NewPersonInput from './dto/new-person.input';
 import PersonArgs from './dto/person.args';
 import Person from './models/person.model';
-import AddPersonAttributeInput from './dto/add-person-attribute.input';
-import LoginPersonInput from './dto/login-person.input';
 
 @Injectable()
 export class PersonService {
+  // constructor(private readonly authService: AuthService) { }
 
   async findOneById(id: string): Promise<Person> {
     // get fabric model with _props
@@ -68,10 +71,9 @@ export class PersonService {
 
   async login(data: LoginPersonInput): Promise<string> {
     try {
-      // const result = await this.authService.login(data.username);
-      // tslint:disable-next-line: max-line-length
-      const result = {accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxLTEwMC0xMDAiLCJ1c2VybmFtZSI6ImpvaG5kb2UiLCJpYXQiOjE1Njg1MDA0ODksImV4cCI6MTU2ODUwNDA4OX0.U-0O5xKIx5v7g9IKKpAnWwJRjBpA4-j56dZyHg9dvHs'};
-      return result.accessToken;
+      // const result: AccessToken = await this.authService.login(data.username);
+      const result: AccessToken = { access_token: '1' };
+      return result.access_token;
     } catch (error) {
       throw error;
     }

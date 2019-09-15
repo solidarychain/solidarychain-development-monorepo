@@ -11,7 +11,6 @@ $ npx lerna run build --scope @convector-sample/common --stream
 
 ```shell
 # start debug
-$ npx lerna run start:debug --scope @convector-sample/server-rest --stream
 $ npx lerna run start:debug --scope @convector-sample/server-graphql --stream
 ```
 
@@ -22,6 +21,12 @@ $ npx lerna run start:debug --scope @convector-sample/server-graphql --stream
 $ npx lerna add participant-cc --scope @convector-sample/server-graphql
 $ npx lerna add person-cc --scope @convector-sample/server-graphql
 $ npx lerna add common --scope @convector-sample/server-graphql
+```
+
+```shell
+# in case of errors like Cannot find module '@convector-sample/common'.
+$ npx lerna clean
+$ npx lerna bootstrap
 ```
 
 ## GraphQL project use server-rest auth and users module
@@ -128,3 +133,48 @@ in docker logs we can view that value is content is sent has a string and not a 
 ```
 
 > read the SO post, link on top of notes
+
+## Authentication Notes
+
+```shell
+# install the required packages
+$ npx lerna add @nestjs/passport --scope @convector-sample/server-graphql --no-bootstrap
+$ npx lerna add @nestjs/jwt --scope @convector-sample/server-graphql --no-bootstrap
+$ npx lerna add passport --scope @convector-sample/server-graphql --no-bootstrap
+$ npx lerna add passport-local --scope @convector-sample/server-graphql --no-bootstrap
+$ npx lerna add bcrypt --scope @convector-sample/server-graphql --no-bootstrap
+# dev
+$ npx lerna add @types/passport-local --scope @convector-sample/server-graphql --dev --no-bootstrap
+$ npx lerna add @types/passport-jwt --save-dev --scope @convector-sample/server-graphql --dev --no-bootstrap
+# bootstrap
+$ npx lerna bootstrap --scope @convector-sample/server-graphql
+```
+
+```shell
+# create modules and services
+$ nest g module auth
+$ nest g service auth
+$ nest g module users
+$ nest g service users
+```
+
+@convector-sample/server-graphql: [Nest] 14138   - 2019-09-15 21:21:30   [ExceptionHandler] Nest can't resolve dependencies of the GraphqlLocalAuthGuard (?). Please make sure that the argument at index [0] is available in the PersonModule context. +4ms
+
+this occures because we are imports services, never imports services, when we import module we already have access to all exported providers(services etc) from module
+
+@convector-sample/server-graphql: [Nest] 15907   - 2019-09-15 21:25:25   [ExceptionHandler] Nest can't resolve dependencies of the GraphqlLocalAuthGuard (?). Please make sure that the argument at index [0] is available in the GraphqlLocalAuthGuard context. +234ms
+
+@convector-sample/server-graphql: [Nest] 6421   - 2019-09-15 22:22:27   [ExceptionHandler] Nest can't resolve dependencies of the PersonService (?). Please make sure that the argument at index [0] is available in the PersonModule context. +69ms
+
+the trick to use `GraphqlLocalAuthGuard` in `PersonModule` is just import `AuthModule` in `PersonModule`
+
+ex
+
+```typescript
+@Module({
+  imports: [AuthModule],
+  providers: [PersonResolver, PersonService, DateScalar],
+})
+
+export class PersonModule { }
+```

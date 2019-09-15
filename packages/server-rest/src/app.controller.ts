@@ -28,6 +28,7 @@ export class AppController {
   @ApiInternalServerErrorResponse({ description: c.API_RESPONSE_INTERNAL_SERVER_ERROR })
   @ApiUnauthorizedResponse({ description: c.API_RESPONSE_UNAUTHORIZED })
   async login(@Request() req): Promise<LoginUserResponseDto> {
+    // passport will attach the authenticated user to the request object
     return this.authService.login(req.user);
   }
 

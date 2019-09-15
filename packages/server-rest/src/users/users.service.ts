@@ -34,9 +34,7 @@ export class UsersService {
       return this.users.find(user => user.username === username);
     } else {
       try {
-        // TODO: in rest method is findOneByUsername
-        // return await this.personService.getByUsername(username);
-        return await this.personService.findOneByUsername(username);
+        return await this.personService.getByUsername(username);
       } catch (err) {
         Logger.error(JSON.stringify(err));
         const message: string = (err.responses[0]) ? err.responses[0].error.message : c.API_RESPONSE_INTERNAL_SERVER_ERROR;

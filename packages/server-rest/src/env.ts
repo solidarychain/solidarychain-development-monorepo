@@ -20,4 +20,10 @@ export const envVariables: any = {
 
   // authService : true: moked users array, false: or ledger person(users) authentication
   authServiceUseMokedUsers: process.env.AUTH_SERVICE_USE_MOKED_USERS || true,
+
+  // jwt
+  // https://github.com/zeit/ms
+  // https://github.com/auth0/node-jsonwebtoken#usage
+  jwtSecret: process.env.JWT_SECRET = 'secretKey',
+  jwtExpiresIn: process.env.JWT_EXPIRES_IN = '1h',
 };

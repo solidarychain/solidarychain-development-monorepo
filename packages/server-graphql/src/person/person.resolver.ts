@@ -1,4 +1,6 @@
-import { NotFoundException, Logger } from '@nestjs/common';
+import { AuthService } from '../auth/auth.service';
+import { GraphqlLocalAuthGuard } from './../auth/graphql-local-auth.guard';
+import { NotFoundException, Logger, UseGuards, Injectable } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'apollo-server-express';
 import NewPersonInput from './dto/new-person.input';
@@ -8,6 +10,7 @@ import { PersonService } from './person.service';
 import GetByAttributeInput from './dto/get-by-attribute.input';
 import AddPersonAttributeInput from './dto/add-person-attribute.input';
 import LoginPersonInput from './dto/login-person.input';
+import { GraphqlJwtAuthGuard } from '../auth/graphql-jwt-auth.guard';
 
 const pubSub = new PubSub();
 
@@ -15,7 +18,9 @@ const pubSub = new PubSub();
 export class PersonResolver {
   constructor(
     private readonly personService: PersonService,
+    private readonly authService: AuthService,
   ) { }
+
   @Query(returns => Person)
   async personById(
     @Args('id') id: string,
@@ -63,6 +68,7 @@ export class PersonResolver {
   }
 
   @Mutation(returns => Person)
+  @UseGuards(GraphqlJwtAuthGuard)
   async personAddAttribute(
     @Args('personId') personId: string,
     @Args('addPersonAttributeData') addPersonAttributeData: AddPersonAttributeInput,
@@ -72,6 +78,7 @@ export class PersonResolver {
   }
 
   @Mutation(returns => String)
+  @UseGuards(GraphqlLocalAuthGuard)
   async personLogin(
     @Args('loginPersonData') loginPersonData: LoginPersonInput,
   ): Promise<string> {

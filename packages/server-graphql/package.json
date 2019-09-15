@@ -19,6 +19,7 @@
     "@nestjs/core": "6.5.3",
     "@nestjs/graphql": "6.4.2",
     "@nestjs/jwt": "^6.1.1",
+    "@nestjs/passport": "^6.1.0",
     "@nestjs/platform-express": "6.5.3",
     "apollo-server-express": "2.8.1",
     "class-transformer": "^0.2.3",
@@ -26,13 +27,18 @@
     "graphql": "14.4.2",
     "graphql-subscriptions": "1.1.0",
     "graphql-type-json": "^0.3.0",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.3.3",
     "type-graphql": "0.17.4",
-    "typescript": "3.5.3"
+    "typescript": "3.5.3",
+    "bcrypt": "^3.0.6"
   },
   "devDependencies": {
     "@types/node": "^10.14.15",
+    "@types/passport-jwt": "^3.0.2",
+    "@types/passport-local": "^1.0.33",
     "ts-node": "^8.3.0",
     "tslint": "5.18.0"
   }
