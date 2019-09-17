@@ -158,15 +158,15 @@ $ nest g module users
 $ nest g service users
 ```
 
-@convector-sample/server-graphql: [Nest] 14138   - 2019-09-15 21:21:30   [ExceptionHandler] Nest can't resolve dependencies of the GraphqlLocalAuthGuard (?). Please make sure that the argument at index [0] is available in the PersonModule context. +4ms
+@convector-sample/server-graphql: [Nest] 14138   - 2019-09-15 21:21:30   [ExceptionHandler] Nest can't resolve dependencies of the GqlLocalAuthGuard (?). Please make sure that the argument at index [0] is available in the PersonModule context. +4ms
 
 this occures because we are imports services, never imports services, when we import module we already have access to all exported providers(services etc) from module
 
-@convector-sample/server-graphql: [Nest] 15907   - 2019-09-15 21:25:25   [ExceptionHandler] Nest can't resolve dependencies of the GraphqlLocalAuthGuard (?). Please make sure that the argument at index [0] is available in the GraphqlLocalAuthGuard context. +234ms
+@convector-sample/server-graphql: [Nest] 15907   - 2019-09-15 21:25:25   [ExceptionHandler] Nest can't resolve dependencies of the GqlLocalAuthGuard (?). Please make sure that the argument at index [0] is available in the GqlLocalAuthGuard context. +234ms
 
 @convector-sample/server-graphql: [Nest] 6421   - 2019-09-15 22:22:27   [ExceptionHandler] Nest can't resolve dependencies of the PersonService (?). Please make sure that the argument at index [0] is available in the PersonModule context. +69ms
 
-the trick to use `GraphqlLocalAuthGuard` in `PersonModule` is just import `AuthModule` in `PersonModule`
+the trick to use `GqlLocalAuthGuard` in `PersonModule` is just import `AuthModule` in `PersonModule`
 
 ex
 
@@ -189,4 +189,42 @@ export class PersonModule { }
 4. using user decorator in mutation
 
 ideal for personProfile
+
+used in `src/auth/graphql-jwt-auth.guard.ts`
+
+
+
+// tslint:disable-next-line: max-line-length
+// [NestJS Get current user in GraphQL resolver authenticated with JWT](https://stackoverflow.com/questions/55269777/nestjs-get-current-user-in-graphql-resolver-authenticated-with-jwt)
+
+// not used yet
+
+// use in @CurrentUser() decorator query/mutation
+// @Query(returns => User)
+// @UseGuards(GqlAuthGuard)
+// whoami(@CurrentUser() user: User) {
+//   console.log(user);
+//   return this.userService.findByUsername(user.username);
+// }
+
+used in
+src/common/decorators/user.decorator.ts
+
+
+
+getting headers in graphql 
+to fix "Cannot read property 'headers' of undefined" graphql request
+https://docs.nestjs.com/graphql/tooling#execution-context
+
+
+
+Applying Middleware-like mechanism to Resolvers' Queries and Mutations
+https://stackoverflow.com/questions/54532263/applying-middleware-like-mechanism-to-resolvers-queries-and-mutations
+
+
+
+
+
+Authentication: GraphQL Oficial Docs
+https://docs.nestjs.com/techniques/authentication#graphql
 

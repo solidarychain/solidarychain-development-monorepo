@@ -1,7 +1,7 @@
 import { NotFoundException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'apollo-server-express';
-import { GraphqlJwtAuthGuard } from '../auth/graphql-jwt-auth.guard';
+import { GqlAuthGuard } from '../auth/gql-auth.guard';
 import AddPersonAttributeInput from './dto/add-person-attribute.input';
 import GetByAttributeInput from './dto/get-by-attribute.input';
 import NewPersonInput from './dto/new-person.input';
@@ -9,6 +9,7 @@ import PersonArgs from './dto/person.args';
 import Person from './models/person.model';
 import { PersonService } from './person.service';
 import { CurrentUser } from '../common/decorators/user.decorator';
+import { AuthGuard } from '@nestjs/passport';
 
 const pubSub = new PubSub();
 
@@ -63,7 +64,6 @@ export class PersonResolver {
   }
 
   @Mutation(returns => Person)
-  @UseGuards(GraphqlJwtAuthGuard)
   async personAddAttribute(
     @Args('personId') personId: string,
     @Args('addPersonAttributeData') addPersonAttributeData: AddPersonAttributeInput,
@@ -78,9 +78,9 @@ export class PersonResolver {
   }
 
   @Mutation(returns => Person)
-  @UseGuards(GraphqlJwtAuthGuard)
-  async personProfile(@CurrentUser() user: any): Promise<any> {
+  @UseGuards(GqlAuthGuard)
+  // @UseGuards(AuthGuard('jwt'))
+  async personProfile(@CurrentUser() user: Person): Promise<any> {
     return await this.personService.findOneByUsername(user.username);
   }
-
 }

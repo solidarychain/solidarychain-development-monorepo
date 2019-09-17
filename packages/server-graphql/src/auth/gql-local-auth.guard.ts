@@ -4,7 +4,7 @@ import { GqlExecutionContext } from '@nestjs/graphql';
 import LoginPersonInput from '../person/dto/login-person.input';
 
 @Injectable()
-export class GraphqlLocalAuthGuard implements CanActivate {
+export class GqlLocalAuthGuard implements CanActivate {
   constructor(private readonly authService: AuthService) { }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {

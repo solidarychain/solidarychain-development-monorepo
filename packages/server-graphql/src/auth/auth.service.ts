@@ -11,20 +11,21 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) { }
 
-  // called by GraphqlLocalAuthGuard
+  // called by GqlLocalAuthGuard
   async validateUser(username: string, pass: string): Promise<any> {
     const user = await this.usersService.findOne(username);
     if (user) {
       const authorized = this.bcryptValidate(pass, user.password);
       if (authorized) {
         const { password, ...result } = user;
+        // we could do a database lookup in our validate() method to extract more information about the user,
+        // resulting in a more enriched user object being available in our Request
         return result;
       }
     }
     return null;
   }
 
-  // TODO: this is not used
   async login(user: any): Promise<AccessToken> {
     // note: we choose a property name of sub to hold our userId value to be consistent with JWT standards
     const payload = { username: user.username, sub: user.userId };

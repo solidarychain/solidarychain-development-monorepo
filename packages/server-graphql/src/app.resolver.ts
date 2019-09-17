@@ -2,7 +2,7 @@ import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'apollo-server-express';
 import { AuthService } from './auth/auth.service';
-import { GraphqlLocalAuthGuard } from './auth/graphql-local-auth.guard';
+import { GqlLocalAuthGuard } from './auth/gql-local-auth.guard';
 import LoginPersonInput from './person/dto/login-person.input';
 import { AccessToken } from './auth/models/access-token.model';
 
@@ -13,7 +13,8 @@ export class AppResolver {
   constructor(private readonly authService: AuthService) { }
 
   @Mutation(returns => AccessToken)
-  @UseGuards(GraphqlLocalAuthGuard)
+  @UseGuards(GqlLocalAuthGuard)
+  // @UseGuards(AuthGuard('local'))
   async personLogin(
     @Args('loginPersonData') loginPersonData: LoginPersonInput,
   ): Promise<AccessToken> {

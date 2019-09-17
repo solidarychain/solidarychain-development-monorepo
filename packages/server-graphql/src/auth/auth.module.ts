@@ -9,11 +9,11 @@ import { LocalStrategy } from './local.strategy';
 
 @Module({
   imports: [
+    UsersModule,
     // configure the JwtModule using register(), passing configuration object, and register a default strategy
     PassportModule.register({
       defaultStrategy: 'jwt',
     }),
-    UsersModule,
     JwtModule.register({
       secret: e.jwtSecret,
       signOptions: { expiresIn: e.jwtExpiresIn },

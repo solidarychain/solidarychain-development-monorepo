@@ -9,4 +9,4 @@ import { PassportModule } from '@nestjs/passport';
   ],
 })
 
-export class ParticipantModule {}
+export class ParticipantModule { }

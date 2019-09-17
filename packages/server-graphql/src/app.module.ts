@@ -17,6 +17,14 @@ import { PersonModule } from './person/person.module';
       autoSchemaFile: 'schema.gql',
       // pass the original req object into the graphql context
       context: ({ req }) => ({ req }),
+      // https://stackoverflow.com/questions/54532263/applying-middleware-like-mechanism-to-resolvers-queries-and-mutations
+      // context: (context) => {
+      //   let req = context.req;
+      //   if (context.connection) {
+      //     req = context.connection.context.req;
+      //   }
+      //   return { req };
+      // },
     }),
   ],
   providers: [AppResolver],
