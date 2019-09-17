@@ -16,7 +16,7 @@ export class GqlAuthGuard extends AuthGuard('jwt') {
     // GqlExecutionContext exposes corresponding methods for each argument, like getArgs(), getContext()
     const ctx = GqlExecutionContext.create(context);
     const { req } = ctx.getContext();
-    return req;
+    // return req;
 
     // the req parameter will contain a user property
     // (populated by Passport during the passport-local authentication flow)

@@ -6,9 +6,7 @@ import { PersonService } from './person.service';
 
 @Module({
   // import AuthModule to has access to Auth Guards
-  imports: [
-    AuthModule,
-  ],
+  imports: [AuthModule],
   providers: [PersonResolver, PersonService, DateScalar],
   exports: [PersonService],
 })
