@@ -9,6 +9,7 @@ import { ParticipantService } from './participant.service';
     ParticipantService,
     DateScalar,
   ],
+  exports: [ParticipantService],
 })
 
 export class ParticipantModule { }

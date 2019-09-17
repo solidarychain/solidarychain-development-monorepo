@@ -6,4 +6,5 @@ import { PersonService } from '../person/person.service';
   providers: [UsersService, PersonService],
   exports: [UsersService],
 })
+
 export class UsersModule { }

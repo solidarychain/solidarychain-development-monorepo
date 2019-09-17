@@ -1,15 +1,16 @@
+import { AppResolver } from './app.resolver';
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 import { ParticipantModule } from './participant/participant.module';
 import { PersonModule } from './person/person.module';
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
-    PersonModule,
-    ParticipantModule,
     AuthModule,
+    ParticipantModule,
+    PersonModule,
     UsersModule,
     GraphQLModule.forRoot({
       installSubscriptionHandlers: true,
@@ -18,6 +19,7 @@ import { UsersModule } from './users/users.module';
       context: ({ req }) => ({ req }),
     }),
   ],
+  providers: [AppResolver],
 })
 
 export class ApplicationModule { }

@@ -1,25 +1,19 @@
-import { AuthService } from '../auth/auth.service';
-import { GraphqlLocalAuthGuard } from './../auth/graphql-local-auth.guard';
-import { NotFoundException, Logger, UseGuards, Injectable } from '@nestjs/common';
+import { NotFoundException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'apollo-server-express';
+import { GraphqlJwtAuthGuard } from '../auth/graphql-jwt-auth.guard';
+import AddPersonAttributeInput from './dto/add-person-attribute.input';
+import GetByAttributeInput from './dto/get-by-attribute.input';
 import NewPersonInput from './dto/new-person.input';
 import PersonArgs from './dto/person.args';
 import Person from './models/person.model';
 import { PersonService } from './person.service';
-import GetByAttributeInput from './dto/get-by-attribute.input';
-import AddPersonAttributeInput from './dto/add-person-attribute.input';
-import LoginPersonInput from './dto/login-person.input';
-import { GraphqlJwtAuthGuard } from '../auth/graphql-jwt-auth.guard';
 
 const pubSub = new PubSub();
 
 @Resolver(of => Person)
 export class PersonResolver {
-  constructor(
-    private readonly personService: PersonService,
-    private readonly authService: AuthService,
-  ) { }
+  constructor(private readonly personService: PersonService) { }
 
   @Query(returns => Person)
   async personById(
@@ -77,16 +71,16 @@ export class PersonResolver {
     return person;
   }
 
-  @Mutation(returns => String)
-  @UseGuards(GraphqlLocalAuthGuard)
-  async personLogin(
-    @Args('loginPersonData') loginPersonData: LoginPersonInput,
-  ): Promise<string> {
-    pubSub.publish('personLogged', { personLogged: loginPersonData.username });
-    const response = await this.personService.login(loginPersonData);
-    Logger.log(response);
-    return response;
-  }
+  // @Mutation(returns => String)
+  // @UseGuards(GraphqlLocalAuthGuard)
+  // async personLogin(
+  //   @Args('loginPersonData') loginPersonData: LoginPersonInput,
+  // ): Promise<string> {
+  //   pubSub.publish('personLogged', { personLogged: loginPersonData.username });
+  //   const response = await this.personService.login(loginPersonData);
+  //   Logger.log(response);
+  //   return response;
+  // }
 
   @Subscription(returns => Person)
   personAdded() {
@@ -97,5 +91,4 @@ export class PersonResolver {
   personLogged() {
     return pubSub.asyncIterator('personLogged');
   }
-
 }

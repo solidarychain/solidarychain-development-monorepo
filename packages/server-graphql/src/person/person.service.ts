@@ -1,20 +1,15 @@
 import { Attribute as AttributeConvectorModel, Person as PersonConvectorModel } from '@convector-sample/person-cc';
 import { Injectable, Logger } from '@nestjs/common';
 import { FlatConvectorModel } from '@worldsibu/convector-core';
-import { AuthService } from '../auth/auth.service';
-import AccessToken from '../common/types/access-token';
 import { PersonControllerBackEnd } from '../convector';
 import AddPersonAttributeInput from './dto/add-person-attribute.input';
 import GetByAttributeInput from './dto/get-by-attribute.input';
-import LoginPersonInput from './dto/login-person.input';
 import NewPersonInput from './dto/new-person.input';
 import PersonArgs from './dto/person.args';
 import Person from './models/person.model';
 
 @Injectable()
 export class PersonService {
-  // constructor(private readonly authService: AuthService) { }
-
   async findOneById(id: string): Promise<Person> {
     // get fabric model with _props
     const fabricModel: PersonConvectorModel = await PersonControllerBackEnd.get(id) as PersonConvectorModel;
@@ -64,16 +59,6 @@ export class PersonService {
       const personToCreate: PersonConvectorModel = new PersonConvectorModel({ ...data });
       await PersonControllerBackEnd.create(personToCreate);
       return await this.findOneById(data.id);
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async login(data: LoginPersonInput): Promise<string> {
-    try {
-      // const result: AccessToken = await this.authService.login(data.username);
-      const result: AccessToken = { access_token: '1' };
-      return result.access_token;
     } catch (error) {
       throw error;
     }
