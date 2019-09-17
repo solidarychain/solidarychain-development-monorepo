@@ -8,6 +8,7 @@ import NewPersonInput from './dto/new-person.input';
 import PersonArgs from './dto/person.args';
 import Person from './models/person.model';
 import { PersonService } from './person.service';
+import { CurrentUser } from '../common/decorators/user.decorator';
 
 const pubSub = new PubSub();
 
@@ -71,24 +72,15 @@ export class PersonResolver {
     return person;
   }
 
-  // @Mutation(returns => String)
-  // @UseGuards(GraphqlLocalAuthGuard)
-  // async personLogin(
-  //   @Args('loginPersonData') loginPersonData: LoginPersonInput,
-  // ): Promise<string> {
-  //   pubSub.publish('personLogged', { personLogged: loginPersonData.username });
-  //   const response = await this.personService.login(loginPersonData);
-  //   Logger.log(response);
-  //   return response;
-  // }
-
   @Subscription(returns => Person)
   personAdded() {
     return pubSub.asyncIterator('personAdded');
   }
 
-  @Subscription(returns => String)
-  personLogged() {
-    return pubSub.asyncIterator('personLogged');
+  @Mutation(returns => Person)
+  @UseGuards(GraphqlJwtAuthGuard)
+  async personProfile(@CurrentUser() user: any): Promise<any> {
+    return await this.personService.findOneByUsername(user.username);
   }
+
 }

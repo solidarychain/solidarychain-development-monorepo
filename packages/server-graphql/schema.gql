@@ -48,6 +48,7 @@ type Mutation {
   participantNew(newParticipantData: NewParticipantInput!): Participant!
   personNew(newPersonData: NewPersonInput!): Person!
   personAddAttribute(addPersonAttributeData: AddPersonAttributeInput!, personId: String!): Person!
+  personProfile: Person!
 }
 
 input NewParticipantInput {
@@ -92,9 +93,9 @@ type Query {
 }
 
 type Subscription {
+  personLogged: String!
   participantAdded: Participant!
   personAdded: Person!
-  personLogged: String!
 }
 
 type x509Identities {

@@ -178,3 +178,15 @@ ex
 
 export class PersonModule { }
 ```
+
+## Awesome Link: Support AuthGuard
+
+- [Support AuthGuard : GraphQL](https://github.com/nestjs/graphql/issues/48)
+
+1. passing req to graphql context
+2. auth guard GraphqlAuthGuard
+3. user decorator
+4. using user decorator in mutation
+
+ideal for personProfile
+
