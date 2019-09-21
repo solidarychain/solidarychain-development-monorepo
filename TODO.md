@@ -43,6 +43,8 @@ Add Yup Validations
   add user with roles array
   invoke and graphql / rest
 
+[ ] https and http to https redirect
+
 all methods cc
   participant
     [X] register

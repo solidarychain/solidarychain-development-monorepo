@@ -5,7 +5,7 @@
 DONt forget to build common package `@convector-sample/common`, if change something, but first restart server
 
 ```shell
-# build
+# build common library
 $ npx lerna run build --scope @convector-sample/common --stream
 ```
 

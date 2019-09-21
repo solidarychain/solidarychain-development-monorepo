@@ -1,15 +1,14 @@
 import { NotFoundException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'apollo-server-express';
-import { GqlAuthGuard } from '../auth/gql-auth.guard';
+import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
+import { CurrentUser } from '../common/decorators/user.decorator';
 import AddPersonAttributeInput from './dto/add-person-attribute.input';
 import GetByAttributeInput from './dto/get-by-attribute.input';
 import NewPersonInput from './dto/new-person.input';
 import PersonArgs from './dto/person.args';
 import Person from './models/person.model';
 import { PersonService } from './person.service';
-import { CurrentUser } from '../common/decorators/user.decorator';
-import { AuthGuard } from '@nestjs/passport';
 
 const pubSub = new PubSub();
 

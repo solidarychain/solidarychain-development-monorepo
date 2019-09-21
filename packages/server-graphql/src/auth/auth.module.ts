@@ -3,6 +3,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { envVariables as e } from '../env';
 import { UsersModule } from './../users/users.module';
+import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
 import { LocalStrategy } from './local.strategy';
@@ -19,7 +20,7 @@ import { LocalStrategy } from './local.strategy';
       signOptions: { expiresIn: e.jwtExpiresIn },
     }),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, AuthResolver, LocalStrategy, JwtStrategy],
   exports: [AuthService],
 })
 
