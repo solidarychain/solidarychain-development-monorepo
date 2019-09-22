@@ -8,8 +8,8 @@ export const envVariables: any = {
   // override or extend common envVariables
 
   // http/s server
-  httpPort: process.env.HTTP_SERVER_PORT || 3001,
-  httpsPort: process.env.HTTPS_SERVER_PORT || 8444,
+  // httpPort: process.env.HTTP_SERVER_PORT || 3001,
+  httpsPort: process.env.HTTPS_SERVER_PORT || 3443,
 
   // jwt
   // https://github.com/zeit/ms

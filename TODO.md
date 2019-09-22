@@ -45,6 +45,7 @@ Add Yup Validations
 
 [ ] https and http to https redirect
 [ ] roles
+[ ] paginate
 
 all methods cc
   participant

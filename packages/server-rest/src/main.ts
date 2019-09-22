@@ -44,7 +44,7 @@ async function bootstrap() {
   // init app
   await app.init();
 
-  // boostrap servers
+  // boosStrap servers
   http.createServer(server).listen(e.httpPort, () => {
     Logger.log(`HTTP Server running on port [${e.httpPort}]`);
   });

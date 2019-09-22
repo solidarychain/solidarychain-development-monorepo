@@ -1,13 +1,17 @@
+import { httpsOptions } from './config/express.config';
 import { envVariables as e } from './env';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { ApplicationModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(ApplicationModule);
+  const app = await NestFactory.create(
+    ApplicationModule, { httpsOptions },
+  );
   app.useGlobalPipes(new ValidationPipe());
-  await app.listen(e.httpPort)
-    .then(() => console.log(`graphql server started. graphql endpoint exposed at http://localhost:${e.httpPort}/graphql`));
+
+  await app.listen(e.httpsPort)
+    .then(() => Logger.log(`graphql server started, endpoint exposed at https://localhost:${e.httpsPort}/graphql`));
 }
 
 bootstrap();
