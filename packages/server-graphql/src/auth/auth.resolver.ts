@@ -12,9 +12,8 @@ const pubSub = new PubSub();
 export class AuthResolver {
   constructor(private readonly authService: AuthService) { }
 
-  @Mutation(returns => AccessToken)
-  // @UseGuards(AuthGuard('local'))
   @UseGuards(GqlLocalAuthGuard)
+  @Mutation(returns => AccessToken)
   async personLogin(
     @Args('loginPersonData') loginPersonData: LoginPersonInput,
   ): Promise<AccessToken> {

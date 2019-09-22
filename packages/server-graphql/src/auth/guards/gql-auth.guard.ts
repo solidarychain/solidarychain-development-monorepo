@@ -14,16 +14,16 @@ export class GqlAuthGuard extends AuthGuard('jwt') {
     const { req } = ctx.getContext();
     // the req parameter will contain a user property
     // (populated by Passport during the passport-local authentication flow)
-    const authorization: string = (req.headers.authorization)
-      ? req.headers.authorization
-      : null;
-    if (authorization) {
+// const authorization: string = (req.headers.authorization)
+//   ? req.headers.authorization
+//   : null;
+// if (authorization) {
       // const token: string = authorization.toLowerCase().replace('bearer ', '');
       // const validToken = this.jwtService.verify(token);
-      return super.canActivate(new ExecutionContextHost([req]));
-    } else {
-      return true;
-    }
+    return super.canActivate(new ExecutionContextHost([req]));
+// } else {
+//   return false;
+// }
   }
 
   handleRequest(err: any, user: any) {

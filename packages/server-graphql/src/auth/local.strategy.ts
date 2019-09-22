@@ -10,7 +10,8 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   }
 
   /**
-   * Passport expects a validate() method with the following signature: validate(username: string, password:string): any
+   * Passport expects a validate() method with the following signature: 
+   * validate(username: string, password:string): any
    */
   async validate(username: string, password: string): Promise<any> {
     const user = await this.authService.validateUser(username, password);

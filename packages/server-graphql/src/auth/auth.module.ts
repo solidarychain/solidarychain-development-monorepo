@@ -11,10 +11,11 @@ import { LocalStrategy } from './local.strategy';
 @Module({
   imports: [
     UsersModule,
+    // not used because we use a class based strategy GqlAuthGuard
     // configure the JwtModule using register(), passing configuration object, and register a default strategy
-    PassportModule.register({
-      defaultStrategy: 'jwt',
-    }),
+    // PassportModule.register({
+    //   defaultStrategy: 'jwt',
+    // }),
     JwtModule.register({
       secret: e.jwtSecret,
       signOptions: { expiresIn: e.jwtExpiresIn },

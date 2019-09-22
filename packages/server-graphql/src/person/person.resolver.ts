@@ -12,6 +12,7 @@ import { PersonService } from './person.service';
 
 const pubSub = new PubSub();
 
+@UseGuards(GqlAuthGuard)
 @Resolver(of => Person)
 export class PersonResolver {
   constructor(private readonly personService: PersonService) { }
@@ -76,9 +77,8 @@ export class PersonResolver {
     return pubSub.asyncIterator('personAdded');
   }
 
-  @Mutation(returns => Person)
   @UseGuards(GqlAuthGuard)
-  // @UseGuards(AuthGuard('jwt'))
+  @Mutation(returns => Person)
   async personProfile(@CurrentUser() user: Person): Promise<any> {
     return await this.personService.findOneByUsername(user.username);
   }

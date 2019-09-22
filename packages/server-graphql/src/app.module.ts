@@ -1,4 +1,3 @@
-import { AuthResolver } from './auth/auth.resolver';
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { UsersModule } from './users/users.module';
@@ -26,7 +25,7 @@ import { PersonModule } from './person/person.module';
       //   return { req };
       // },
     }),
-  ]
+  ],
 })
 
 export class ApplicationModule { }

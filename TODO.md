@@ -44,6 +44,7 @@ Add Yup Validations
   invoke and graphql / rest
 
 [ ] https and http to https redirect
+[ ] roles
 
 all methods cc
   participant
@@ -62,4 +63,4 @@ all methods cc
 login mutation > jwt
 authentication/authorization
 
-receive transactionid, to store in neo4j
+receive transaction id, to store in neo4j
