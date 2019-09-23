@@ -1,12 +1,13 @@
-import { Module } from '@nestjs/common';
+import { Module, MiddlewareConsumer } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
-import { PassportModule } from '@nestjs/passport';
 import { envVariables as e } from '../env';
 import { UsersModule } from './../users/users.module';
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
 import { LocalStrategy } from './local.strategy';
+import { CookieParserMiddleware } from '@nest-middlewares/cookie-parser';
+import { AuthController } from './auth.controller';
 
 @Module({
   imports: [
@@ -17,12 +18,17 @@ import { LocalStrategy } from './local.strategy';
     //   defaultStrategy: 'jwt',
     // }),
     JwtModule.register({
-      secret: e.jwtSecret,
-      signOptions: { expiresIn: e.jwtExpiresIn },
+      secret: e.accessTokenJwtSecret,
+      signOptions: { expiresIn: e.accessTokenExpiresIn },
     }),
   ],
+  controllers: [AuthController],
   providers: [AuthService, AuthResolver, LocalStrategy, JwtStrategy],
   exports: [AuthService],
 })
 
-export class AuthModule { }
+export class AuthModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(CookieParserMiddleware).forRoutes('/refresh-token');
+  }
+}

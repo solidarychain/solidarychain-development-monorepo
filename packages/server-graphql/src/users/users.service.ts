@@ -1,4 +1,4 @@
-import { Injectable, Logger, HttpException, HttpStatus, forwardRef, Inject } from '@nestjs/common';
+import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
 import { appConstants as c } from '../constants';
 import { PersonService } from '../person/person.service';
 
@@ -10,7 +10,7 @@ export class UsersService {
     private readonly personService: PersonService,
   ) { }
 
-  async findOne(username: string): Promise<User | undefined> {
+  async findOneByUsername(username: string): Promise<User | undefined> {
     try {
       return await this.personService.findOneByUsername(username);
     } catch (err) {

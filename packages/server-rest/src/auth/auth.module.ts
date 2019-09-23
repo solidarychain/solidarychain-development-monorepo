@@ -16,7 +16,7 @@ import { envVariables as e } from '../env';
     UsersModule,
     JwtModule.register({
       secret: e.jwtSecret,
-      signOptions: { expiresIn: e.jwtExpiresIn },
+      signOptions: { expiresIn: e.accessTokenExpiresIn },
     }),
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy],

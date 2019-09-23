@@ -228,3 +228,31 @@ https://stackoverflow.com/questions/54532263/applying-middleware-like-mechanism-
 Authentication: GraphQL Oficial Docs
 https://docs.nestjs.com/techniques/authentication#graphql
 
+
+
+
+GraphQL Playground accepts cookie must change preferences `"request.credentials": "omit"` to `"request.credentials": "include"`
+
+
+## Cookie Parser
+
+curl -k --request POST \
+  --url https://localhost:3443/refresh-token \
+  --cookie jid=j%253A%257B%2522accessToken%2522%253A%2522eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImphbmVkb2UiLCJpYXQiOjE1NjkyNzc0NjAsImV4cCI6MTU2OTg4MjI2MH0.A6XcwTvNZDUoT1MG6lFu7GyxVDg1GrTyTkjEFhvgDtI%2522%257D
+
+https://www.npmjs.com/package/@nest-middlewares/cookie-parser
+https://docs.nestjs.com/middleware
+
+npx lerna add @nest-middlewares/cookie-parser --scope @convector-sample/server-graphql
+
+```typescript
+export class AuthModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(CookieParserMiddleware).forRoutes('/refresh-token');
+  }
+}
+```
+
+curl -k --request POST \
+  --url https://localhost:3443/refresh-token \
+  --cookie jid=j%3A%7B%22accessToken%22%3A%22eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImphbmVkb2UiLCJpYXQiOjE1NjkyODEyNzUsImV4cCI6MTU2OTg4NjA3NX0.IpMlOxsQBCwCSwrXGzA3xVhodAJsDHNggaChZ8LSJEA%22%7D

@@ -1190,16 +1190,16 @@ update the `AuthModule` to import the new dependencies and configure the `JwtMod
 add `packages/server/src/auth/constants.ts`
 
 ```typescript
-const jwtSecret = process.env.JWT_SECRET = 'secretKey';
-const jwtExpiresIn = process.env.JWT_EXPIRES_IN = '60s';
+const jwtSecret = process.env.ACCESS_TOKEN_JWT_SECRET = 'secretKey';
+const expiresIn = process.env.ACCESS_TOKEN_EXPIRES_IN = '60s';
 
 export const jwtConstants = {
   secret: jwtSecret,
-  expiresIn: jwtExpiresIn,
+  expiresIn: expiresIn,
 };
 ```
 
-add to `.env` `JWT_SECRET` env variable ex `JWT_SECRET=uKxHrE431MRgYoI8G6JKePsKhQ71kdZX`
+add to `.env` `ACCESS_TOKEN_JWT_SECRET` env variable ex `ACCESS_TOKEN_JWT_SECRET=uKxHrE431MRgYoI8G6JKePsKhQ71kdZX`
 
 now update `packages/server/src/auth/auth.module.ts` with
 

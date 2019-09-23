@@ -7,8 +7,12 @@ import { ApplicationModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(
     ApplicationModule, { httpsOptions },
+
   );
+  // middleware
   app.useGlobalPipes(new ValidationPipe());
+  // TODO:
+  // app.enableCors();
 
   await app.listen(e.httpsPort)
     .then(() => Logger.log(`graphql server started, endpoint exposed at https://localhost:${e.httpsPort}/graphql`));

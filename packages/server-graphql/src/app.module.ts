@@ -11,19 +11,13 @@ import { PersonModule } from './person/person.module';
     ParticipantModule,
     PersonModule,
     UsersModule,
+    // ApolloServer config
     GraphQLModule.forRoot({
       installSubscriptionHandlers: true,
       autoSchemaFile: 'schema.gql',
-      // pass the original req object into the graphql context
-      context: ({ req }) => ({ req }),
-      // https://stackoverflow.com/questions/54532263/applying-middleware-like-mechanism-to-resolvers-queries-and-mutations
-      // context: (context) => {
-      //   let req = context.req;
-      //   if (context.connection) {
-      //     req = context.connection.context.req;
-      //   }
-      //   return { req };
-      // },
+      // pass the original req and res object into the graphql context,
+      // get context with decorator `@Context() { req, res }: GqlContext`
+      context: ({ req, res }) => ({ req, res }),
     }),
   ],
 })

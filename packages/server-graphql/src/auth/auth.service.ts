@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { SignOptions } from 'jsonwebtoken';
 import AccessToken from '../common/types/access-token';
+import { GqlContextPayload } from '../types';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class AuthService {
@@ -13,7 +15,7 @@ export class AuthService {
 
   // called by GqlLocalAuthGuard
   async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.usersService.findOne(username);
+    const user = await this.usersService.findOneByUsername(username);
     if (user) {
       const authorized = this.bcryptValidate(pass, user.password);
       if (authorized) {
@@ -26,13 +28,17 @@ export class AuthService {
     return null;
   }
 
-  async login(user: any): Promise<AccessToken> {
+  async signJwtToken(user: any, options?: SignOptions): Promise<AccessToken> {
     // note: we choose a property name of sub to hold our userId value to be consistent with JWT standards
     const payload = { username: user.username, sub: user.userId };
     return {
       // generate JWT from a subset of the user object properties
-      accessToken: this.jwtService.sign(payload),
+      accessToken: this.jwtService.sign(payload, options),
     };
+  }
+
+  getJwtPayLoad(token: string): GqlContextPayload {
+    return this.jwtService.verify(token);
   }
 
   bcryptValidate = (password: string, hashPassword: string): boolean => {
