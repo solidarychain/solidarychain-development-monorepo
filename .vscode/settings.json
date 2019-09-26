@@ -38,5 +38,6 @@
     "sideBar.border": "#7f40bf",
     "editorGroup.border": "#7f40bf"
   },
-  "peacock.color": "#639"
+  "peacock.color": "#639",
+  "browser-preview.startUrl": "http://localhost:3000"
 }

@@ -2,10 +2,14 @@
   "name": "@convector-sample/frontend-react",
   "version": "0.1.0",
   "dependencies": {
+    "@apollo/react-hooks": "^3.1.1",
     "@types/jest": "24.0.18",
     "@types/node": "12.7.8",
     "@types/react": "16.9.3",
     "@types/react-dom": "16.9.1",
+    "apollo-boost": "^0.4.4",
+    "apollo-link-context": "^1.0.19",
+    "graphql": "^14.5.8",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-scripts": "3.1.2",
@@ -31,5 +35,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/graphql": "^14.5.0"
   }
 }

@@ -11,8 +11,10 @@ async function bootstrap() {
   );
   // middleware
   app.useGlobalPipes(new ValidationPipe());
-  // TODO:
-  // app.enableCors();
+  app.enableCors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+  });
 
   await app.listen(e.httpsPort)
     .then(() => Logger.log(`graphql server started, endpoint exposed at https://localhost:${e.httpsPort}/graphql`));

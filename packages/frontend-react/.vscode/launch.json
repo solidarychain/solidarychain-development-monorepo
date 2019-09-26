@@ -14,6 +14,17 @@
       "sourceMapPathOverrides": {
         "webpack:///src/*": "${webRoot}/*"
       }
+    },
+    {
+      "type": "browser-preview",
+      "request": "attach",
+      "name": "Browser Preview: Attach"
+    },
+    {
+      "type": "browser-preview",
+      "request": "launch",
+      "name": "Browser Preview: Launch",
+      "url": "http://localhost:3000"
     }
   ]
 }
