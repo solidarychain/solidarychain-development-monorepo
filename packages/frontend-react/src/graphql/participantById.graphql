@@ -1,0 +1,14 @@
+query ($id: String!){
+  participantById(id:$id)
+  {
+    id
+    name
+    msp,
+    identities{
+      id
+      status
+      fingerprint
+    }
+  }
+}
+ 
