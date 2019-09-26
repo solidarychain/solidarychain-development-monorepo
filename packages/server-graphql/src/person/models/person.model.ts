@@ -23,6 +23,9 @@ export default class Person {
   @IsDefined()
   public username: string;
 
+  // not exposed
+  public password: string;
+
   @Field()
   public email: string;
 

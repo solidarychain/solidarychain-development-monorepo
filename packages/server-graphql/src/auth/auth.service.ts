@@ -5,6 +5,8 @@ import { SignOptions } from 'jsonwebtoken';
 import AccessToken from '../common/types/access-token';
 import { GqlContextPayload } from '../types';
 import { UsersService } from '../users/users.service';
+import { Response } from 'express';
+import { envVariables as e } from '../env';
 
 @Injectable()
 export class AuthService {
@@ -35,6 +37,21 @@ export class AuthService {
       // generate JWT from a subset of the user object properties
       accessToken: this.jwtService.sign(payload, options),
     };
+  }
+
+  async signRefreshToken(user: any, tokenVersion: number, options?: SignOptions): Promise<AccessToken> {
+    const payload = { username: user.username, sub: user.userId, tokenVersion };
+    return {
+      // generate JWT from a subset of the user object properties
+      accessToken: this.jwtService.sign(payload, { ...options, expiresIn: e.refreshTokenExpiresIn }),
+    };
+  }
+
+  sendRefreshToken(res: Response, { accessToken }: AccessToken): void {
+    res.cookie('jid', accessToken, {
+      // prevent javascript access
+      httpOnly: true,
+    });
   }
 
   getJwtPayLoad(token: string): GqlContextPayload {

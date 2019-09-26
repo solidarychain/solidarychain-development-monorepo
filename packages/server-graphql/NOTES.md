@@ -1,5 +1,9 @@
 # NOTES
 
+## Links
+
+- [JWT Authentication Node.js Tutorial with GraphQL and React](https://www.youtube.com/watch?v=25GS0MLT8JU&t=368s)
+
 ## Start
 
 DONt forget to build common package `@convector-sample/common`, if change something, but first restart server
@@ -233,8 +237,9 @@ https://docs.nestjs.com/techniques/authentication#graphql
 
 GraphQL Playground accepts cookie must change preferences `"request.credentials": "omit"` to `"request.credentials": "include"`
 
-
 ## Cookie Parser
+
+
 
 curl -k --request POST \
   --url https://localhost:3443/refresh-token \
@@ -253,6 +258,15 @@ export class AuthModule {
 }
 ```
 
-curl -k --request POST \
+notes with tokenVersion we must:
+
+1. login, and get cookie refreshToken
+2. send refreshToken to /refresh-token, keep send this same refreshToken until we login, time when we increase tokenVersion and it will be invalidated
+
+> never use accessToken, wrong secret, don't have tokenVersion
+
+# refreshToken from cookie
+$ TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImphbmVkb2UiLCJ0b2tlblZlcnNpb24iOjUsImlhdCI6MTU2OTM2Mzg1MCwiZXhwIjoxNTY5OTY4NjUwfQ.ArD1yOMv_xrsUwveKur9Jyy03FKhvdvYZQaoY54KfGw
+$ curl -k -v -X POST \
   --url https://localhost:3443/refresh-token \
-  --cookie jid=j%3A%7B%22accessToken%22%3A%22eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImphbmVkb2UiLCJpYXQiOjE1NjkyODEyNzUsImV4cCI6MTU2OTg4NjA3NX0.IpMlOxsQBCwCSwrXGzA3xVhodAJsDHNggaChZ8LSJEA%22%7D
+  --cookie jid=${TOKEN}

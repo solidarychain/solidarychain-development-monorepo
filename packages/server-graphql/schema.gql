@@ -45,6 +45,7 @@ input LoginPersonInput {
 
 type Mutation {
   personLogin(loginPersonData: LoginPersonInput!): AccessToken!
+  revokeUserRefreshTokens(username: String!): Boolean!
   participantNew(newParticipantData: NewParticipantInput!): Participant!
   personNew(newPersonData: NewPersonInput!): Person!
   personAddAttribute(addPersonAttributeData: AddPersonAttributeInput!, personId: String!): Person!

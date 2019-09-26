@@ -3,4 +3,5 @@ export interface GqlContextPayload {
   // sub: string;
   iat: string;
   exp: string;
+  tokenVersion: number;
 }
