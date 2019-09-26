@@ -72,6 +72,19 @@ $ sudo docker container ls | grep "person-1.1" | awk '{print $1}'
 sudo docker logs $(docker container ls | grep "person-1.1" | awk '{print $1}' | head -n 1) -f
 ```
 
+## Fix's
+
+```shell
+# when running servers
+@convector-sample/server-graphql: src/convector.ts(35,50): error TS2339: Property 'get' does not exist on type 'ConvectorControllerClient<ConvectorController<any>>'.
+@convector-sample/server-graphql: src/participant/participant.service.ts(13,42): error TS2339: Property 'register' does not exist on type 'ConvectorControllerClient<ConvectorController<any>>'.
+@convector-sample/server-graphql: src/participant/participant.service.ts(23,75): error TS2339: Property 'get' does not exist on type 'ConvectorControllerClient<ConvectorController<any>>'.
+@convector-sample/server-graphql: src/participant/participant.service.ts(35,105): error TS2339: Property 'getAll' does not exist on type 'ConvectorControllerClient<ConvectorController<any>>'.
+@convector-sample/server-graphql: 20:58:05 - Found 4 errors. Watching for file changes.
+# fix build cc and start server
+$ npx lerna run build --scope @convector-sample/participant-cc --stream
+```
+
 ## Uris and Endpoints
 
 ### Tools

@@ -1,24 +1,17 @@
-0 silly argv { _: [ 'add' ],
-0 silly argv   scope: '@convector-sample/server-graphql',
-0 silly argv   globs: [],
+0 silly argv { _: [ 'import' ],
+0 silly argv   flatten: true,
 0 silly argv   lernaVersion: '3.16.4',
 0 silly argv   '$0': 'node_modules/.bin/lerna',
-0 silly argv   pkg: './packages-nestjs/@koakh/nestjs-auth-quick-config' }
+0 silly argv   dir: '/tmp/frontend-react' }
 1 notice cli v3.16.4
 2 verbose rootPath /media/mario/Storage/Development/BlockChain/Convector/NodeNestJsHyperLedgerConvectorRestStarter
-3 info filter [ '@convector-sample/server-graphql' ]
-4 error TypeError: Invalid comparator: /media/mario/Storage/Development/BlockChain/Convector/@koakh/nestjs-easyconfig
-4 error     at Comparator.parse (/media/mario/Storage/Development/BlockChain/Convector/NodeNestJsHyperLedgerConvectorRestStarter/node_modules/@lerna/add/node_modules/semver/semver.js:794:11)
-4 error     at new Comparator (/media/mario/Storage/Development/BlockChain/Convector/NodeNestJsHyperLedgerConvectorRestStarter/node_modules/@lerna/add/node_modules/semver/semver.js:777:8)
-4 error     at Range.<anonymous> (/media/mario/Storage/Development/BlockChain/Convector/NodeNestJsHyperLedgerConvectorRestStarter/node_modules/@lerna/add/node_modules/semver/semver.js:975:12)
-4 error     at Array.map (<anonymous>)
-4 error     at Range.parseRange (/media/mario/Storage/Development/BlockChain/Convector/NodeNestJsHyperLedgerConvectorRestStarter/node_modules/@lerna/add/node_modules/semver/semver.js:974:13)
-4 error     at Range.<anonymous> (/media/mario/Storage/Development/BlockChain/Convector/NodeNestJsHyperLedgerConvectorRestStarter/node_modules/@lerna/add/node_modules/semver/semver.js:917:17)
-4 error     at Array.map (<anonymous>)
-4 error     at new Range (/media/mario/Storage/Development/BlockChain/Convector/NodeNestJsHyperLedgerConvectorRestStarter/node_modules/@lerna/add/node_modules/semver/semver.js:916:40)
-4 error     at Function.intersects (/media/mario/Storage/Development/BlockChain/Convector/NodeNestJsHyperLedgerConvectorRestStarter/node_modules/@lerna/add/node_modules/semver/semver.js:1542:8)
-4 error     at getRangeToReference (/media/mario/Storage/Development/BlockChain/Convector/NodeNestJsHyperLedgerConvectorRestStarter/node_modules/@lerna/add/lib/get-range-to-reference.js:18:35)
-4 error     at result.filter.pkg (/media/mario/Storage/Development/BlockChain/Convector/NodeNestJsHyperLedgerConvectorRestStarter/node_modules/@lerna/add/index.js:142:14)
-4 error     at Array.filter (<anonymous>)
-4 error     at AddCommand.collectPackagesToChange (/media/mario/Storage/Development/BlockChain/Convector/NodeNestJsHyperLedgerConvectorRestStarter/node_modules/@lerna/add/index.js:134:21)
-4 error     at chain.then (/media/mario/Storage/Development/BlockChain/Convector/NodeNestJsHyperLedgerConvectorRestStarter/node_modules/@lerna/add/index.js:69:35)
+3 error Error: Command failed: git log --format=%h --first-parent
+3 error fatal: not a git repository (or any of the parent directories): .git
+3 error
+3 error
+3 error     at makeError (/media/mario/Storage/Development/BlockChain/Convector/NodeNestJsHyperLedgerConvectorRestStarter/node_modules/@lerna/child-process/node_modules/execa/index.js:174:9)
+3 error     at Function.module.exports.sync (/media/mario/Storage/Development/BlockChain/Convector/NodeNestJsHyperLedgerConvectorRestStarter/node_modules/@lerna/child-process/node_modules/execa/index.js:338:15)
+3 error     at Object.execSync (/media/mario/Storage/Development/BlockChain/Convector/NodeNestJsHyperLedgerConvectorRestStarter/node_modules/@lerna/child-process/index.js:26:16)
+3 error     at ImportCommand.externalExecSync (/media/mario/Storage/Development/BlockChain/Convector/NodeNestJsHyperLedgerConvectorRestStarter/node_modules/@lerna/import/index.js:147:34)
+3 error     at ImportCommand.initialize (/media/mario/Storage/Development/BlockChain/Convector/NodeNestJsHyperLedgerConvectorRestStarter/node_modules/@lerna/import/index.js:82:25)
+3 error     at Promise.resolve.then (/media/mario/Storage/Development/BlockChain/Convector/NodeNestJsHyperLedgerConvectorRestStarter/node_modules/@lerna/command/index.js:271:24)

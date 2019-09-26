@@ -1,4 +1,4 @@
-**/node_modules/
+**/node_modules/**
 .bak
 .src
 .trash
@@ -6,3 +6,4 @@
 dist/
 chaincode-person/
 log/packages/server/.env
+.vscode/chrome
