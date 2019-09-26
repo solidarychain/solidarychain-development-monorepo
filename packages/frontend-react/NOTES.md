@@ -5,6 +5,10 @@
 - [@apollo/react-hooks: API reference](https://www.apollographql.com/docs/react/api/react-hooks/)
 - [Apollo: Authentication](https://www.apollographql.com/docs/react/networking/authentication/)
 - [Apollo client query error: “Network error: Failed to fetch” How to troubleshoot?](https://stackoverflow.com/questions/49394718/apollo-client-query-error-network-error-failed-to-fetch-how-to-troubleshoot)
+- [Apollo Client, now with React Hooks](https://blog.apollographql.com/apollo-client-now-with-react-hooks-676d116eeae2)
+
+- [@graphql-codegen](https://www.npmjs.com/package/@graphql-codegen/cli)
+- [graphql-code-generator.com](https://graphql-code-generator.com/)
 
 ## 
 
@@ -298,3 +302,14 @@ const App: React.FC = () => {
 export default App;
 ```
 
+## Install GraphQL CodeGen
+
+```shell
+# install deps
+$ npx lerna add @graphql-codegen/cli --scope @convector-sample/frontend-react --no-bootstrap --dev
+$ npx lerna bootstrap
+# help
+$ npx graphql-codegen --help
+```
+
+### init project

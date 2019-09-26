@@ -37,6 +37,7 @@
     ]
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^1.7.0",
     "@types/graphql": "^14.5.0"
   }
 }
