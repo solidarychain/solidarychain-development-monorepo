@@ -1,6 +1,13 @@
 {
   "name": "@convector-sample/frontend-react",
   "version": "0.1.0",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "gen:graphql": "NODE_TLS_REJECT_UNAUTHORIZED=0 graphql-codegen --config codegen.yml"
+  },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.1",
     "@types/jest": "24.0.18",
@@ -15,11 +22,13 @@
     "react-scripts": "3.1.2",
     "typescript": "3.6.3"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+  "devDependencies": {
+    "@graphql-codegen/cli": "^1.7.0",
+    "@types/graphql": "^14.5.0",
+    "@graphql-codegen/typescript": "1.7.0",
+    "@graphql-codegen/typescript-operations": "1.7.0",
+    "@graphql-codegen/typescript-react-apollo": "1.7.0",
+    "@graphql-codegen/introspection": "1.7.0"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -35,9 +44,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@graphql-codegen/cli": "^1.7.0",
-    "@types/graphql": "^14.5.0"
   }
 }

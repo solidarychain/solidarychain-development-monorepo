@@ -32,7 +32,7 @@ const authLink = setContext((_: any, { headers }: any) => {
   // get the authentication token from local storage if it exists
   let token = localStorage.getItem('token');
   if (!token) {
-    token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImphbmVkb2UiLCJpYXQiOjE1Njk1MzY4MzMsImV4cCI6MTU2OTUzNzczM30.WzkWl0tn4xo9si4SMJdR6LIYcWvKMHSu4JaMtpOzQAE';
+    token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImphbmVkb2UiLCJpYXQiOjE1Njk1Mzk4OTIsImV4cCI6MTU2OTU0MDc5Mn0.GihMVVNxS4acDCP68KJwRuNlplvGAGnZDojHE63INY4';
   }
   // return the headers to the context so httpLink can read them
   return {

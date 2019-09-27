@@ -10,6 +10,16 @@
 - [@graphql-codegen](https://www.npmjs.com/package/@graphql-codegen/cli)
 - [graphql-code-generator.com](https://graphql-code-generator.com/)
 
+## commands
+
+```shell
+# run server and app
+$ npx lerna run gen:graphql --scope @convector-sample/frontend-react
+$ npx lerna run gen:graphql --scope @convector-sample/server-graphql
+# gen graphql
+$ npx lerna run gen:graphql --scope @convector-sample/frontend-react
+```
+
 ## 
 
 1:25
@@ -313,3 +323,94 @@ $ npx graphql-codegen --help
 ```
 
 ### init project
+
+create `src/graphql` folder
+
+```shell
+# enter frontend-react else it creates .yml and add script to main lerna package.json and not to frontend-react/package.json
+$ cd packages/frontend-react/
+# init
+$ npx graphql-codegen init
+# config
+? What type of application are you building? Application built with React
+? Where is your schema?: (path or url) https://localhost:3443/graphql
+? Where are your operations and fragments?: src/graphql/*.graphql
+# plugins
+? Pick plugins: TypeScript (required by other typescript plugins), TypeScr
+ipt Operations (operations and fragments), TypeScript React Apollo (typed 
+components and HOCs)
+# config
+? Where to write the output: src/generated/graphql.ts
+? Do you want to generate an introspection file? Yes
+? How to name the config file? codegen.yml
+# script
+? What script in package.json should run the codegen? gen:graphql
+
+config file generated at codegen.yml
+
+$ npm install
+To install the plugins.
+
+$ npm run gen:graphql
+To run GraphQL Code Generator.
+```
+
+new file `packages/frontend-react/codegen.yml`
+script added `"gen:graphql": "graphql-codegen --config codegen.yml"`
+
+```shell
+# add dep added by codegen
+$ npx lerna bootstrap
+```
+
+```json
+"devDependencies": {
+  "@graphql-codegen/cli": "^1.7.0",
+  "@types/graphql": "^14.5.0",
+  "@graphql-codegen/typescript": "1.7.0",
+  "@graphql-codegen/typescript-operations": "1.7.0",
+  "@graphql-codegen/typescript-react-apollo": "1.7.0",
+  "@graphql-codegen/introspection": "1.7.0"
+}
+```
+
+https://graphql-code-generator.com/docs/getting-started/codegen-config
+
+Debug Mode
+You can set the DEBUG environment to 1 in order to tell the Codegen to print debug information.
+
+You can set the VERBOSE environment to 1 in order to tell the codegen to print more information regarding the CLI output (listr).
+
+$ DEBUG=1
+$ cd packages/frontend-react
+$ npm run gen:graphql
+
+  ✖ ./graphql.schema.json
+    Failed to load schema from https://localhost:3443/graphql:
+
+        request to https://localhost:3443/graphql failed, reason: self signed certificate
+
+
+add to script
+
+"gen:graphql": "NODE_TLS_REJECT_UNAUTHORIZED=0 graphql-codegen --config codegen.yml"
+
+ Found 1 error
+  ✖ src/generated/graphql.ts
+    Plugin "react-apollo" requires extension to be ".tsx"!
+
+now change `packages/frontend-react/codegen.yml`
+src/generated/graphql.ts:
+to
+src/generated/graphql.tsx:
+
+  ✔ Parse configuration
+  ✔ Generate outputs
+
+npm run gen:graphql
+
+now test with lerna script
+
+$ npx lerna run gen:graphql --scope @convector-sample/frontend-react
+
+it works move on
