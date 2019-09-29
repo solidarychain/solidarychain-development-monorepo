@@ -5,7 +5,13 @@ interface Props { }
 
 export const Home: React.FC<Props> = () => {
   // hooks
-  const { data, loading, error } = usePersonsQuery();
+  const { data, loading, error } = usePersonsQuery({
+    fetchPolicy: 'network-only',
+    variables: {
+      skip: 0,
+      take: 50
+    }
+  });
 
   // catch error first
   if (error) {

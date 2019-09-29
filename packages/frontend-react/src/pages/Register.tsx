@@ -1,6 +1,7 @@
 import React, { useState, Fragment } from 'react';
 import { usePersonNewMutation, NewPersonInput } from '../generated/graphql';
 import { RouteComponentProps } from 'react-router';
+import { errorStyle, loadingStyle } from '../common';
 
 // use RouteComponentProps to get history props from Route
 export const Register: React.FC<RouteComponentProps> = ({ history }) => {
@@ -11,9 +12,7 @@ export const Register: React.FC<RouteComponentProps> = ({ history }) => {
 		email: 'mario@koakh.com',
 		username: 'mario',
 		password: '12345678',
-	}
-	const errorStyle = { color: 'red' };
-	const loadingStyle = { color: 'grey' };
+	};
 	// hooks: state
 	const [id, setId] = useState(defaults.id)
 	const [firstname, setFirstname] = useState(defaults.firstname)
@@ -48,7 +47,7 @@ export const Register: React.FC<RouteComponentProps> = ({ history }) => {
 		try {
 			e.preventDefault();
 			const newPersonData: NewPersonInput = {
-				id, firstname, lastname, username, email, password
+				id, firstname, lastname, email, username, password
 			};
 			const response = await personNewMutation({ variables: { newPersonData } }).catch(error => {
 				throw error;

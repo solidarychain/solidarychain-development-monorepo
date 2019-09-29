@@ -16,8 +16,8 @@
 
 ```shell
 # run server and app
-$ npx lerna run start:debug --scope @convector-sample/server-graphql
-$ npx lerna run start --scope @convector-sample/frontend-react --stream
+$ npx lerna run start:debug --scope @convector-sample/server-graphql --stream
+$ npx lerna run start --scope @convector-sample/frontend-react --stream --stream
 # gen graphql
 $ npx lerna run gen:graphql --scope @convector-sample/frontend-react
 ```

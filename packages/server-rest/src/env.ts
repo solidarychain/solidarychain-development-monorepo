@@ -1,5 +1,6 @@
 // tslint:disable-next-line:no-var-requires
 import { envVariables as envVariablesCommon } from '@convector-sample/common';
+import { Logger } from '@nestjs/common';
 
 export const envVariables: any = {
   // merge common envVariables

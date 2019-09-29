@@ -1,0 +1,5 @@
+mutation personLogin($loginPersonData: LoginPersonInput!) {
+	personLogin(loginPersonData: $loginPersonData) {
+		accessToken
+	}
+}

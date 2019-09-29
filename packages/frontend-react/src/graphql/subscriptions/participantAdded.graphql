@@ -1,0 +1,12 @@
+subscription participantAdded {
+	participantAdded {
+		id
+		name
+		msp
+		identities {
+			id
+			status
+			fingerprint
+		}
+	}
+}

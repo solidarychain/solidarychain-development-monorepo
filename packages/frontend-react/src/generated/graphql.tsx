@@ -195,6 +195,61 @@ export type NewParticipantDataMutation = (
   ) }
 );
 
+export type ParticipantNewMutationVariables = {
+  newParticipantData: NewParticipantInput
+};
+
+
+export type ParticipantNewMutation = (
+  { __typename?: 'Mutation' }
+  & { participantNew: (
+    { __typename?: 'Participant' }
+    & Pick<Participant, 'id' | 'name' | 'msp'>
+    & { identities: Array<(
+      { __typename?: 'x509Identities' }
+      & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
+    )> }
+  ) }
+);
+
+export type PersonAddAttributeMutationVariables = {
+  personId: Scalars['String'],
+  addPersonAttributeData: AddPersonAttributeInput
+};
+
+
+export type PersonAddAttributeMutation = (
+  { __typename?: 'Mutation' }
+  & { personAddAttribute: (
+    { __typename?: 'Person' }
+    & Pick<Person, 'id' | 'firstname' | 'lastname' | 'username' | 'email' | 'roles'>
+    & { attributes: Maybe<Array<(
+      { __typename?: 'Attribute' }
+      & Pick<Attribute, 'id' | 'content' | 'issuedDate' | 'expiresDate' | 'expired' | 'certifierID'>
+    )>>, participant: (
+      { __typename?: 'Participant' }
+      & Pick<Participant, 'id' | 'name' | 'msp'>
+      & { identities: Array<(
+        { __typename?: 'x509Identities' }
+        & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
+      )> }
+    ) }
+  ) }
+);
+
+export type PersonLoginMutationVariables = {
+  loginPersonData: LoginPersonInput
+};
+
+
+export type PersonLoginMutation = (
+  { __typename?: 'Mutation' }
+  & { personLogin: (
+    { __typename?: 'AccessToken' }
+    & Pick<AccessToken, 'accessToken'>
+  ) }
+);
+
 export type PersonNewMutationVariables = {
   newPersonData: NewPersonInput
 };
@@ -203,6 +258,28 @@ export type PersonNewMutationVariables = {
 export type PersonNewMutation = (
   { __typename?: 'Mutation' }
   & { personNew: (
+    { __typename?: 'Person' }
+    & Pick<Person, 'id' | 'firstname' | 'lastname' | 'username' | 'email' | 'roles'>
+    & { attributes: Maybe<Array<(
+      { __typename?: 'Attribute' }
+      & Pick<Attribute, 'id' | 'content' | 'issuedDate' | 'expiresDate' | 'expired' | 'certifierID'>
+    )>>, participant: (
+      { __typename?: 'Participant' }
+      & Pick<Participant, 'id' | 'name' | 'msp'>
+      & { identities: Array<(
+        { __typename?: 'x509Identities' }
+        & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
+      )> }
+    ) }
+  ) }
+);
+
+export type PersonProfileMutationVariables = {};
+
+
+export type PersonProfileMutation = (
+  { __typename?: 'Mutation' }
+  & { personProfile: (
     { __typename?: 'Person' }
     & Pick<Person, 'id' | 'firstname' | 'lastname' | 'username' | 'email' | 'roles'>
     & { attributes: Maybe<Array<(
@@ -254,6 +331,80 @@ export type ParticipantsQuery = (
   )> }
 );
 
+export type PersonByAttributeQueryVariables = {
+  getByAttributeInput: GetByAttributeInput,
+  skip?: Maybe<Scalars['Int']>,
+  take?: Maybe<Scalars['Int']>
+};
+
+
+export type PersonByAttributeQuery = (
+  { __typename?: 'Query' }
+  & { personByAttribute: Array<(
+    { __typename?: 'Person' }
+    & Pick<Person, 'id' | 'firstname' | 'lastname' | 'username' | 'email' | 'roles'>
+    & { attributes: Maybe<Array<(
+      { __typename?: 'Attribute' }
+      & Pick<Attribute, 'id' | 'content' | 'issuedDate' | 'expiresDate' | 'expired' | 'certifierID'>
+    )>>, participant: (
+      { __typename?: 'Participant' }
+      & Pick<Participant, 'id' | 'name' | 'msp'>
+      & { identities: Array<(
+        { __typename?: 'x509Identities' }
+        & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
+      )> }
+    ) }
+  )> }
+);
+
+export type PersonByIdQueryVariables = {
+  id: Scalars['String']
+};
+
+
+export type PersonByIdQuery = (
+  { __typename?: 'Query' }
+  & { personById: (
+    { __typename?: 'Person' }
+    & Pick<Person, 'id' | 'firstname' | 'lastname' | 'username' | 'email' | 'roles'>
+    & { attributes: Maybe<Array<(
+      { __typename?: 'Attribute' }
+      & Pick<Attribute, 'id' | 'content' | 'issuedDate' | 'expiresDate' | 'expired' | 'certifierID'>
+    )>>, participant: (
+      { __typename?: 'Participant' }
+      & Pick<Participant, 'id' | 'name' | 'msp'>
+      & { identities: Array<(
+        { __typename?: 'x509Identities' }
+        & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
+      )> }
+    ) }
+  ) }
+);
+
+export type PersonByUsernameQueryVariables = {
+  username: Scalars['String']
+};
+
+
+export type PersonByUsernameQuery = (
+  { __typename?: 'Query' }
+  & { personByUsername: (
+    { __typename?: 'Person' }
+    & Pick<Person, 'id' | 'firstname' | 'lastname' | 'username' | 'email' | 'roles'>
+    & { attributes: Maybe<Array<(
+      { __typename?: 'Attribute' }
+      & Pick<Attribute, 'id' | 'content' | 'issuedDate' | 'expiresDate' | 'expired' | 'certifierID'>
+    )>>, participant: (
+      { __typename?: 'Participant' }
+      & Pick<Participant, 'id' | 'name' | 'msp'>
+      & { identities: Array<(
+        { __typename?: 'x509Identities' }
+        & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
+      )> }
+    ) }
+  ) }
+);
+
 export type PersonsQueryVariables = {
   skip?: Maybe<Scalars['Int']>,
   take?: Maybe<Scalars['Int']>
@@ -279,6 +430,51 @@ export type PersonsQuery = (
   )> }
 );
 
+export type ParticipantAddedSubscriptionVariables = {};
+
+
+export type ParticipantAddedSubscription = (
+  { __typename?: 'Subscription' }
+  & { participantAdded: (
+    { __typename?: 'Participant' }
+    & Pick<Participant, 'id' | 'name' | 'msp'>
+    & { identities: Array<(
+      { __typename?: 'x509Identities' }
+      & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
+    )> }
+  ) }
+);
+
+export type PersonAddedSubscriptionVariables = {};
+
+
+export type PersonAddedSubscription = (
+  { __typename?: 'Subscription' }
+  & { personAdded: (
+    { __typename?: 'Person' }
+    & Pick<Person, 'id' | 'firstname' | 'lastname' | 'username' | 'email' | 'roles'>
+    & { attributes: Maybe<Array<(
+      { __typename?: 'Attribute' }
+      & Pick<Attribute, 'id' | 'content' | 'issuedDate' | 'expiresDate' | 'expired' | 'certifierID'>
+    )>>, participant: (
+      { __typename?: 'Participant' }
+      & Pick<Participant, 'id' | 'name' | 'msp'>
+      & { identities: Array<(
+        { __typename?: 'x509Identities' }
+        & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
+      )> }
+    ) }
+  ) }
+);
+
+export type PersonLoggedSubscriptionVariables = {};
+
+
+export type PersonLoggedSubscription = (
+  { __typename?: 'Subscription' }
+  & Pick<Subscription, 'personLogged'>
+);
+
 export const NewParticipantDataDocument = gql`
     mutation newParticipantData($newParticipantData: NewParticipantInput!) {
   participantNew(newParticipantData: $newParticipantData) {
@@ -301,6 +497,81 @@ export type NewParticipantDataMutationFn = ApolloReactCommon.MutationFunction<Ne
 export type NewParticipantDataMutationHookResult = ReturnType<typeof useNewParticipantDataMutation>;
 export type NewParticipantDataMutationResult = ApolloReactCommon.MutationResult<NewParticipantDataMutation>;
 export type NewParticipantDataMutationOptions = ApolloReactCommon.BaseMutationOptions<NewParticipantDataMutation, NewParticipantDataMutationVariables>;
+export const ParticipantNewDocument = gql`
+    mutation participantNew($newParticipantData: NewParticipantInput!) {
+  participantNew(newParticipantData: $newParticipantData) {
+    id
+    name
+    msp
+    identities {
+      id
+      status
+      fingerprint
+    }
+  }
+}
+    `;
+export type ParticipantNewMutationFn = ApolloReactCommon.MutationFunction<ParticipantNewMutation, ParticipantNewMutationVariables>;
+
+    export function useParticipantNewMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<ParticipantNewMutation, ParticipantNewMutationVariables>) {
+      return ApolloReactHooks.useMutation<ParticipantNewMutation, ParticipantNewMutationVariables>(ParticipantNewDocument, baseOptions);
+    }
+export type ParticipantNewMutationHookResult = ReturnType<typeof useParticipantNewMutation>;
+export type ParticipantNewMutationResult = ApolloReactCommon.MutationResult<ParticipantNewMutation>;
+export type ParticipantNewMutationOptions = ApolloReactCommon.BaseMutationOptions<ParticipantNewMutation, ParticipantNewMutationVariables>;
+export const PersonAddAttributeDocument = gql`
+    mutation personAddAttribute($personId: String!, $addPersonAttributeData: AddPersonAttributeInput!) {
+  personAddAttribute(personId: $personId, addPersonAttributeData: $addPersonAttributeData) {
+    id
+    firstname
+    lastname
+    username
+    email
+    attributes {
+      id
+      content
+      issuedDate
+      expiresDate
+      expired
+      certifierID
+    }
+    roles
+    participant {
+      id
+      name
+      msp
+      identities {
+        id
+        status
+        fingerprint
+      }
+    }
+  }
+}
+    `;
+export type PersonAddAttributeMutationFn = ApolloReactCommon.MutationFunction<PersonAddAttributeMutation, PersonAddAttributeMutationVariables>;
+
+    export function usePersonAddAttributeMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<PersonAddAttributeMutation, PersonAddAttributeMutationVariables>) {
+      return ApolloReactHooks.useMutation<PersonAddAttributeMutation, PersonAddAttributeMutationVariables>(PersonAddAttributeDocument, baseOptions);
+    }
+export type PersonAddAttributeMutationHookResult = ReturnType<typeof usePersonAddAttributeMutation>;
+export type PersonAddAttributeMutationResult = ApolloReactCommon.MutationResult<PersonAddAttributeMutation>;
+export type PersonAddAttributeMutationOptions = ApolloReactCommon.BaseMutationOptions<PersonAddAttributeMutation, PersonAddAttributeMutationVariables>;
+export const PersonLoginDocument = gql`
+    mutation personLogin($loginPersonData: LoginPersonInput!) {
+  personLogin(loginPersonData: $loginPersonData) {
+    accessToken
+  }
+}
+    `;
+export type PersonLoginMutationFn = ApolloReactCommon.MutationFunction<PersonLoginMutation, PersonLoginMutationVariables>;
+
+    export function usePersonLoginMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<PersonLoginMutation, PersonLoginMutationVariables>) {
+      return ApolloReactHooks.useMutation<PersonLoginMutation, PersonLoginMutationVariables>(PersonLoginDocument, baseOptions);
+    }
+export type PersonLoginMutationHookResult = ReturnType<typeof usePersonLoginMutation>;
+export type PersonLoginMutationResult = ApolloReactCommon.MutationResult<PersonLoginMutation>;
+export type PersonLoginMutationOptions = ApolloReactCommon.BaseMutationOptions<PersonLoginMutation, PersonLoginMutationVariables>;
 export const PersonNewDocument = gql`
     mutation personNew($newPersonData: NewPersonInput!) {
   personNew(newPersonData: $newPersonData) {
@@ -339,6 +610,44 @@ export type PersonNewMutationFn = ApolloReactCommon.MutationFunction<PersonNewMu
 export type PersonNewMutationHookResult = ReturnType<typeof usePersonNewMutation>;
 export type PersonNewMutationResult = ApolloReactCommon.MutationResult<PersonNewMutation>;
 export type PersonNewMutationOptions = ApolloReactCommon.BaseMutationOptions<PersonNewMutation, PersonNewMutationVariables>;
+export const PersonProfileDocument = gql`
+    mutation personProfile {
+  personProfile {
+    id
+    firstname
+    lastname
+    username
+    email
+    attributes {
+      id
+      content
+      issuedDate
+      expiresDate
+      expired
+      certifierID
+    }
+    roles
+    participant {
+      id
+      name
+      msp
+      identities {
+        id
+        status
+        fingerprint
+      }
+    }
+  }
+}
+    `;
+export type PersonProfileMutationFn = ApolloReactCommon.MutationFunction<PersonProfileMutation, PersonProfileMutationVariables>;
+
+    export function usePersonProfileMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<PersonProfileMutation, PersonProfileMutationVariables>) {
+      return ApolloReactHooks.useMutation<PersonProfileMutation, PersonProfileMutationVariables>(PersonProfileDocument, baseOptions);
+    }
+export type PersonProfileMutationHookResult = ReturnType<typeof usePersonProfileMutation>;
+export type PersonProfileMutationResult = ApolloReactCommon.MutationResult<PersonProfileMutation>;
+export type PersonProfileMutationOptions = ApolloReactCommon.BaseMutationOptions<PersonProfileMutation, PersonProfileMutationVariables>;
 export const ParticipantByIdDocument = gql`
     query participantById($id: String!) {
   participantById(id: $id) {
@@ -387,6 +696,126 @@ export const ParticipantsDocument = gql`
       
 export type ParticipantsQueryHookResult = ReturnType<typeof useParticipantsQuery>;
 export type ParticipantsQueryResult = ApolloReactCommon.QueryResult<ParticipantsQuery, ParticipantsQueryVariables>;
+export const PersonByAttributeDocument = gql`
+    query personByAttribute($getByAttributeInput: GetByAttributeInput!, $skip: Int, $take: Int) {
+  personByAttribute(getByAttributeInput: $getByAttributeInput, skip: $skip, take: $take) {
+    id
+    firstname
+    lastname
+    username
+    email
+    attributes {
+      id
+      content
+      issuedDate
+      expiresDate
+      expired
+      certifierID
+    }
+    roles
+    participant {
+      id
+      name
+      msp
+      identities {
+        id
+        status
+        fingerprint
+      }
+    }
+  }
+}
+    `;
+
+    export function usePersonByAttributeQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PersonByAttributeQuery, PersonByAttributeQueryVariables>) {
+      return ApolloReactHooks.useQuery<PersonByAttributeQuery, PersonByAttributeQueryVariables>(PersonByAttributeDocument, baseOptions);
+    }
+      export function usePersonByAttributeLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PersonByAttributeQuery, PersonByAttributeQueryVariables>) {
+        return ApolloReactHooks.useLazyQuery<PersonByAttributeQuery, PersonByAttributeQueryVariables>(PersonByAttributeDocument, baseOptions);
+      }
+      
+export type PersonByAttributeQueryHookResult = ReturnType<typeof usePersonByAttributeQuery>;
+export type PersonByAttributeQueryResult = ApolloReactCommon.QueryResult<PersonByAttributeQuery, PersonByAttributeQueryVariables>;
+export const PersonByIdDocument = gql`
+    query personById($id: String!) {
+  personById(id: $id) {
+    id
+    firstname
+    lastname
+    username
+    email
+    attributes {
+      id
+      content
+      issuedDate
+      expiresDate
+      expired
+      certifierID
+    }
+    roles
+    participant {
+      id
+      name
+      msp
+      identities {
+        id
+        status
+        fingerprint
+      }
+    }
+  }
+}
+    `;
+
+    export function usePersonByIdQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PersonByIdQuery, PersonByIdQueryVariables>) {
+      return ApolloReactHooks.useQuery<PersonByIdQuery, PersonByIdQueryVariables>(PersonByIdDocument, baseOptions);
+    }
+      export function usePersonByIdLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PersonByIdQuery, PersonByIdQueryVariables>) {
+        return ApolloReactHooks.useLazyQuery<PersonByIdQuery, PersonByIdQueryVariables>(PersonByIdDocument, baseOptions);
+      }
+      
+export type PersonByIdQueryHookResult = ReturnType<typeof usePersonByIdQuery>;
+export type PersonByIdQueryResult = ApolloReactCommon.QueryResult<PersonByIdQuery, PersonByIdQueryVariables>;
+export const PersonByUsernameDocument = gql`
+    query personByUsername($username: String!) {
+  personByUsername(username: $username) {
+    id
+    firstname
+    lastname
+    username
+    email
+    attributes {
+      id
+      content
+      issuedDate
+      expiresDate
+      expired
+      certifierID
+    }
+    roles
+    participant {
+      id
+      name
+      msp
+      identities {
+        id
+        status
+        fingerprint
+      }
+    }
+  }
+}
+    `;
+
+    export function usePersonByUsernameQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PersonByUsernameQuery, PersonByUsernameQueryVariables>) {
+      return ApolloReactHooks.useQuery<PersonByUsernameQuery, PersonByUsernameQueryVariables>(PersonByUsernameDocument, baseOptions);
+    }
+      export function usePersonByUsernameLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PersonByUsernameQuery, PersonByUsernameQueryVariables>) {
+        return ApolloReactHooks.useLazyQuery<PersonByUsernameQuery, PersonByUsernameQueryVariables>(PersonByUsernameDocument, baseOptions);
+      }
+      
+export type PersonByUsernameQueryHookResult = ReturnType<typeof usePersonByUsernameQuery>;
+export type PersonByUsernameQueryResult = ApolloReactCommon.QueryResult<PersonByUsernameQuery, PersonByUsernameQueryVariables>;
 export const PersonsDocument = gql`
     query persons($skip: Int, $take: Int) {
   persons(skip: $skip, take: $take) {
@@ -427,3 +856,70 @@ export const PersonsDocument = gql`
       
 export type PersonsQueryHookResult = ReturnType<typeof usePersonsQuery>;
 export type PersonsQueryResult = ApolloReactCommon.QueryResult<PersonsQuery, PersonsQueryVariables>;
+export const ParticipantAddedDocument = gql`
+    subscription participantAdded {
+  participantAdded {
+    id
+    name
+    msp
+    identities {
+      id
+      status
+      fingerprint
+    }
+  }
+}
+    `;
+
+    export function useParticipantAddedSubscription(baseOptions?: ApolloReactHooks.SubscriptionHookOptions<ParticipantAddedSubscription, ParticipantAddedSubscriptionVariables>) {
+      return ApolloReactHooks.useSubscription<ParticipantAddedSubscription, ParticipantAddedSubscriptionVariables>(ParticipantAddedDocument, baseOptions);
+    }
+export type ParticipantAddedSubscriptionHookResult = ReturnType<typeof useParticipantAddedSubscription>;
+export type ParticipantAddedSubscriptionResult = ApolloReactCommon.SubscriptionResult<ParticipantAddedSubscription>;
+export const PersonAddedDocument = gql`
+    subscription personAdded {
+  personAdded {
+    id
+    firstname
+    lastname
+    username
+    email
+    attributes {
+      id
+      content
+      issuedDate
+      expiresDate
+      expired
+      certifierID
+    }
+    roles
+    participant {
+      id
+      name
+      msp
+      identities {
+        id
+        status
+        fingerprint
+      }
+    }
+  }
+}
+    `;
+
+    export function usePersonAddedSubscription(baseOptions?: ApolloReactHooks.SubscriptionHookOptions<PersonAddedSubscription, PersonAddedSubscriptionVariables>) {
+      return ApolloReactHooks.useSubscription<PersonAddedSubscription, PersonAddedSubscriptionVariables>(PersonAddedDocument, baseOptions);
+    }
+export type PersonAddedSubscriptionHookResult = ReturnType<typeof usePersonAddedSubscription>;
+export type PersonAddedSubscriptionResult = ApolloReactCommon.SubscriptionResult<PersonAddedSubscription>;
+export const PersonLoggedDocument = gql`
+    subscription personLogged {
+  personLogged
+}
+    `;
+
+    export function usePersonLoggedSubscription(baseOptions?: ApolloReactHooks.SubscriptionHookOptions<PersonLoggedSubscription, PersonLoggedSubscriptionVariables>) {
+      return ApolloReactHooks.useSubscription<PersonLoggedSubscription, PersonLoggedSubscriptionVariables>(PersonLoggedDocument, baseOptions);
+    }
+export type PersonLoggedSubscriptionHookResult = ReturnType<typeof usePersonLoggedSubscription>;
+export type PersonLoggedSubscriptionResult = ApolloReactCommon.SubscriptionResult<PersonLoggedSubscription>;

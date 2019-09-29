@@ -1,12 +1,65 @@
-import * as React from 'react'
+import * as React from 'react';
+import { RouteComponentProps } from 'react-router';
+import { LoginPersonInput, usePersonLoginMutation, PersonLoginMutationHookResult, PersonLoginMutationResult } from '../generated/graphql';
+import { errorStyle, loadingStyle, validStyle } from '../common';
 
-interface Props { }
+// use RouteComponentProps to get history props from Route
+export const Login: React.FC<RouteComponentProps> = ({ history }) => {
+	const defaults = {
+		username: 'johndoe',
+		password: '12345678',
+	};
+	// hooks: state
+	const [username, setUsername] = React.useState(defaults.username)
+	const [password, setPassword] = React.useState(defaults.password);
 
-export const Login: React.FC<Props> = () => {
+	// hooks: apollo
+	const [personLoginMutation, { data, loading, error }] = usePersonLoginMutation();
+	// handlers
+	const onChangeUsernameHandler = (e: React.SyntheticEvent) => {
+		setUsername((e.target as HTMLSelectElement).value)
+	};
+	const onChangePasswordHandler = (e: React.SyntheticEvent) => {
+		setPassword((e.target as HTMLSelectElement).value)
+	};
+
+	const onSubmitFormHandler = async (e: any) => {
+		try {
+			e.preventDefault();
+			const loginPersonData: LoginPersonInput = {
+				username, password
+			};
+			/*const data =*/ await personLoginMutation({ variables: { loginPersonData } }).catch(error => {
+				throw error;
+			})
+
+			// use history to send user to homepage, after awaiting for response object
+			if (data) {
+				// history.push('/');
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
 	return (
-		<div>
+		<React.Fragment>
 			<h2>Login</h2>
-			<p>Login Page</p>
-		</div>
+			<form onSubmit={(e) => onSubmitFormHandler(e)}>
+				<input
+					value={username}
+					placeholder='username'
+					onChange={(e) => onChangeUsernameHandler(e)} />
+				<input
+					value={password}
+					placeholder='password'
+					type='password'
+					onChange={(e) => onChangePasswordHandler(e)} />
+				<button type='submit'>register</button>
+			</form>
+			{error && <p style={errorStyle}>{JSON.stringify(error.message, undefined, 2)}</p>}
+			{loading && <p style={loadingStyle}>Loading....</p>}
+			{data && <p style={validStyle}>{data.personLogin.accessToken}</p>}
+		</React.Fragment>
 	);
 }

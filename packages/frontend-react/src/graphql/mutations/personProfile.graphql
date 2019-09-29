@@ -1,0 +1,28 @@
+mutation personProfile {
+	personProfile {
+		id
+		firstname
+		lastname
+		username
+		email
+		attributes {
+			id
+			content
+			issuedDate
+			expiresDate
+			expired
+			certifierID
+		}
+		roles
+		participant {
+			id
+			name
+			msp
+			identities {
+				id
+				status
+				fingerprint
+			}
+		}
+	}
+}
