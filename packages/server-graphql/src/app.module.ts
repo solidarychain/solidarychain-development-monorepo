@@ -19,6 +19,11 @@ import { UsersModule } from './users/users.module';
       // pass the original req and res object into the graphql context,
       // get context with decorator `@Context() { req, res, payload }: GqlContext`
       context: ({ req, res, payload }: GqlContext) => ({ req, res, payload }),
+      // configure graphql cors here
+      cors: {
+        origin: 'http://localhost:3000',
+        credentials: true,
+      },
     }),
   ],
 })

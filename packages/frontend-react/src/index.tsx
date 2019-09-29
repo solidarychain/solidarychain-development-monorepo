@@ -6,6 +6,7 @@ import https from 'https';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Routes } from './Routes';
+import { getAccessToken } from './common';
 
 // minimal version without
 // const client = new ApolloClient({
@@ -24,15 +25,19 @@ const httpLink = createHttpLink({
   uri: 'https://localhost:3443/graphql',
   fetchOptions: {
     // How to avoid "self signed certificate" error?
-    agent: new https.Agent({ rejectUnauthorized: false }),
+    agent: new https.Agent({ rejectUnauthorized: false }),    
   },  
+  // required, else we can't receive jid cookie
+  credentials: 'include',
 });
 
 const authLink = setContext((_: any, { headers }: any) => {
   // get the authentication token from local storage if it exists
-  let token = localStorage.getItem('token');
-  if (!token) {
-    token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImphbmVkb2UiLCJpYXQiOjE1Njk3OTAzNzgsImV4cCI6MTU2OTc5MTI3OH0.oWt7HigIO2OB1hieacePptGE3vp_CRPvpcJXbX0xG_Q';
+  // let token = localStorage.getItem('token');
+  let token;
+  // get accessToken from global variable
+  if (getAccessToken()) {
+    token = getAccessToken();
   }
   // return the headers to the context so httpLink can read them
   return {

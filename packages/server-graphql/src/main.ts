@@ -9,12 +9,13 @@ async function bootstrap() {
     ApplicationModule, { httpsOptions },
 
   );
+  // cors, before any middleware, warn cors for graphql is configured in ApplicationModule
+  // app.enableCors({
+  //   origin: 'http://localhost:3000',
+  //   credentials: true,
+  // });
   // middleware
   app.useGlobalPipes(new ValidationPipe());
-  app.enableCors({
-    origin: 'http://localhost:3000',
-    credentials: true,
-  });
 
   await app.listen(e.httpsPort)
     .then(() => Logger.log(`graphql server started, endpoint exposed at https://localhost:${e.httpsPort}/graphql`));
