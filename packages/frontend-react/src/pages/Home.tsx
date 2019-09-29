@@ -18,11 +18,12 @@ export const Home: React.FC<Props> = () => {
 
   return (
     <div>
-      {data.persons.map((e: Person) =>
-        <ul>
-          <li>{e.id}, {e.firstname}, {e.lastname}, {e.email}, {e.username}</li>
-        </ul>
-      )}
+      <h2>Home</h2>
+      <ul>
+        {data.persons.map((e: Person) =>
+          <li key={e.id}>{e.id}, {e.firstname}, {e.lastname}, {e.email}, {e.username}</li>
+        )}
+      </ul>
     </div>
   );
 }

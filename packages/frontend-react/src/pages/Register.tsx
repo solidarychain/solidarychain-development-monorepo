@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import { usePersonNewMutation, NewPersonInput } from '../generated/graphql';
+import { RouteComponentProps } from 'react-router';
 
-interface Props { }
-
-export const Register: React.FC<Props> = () => {
+// use RouteComponentProps to get history props from Route
+export const Register: React.FC<RouteComponentProps> = ({ history }) => {
 	const defaults = {
 		id: '1-100-200',
 		firstname: 'Mário',
@@ -12,6 +12,8 @@ export const Register: React.FC<Props> = () => {
 		username: 'mario',
 		password: '12345678',
 	}
+	const errorStyle = { color: 'red' };
+	const loadingStyle = { color: 'grey' };
 	// hooks: state
 	const [id, setId] = useState(defaults.id)
 	const [firstname, setFirstname] = useState(defaults.firstname)
@@ -21,7 +23,7 @@ export const Register: React.FC<Props> = () => {
 	const [password, setPassword] = useState(defaults.password);
 
 	// hooks: apollo
-	const [personNewMutation] = usePersonNewMutation();
+	const [personNewMutation, { loading, error }] = usePersonNewMutation();
 	// handlers
 	const onChangeIdHandler = (e: React.SyntheticEvent) => {
 		setId((e.target as HTMLSelectElement).value)
@@ -43,47 +45,57 @@ export const Register: React.FC<Props> = () => {
 	};
 
 	const onSubmitFormHandler = async (e: any) => {
-		e.preventDefault();
-		console.log('for submitted')
-		console.log(id, firstname, lastname, email, username, password);
-		const newPersonData: NewPersonInput = {
-			id, firstname, lastname, username, email, password
-		};
-		const data = await personNewMutation({ variables: { newPersonData } }).catch(error => {
-			console.error(error.message);
-		})
-		// const { person }: Person = data;
-		console.log(data);
-	}
+		try {
+			e.preventDefault();
+			const newPersonData: NewPersonInput = {
+				id, firstname, lastname, username, email, password
+			};
+			const response = await personNewMutation({ variables: { newPersonData } }).catch(error => {
+				throw error;
+			})
+
+			// use history to send user to homepage, after awaiting for response object
+			if (response) {
+				history.push('/');
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	};
 
 	return (
-		<form onSubmit={(e) => onSubmitFormHandler(e)}>
-			<input
-				value={id}
-				placeholder='id'
-				onChange={(e) => onChangeIdHandler(e)} />
-			<input
-				value={firstname}
-				placeholder='firstname'
-				onChange={(e) => onChangeFirstnameHandler(e)} />
-			<input
-				value={lastname}
-				placeholder='lastname'
-				onChange={(e) => onChangeLastnameHandler(e)} />
-			<input
-				value={email}
-				placeholder='email'
-				onChange={(e) => onChangeEmailHandler(e)} />
-			<input
-				value={username}
-				placeholder='username'
-				onChange={(e) => onChangeUsernameHandler(e)} />
-			<input
-				value={password}
-				placeholder='password'
-				type='password'
-				onChange={(e) => onChangePasswordHandler(e)} />
-			<button type='submit'>register</button>
-		</form>
+		<Fragment>
+			<h2>Register</h2>
+			<form onSubmit={(e) => onSubmitFormHandler(e)}>
+				<input
+					value={id}
+					placeholder='id'
+					onChange={(e) => onChangeIdHandler(e)} />
+				<input
+					value={firstname}
+					placeholder='firstname'
+					onChange={(e) => onChangeFirstnameHandler(e)} />
+				<input
+					value={lastname}
+					placeholder='lastname'
+					onChange={(e) => onChangeLastnameHandler(e)} />
+				<input
+					value={email}
+					placeholder='email'
+					onChange={(e) => onChangeEmailHandler(e)} />
+				<input
+					value={username}
+					placeholder='username'
+					onChange={(e) => onChangeUsernameHandler(e)} />
+				<input
+					value={password}
+					placeholder='password'
+					type='password'
+					onChange={(e) => onChangePasswordHandler(e)} />
+				<button type='submit'>register</button>
+			</form>
+			{error && <p style={errorStyle}>{JSON.stringify(error.message, undefined, 2)}</p>}
+			{loading && <p style={loadingStyle}>Loading....</p>}
+		</Fragment>
 	);
 }
