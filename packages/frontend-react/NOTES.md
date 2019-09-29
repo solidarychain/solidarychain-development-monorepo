@@ -10,12 +10,14 @@
 - [@graphql-codegen](https://www.npmjs.com/package/@graphql-codegen/cli)
 - [graphql-code-generator.com](https://graphql-code-generator.com/)
 
+- [Visual Studio Code Settings Sync Gist](https://gist.github.com/benawad/1e9dd01994f78489306fbfd6f7b01cd3#file-snippets-typescriptreact-json)
+
 ## commands
 
 ```shell
 # run server and app
-$ npx lerna run gen:graphql --scope @convector-sample/frontend-react
-$ npx lerna run gen:graphql --scope @convector-sample/server-graphql
+$ npx lerna run start:debug --scope @convector-sample/server-graphql
+$ npx lerna run start --scope @convector-sample/frontend-react --stream
 # gen graphql
 $ npx lerna run gen:graphql --scope @convector-sample/frontend-react
 ```
@@ -414,3 +416,51 @@ now test with lerna script
 $ npx lerna run gen:graphql --scope @convector-sample/frontend-react
 
 it works move on
+
+## Working with GraphQL-CodeGen
+
+name queries from `query ($id: String!)` to `query participantById($id: String!)` this way we prevent 
+
+```typescript
+export type Unnamed_1_QueryVariables = {
+..
+export type Unnamed_1_Query = (
+..
+```
+
+now will be generated like
+
+```typescript
+export type ParticipantByIdQueryVariables = {
+...
+
+export type ParticipantByIdQuery = (
+...
+```
+
+### Configure hooke plugins
+
+change `packages/frontend-react/codegen.yml` to use only hooks
+
+```yml
+generates:
+  src/generated/graphql.tsx:
+    plugins:
+    ...
+    config:
+      withHOC: false
+      withComponent: false
+      withHooks: true
+```
+
+now we some good stuff hooks use functions like `useParticipantByIdQuery` and `useParticipantByIdLazyQuery`
+
+## Configure react Router
+
+```shell
+# add apollo
+$ npx lerna add react-router-dom --scope @convector-sample/frontend-react --no-bootstrap
+$ npx lerna add @types/react-router-dom --scope @convector-sample/frontend-react --no-bootstrap
+$ npx lerna bootstrap
+```
+

@@ -1,3 +1,5 @@
+import { envVariables as e } from '../env';
+
 interface User {
   username: string;
   tokenVersion: number;
@@ -33,6 +35,12 @@ export default class UsersStore {
 
   incrementTokenVersion(username: string): number {
     const user: User = this.getUser(username);
-    return ++user.tokenVersion;
+    if (Boolean(e.refreshTokenSkipIncrementVersion)) {
+      // devMode: don't increment tokenVersion
+      return user.tokenVersion;
+    } else {
+      // productionMode: increment tokenVersion
+      return ++user.tokenVersion;
+    }
   }
 }

@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { Response } from 'express';
 import { SignOptions } from 'jsonwebtoken';
 import AccessToken from '../common/types/access-token';
+import { envVariables as e } from '../env';
 import { GqlContextPayload } from '../types';
 import { UsersService } from '../users/users.service';
-import { Response } from 'express';
-import { envVariables as e } from '../env';
 
 @Injectable()
 export class AuthService {

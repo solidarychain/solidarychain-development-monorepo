@@ -1,4 +1,3 @@
-import { ArgsType } from 'type-graphql';
 import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Resolver, Subscription, Context } from '@nestjs/graphql';
 import { PubSub } from 'apollo-server-express';
@@ -29,7 +28,7 @@ export class AuthResolver {
     // accessToken
     const accessToken = await this.authService.signJwtToken(loginPersonData);
     // assign jwt Payload to context
-    // TODO: payload is assigned to context
+    // TODO: payload is assigned to context?
     payload = this.authService.getJwtPayLoad(accessToken.accessToken);
     // get incremented tokenVersion
     const tokenVersion = this.usersService.usersStore.incrementTokenVersion(loginPersonData.username);

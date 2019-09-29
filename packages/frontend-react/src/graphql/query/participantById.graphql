@@ -1,4 +1,4 @@
-query ($id: String!){
+query participantById($id: String!){
   participantById(id:$id)
   {
     id
@@ -11,4 +11,3 @@ query ($id: String!){
     }
   }
 }
- 
