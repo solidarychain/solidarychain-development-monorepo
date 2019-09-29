@@ -5,8 +5,9 @@ import { createHttpLink } from 'apollo-link-http';
 import https from 'https';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Routes } from './Routes';
+import { App } from './App';
 import { getAccessToken } from './common';
+import { envVariables as e } from './env';
 
 // minimal version without
 // const client = new ApolloClient({
@@ -22,7 +23,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 // };
 
 const httpLink = createHttpLink({
-  uri: 'https://localhost:3443/graphql',
+  uri: e.graphqlServerUri,
   fetchOptions: {
     // How to avoid "self signed certificate" error?
     agent: new https.Agent({ rejectUnauthorized: false }),    
@@ -35,7 +36,7 @@ const authLink = setContext((_: any, { headers }: any) => {
   // get the authentication token from local storage if it exists
   // let token = localStorage.getItem('token');
   let token;
-  // get accessToken from global variable
+  // get inMemory accessToken from global variable
   if (getAccessToken()) {
     token = getAccessToken();
   }
@@ -55,7 +56,7 @@ const client = new ApolloClient({
 
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <Routes />
+    <App />
   </ApolloProvider>
   , document.getElementById('root')
 );

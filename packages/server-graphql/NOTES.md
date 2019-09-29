@@ -239,8 +239,6 @@ GraphQL Playground accepts cookie must change preferences `"request.credentials"
 
 ## Cookie Parser
 
-
-
 curl -k --request POST \
   --url https://localhost:3443/refresh-token \
   --cookie jid=j%253A%257B%2522accessToken%2522%253A%2522eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImphbmVkb2UiLCJpYXQiOjE1NjkyNzc0NjAsImV4cCI6MTU2OTg4MjI2MH0.A6XcwTvNZDUoT1MG6lFu7GyxVDg1GrTyTkjEFhvgDtI%2522%257D

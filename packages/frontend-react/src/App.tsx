@@ -1,49 +1,37 @@
-import React from 'react';
-// import { useQuery } from '@apollo/react-hooks';
-// import { gql } from 'apollo-boost';
-import { useParticipantByIdQuery } from './generated/graphql';
+import * as React from 'react'
+import { Routes } from './Routes';
+import { useState } from 'react';
+import { envVariables as e } from './env';
 
-const App: React.FC = () => {
-  // old query without graphql-codegen useQuery
-  // const { data, loading, error } = useQuery(gql`
-  //   query ($id: String!){
-  //     participantById(id:$id)
-  //     {
-  //       id
-  //       name
-  //       msp,
-  //       identities{
-  //         id
-  //         status
-  //         fingerprint
-  //       }
-  //     }
-  //   }
-  // `, {
-  //   variables: {
-  //     'id': 'gov'
-  //   },
-  // })
+interface Props { }
 
-  // with graphql-codegen generated useQuery
-  const { data, loading, error } = useParticipantByIdQuery({
-    variables: {
-      'id': 'gov'
-    }
-  });
+export const App: React.FC<Props> = () => {
+  const [loading, setLoading] = useState(true)
 
-  // catch error first
-  if (error) {
-    return <pre>{JSON.stringify(error, undefined, 2)}</pre>
+  // on app mounts
+  React.useEffect(() => {
+    console.log(`${e.restServerUri}/refresh-token`);
+    // require credentials to send jid cookie from browser
+    fetch(`${e.restServerUri}/refresh-token`, {
+      method: 'POST',
+      credentials: 'include'
+    })
+      // hooks don't support async/await
+      .then(async res => {
+        // but here we can use it to await for json() Promise
+        const data = await res.json();
+        console.log(data)
+        // setAccessToken(data.)
+      })
+      .catch(error => console.error(error));
+    return () => {
+      // cleanup
+    };
+  }, [])
+
+  if (loading) {
+    return <div>Loading...</div>
   }
 
-  if (loading || !data) {
-    return <div>loading...</div>
-  }
-
-  return (
-    <pre>{JSON.stringify(data.participantById, undefined, 2)}</pre>
-  );
+  return (<Routes />);
 }
-
-export default App;

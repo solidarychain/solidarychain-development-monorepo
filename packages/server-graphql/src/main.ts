@@ -9,11 +9,12 @@ async function bootstrap() {
     ApplicationModule, { httpsOptions },
 
   );
-  // cors, before any middleware, warn cors for graphql is configured in ApplicationModule
-  // app.enableCors({
-  //   origin: 'http://localhost:3000',
-  //   credentials: true,
-  // });
+  // rest server cors, before any middleware,
+  // warn cors for graphql is configured in ApplicationModule
+  app.enableCors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+  });
   // middleware
   app.useGlobalPipes(new ValidationPipe());
 

@@ -33,10 +33,11 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
 				throw error;
 			})
 
-			// use history to send user to homepage, after awaiting for response object
 			if (response && response.data) {
-				// set global accessToken variable
+				// set inMemory global accessToken variable
 				setAccessToken(response.data.personLogin.accessToken);
+				// use history to send user to homepage, after awaiting for response object
+				history.push('/');
 			}
 		} catch (error) {
 			console.error(error);

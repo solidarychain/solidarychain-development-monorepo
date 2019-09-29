@@ -53,8 +53,8 @@ export const Register: React.FC<RouteComponentProps> = ({ history }) => {
 				throw error;
 			})
 
-			// use history to send user to homepage, after awaiting for response object
 			if (response) {
+				// use history to send user to homepage, after awaiting for response object
 				history.push('/');
 			}
 		} catch (error) {
