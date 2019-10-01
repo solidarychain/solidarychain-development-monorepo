@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
-import { errorStyle, loadingStyle, setAccessToken } from '../common';
+import { setAccessToken } from '../common';
+import { Loading, ErrorMessage } from '../components';
 import { LoginPersonInput, usePersonLoginMutation } from '../generated/graphql';
 
 // use RouteComponentProps to get history props from Route
@@ -59,8 +60,8 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
 					onChange={(e) => onChangePasswordHandler(e)} />
 				<button type='submit'>login</button>
 			</form>
-			{error && <p style={errorStyle}>{JSON.stringify(error.message, undefined, 2)}</p>}
-			{loading && <p style={loadingStyle}>Loading....</p>}
+			{error && <ErrorMessage error={error.message}/>}
+			{loading && <Loading/>}
 		</React.Fragment>
 	);
 }

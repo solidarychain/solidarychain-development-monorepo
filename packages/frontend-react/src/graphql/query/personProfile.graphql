@@ -1,4 +1,4 @@
-mutation personProfile {
+query personProfile {
 	personProfile {
 		id
 		firstname

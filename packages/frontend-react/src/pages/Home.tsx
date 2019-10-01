@@ -1,5 +1,6 @@
-import * as React from 'react'
-import { usePersonsQuery, Person } from '../generated/graphql'
+import * as React from 'react';
+import { Loading, ErrorMessage } from '../components';
+import { Person, usePersonsQuery } from '../generated/graphql';
 
 interface Props { }
 
@@ -15,11 +16,11 @@ export const Home: React.FC<Props> = () => {
 
   // catch error first
   if (error) {
-    return <pre>{JSON.stringify(error, undefined, 2)}</pre>
+    return <ErrorMessage error={error.message} />;
   }
 
   if (loading || !data) {
-    return <div>loading...</div>
+    return <Loading />
   }
 
   return (

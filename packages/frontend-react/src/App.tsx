@@ -2,15 +2,16 @@ import * as React from 'react'
 import { Routes } from './Routes';
 import { useState } from 'react';
 import { envVariables as e } from './env';
+import { setAccessToken } from './common';
+import { Loading } from './components';
 
 interface Props { }
 
 export const App: React.FC<Props> = () => {
   const [loading, setLoading] = useState(true)
 
-  // on app mounts
+  // on app mounts, request a new accessToken with cookie jid refreshToken, and set it in inMemory accessToken
   React.useEffect(() => {
-    console.log(`${e.restServerUri}/refresh-token`);
     // require credentials to send jid cookie from browser
     fetch(`${e.restServerUri}/refresh-token`, {
       method: 'POST',
@@ -20,17 +21,18 @@ export const App: React.FC<Props> = () => {
       .then(async res => {
         // but here we can use it to await for json() Promise
         const data = await res.json();
-        console.log(data)
-        // setAccessToken(data.)
+        // disable loading, and let it pass to render Routes
+        setLoading(false);
+        setAccessToken(data.accessToken);
       })
       .catch(error => console.error(error));
     return () => {
-      // cleanup
+      // cleanup stuff
     };
   }, [])
 
   if (loading) {
-    return <div>Loading...</div>
+    return <Loading/>
   }
 
   return (<Routes />);

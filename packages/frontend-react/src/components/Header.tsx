@@ -15,6 +15,9 @@ export const Header: React.FC<Props> = () => {
       <div>
         <Link to='/login'>login</Link>
       </div>
+      <div>
+        <Link to='/profile'>profile</Link>
+      </div>
     </div>
   );
 }

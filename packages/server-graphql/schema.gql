@@ -49,7 +49,6 @@ type Mutation {
   participantNew(newParticipantData: NewParticipantInput!): Participant!
   personNew(newPersonData: NewPersonInput!): Person!
   personAddAttribute(addPersonAttributeData: AddPersonAttributeInput!, personId: String!): Person!
-  personProfile: Person!
 }
 
 input NewParticipantInput {
@@ -91,6 +90,7 @@ type Query {
   personByUsername(username: String!): Person!
   persons(skip: Int = 0, take: Int = 25): [Person!]!
   personByAttribute(skip: Int = 0, take: Int = 25, getByAttributeInput: GetByAttributeInput!): [Person!]!
+  personProfile: Person!
 }
 
 type Subscription {

@@ -78,7 +78,7 @@ export class PersonResolver {
   }
 
   @UseGuards(GqlAuthGuard)
-  @Mutation(returns => Person)
+  @Query(returns => Person)
   async personProfile(@CurrentUser() user: Person): Promise<any> {
     return await this.personService.findOneByUsername(user.username);
   }
