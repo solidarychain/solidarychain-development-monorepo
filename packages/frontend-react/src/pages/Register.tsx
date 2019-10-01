@@ -1,7 +1,7 @@
-import React, { useState, Fragment } from 'react';
-import { usePersonNewMutation, NewPersonInput } from '../generated/graphql';
+import React, { Fragment, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
-import { errorStyle, loadingStyle } from '../common';
+import { Loading, ErrorMessage } from '../components';
+import { NewPersonInput, usePersonNewMutation } from '../generated/graphql';
 
 // use RouteComponentProps to get history props from Route
 export const Register: React.FC<RouteComponentProps> = ({ history }) => {
@@ -93,8 +93,8 @@ export const Register: React.FC<RouteComponentProps> = ({ history }) => {
 					onChange={(e) => onChangePasswordHandler(e)} />
 				<button type='submit'>register</button>
 			</form>
-			{error && <p style={errorStyle}>{JSON.stringify(error.message, undefined, 2)}</p>}
-			{loading && <p style={loadingStyle}>Loading....</p>}
+			{error && <ErrorMessage error={error.message}/>}
+			{loading && <Loading/>}
 		</Fragment>
 	);
 }
