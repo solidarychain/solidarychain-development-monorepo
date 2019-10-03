@@ -1,11 +1,14 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom';
+import { usePersonProfileQuery } from '../generated/graphql';
 
 interface Props { }
 
 export const Header: React.FC<Props> = () => {
+  const { data } = usePersonProfileQuery();
+  
   return (
-    <div>
+    <header>
       <div>
         <Link to='/'>home</Link>
       </div>
@@ -18,6 +21,9 @@ export const Header: React.FC<Props> = () => {
       <div>
         <Link to='/profile'>profile</Link>
       </div>
-    </div>
+      {data && data.personProfile.username && (
+        <div>You are logged in as: {data.personProfile.username}</div>
+      )}
+    </header>
   );
 }

@@ -1,13 +1,124 @@
 import { ApolloProvider } from '@apollo/react-hooks';
-import { ApolloClient, InMemoryCache } from 'apollo-boost';
-import { setContext } from 'apollo-link-context';
-import { createHttpLink } from 'apollo-link-http';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import { ApolloClient } from 'apollo-client';
+import { ApolloLink, Observable } from 'apollo-link';
+import { onError } from 'apollo-link-error';
+import { HttpLink } from 'apollo-link-http';
+import { TokenRefreshLink } from 'apollo-link-token-refresh';
 import https from 'https';
+import jwtDecode from 'jwt-decode';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { App } from './App';
-import { getAccessToken } from './common';
+import { getAccessToken, setAccessToken } from './common';
 import { envVariables as e } from './env';
+
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
+// use default InMemoryCache
+const cache = new InMemoryCache({});
+
+// apolloLinkTokenRefresh
+const refreshLink = new TokenRefreshLink({  
+  // define accessToken field
+  accessTokenField: 'accessToken',
+  // check if current accessToken is valid
+  isTokenValidOrUndefined: () => {
+    const accessToken = getAccessToken();
+    // invalid Token
+    if (!accessToken) {
+      return true;
+    }
+    // check if valid Token is not Expired
+    try {
+      const { exp } = jwtDecode(accessToken);
+      // if current time is greater than exp
+      return (Date.now() >= exp * 1000) ? false : true;
+    } catch (error) {
+      return false;
+    }
+  },
+  // if not valid, request a new accessToken with refreshToken
+  fetchAccessToken: () => {
+    return fetch(`${e.restServerUri}/refresh-token`, {
+      method: 'POST',
+      credentials: 'include',
+    });
+  },
+  // handle fetch accessToken
+  handleFetch: accessToken => {
+    // set inMemory accessToken
+    setAccessToken(accessToken);
+  },
+  // handle Response
+  // handleResponse: (operation, accessTokenField) => response => {
+  //   // here you can parse response, handle errors, prepare returned token to
+  //   // further operations
+  //   // returned object should be like this:
+  //   // {
+  //   //    access_token: 'token string here'
+  //   // }
+  // },
+  handleError: err => {
+    // full control over handling token fetch Error
+    console.warn('Your refresh token is invalid. Try to relogin');
+    console.error(err);
+    // your custom action here
+    // user.logout();
+  }
+});
+
+const requestLink = new ApolloLink((operation, forward) =>
+  new Observable(observer => {
+    let handle: any;
+    Promise.resolve(operation)
+      .then(operation => {
+        // get inMemory accessToken from global variable
+        const accessToken = getAccessToken();
+        if (accessToken) {
+          operation.setContext({
+            headers: {
+              authorization: accessToken ? `Bearer ${accessToken}` : ''
+            }
+          })
+        }
+      })
+      .then(() => {
+        handle = forward(operation).subscribe({
+          next: observer.next.bind(observer),
+          error: observer.error.bind(observer),
+          complete: observer.complete.bind(observer),
+        });
+      })
+      .catch(observer.error.bind(observer));
+    return () => {
+      if (handle) handle.unsubscribe();
+    };
+  })
+);
+
+const client = new ApolloClient({
+  link: ApolloLink.from([
+    // apolloLinkTokenRefresh
+    refreshLink,
+    // normal apolloLink stuff
+    onError(({ graphQLErrors, networkError }) => {
+      console.error(graphQLErrors);
+      console.error(networkError);
+    }),
+    requestLink,
+    new HttpLink({
+      uri: e.graphqlServerUri,
+      fetchOptions: {
+        // How to avoid "self signed certificate" error?
+        agent: new https.Agent({ rejectUnauthorized: e.apolloRejectUnauthorized }),
+      },
+      // required, else we can't receive jid cookie
+      credentials: 'include',
+    })
+  ]),
+  cache
+});
 
 // minimal version without
 // const client = new ApolloClient({
@@ -15,44 +126,12 @@ import { envVariables as e } from './env';
 // });
 
 // const headers:any = [];
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+// process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 // const corsOptions = {
 //   origin: "http://localhost:3000",
 //   credentials: true
 // };
-
-const httpLink = createHttpLink({
-  uri: e.graphqlServerUri,
-  fetchOptions: {
-    // How to avoid "self signed certificate" error?
-    agent: new https.Agent({ rejectUnauthorized: false }),    
-  },  
-  // required, else we can't receive jid cookie
-  credentials: 'include',
-});
-
-const authLink = setContext((_: any, { headers }: any) => {
-  // get the authentication token from local storage if it exists
-  // let token = localStorage.getItem('token');
-  let token;
-  // get inMemory accessToken from global variable
-  if (getAccessToken()) {
-    token = getAccessToken();
-  }
-  // return the headers to the context so httpLink can read them
-  return {
-    headers: {
-      ...headers,
-      authorization: token ? `Bearer ${token}` : '',
-    }
-  }
-});
-
-const client = new ApolloClient({
-  link: authLink.concat(httpLink),
-  cache: new InMemoryCache(),
-});
 
 ReactDOM.render(
   <ApolloProvider client={client}>

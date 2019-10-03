@@ -9,6 +9,7 @@ interface Props { }
 
 export const App: React.FC<Props> = () => {
   const [loading, setLoading] = useState(true)
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
   // on app mounts, request a new accessToken with cookie jid refreshToken, and set it in inMemory accessToken
   React.useEffect(() => {

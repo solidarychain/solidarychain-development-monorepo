@@ -151,7 +151,7 @@ $ npx lerna add bcrypt --scope @convector-sample/server-graphql --no-bootstrap
 $ npx lerna add @types/passport-local --scope @convector-sample/server-graphql --dev --no-bootstrap
 $ npx lerna add @types/passport-jwt --save-dev --scope @convector-sample/server-graphql --dev --no-bootstrap
 # bootstrap
-$ npx lerna bootstrap --scope @convector-sample/server-graphql
+$ npx lerna bootstrap
 ```
 
 ```shell
@@ -162,15 +162,17 @@ $ nest g module users
 $ nest g service users
 ```
 
+```
 @convector-sample/server-graphql: [Nest] 14138   - 2019-09-15 21:21:30   [ExceptionHandler] Nest can't resolve dependencies of the GqlLocalAuthGuard (?). Please make sure that the argument at index [0] is available in the PersonModule context. +4ms
 
-this occures because we are imports services, never imports services, when we import module we already have access to all exported providers(services etc) from module
+this occurs because we are imports services, never imports services, when we import module we already have access to all exported providers(services etc) from module
 
 @convector-sample/server-graphql: [Nest] 15907   - 2019-09-15 21:25:25   [ExceptionHandler] Nest can't resolve dependencies of the GqlLocalAuthGuard (?). Please make sure that the argument at index [0] is available in the GqlLocalAuthGuard context. +234ms
 
 @convector-sample/server-graphql: [Nest] 6421   - 2019-09-15 22:22:27   [ExceptionHandler] Nest can't resolve dependencies of the PersonService (?). Please make sure that the argument at index [0] is available in the PersonModule context. +69ms
 
 the trick to use `GqlLocalAuthGuard` in `PersonModule` is just import `AuthModule` in `PersonModule`
+```
 
 ex
 
@@ -268,3 +270,18 @@ $ TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImphbmVkb2UiLCJ0b2t
 $ curl -k -v -X POST \
   --url https://localhost:3443/refresh-token \
   --cookie jid=${TOKEN}
+
+## Apollo-Link-Token-Refresh and Migrate `apollo-boost` to `apollo-client`
+
+- [apollo-link-token-refresh](https://github.com/newsiberian/apollo-link-token-refresh)
+- [Apollo Boost migration](https://www.apollographql.com/docs/react/migrating/boost-migration/)
+
+```shell
+# install deps
+$ npx lerna add apollo-link-token-refresh --scope @convector-sample/frontend-react --no-bootstrap
+$ npx lerna add jwt-decode --scope @convector-sample/frontend-react --no-bootstrap
+# types
+$ npx lerna add @types/jwt-decode --scope @convector-sample/frontend-react --dev --no-bootstrap
+# bootstrap
+$ npx lerna bootstrap
+```
