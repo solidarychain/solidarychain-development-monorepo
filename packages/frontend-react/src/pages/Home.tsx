@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { Loading, ErrorMessage } from '../components';
 import { Person, usePersonsQuery } from '../generated/graphql';
+import { envVariables as e } from '../env';
 
 interface Props { }
 
 export const Home: React.FC<Props> = () => {
   // hooks
   const { data, loading, error } = usePersonsQuery({
-    fetchPolicy: 'network-only',
+    fetchPolicy: e.apolloFetchPolicy,
     variables: {
       skip: 0,
       take: 50

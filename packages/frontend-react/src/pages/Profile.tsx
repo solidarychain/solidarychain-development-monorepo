@@ -1,11 +1,14 @@
 import * as React from 'react';
-import { Loading, ErrorMessage } from '../components';
+import { ErrorMessage, Loading } from '../components';
+import { envVariables as e } from '../env';
 import { usePersonProfileQuery } from '../generated/graphql';
 
 interface Props { }
 
 export const Profile: React.FC<Props> = () => {
-  const { data, loading, error } = usePersonProfileQuery();
+  const { data, loading, error } = usePersonProfileQuery({
+    fetchPolicy: e.apolloFetchPolicy
+  });
 
   if (error) {
     console.log(error);
