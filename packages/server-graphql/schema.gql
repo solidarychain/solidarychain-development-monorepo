@@ -3,10 +3,6 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
-type AccessToken {
-  accessToken: String!
-}
-
 input AddPersonAttributeInput {
   id: ID!
   content: JSONObject
@@ -44,7 +40,8 @@ input LoginPersonInput {
 }
 
 type Mutation {
-  personLogin(loginPersonData: LoginPersonInput!): AccessToken!
+  personLogin(loginPersonData: LoginPersonInput!): PersonLoginResponse!
+  personLogout: Boolean!
   revokeUserRefreshTokens(username: String!): Boolean!
   participantNew(newParticipantData: NewParticipantInput!): Participant!
   personNew(newPersonData: NewPersonInput!): Person!
@@ -81,6 +78,11 @@ type Person {
   attributes: [Attribute!]
   roles: [String!]
   participant: Participant!
+}
+
+type PersonLoginResponse {
+  user: Person!
+  accessToken: String!
 }
 
 type Query {

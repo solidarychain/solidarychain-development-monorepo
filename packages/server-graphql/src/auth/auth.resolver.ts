@@ -7,6 +7,8 @@ import { AccessToken } from './models';
 import { GqlLocalAuthGuard } from './guards/gql-local-auth.guard';
 import { GqlContext } from '../types';
 import { UsersService } from '../users/users.service';
+import Person from '../person/models/person.model';
+import PersonLoginResponse from './models/person-login-response.model';
 
 const pubSub = new PubSub();
 
@@ -18,26 +20,38 @@ export class AuthResolver {
   ) { }
 
   @UseGuards(GqlLocalAuthGuard)
-  @Mutation(returns => AccessToken)
+  @Mutation(returns => PersonLoginResponse)
   async personLogin(
     @Args('loginPersonData') loginPersonData: LoginPersonInput,
     @Context() { res, payload }: GqlContext,
-  ): Promise<AccessToken> {
+  ): Promise<PersonLoginResponse> {
     // publish personLogged subscription
     pubSub.publish('personLogged', { personLogged: loginPersonData.username });
     // accessToken
-    const accessToken = await this.authService.signJwtToken(loginPersonData);
+    const { accessToken } = await this.authService.signJwtToken(loginPersonData);
     // assign jwt Payload to context
     // TODO: payload is assigned to context?
-    payload = this.authService.getJwtPayLoad(accessToken.accessToken);
+    payload = this.authService.getJwtPayLoad(accessToken);
     // get incremented tokenVersion
     const tokenVersion = this.usersService.usersStore.incrementTokenVersion(loginPersonData.username);
     // refreshToken
     const refreshToken: AccessToken = await this.authService.signRefreshToken(loginPersonData, tokenVersion);
     // send refresh token
     this.authService.sendRefreshToken(res, refreshToken);
-    // return accessToken
-    return accessToken;
+    // get person
+    const person: Person = await this.usersService.findOneByUsername(loginPersonData.username);
+    // return loginPersonResponse
+    return { user: person, accessToken };
+  }
+
+  @Mutation(returns => Boolean)
+  async personLogout(
+    @Context() { res, payload }: GqlContext,
+  ): Promise<boolean> {
+    // send empty refreshToken, with same name jid, etc, better than res.clearCookie
+    // this will invalidate the browser cookie refreshToken
+    this.authService.sendRefreshToken(res, { accessToken: '' });
+    return true;
   }
 
   // Don't expose this resolver, only used in development environments

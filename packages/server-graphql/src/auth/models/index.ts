@@ -1,2 +1,2 @@
 export * from './access-token.model';
-export * from './jwtPayload';
+export * from './jwt-payload';

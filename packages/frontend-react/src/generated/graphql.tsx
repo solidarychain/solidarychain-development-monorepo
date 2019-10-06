@@ -15,11 +15,6 @@ export type Scalars = {
   Date: any,
 };
 
-export type AccessToken = {
-   __typename?: 'AccessToken',
-  accessToken: Scalars['String'],
-};
-
 export type AddPersonAttributeInput = {
   id: Scalars['ID'],
   content?: Maybe<Scalars['JSONObject']>,
@@ -53,7 +48,8 @@ export type LoginPersonInput = {
 
 export type Mutation = {
    __typename?: 'Mutation',
-  personLogin: AccessToken,
+  personLogin: PersonLoginResponse,
+  personLogout: Scalars['Boolean'],
   revokeUserRefreshTokens: Scalars['Boolean'],
   participantNew: Participant,
   personNew: Person,
@@ -118,6 +114,12 @@ export type Person = {
   attributes?: Maybe<Array<Attribute>>,
   roles?: Maybe<Array<Scalars['String']>>,
   participant: Participant,
+};
+
+export type PersonLoginResponse = {
+   __typename?: 'PersonLoginResponse',
+  user: Person,
+  accessToken: Scalars['String'],
 };
 
 export type Query = {
@@ -245,9 +247,32 @@ export type PersonLoginMutationVariables = {
 export type PersonLoginMutation = (
   { __typename?: 'Mutation' }
   & { personLogin: (
-    { __typename?: 'AccessToken' }
-    & Pick<AccessToken, 'accessToken'>
+    { __typename?: 'PersonLoginResponse' }
+    & Pick<PersonLoginResponse, 'accessToken'>
+    & { user: (
+      { __typename?: 'Person' }
+      & Pick<Person, 'id' | 'firstname' | 'lastname' | 'username' | 'email' | 'roles'>
+      & { attributes: Maybe<Array<(
+        { __typename?: 'Attribute' }
+        & Pick<Attribute, 'id' | 'content' | 'issuedDate' | 'expiresDate' | 'expired' | 'certifierID'>
+      )>>, participant: (
+        { __typename?: 'Participant' }
+        & Pick<Participant, 'id' | 'name' | 'msp'>
+        & { identities: Array<(
+          { __typename?: 'x509Identities' }
+          & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
+        )> }
+      ) }
+    ) }
   ) }
+);
+
+export type PersonLogoutMutationVariables = {};
+
+
+export type PersonLogoutMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'personLogout'>
 );
 
 export type PersonNewMutationVariables = {
@@ -561,6 +586,32 @@ export const PersonLoginDocument = gql`
     mutation personLogin($loginPersonData: LoginPersonInput!) {
   personLogin(loginPersonData: $loginPersonData) {
     accessToken
+    user {
+      id
+      firstname
+      lastname
+      username
+      email
+      attributes {
+        id
+        content
+        issuedDate
+        expiresDate
+        expired
+        certifierID
+      }
+      roles
+      participant {
+        id
+        name
+        msp
+        identities {
+          id
+          status
+          fingerprint
+        }
+      }
+    }
   }
 }
     `;
@@ -572,6 +623,19 @@ export type PersonLoginMutationFn = ApolloReactCommon.MutationFunction<PersonLog
 export type PersonLoginMutationHookResult = ReturnType<typeof usePersonLoginMutation>;
 export type PersonLoginMutationResult = ApolloReactCommon.MutationResult<PersonLoginMutation>;
 export type PersonLoginMutationOptions = ApolloReactCommon.BaseMutationOptions<PersonLoginMutation, PersonLoginMutationVariables>;
+export const PersonLogoutDocument = gql`
+    mutation personLogout {
+  personLogout
+}
+    `;
+export type PersonLogoutMutationFn = ApolloReactCommon.MutationFunction<PersonLogoutMutation, PersonLogoutMutationVariables>;
+
+    export function usePersonLogoutMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<PersonLogoutMutation, PersonLogoutMutationVariables>) {
+      return ApolloReactHooks.useMutation<PersonLogoutMutation, PersonLogoutMutationVariables>(PersonLogoutDocument, baseOptions);
+    }
+export type PersonLogoutMutationHookResult = ReturnType<typeof usePersonLogoutMutation>;
+export type PersonLogoutMutationResult = ApolloReactCommon.MutationResult<PersonLogoutMutation>;
+export type PersonLogoutMutationOptions = ApolloReactCommon.BaseMutationOptions<PersonLogoutMutation, PersonLogoutMutationVariables>;
 export const PersonNewDocument = gql`
     mutation personNew($newPersonData: NewPersonInput!) {
   personNew(newPersonData: $newPersonData) {

@@ -3,6 +3,7 @@
 ## Links
 
 - [JWT Authentication Node.js Tutorial with GraphQL and React](https://www.youtube.com/watch?v=25GS0MLT8JU&t=368s)
+- [benawad/jwt-auth-example](https://github.com/benawad/jwt-auth-example)
 
 ## Start
 
@@ -19,6 +20,11 @@ $ npx lerna run start:debug --scope @convector-sample/server-graphql --stream
 ```
 
 <http://localhost:3000/graphql>
+
+```shell
+# generate graphql types
+$ npx lerna run gen:graphql --scope @convector-sample/frontend-react
+```
 
 ```shell
 # add dependencies

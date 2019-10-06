@@ -1,5 +1,31 @@
 mutation personLogin($loginPersonData: LoginPersonInput!) {
-	personLogin(loginPersonData: $loginPersonData) {
-		accessToken
-	}
+  personLogin(loginPersonData: $loginPersonData) {
+    accessToken
+    user {
+      id
+      firstname
+      lastname
+      username
+      email
+      attributes {
+        id
+        content
+        issuedDate
+        expiresDate
+        expired
+        certifierID
+      }
+      roles
+      participant {
+        id
+        name
+        msp
+        identities {
+          id
+          status
+          fingerprint
+        }
+      }
+    }
+  }
 }

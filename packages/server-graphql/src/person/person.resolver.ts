@@ -54,6 +54,11 @@ export class PersonResolver {
     return this.personService.findByAttribute(getByAttributeInput, personsArgs);
   }
 
+  @Query(returns => Person)
+  async personProfile(@CurrentUser() user: Person): Promise<Person> {
+    return await this.personService.findOneByUsername(user.username);
+  }
+
   @Mutation(returns => Person)
   async personNew(
     @Args('newPersonData') newPersonData: NewPersonInput,
@@ -75,11 +80,5 @@ export class PersonResolver {
   @Subscription(returns => Person)
   personAdded() {
     return pubSub.asyncIterator('personAdded');
-  }
-
-  @UseGuards(GqlAuthGuard)
-  @Query(returns => Person)
-  async personProfile(@CurrentUser() user: Person): Promise<any> {
-    return await this.personService.findOneByUsername(user.username);
   }
 }

@@ -464,3 +464,10 @@ $ npx lerna add @types/react-router-dom --scope @convector-sample/frontend-react
 $ npx lerna bootstrap
 ```
 
+## Apollo resetStore /Cache
+
+- [Reset store on logout](https://www.apollographql.com/docs/react/networking/authentication/#reset-store-on-logout)
+
+`bundle.esm.js:76 Uncaught (in promise) Error: Network error: Store reset while query was in flight (not completed in link chain)`
+
+on try to `await client!.resetStore();`

@@ -6,5 +6,6 @@ interface Props {
 }
 
 export const ErrorMessage: React.FC<Props> = ({ error }: Props) => {
+  // console.log(error);
   return (<div style={errorStyle}>{error}</div>);
 }

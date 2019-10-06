@@ -11,7 +11,6 @@ export const Profile: React.FC<Props> = () => {
   });
 
   if (error) {
-    console.log(error);
     return <ErrorMessage error={error.message} />;
   }
 
