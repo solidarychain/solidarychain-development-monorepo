@@ -13,13 +13,13 @@ import { App } from './App';
 import { getAccessToken, setAccessToken } from './common';
 import { envVariables as e } from './env';
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+// process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 // use default InMemoryCache
 const cache = new InMemoryCache({});
 
 // apolloLinkTokenRefresh
-const refreshLink = new TokenRefreshLink({  
+const refreshLink = new TokenRefreshLink({
   // define accessToken field
   accessTokenField: 'accessToken',
   // check if current accessToken is valid
@@ -75,6 +75,7 @@ const requestLink = new ApolloLink((operation, forward) =>
       .then(operation => {
         // get inMemory accessToken from global variable
         const accessToken = getAccessToken();
+        // if have accessToken, add authorization headers
         if (accessToken) {
           operation.setContext({
             headers: {
@@ -103,8 +104,12 @@ const client = new ApolloClient({
     refreshLink,
     // normal apolloLink stuff
     onError(({ graphQLErrors, networkError }) => {
-      console.error(graphQLErrors);
-      console.error(networkError);
+      if (graphQLErrors) {
+        console.error(graphQLErrors);
+      }
+      if (networkError) {
+        console.error(networkError);
+      }
     }),
     requestLink,
     new HttpLink({
