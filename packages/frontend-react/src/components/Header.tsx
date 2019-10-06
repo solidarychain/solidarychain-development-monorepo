@@ -1,25 +1,34 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { useStateValue, ActionType } from '../app/state';
 import { setAccessToken } from '../common';
-import { usePersonLogoutMutation, usePersonProfileQuery } from '../generated/graphql';
+import { usePersonLogoutMutation } from '../generated/graphql';
 
 interface Props { }
 
 export const Header: React.FC<Props> = () => {
+  // get hook
+  const [state, dispatch] = useStateValue();
+  // debug helper
+  // const stateOutput = <pre>{JSON.stringify(state, undefined, 2)}</pre>;
 
+  // DEPRECATED: now use state
   // this will use apollo cache, and this cache is modified in login, check `store.writeQuery` on Login.tsx
-  const { data, loading } = usePersonProfileQuery();
+  // const { data, loading } = usePersonProfileQuery();
+
   // access apollo client to clear cache store on logout
   const [logout, { client }] = usePersonLogoutMutation();
 
   let body: any = null;
-  if (loading) {
-    body = null;
-  } else if (data && data.personProfile) {
-    body = <div>You are logged in as: {data.personProfile.username}</div>;
-  } else {
-    body = <div>You are not logged in</div>
-  }
+
+  // DEPRECATED: now use state
+  // if (loading) {
+  //   body = null;
+  // } else if (data && data.personProfile) {
+  //   body = <div>You are logged in as: {data.personProfile.username}</div>;
+  // } else {
+  //   body = <div>You are not logged in</div>
+  // }
 
   return (
     <header>
@@ -30,9 +39,6 @@ export const Header: React.FC<Props> = () => {
         <Link to='/register'>register</Link>
       </div>
       <div>
-        <Link to='/login'>login</Link>
-      </div>
-      <div>
         <Link to='/profile'>profile</Link>
       </div>
       <div>
@@ -40,17 +46,20 @@ export const Header: React.FC<Props> = () => {
       </div>
       {body}
       <div>
-        {!loading && data && data.personProfile ? (
+        {/* {!loading && data && data.personProfile ? (} */}
+        {state.user.logged ? (
           <button onClick={async () => {
+            // fire logoutMutation
             await logout();
             // clean inMemory accessToken
             setAccessToken('');
             // clear/reset apollo cache store
-            // check chrome devTools for apollo, we see empty cache
             await client!.resetStore()
               .catch(error => {
                 console.error(error)
               });
+            // dispatch logout
+            dispatch({ type: ActionType.LOGOUT_USER });
           }
           }>logout</button>
         ) : null}

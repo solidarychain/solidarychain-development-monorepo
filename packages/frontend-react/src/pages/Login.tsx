@@ -3,9 +3,14 @@ import { RouteComponentProps } from 'react-router';
 import { setAccessToken } from '../common';
 import { ErrorMessage, Loading } from '../components';
 import { LoginPersonInput, PersonProfileDocument, usePersonLoginMutation } from '../generated/graphql';
+import { useStateValue, ActionType } from '../app/state';
+import { Fragment } from 'react';
 
 // use RouteComponentProps to get history props from Route
 export const Login: React.FC<RouteComponentProps> = ({ history }) => {
+	// get hook
+	const [_, dispatch] = useStateValue();
+
 	const defaults = {
 		username: 'johndoe',
 		password: '12345678',
@@ -44,9 +49,9 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
 					store.writeQuery({
 						// must use postfix Document type gql``
 						query: PersonProfileDocument,
-						data: { 
+						data: {
 							// must match personProfile with personLogin.user return objects
-							personProfile: data.personLogin.user 
+							personProfile: data.personLogin.user
 						}
 					});
 				}
@@ -57,6 +62,19 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
 			if (response && response.data) {
 				// set inMemory global accessToken variable
 				setAccessToken(response.data.personLogin.accessToken);
+				// dispatch state
+				const { user } = response.data.personLogin;
+				const payload = {
+					profile: {
+						id: user.id,
+						firstname: user.username,
+						lastname: user.lastname,
+						username: user.username,
+						email: user.email,
+						roles: user.roles
+					}
+				};
+				dispatch({ type: ActionType.LOGGED_USER, payload });
 				// use history to send user to homepage, after awaiting for response object
 				history.push('/');
 			}
@@ -66,7 +84,7 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
 	};
 
 	return (
-		<React.Fragment>
+		<Fragment>
 			<h2>Login</h2>
 			<form onSubmit={(e) => onSubmitFormHandler(e)}>
 				<input
@@ -82,6 +100,6 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
 			</form>
 			{error && <ErrorMessage error={error.message} />}
 			{loading && <Loading />}
-		</React.Fragment>
+		</Fragment>
 	);
 }

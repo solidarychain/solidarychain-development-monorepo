@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { ActionType, Themes } from '../app/state/reducerStateValue';
 import { useStateValue } from '../app/state/useStateValue';
-import { InputMouseEvent } from '../types/InputEvent';
+import { InputMouseEvent } from '../types';
 
 type ClickHandlerAction = {
   type: ActionType,

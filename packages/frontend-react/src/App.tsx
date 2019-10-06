@@ -1,15 +1,22 @@
-import * as React from 'react'
-import { Routes } from './Routes';
+import * as React from 'react';
 import { useState } from 'react';
-import { envVariables as e } from './env';
+import { useStateValue, ActionType } from './app/state';
 import { setAccessToken } from './common';
 import { Loading } from './components';
+import { envVariables as e } from './env';
+import { usePersonProfileLazyQuery } from './generated/graphql';
+import { Routes } from './Routes';
 
 interface Props { }
 
 export const App: React.FC<Props> = () => {
+  // context state hook
+  const [state, dispatch] = useStateValue();
+  // state hook
   const [loading, setLoading] = useState(true)
-  // process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+  // person hook
+  const [profileQuery, { called: profileCalled, data: profileData, loading: profileLoading }] = usePersonProfileLazyQuery();
+  const [profileLoaded, setProfileLoaded] = useState(false);
 
   // on app mounts, request a new accessToken with cookie jid refreshToken, and set it in inMemory accessToken
   React.useEffect(() => {
@@ -25,16 +32,36 @@ export const App: React.FC<Props> = () => {
         // disable loading, and let it pass to render Routes
         setLoading(false);
         setAccessToken(data.accessToken);
+        // fire profile hook
+        if (!profileCalled) profileQuery();
       })
       .catch(error => console.error(error));
     return () => {
       // cleanup stuff
     };
-  }, [])
+  }, [state.user.logged, profileCalled, profileQuery])
 
-  if (loading) {
+  if (!profileLoaded && profileData) {
+    // dispatch state
+    const payload = {
+      profile: {
+        id: profileData.personProfile.id,
+        firstname: profileData.personProfile.firstname,
+        lastname: profileData.personProfile.lastname,
+        username: profileData.personProfile.username,
+        email: profileData.personProfile.email,
+        roles: profileData.personProfile.roles
+      }
+    };
+    dispatch({ type: ActionType.LOGGED_USER, payload });
+    // set state to profile loaded to prevent loops
+    setProfileLoaded(true);
+  }
+
+  // require to use both loading states
+  if (loading || profileLoading) {
     return <Loading />
   }
 
-  return (<Routes />);
+  return (<Routes logged={state.user.logged} />);
 }

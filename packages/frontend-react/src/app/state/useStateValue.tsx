@@ -12,6 +12,7 @@ import React, { createContext, useContext, useReducer } from 'react';
 // </StateProvider>
 //
 // 2. then use and update the state inside your app, get custom hook useStateValue
+// const [state, dispatch] = useStateValue();
 // const [{ theme }, dispatch] = useStateValue();
 
 type StateProviderArgumentType = {
