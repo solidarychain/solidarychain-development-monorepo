@@ -17,7 +17,9 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react"
+    "jsx": "react",
+    // changed to override problem in "value={useReducer(reducer, initialState)"
+    "strictNullChecks": false
   },
   "include": [
     "src"

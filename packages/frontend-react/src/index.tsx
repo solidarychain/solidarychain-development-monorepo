@@ -12,6 +12,8 @@ import ReactDOM from 'react-dom';
 import { App } from './App';
 import { getAccessToken, setAccessToken } from './common';
 import { envVariables as e } from './env';
+import { StateProvider } from './app/state/useStateValue';
+import reducer, { initialState } from './app/state/reducerStateValue';
 
 // process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
@@ -125,22 +127,12 @@ const client = new ApolloClient({
   cache
 });
 
-// minimal version without
-// const client = new ApolloClient({
-//   uri: 'https://localhost:3443/graphql'
-// });
-
-// const headers:any = [];
-// process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-
-// const corsOptions = {
-//   origin: "http://localhost:3000",
-//   credentials: true
-// };
-
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <App />
+    {/* wrap with state provider */}
+    <StateProvider initialState={initialState} reducer={reducer}>
+      <App />
+    </StateProvider>
   </ApolloProvider>
   , document.getElementById('root')
 );

@@ -1,11 +1,12 @@
-import * as React from 'react'
+import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { usePersonProfileQuery, usePersonLogoutMutation } from '../generated/graphql';
 import { setAccessToken } from '../common';
+import { usePersonLogoutMutation, usePersonProfileQuery } from '../generated/graphql';
 
 interface Props { }
 
 export const Header: React.FC<Props> = () => {
+
   // this will use apollo cache, and this cache is modified in login, check `store.writeQuery` on Login.tsx
   const { data, loading } = usePersonProfileQuery();
   // access apollo client to clear cache store on logout
@@ -33,6 +34,9 @@ export const Header: React.FC<Props> = () => {
       </div>
       <div>
         <Link to='/profile'>profile</Link>
+      </div>
+      <div>
+        <Link to='/state'>state</Link>
       </div>
       {body}
       <div>
