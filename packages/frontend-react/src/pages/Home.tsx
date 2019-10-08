@@ -1,19 +1,25 @@
 import * as React from 'react';
-import { Loading, ErrorMessage } from '../components';
-import { Person, usePersonsQuery } from '../generated/graphql';
+import { getAccessToken } from '../common';
+import { ErrorMessage, Loading } from '../components';
 import { envVariables as e } from '../env';
+import { Person, usePersonsLazyQuery } from '../generated/graphql';
 
 interface Props { }
 
 export const Home: React.FC<Props> = () => {
   // hooks
-  const { data, loading, error } = usePersonsQuery({
+  const [personQuery, { data, loading, error }] = usePersonsLazyQuery({
     fetchPolicy: e.apolloFetchPolicy,
     variables: {
       skip: 0,
       take: 50
     }
   });
+
+  // only fire query if has a valid accessToken to prevent after login delay problems
+  if (!data && !loading && getAccessToken()) {
+    personQuery();
+  }
 
   // catch error first
   if (error) {

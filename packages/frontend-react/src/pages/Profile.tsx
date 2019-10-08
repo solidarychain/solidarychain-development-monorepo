@@ -20,6 +20,9 @@ export const Profile: React.FC<Props> = () => {
 
   const { personProfile } = data;
   return (
-    <pre>{JSON.stringify(personProfile, undefined, 2)}</pre>
+    <div>
+      <h1>Profile</h1>
+      <pre>{JSON.stringify(personProfile, undefined, 2)}</pre>
+    </div>
   );
 }

@@ -1,15 +1,15 @@
 import * as React from 'react';
+import { Fragment } from 'react';
 import { RouteComponentProps } from 'react-router';
+import { ActionType, useStateValue } from '../app/state';
 import { setAccessToken } from '../common';
 import { ErrorMessage, Loading } from '../components';
 import { LoginPersonInput, PersonProfileDocument, usePersonLoginMutation } from '../generated/graphql';
-import { useStateValue, ActionType } from '../app/state';
-import { Fragment } from 'react';
 
 // use RouteComponentProps to get history props from Route
 export const Login: React.FC<RouteComponentProps> = ({ history }) => {
 	// get hook
-	const [_, dispatch] = useStateValue();
+	const [, dispatch] = useStateValue();
 
 	const defaults = {
 		username: 'johndoe',
@@ -59,7 +59,7 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
 				throw error;
 			})
 
-			if (response && response.data) {
+			if (response && response.data.personLogin) {
 				// set inMemory global accessToken variable
 				setAccessToken(response.data.personLogin.accessToken);
 				// dispatch state
@@ -75,7 +75,7 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
 					}
 				};
 				dispatch({ type: ActionType.LOGGED_USER, payload });
-				// use history to send user to homepage, after awaiting for response object
+				// use history to send user to homepage, after awaiting for response object, 
 				history.push('/');
 			}
 		} catch (error) {

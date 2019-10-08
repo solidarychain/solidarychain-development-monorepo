@@ -1,11 +1,5 @@
 import React, { createContext, useContext, useReducer } from 'react';
 
-// custom hook to manage state
-// 
-// State Management with React Hooks and Context API in 10 lines of code!
-// https://medium.com/simply/state-management-with-react-hooks-and-context-api-at-10-lines-of-code-baf6be8302c
-// 
-// to use 
 // 1. wrap app with StateProvider
 // <StateProvider initialState={initialState} reducer={reducer}>
 //   App content ...

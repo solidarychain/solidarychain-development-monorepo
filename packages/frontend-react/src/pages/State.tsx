@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { ActionType, Themes } from '../app/state/reducerStateValue';
 import { useStateValue } from '../app/state/useStateValue';
 import { InputMouseEvent } from '../types';
@@ -28,11 +28,11 @@ export default () => {
   const stateOutput = JSON.stringify(state, undefined, 2);
 
   return (
-    <Fragment>
-      <h1>Theme: {state.theme.primary} : {state.counter}</h1>
+    <div>
+      <h1>State</h1>
       {buttons}
       <button onClick={onClickIncrementHandler}>Increment</button>
       <pre>state: {stateOutput}</pre>
-    </Fragment>
+    </div>
   )
 }

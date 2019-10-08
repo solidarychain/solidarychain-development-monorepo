@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useStateValue, ActionType } from '../app/state';
 import { setAccessToken } from '../common';
 import { usePersonLogoutMutation } from '../generated/graphql';
+import { Fragment } from 'react';
 
 interface Props { }
 
@@ -32,18 +33,17 @@ export const Header: React.FC<Props> = () => {
 
   return (
     <header>
-      <div>
-        <Link to='/'>home</Link>
-      </div>
-      <div>
-        <Link to='/register'>register</Link>
-      </div>
-      <div>
-        <Link to='/profile'>profile</Link>
-      </div>
-      <div>
-        <Link to='/state'>state</Link>
-      </div>
+      {state.user.logged ? (
+        <Fragment>
+          <div><Link to='/'>home</Link></div>
+          <div><Link to='/profile'>profile</Link></div>
+          <div><Link to='/state'>state</Link></div>
+        </Fragment>
+      ) : (
+        <div>
+          <Link to='/register'>register</Link>
+        </div>
+        )}
       {body}
       <div>
         {/* {!loading && data && data.personProfile ? (} */}

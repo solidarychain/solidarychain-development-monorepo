@@ -12,17 +12,18 @@
 
 - [Visual Studio Code Settings Sync Gist](https://gist.github.com/benawad/1e9dd01994f78489306fbfd6f7b01cd3#file-snippets-typescriptreact-json)
 
-## commands
+## Quick Commands
 
 ```shell
-# run server and app
+# run server
 $ npx lerna run start:debug --scope @convector-sample/server-graphql --stream
+# run frontend
 $ npx lerna run start --scope @convector-sample/frontend-react --stream --stream
 # gen graphql
 $ npx lerna run gen:graphql --scope @convector-sample/frontend-react
 ```
 
-## 
+## Bootstrap App
 
 1:25
 
@@ -30,8 +31,6 @@ $ npx lerna run gen:graphql --scope @convector-sample/frontend-react
 # create  react app
 $ cd packages
 $ npx create-react-app frontend-react --typescript
-# test it
-
 ```
 
 ```shell
@@ -194,20 +193,18 @@ app.enableCors({
 });
 ```
 
-add  cors to nest.js server
-
-bundle.esm.js:101 OPTIONS https://localhost:3443/graphql net::ERR_CERT_AUTHORITY_INVALID
-
-npx lerna run start --scope @convector-sample/frontend-react --stream
-
+### Fix ERR_CERT_AUTHORITY_INVALID
 
 Fix apollo react ERR_CERT_AUTHORITY_INVALID
 https://github.com/apollographql/apollo-link/issues/229
 
-it seems that won't work in chrom debugger
-the trick is open <http://localhost:3000/> and accept certificate like we do to advance in invalid certificates, and it start to work in chrome debug mode
+the trick is open nestjs graphql playground (https)  on chrome or chrome debugger at <https://localhost:3443/graphql>, and accept certificate like we do normally with advance in invalid certificates, and it start to work in chrome debug mode, and in non chrome debugger. 
 
 working version with a fresh login token
+
+### Add CORS
+
+add  cors to nest.js server
 
 `packages/frontend-react/src/index.tsx`
 
@@ -460,7 +457,7 @@ now we some good stuff hooks use functions like `useParticipantByIdQuery` and `u
 ```shell
 # add apollo
 $ npx lerna add react-router-dom --scope @convector-sample/frontend-react --no-bootstrap
-$ npx lerna add @types/react-router-dom --scope @convector-sample/frontend-react --no-bootstrap
+$ npx lerna add @types/react-router-dom --scope @convector-sample/frontend-react --no-bootstrap --dev
 $ npx lerna bootstrap
 ```
 
@@ -471,3 +468,14 @@ $ npx lerna bootstrap
 `bundle.esm.js:76 Uncaught (in promise) Error: Network error: Store reset while query was in flight (not completed in link chain)`
 
 on try to `await client!.resetStore();`
+
+## Use js-cookie
+
+- [js-cookie](https://github.com/js-cookie/js-cookie)
+
+```shell
+# add js-cookie
+$ npx lerna add js-cookie --scope @convector-sample/frontend-react --no-bootstrap
+$ npx lerna add @types/js-cookie --scope @convector-sample/frontend-react --no-bootstrap --dev
+$ npx lerna bootstrap
+```

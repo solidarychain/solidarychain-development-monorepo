@@ -59,7 +59,7 @@ export const App: React.FC<Props> = () => {
   }
 
   // require to use both loading states
-  if (loading || profileLoading) {
+  if (loading && profileLoading) {
     return <Loading />
   }
 
