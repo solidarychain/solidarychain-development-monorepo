@@ -10,7 +10,7 @@
 DONt forget to build common package `@convector-sample/common`, if something change, but first restart server
 
 ```shell
-# build common library
+# build common library: this is required on fresh clones before lerna boostrap else `Cannot find module '@convector-sample/common'`
 $ npx lerna run build --scope @convector-sample/common --stream
 ```
 
