@@ -7,7 +7,7 @@
 
 ## Start
 
-DONt forget to build common package `@convector-sample/common`, if change something, but first restart server
+DONt forget to build common package `@convector-sample/common`, if something change, but first restart server
 
 ```shell
 # build common library
@@ -168,17 +168,19 @@ $ nest g module users
 $ nest g service users
 ```
 
+## Problem: Nest can't resolve dependencies of the GqlLocalAuthGuard
+
 ```
 @convector-sample/server-graphql: [Nest] 14138   - 2019-09-15 21:21:30   [ExceptionHandler] Nest can't resolve dependencies of the GqlLocalAuthGuard (?). Please make sure that the argument at index [0] is available in the PersonModule context. +4ms
-
-this occurs because we are imports services, never imports services, when we import module we already have access to all exported providers(services etc) from module
 
 @convector-sample/server-graphql: [Nest] 15907   - 2019-09-15 21:25:25   [ExceptionHandler] Nest can't resolve dependencies of the GqlLocalAuthGuard (?). Please make sure that the argument at index [0] is available in the GqlLocalAuthGuard context. +234ms
 
 @convector-sample/server-graphql: [Nest] 6421   - 2019-09-15 22:22:27   [ExceptionHandler] Nest can't resolve dependencies of the PersonService (?). Please make sure that the argument at index [0] is available in the PersonModule context. +69ms
-
-the trick to use `GqlLocalAuthGuard` in `PersonModule` is just import `AuthModule` in `PersonModule`
 ```
+
+this occurs because **we are imports services**, **never imports services**, **when we import module we already have access to all exported providers(services etc) from module**
+
+> the trick to use `GqlLocalAuthGuard` in `PersonModule` is just import `AuthModule` in `PersonModule`
 
 ex
 
@@ -200,31 +202,75 @@ export class PersonModule { }
 3. user decorator
 4. using user decorator in mutation
 
-ideal for personProfile
+ideal for `personProfile.graphql`
 
-used in `src/auth/graphql-jwt-auth.guard.ts`
+used in `src/auth/gql-auth.guard.ts`
 
+## Problem with `return super.canActivate(new ExecutionContextHost([req]))`
 
+```
+error TS2345: Argument of type 'ExecutionContextHost' is not assignable to parameter of type 'ExecutionContext'. Property 'getType' is missing in type 'ExecutionContextHost' but required in type 'ExecutionContext'.
+```
 
-// tslint:disable-next-line: max-line-length
-// [NestJS Get current user in GraphQL resolver authenticated with JWT](https://stackoverflow.com/questions/55269777/nestjs-get-current-user-in-graphql-resolver-authenticated-with-jwt)
+- [NestJS Get current user in GraphQL resolver authenticated with JWT](https://stackoverflow.com/questions/55269777/nestjs-get-current-user-in-graphql-resolver-authenticated-with-jwt)
 
-// not used yet
+> Instead of implement your own `canActivate` method in your `GqlAuthGuard` you should create a `getRequest` method and return `GqlExecutionContext.create(context).getContext().req;`. This is a better approach in my opinion.
 
-// use in @CurrentUser() decorator query/mutation
-// @Query(returns => User)
-// @UseGuards(GqlAuthGuard)
-// whoami(@CurrentUser() user: User) {
-//   console.log(user);
-//   return this.userService.findByUsername(user.username);
+the fix is just use `getRequest()`  from nest docs (maybe this is new, after I implemented above canActivate method)
+
+- [Nest graphql](https://docs.nestjs.com/techniques/authentication#graphql)
+
+> In order to use an AuthGuard with GraphQL, extend the built-in AuthGuard class and override the getRequest() method.
+
+remove old `canActivate` method and add official docs `getRequest` method and it works :)
+
+old method
+
+```typescript
+canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
+  // GqlExecutionContext exposes corresponding methods for each argument, like getArgs(), getContext()
+  const ctx = GqlExecutionContext.create(context);
+  const { req } = ctx.getContext();
+  // the req parameter will contain a user property
+  // (populated by Passport during the passport-local authentication flow)
+// const authorization: string = (req.headers.authorization)
+//   ? req.headers.authorization
+//   : null;
+// if (authorization) {
+    // const token: string = authorization.toLowerCase().replace('bearer ', '');
+    // const validToken = this.jwtService.verify(token);
+  return super.canActivate(new ExecutionContextHost([req]));
+// } else {
+//   return false;
 // }
+}
+```
 
-used in
-src/common/decorators/user.decorator.ts
+new method
 
+```typescript
+@Injectable()
+export class GqlAuthGuard extends AuthGuard('jwt') {
+  getRequest(context: ExecutionContext) {
+    const ctx = GqlExecutionContext.create(context);
+    return ctx.getContext().req;
+  }
+}
+```
 
+## @CurrentUser() decorator, to get @CurrentUser() in graphql endpoints like in personProfile
 
-getting headers in graphql 
+`packages/server-graphql/src/common/decorators/user.decorator.ts`
+
+```typescript
+@Query(returns => Person)
+async personProfile(@CurrentUser() user: Person): Promise<Person> {
+  return await this.personService.findOneByUsername(user.username);
+}
+```
+
+## Getting headers in graphql
+
 to fix "Cannot read property 'headers' of undefined" graphql request
 https://docs.nestjs.com/graphql/tooling#execution-context
 
@@ -232,9 +278,6 @@ https://docs.nestjs.com/graphql/tooling#execution-context
 
 Applying Middleware-like mechanism to Resolvers' Queries and Mutations
 https://stackoverflow.com/questions/54532263/applying-middleware-like-mechanism-to-resolvers-queries-and-mutations
-
-
-
 
 
 Authentication: GraphQL Oficial Docs

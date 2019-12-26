@@ -36,7 +36,7 @@ export class ParticipantController extends ConvectorController {
       throw new Error('Identity exists already, please call changeIdentity fn for updates');
     }
   }
-  
+
   @Invokable()
   public async changeIdentity(
     @Param(yup.string())
@@ -73,7 +73,7 @@ export class ParticipantController extends ConvectorController {
       fingerprint: newIdentity,
       status: true
     });
-    
+
     await existing.save();
   }
 

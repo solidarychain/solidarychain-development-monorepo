@@ -180,6 +180,7 @@ export type X509Identities = {
   status: Scalars['Boolean'],
   fingerprint: Scalars['String'],
 };
+
 export type NewParticipantDataMutationVariables = {
   newParticipantData: NewParticipantInput
 };
@@ -499,6 +500,7 @@ export type PersonLoggedSubscription = (
   { __typename?: 'Subscription' }
   & Pick<Subscription, 'personLogged'>
 );
+
 
 export const NewParticipantDataDocument = gql`
     mutation newParticipantData($newParticipantData: NewParticipantInput!) {

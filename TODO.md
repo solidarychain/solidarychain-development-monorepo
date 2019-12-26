@@ -65,3 +65,19 @@ login mutation > jwt
 authentication/authorization
 
 receive transaction id, to store in neo4j
+
+## Todo: NOTES and README
+
+[ ] Finish `packages/server-rest/README.md`
+[ ] Replace all Curls `curl http://localhost:3000/participant/gov` with auth and https, ex curl -k `https://localhost:3443/api/participant/gov`
+[ ] Checkout whole repo and test all in other folder without dependencies etc
+[ ] all curls add /api/, -h token 
+[ ] all curls all hurley invoke equivalent
+
+BUGS
+add-attribute so funciona se o content for object, se for string or int etc it keeps null
+      "content": {
+        "height": "1.80"
+      },
+
+put to work in rest and graphql same way

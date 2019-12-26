@@ -3,17 +3,22 @@
 		"path": "$ROOTPATH$/NOTES.md",
 		"bookmarks": [
 			{
-				"line": 48,
+				"line": 61,
 				"column": 0,
 				"label": ""
 			},
 			{
-				"line": 57,
+				"line": 70,
 				"column": 51,
 				"label": ""
 			},
 			{
-				"line": 1693,
+				"line": 498,
+				"column": 2,
+				"label": ""
+			},
+			{
+				"line": 1710,
 				"column": 54,
 				"label": ""
 			}

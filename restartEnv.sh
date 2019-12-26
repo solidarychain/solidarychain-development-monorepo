@@ -14,6 +14,7 @@ sleep 20
 
 # seed ledger
 npm run seed
+
 # create views
 ./views/install.sh
 
@@ -25,4 +26,5 @@ npx lerna run build --scope participant-cc
 npx hurl invoke person person_get 1-100-100
 
 # start server
-echo "start server with: npx lerna run start:debug --scope server --stream"
+echo "start server-rest with: npx lerna run start:debug --scope @convector-sample/server-rest --stream"
+echo "start server-graphql with: npx lerna run start:debug --scope @convector-sample/server-graphql --stream"

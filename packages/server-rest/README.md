@@ -1,75 +1,306 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
-
-[travis-image]: https://api.travis-ci.org/nestjs/nest.svg?branch=master
-[travis-url]: https://travis-ci.org/nestjs/nest
-[linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
-[linux-url]: https://travis-ci.org/nestjs/nest
-  
-  <p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications, heavily inspired by <a href="https://angular.io" target="blank">Angular</a>.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/dm/@nestjs/core.svg" alt="NPM Downloads" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://api.travis-ci.org/nestjs/nest.svg?branch=master" alt="Travis" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://img.shields.io/travis/nestjs/nest/master.svg?label=linux" alt="Linux" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#5" alt="Coverage" /></a>
-<a href="https://gitter.im/nestjs/nestjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge"><img src="https://badges.gitter.im/nestjs/nestjs.svg" alt="Gitter" /></a>
-<a href="https://opencollective.com/nest#backer"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec"><img src="https://img.shields.io/badge/Donate-PayPal-dc3d53.svg"/></a>
-  <a href="https://twitter.com/nestframework"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+# README
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Rest API based on [Nest](https://github.com/nestjs/nest) framework, with http redirect, https, swagger and jwt authentication
 
-## Installation
+## Pre-Requisites
 
-```bash
-$ npm install
+1. Node Js
+
+2. this project must have a running hurley hyperledger network running, with **person chaincode** deployed, follow instructions on [README.me](../../README.md)
+
+3. the great `jq` tool, in ubuntu/debian based distros use `$ sudo apt install jq -y`
+
+## Configure environment variables
+
+default `.env`
+
+```conf
+# example can be shared, not used in production
+HTTP_SERVER_PORT=3080
+HTTPS_SERVER_PORT=3443
+ACCESS_TOKEN_JWT_SECRET=rGtqzOjlW9OG47ncUKbPDltTxA3EtZFp
+REFRESH_TOKEN_JWT_SECRET=3XgiizDr35A4H1I9ocOPTFeUkFSfKkSy
+AUTH_SERVICE_USE_MOKED_USERS=false
 ```
 
-## Running the app
+## Start Rest Api
 
-```bash
-# development
-$ npm run start
+```shell
+# in repo root folder
 
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+# run in prod mode
+$ npx lerna run start:prod --scope @convector-sample/server-rest --stream
+# run in dev mode
+$ npx lerna run start:dev --scope @convector-sample/server-rest --stream
+# or run in debug mode
+$ npx lerna run start:debug --scope @convector-sample/server-rest --stream
+# output
+@convector-sample/server-rest: [Nest] 13860   - 2019-12-25 21:15:15   HTTP Server running on port [3080] +19ms
+@convector-sample/server-rest: [Nest] 13860   - 2019-12-25 21:15:15   HTTPS Server running on port [3443] +1ms
 ```
 
-## Test
+## Get JWT Access Token
 
-```bash
-# unit tests
-$ npm run test
+- access swagger api at <https://localhost:3443/api>
 
-# e2e tests
-$ npm run test:e2e
+to test some api endpoints, first we need a valid access token, use swagger endpoint `/api/login` with `LoginUserDto` payload `{ "username": "johndoe", "password": "12345678"}`
 
-# test coverage
-$ npm run test:cov
+or below curl
+
+### POST:/api/login
+
+```shell
+$ curl -k -s -X POST https://localhost:3443/api/login -d '{ "username": "johndoe", "password": "12345678"}' -H 'Content-Type: application/json' | jq
+
+# response
+{
+  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxLTEwMC0xMDAiLCJ1c2VybmFtZSI6ImpvaG5kb2UiLCJpYXQiOjE1NzczMDk3NDQsImV4cCI6MTU3NzMxMDY0NH0.n8L6j_1DDU4Rb0FoPoIAQJKCNaxRCgVSyMh-nkSRRjE"
+}
 ```
 
-## Support
+if use swagger add `Bearer YOUR-ACCESS-TOKEN-HERE` and fire some queries
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+ex `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxLTEwMC0xMDAiLCJ1c2VybmFtZSI6ImpvaG5kb2UiLCJpYXQiOjE1NzczMDk3NDQsImV4cCI6MTU3NzMxMDY0NH0.n8L6j_1DDU4Rb0FoPoIAQJKCNaxRCgVSyMh-nkSRRjE`
 
-## Stay in touch
+## Test Rest API
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Variables
 
-## License
+```shell
+# define some variables
+$ URI="https://localhost:3443"
+# request token and assign it to variable with the help of jq
+$ TOKEN=$(curl -k -s -X POST https://localhost:3443/api/login -d '{ "username": "johndoe", "password": "12345678"}' -H 'Content-Type: application/json' | jq -r ".accessToken"
+)
+```
 
-  Nest is [MIT licensed](LICENSE).
+### GET:/api/me
+
+```shell
+# /api/me
+$ curl -k -s -X GET "${URI}/api/me" -H "accept: application/json" -H "Authorization: Bearer ${TOKEN}" | jq
+```
+
+```json
+{
+  "userId": "1-100-100",
+  "username": "johndoe"
+}
+```
+
+### GET:/api/participant
+
+```shell
+# /api/participant
+$ curl -k -s -X GET "${URI}/api/participant" -H "accept: application/json" -H "Authorization: Bearer ${TOKEN}" | jq
+```
+
+```json
+[
+  {
+    "id": "gov",
+    "type": "io.worldsibu.examples.participant",
+    "name": "Big Government",
+    "msp": "org1MSP",
+    "identities": [
+      {
+        "fingerprint": "5B:1D:82:F7:93:6E:60:E7:6D:3D:D7:6E:8D:91:DB:E2:BF:67:03:07",
+        "status": true
+      }
+    ]
+  },
+  {
+    "id": "mit",
+    "type": "io.worldsibu.examples.participant",
+    "name": "MIT",
+    "msp": "org1MSP",
+    "identities": [
+      {
+        "fingerprint": "A7:67:30:62:1C:81:30:4F:5C:53:84:3D:DE:47:0E:D0:24:AF:CE:AD",
+        "status": true
+      }
+    ]
+  },
+  ...
+]
+```
+
+### POST:/api/participant
+
+```shell
+# /api/participant
+$ PAYLOAD="{ \"id\": \"unicef\", \"name\": \"Unicef\"}"
+$ curl -k -s -X POST "${URI}/api/participant" -H "accept: application/json" -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" -d "${PAYLOAD}"
+```
+
+```json
+{"type":"Buffer","data":[]}
+```
+
+### GET:/api/participant/{id}
+
+```shell
+# /api/participant
+$ ID=unicef
+$ curl -k -s -X GET "${URI}/api/participant/${ID}" -H "accept: application/json" -H "Authorization: Bearer ${TOKEN}" | jq
+```
+
+```json
+{
+  "_id": "unicef",
+  "_identities": [
+    {
+      "fingerprint": "54:F9:85:11:91:8F:81:F8:54:DB:25:CE:E6:0D:2C:8C:BB:7B:AD:7F",
+      "status": true
+    }
+  ],
+  "_msp": "org1MSP",
+  "_name": "Unicef",
+  "_type": "io.worldsibu.examples.participant"
+}
+```
+
+### GET:/api/person
+
+```shell
+$ curl -k -s -X GET "${URI}/api/person" -H "accept: application/json" -H "Authorization: Bearer ${TOKEN}"
+```
+
+```json
+[
+  {
+    "id": "1-100-100",
+    "type": "io.worldsibu.examples.person",
+    "firstname": "John",
+    "lastname": "Doe",
+    "username": "johndoe",
+    "password": "$2b$10$5SbuQ4vc.SBtbAA4PEGrHOBpBvuH3OsIhXPXa8qq5wb2fDs.whtvO",
+    "email": "john.doe@mail.com",
+    "attributes": [
+      {
+        "certifierID": "gov",
+        "content": null,
+        "id": "birth-year",
+        "issuedDate": 1554239270
+      }
+    ],
+    "roles": [
+      "USER"
+    ],
+    "participant": {
+      "id": "gov",
+      "identities": [
+        {
+          "fingerprint": "54:F9:85:11:91:8F:81:F8:54:DB:25:CE:E6:0D:2C:8C:BB:7B:AD:7F",
+          "status": true
+        }
+      ],
+      "msp": "org1MSP",
+      "name": "Big Government",
+      "type": "io.worldsibu.examples.participant"
+    }
+  },
+  ...
+```
+
+### POST:/api/person
+
+```shell
+# /api/person
+$ PAYLOAD="{ \"id\": \"koakh\", \"firstname\": \"Mario\", \"lastname\": \"Monteiro\", \"username\": \"koakh\", \"password\": \"12345678\", \"email\": \"mail@koakh.com\" }"
+$ curl -k -s -X POST "${URI}/api/person" -H "accept: application/json" -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" -d "${PAYLOAD}"
+```
+
+```json
+{"type":"Buffer","data":[]}
+```
+
+### GET:/api/person/{id}
+
+```shell
+# /api/participant
+$ ID=koakh
+$ curl -k -s -X GET "${URI}/api/person/${ID}" -H "accept: application/json" -H "Authorization: Bearer ${TOKEN}" | jq
+```
+
+```json
+{
+  "id": "koakh",
+  "type": "io.worldsibu.examples.person",
+  "firstname": "Mario",
+  "lastname": "Monteiro",
+  "username": "koakh",
+  "password": "$2b$10$.1unf8AGahW3ss.6NkFJsu1lIOUwg6oNGrgm4vGzSk3ztVaXlsn/i",
+  "email": "mail@koakh.com",
+  "roles": [
+    "USER"
+  ],
+  "participant": {
+    "id": "gov",
+    "identities": [
+      {
+        "fingerprint": "54:F9:85:11:91:8F:81:F8:54:DB:25:CE:E6:0D:2C:8C:BB:7B:AD:7F",
+        "status": true
+      }
+    ],
+    "msp": "org1MSP",
+    "name": "Big Government",
+    "type": "io.worldsibu.examples.participant"
+  }
+}
+```
+
+### POST:/api/person/{id}/add-attribute
+
+```shell
+# /api/person
+$ ID=koakh
+$ PAYLOAD='{ "attributeId":"birth-year", "content": "1971" }'
+$ curl -k -s -X POST "${URI}/api/person/${ID}/add-attribute" -H "accept: application/json" -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" -d "${PAYLOAD}" | jq
+```
+
+```json
+{
+  "id": "koakh",
+  "type": "io.worldsibu.examples.person",
+  "firstname": "Mario",
+  "lastname": "Monteiro",
+  "username": "koakh",
+  "password": "$2b$10$.1unf8AGahW3ss.6NkFJsu1lIOUwg6oNGrgm4vGzSk3ztVaXlsn/i",
+  "email": "mail@koakh.com",
+  "attributes": [
+    {
+      "certifierID": "gov",
+      "content": "1971",
+      "id": "birth-year",
+      "issuedDate": 1577318087448,
+      "type": "io.worldsibu.examples.attribute"
+    }
+  ],
+  "roles": [
+    "USER"
+  ],
+...  
+```
+
+
+npx hurl invoke person person_addAttribute 1-100-100 '{"id": "birth-year", "certifierID": "gov", "content": "1993", "issuedDate": 1554239270 }' -u admin
+npx hurl invoke person person_getByAttribute birth-year 1993
+
+
+TOKEN=$(curl -k -s -X POST https://localhost:3443/api/login -d '{ "username": "johndoe", "password": "12345678"}' -H 'Content-Type: application/json' | jq -r ".accessToken"
+)
+curl -k -X POST \
+  https://localhost:3443/api/person/1-100-101/add-attribute \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer ${TOKEN}" \
+  -d '{
+    "attributeId":"birth-year",
+    "content": "1971"
+  }' | jq
+
+
+npx hurl invoke person person_addAttribute 1-100-100 '{"id": "born-year", "certifierID": "gov", "content": "1971", "issuedDate": 1554239270 }' -u admin
+npx hurl invoke person person_addAttribute 1-100-100 '{"id": "born-year", "content": "1971" }' -u admin

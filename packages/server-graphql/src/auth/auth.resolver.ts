@@ -49,7 +49,7 @@ export class AuthResolver {
     @Context() { res, payload }: GqlContext,
   ): Promise<boolean> {
     // send empty refreshToken, with same name jid, etc, better than res.clearCookie
-    // this will invalidate the browser cookie refreshToken
+    // this will invalidate the browser cookie refreshToken, only work with browser, not with insomnia etc
     this.authService.sendRefreshToken(res, { accessToken: '' });
     return true;
   }

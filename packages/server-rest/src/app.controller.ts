@@ -1,4 +1,4 @@
-import { Controller, Get, HttpStatus, Post, Request, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Post, Request, Res, UseGuards, Body } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiCreatedResponse, ApiExcludeEndpoint, ApiInternalServerErrorResponse, ApiOkResponse, ApiOperation, ApiUnauthorizedResponse, ApiUseTags } from '@nestjs/swagger';
 import * as express from 'express';
@@ -7,6 +7,7 @@ import { GetProfileResponseDto } from './auth/dto/get-profile-response.dto';
 import { LoginUserResponseDto } from './auth/dto/login-user-response.dto';
 import { appConstants as c } from './constants';
 import { envVariables as e } from './env';
+import { LoginUserDto } from './auth/dto/login-user.dto';
 
 @Controller()
 export class AppController {
@@ -27,8 +28,9 @@ export class AppController {
   @ApiCreatedResponse({ description: c.API_RESPONSE_LOGIN, type: LoginUserResponseDto })
   @ApiInternalServerErrorResponse({ description: c.API_RESPONSE_INTERNAL_SERVER_ERROR })
   @ApiUnauthorizedResponse({ description: c.API_RESPONSE_UNAUTHORIZED })
-  async login(@Request() req): Promise<LoginUserResponseDto> {
+  async login(@Request() req, @Body() loginUser: LoginUserDto): Promise<LoginUserResponseDto> {
     // passport will attach the authenticated user to the request object
+    // @Body() loginUser: LoginUserDto is used only in swagger api, else we don't have a object to fill with properties ex {"username": "johndoe","password": "12345678"}
     return this.authService.login(req.user);
   }
 

@@ -25,7 +25,7 @@ export class AuthService {
 
     if (authorized) {
       // protect expose password property to outside
-      // use spread operator to assign password to password, and all the other user props to result
+      // use spread operator to assign password to password, and add all the other user props to result
       // required .toJSON()
       const { password, ...result } = user.toJSON();
       return result;

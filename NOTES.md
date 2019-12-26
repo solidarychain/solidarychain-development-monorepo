@@ -1,8 +1,8 @@
 # NOTES
 
-This is a simple NestJs starter, based on above links, I only extended it with a few things like swagger api, https, jwt, and other stuff, thanks m8s
+This is a simple NestJs starter, based on above links, I only extended it with a few things like **swagger api**, **https**, **jwt**, and other stuff, thanks m8s
 
-IMPORTANT NOTE: used node `v8.16.0` without issues
+> IMPORTANT NOTE: node version used `v8.16.0` without issues
 
 ## Links Used
 
@@ -30,11 +30,24 @@ $ npm test
 # lift hyperledger
 $ npm run env:restart
 
-# deploy smart contract
+# deploy smart contract (this smart contract have person and participant packages deployed in one unified chaincode)
 $ npm run cc:start -- person
+
+# build chaincode (before upgrade)
+$ npx lerna run build --scope @convector-sample/person-cc
+$ npx lerna run build --scope @convector-sample/participant-cc
 # upgrade smart contract
-$ npm run cc:upgrade -- person 1.1
-# note: after deploy/upgrade wait a few second/minutes in first invoke
+$ npm run cc:upgrade -- person 1.3
+$ npm run cc:upgrade -- participant 1.3
+# note: after deploy/upgrade wait a few second/minutes in first invoke, 
+# when done we have a new container and end with result `Upgraded Chaincode at org1`
+# watch for deployed container
+$ watch "docker container ls --format "{{.Names}}" | grep \"person\|participant\""
+dev-peer0.org1.hurley.lab-participant-1.2
+dev-peer0.org1.hurley.lab-participant-1.1
+dev-peer0.org2.hurley.lab-person-1.0
+dev-peer0.org1.hurley.lab-person-1.0
+
 # package chain code: force build chaincode-person folders
 $ npm run cc:package -- person org1
 
@@ -48,41 +61,45 @@ $ ./views/install.sh
 # debug chain code
 $ npm run cc:start:debug -- person
 
-# TODO: to confirm
 # if error occur use target debug version
 $ npm run cc:start:debug -- person 1.1
+$ npm run cc:start:debug -- participant 1.1
 
 # run dev server
-$ npx lerna run start:dev --scope server --stream
-# debug dev server
-$ npx lerna run start:debug --scope server --stream
+$ npx lerna run start:dev --scope @convector-sample/server-rest --stream
+# run debug server
+$ npx lerna run start:debug --scope @convector-sample/server-rest --stream
 
-# build chaincode
-$ npx lerna run build --scope person-cc
-$ npx lerna run build --scope participant-cc
-
-# invoke some stuff
+# invoke some stuff (after deploy or upgrade chaincode)
 $ npx hurl invoke person person_get 1-100-100
+$ npx hurl invoke person participant_get gov
 
-# debug container person-1.0, person-1.1...
-$ SEARCH_CONTAINER="person-1.1"
-$ sudo docker logs $(docker container ls | grep $SEARCH_CONTAINER | awk '{print $1}' | head -n 1) -f
-
-$ sudo docker container ls | grep "person-1.1" | awk '{print $1}'
-sudo docker logs $(docker container ls | grep "person-1.1" | awk '{print $1}' | head -n 1) -f
+# debug/view logs container person-1.0, person-1.1...
+$ CHAINCODE="person"
+$ sudo docker container ls | grep ${CHAINCODE} | awk '{print $1" : "$2}'
+f544509eec58 : dev-peer0.org2.hurley.lab-person-1.0-351b0bef3757230f476dec587f92b0d6ec2d60224e983cc32119aafec151bcdd
+32ebfd14677d : dev-peer0.org1.hurley.lab-person-1.0-327a0dd6d92274526a6230611433ce88bc56a5602b3f6036cd5f739662e1d1f5
+# or
+$ docker container ls --format "{{.ID}}\t{{.Image}}"
+# with chaincode version
+$ CHAINCODE_VERSION="1.0"
+$ SEARCH_CONTAINER="${CHAINCODE}-${CHAINCODE_VERSION}"
+$ sudo docker logs $(docker container ls | grep ${SEARCH_CONTAINER} | awk '{print $1}' | head -n 1) -f
 ```
 
 ## Fix's
 
 ```shell
-# when running servers
+# when running server, when we build chaincode, we must stop and start server
 @convector-sample/server-graphql: src/convector.ts(35,50): error TS2339: Property 'get' does not exist on type 'ConvectorControllerClient<ConvectorController<any>>'.
 @convector-sample/server-graphql: src/participant/participant.service.ts(13,42): error TS2339: Property 'register' does not exist on type 'ConvectorControllerClient<ConvectorController<any>>'.
 @convector-sample/server-graphql: src/participant/participant.service.ts(23,75): error TS2339: Property 'get' does not exist on type 'ConvectorControllerClient<ConvectorController<any>>'.
 @convector-sample/server-graphql: src/participant/participant.service.ts(35,105): error TS2339: Property 'getAll' does not exist on type 'ConvectorControllerClient<ConvectorController<any>>'.
 @convector-sample/server-graphql: 20:58:05 - Found 4 errors. Watching for file changes.
-# fix build cc and start server
+# fix build cc's and start server
+$ npx lerna run build --scope @convector-sample/person-cc --stream
 $ npx lerna run build --scope @convector-sample/participant-cc --stream
+$ npx lerna run start:debug --scope @convector-sample/server-rest --stream
 ```
 
 ## Uris and Endpoints
@@ -136,7 +153,7 @@ if have problems after install packages with `lerna add` and with chaincodes, ex
 and have error not found chaincode package on npm registry like `'participant-cc@^0.1.0' is not in the npm registry`, just rebuild chaincode, and next `lerna bootstrap`
 
 ```shell
-$ npx lerna run build --scope participant-cc
+$ npx lerna run build --scope @convector-sample/participant-cc
 lerna success run Ran npm script 'build' in 1 package in 3.2s:
 lerna success - participant-cc
 $ npx lerna bootstrap
@@ -214,19 +231,19 @@ v8.16.0
 
 3. Recreate repo with `rm .git -r && git init`
 
-4. Run `rm -rf ./packages/server` to delete Express App.
+4. Run `rm -rf ./packages/server-rest` to delete Express App.
 
 5. Edit `.gitignore`
 
 6. Move to the package folder run `cd packages && nest new server && cd ..`. This is going to scaffold a NestJS project for you.
 
-7. Install `env-cmd` with lerna for handle environmental variables `npx lerna add env-cmd --dev --scope server --no-bootstrap`
+7. Install `env-cmd` with lerna for handle environmental variables `npx lerna add env-cmd --dev --scope @convector-sample/server-rest --no-bootstrap`
 
 8. Install the smart contract packages that are going to be consumed by NestJS
 
 ```shell
-$ npx lerna add participant-cc --scope server --no-bootstrap
-$ npx lerna add person-cc --scope server --no-bootstrap
+$ npx lerna add participant-cc --scope @convector-sample/server-rest --no-bootstrap
+$ npx lerna add person-cc --scope @convector-sample/server-rest --no-bootstrap
 ```
 
 > To avoid typing conflicts add the `skipLibCheck` flag in the `root` and `server` `tsconfig` files.
@@ -271,11 +288,11 @@ Assume that a network participant is the **government**, a person is you and an 
 The government is in charge of **registering your birth day and issue a born certificate** that you’ll store.
 But for some reason your name have a typo (I’m sorry for you 😂) in the certificate and only the county court (another network participant that is not the government) can help you. The county court can **fix your name but not create another person**.
 
-## Start Code It: Modules, Controlllers and Services
+## Start Code It: Modules, Controllers and Services
 
 ```shell
 # enter nestjs dir
-cd packages/server
+cd packages/server-rest
 # create the participant module and register it in the app module automatically.
 $ nest generate module participant
 ```
@@ -317,21 +334,21 @@ config package.json to use `env-cmd -f .env`
 "start:prod": "env-cmd -f .env ...",
 ```
 
-create `packages/server/.env` with
+create `packages/server-rest/.env` with
 
 ```config
 PORT=3000
 ```
 
-add `.env` to `.gitignore` with `echo packages/server/.env >> .gitignore`
+add `.env` to `.gitignore` with `echo packages/server-rest/.env >> .gitignore`
 
 Now, what we need to do is start migrating the logic. All the code related to the communication with convector and any other heavy calculation to our services and the controllers are going to be in charge of exposing the endpoints and pass down the data to the services.
 
 ## Create files
 
-- `packages/server/src/participant/participant.controller.ts`
-- `packages/server/src/participant/participant.service.ts`
-- `packages/server/src/person/person.controller.ts`
+- `packages/server-rest/src/participant/participant.controller.ts`
+- `packages/server-rest/src/participant/participant.service.ts`
+- `packages/server-rest/src/person/person.controller.ts`
 
 ## Run Convector and Test
 
@@ -367,7 +384,7 @@ $ npm run cc:start -- person
 Instantiated Chaincode at org1
 
 # start your web server
-$ npx lerna run start:dev --scope server --stream
+$ npx lerna run start:dev --scope @convector-sample/server-rest --stream
 
 # seed some participants, in first invoke wait some seconds more
 $ npx hurl invoke person participant_register gov "Big Government" -u admin
@@ -407,10 +424,10 @@ $ git add . && git commit -am "finished tutorial"
 
 ### add Types to `Participant` and `Person` Modules and Use it [DEPRECATED]
 
-- `packages/server/src/participant/types/participant.ts`
-- `packages/server/src/participant/types/index.ts`
-- `packages/server/src/person/types/index.ts`
-- `packages/server/src/person/types/person.ts`
+- `packages/server-rest/src/participant/types/participant.ts`
+- `packages/server-rest/src/participant/types/index.ts`
+- `packages/server-rest/src/person/types/index.ts`
+- `packages/server-rest/src/person/types/person.ts`
 
 ### To Use CouchDB and don't DRY Initialization block in Controllers
 
@@ -516,7 +533,7 @@ However, Jest was able to find:
 You might want to include a file extension in your import, or update your 'moduleFileExtensions', which is currently ['js', 'json', 'ts'].
 ```
 
-add `"node"` to `packages/server/package.json`
+add `"node"` to `packages/server-rest/package.json`
 
 ```json
 "jest": {
@@ -555,7 +572,7 @@ FAIL  src/person/person.controller.spec.ts
     at Object.it (person/person.controller.spec.ts:16:24)
 ```
 
-Fix: was adding missing `providers: [PersonService]` on `packages/server/src/person/person.controller.spec.ts`
+Fix: was adding missing `providers: [PersonService]` on `packages/server-rest/src/person/person.controller.spec.ts`
 
 ```typescript
 beforeEach(async () => {
@@ -574,11 +591,11 @@ beforeEach(async () => {
 
 ```shell
 # install the required packages
-$ npx lerna add @nestjs/swagger --scope server --no-bootstrap
-$ npx lerna add swagger-ui-express --scope server --no-bootstrap
+$ npx lerna add @nestjs/swagger --scope @convector-sample/server-rest --no-bootstrap
+$ npx lerna add swagger-ui-express --scope @convector-sample/server-rest --no-bootstrap
 # required for models
-$ npx lerna add class-validator --scope server --no-bootstrap
-$ npx lerna add class-transformer --scope server --no-bootstrap
+$ npx lerna add class-validator --scope @convector-sample/server-rest --no-bootstrap
+$ npx lerna add class-transformer --scope @convector-sample/server-rest --no-bootstrap
 $ npx lerna bootstrap
 ```
 
@@ -586,7 +603,7 @@ $ npx lerna bootstrap
 
 - [Nest.JS OpenAPI (Swagger)](https://docs.nestjs.com/recipes/swagger)
 
-add to `packages/server/src/env.ts`
+add to `packages/server-rest/src/env.ts`
 
 ```typescript
   ...
@@ -601,7 +618,7 @@ add to `packages/server/src/env.ts`
 };
 ```
 
-add to `packages/server/src/main.ts`
+add to `packages/server-rest/src/main.ts`
 
 ```typescript
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
@@ -626,7 +643,7 @@ async function bootstrap() {
 
 ### Redirect root to Api
 
-change default `@Get` controller in `packages/server/src/app.controller.ts` to
+change default `@Get` controller in `packages/server-rest/src/app.controller.ts` to
 
 ```typescript
 @Controller()
@@ -645,7 +662,7 @@ export class AppController {
 
 ```shell
 # boot server and test api docs
-$ npx lerna run start:dev --scope server --stream
+$ npx lerna run start:dev --scope @convector-sample/server-rest --stream
 ```
 
 open your browser and navigate to <http://localhost:3000/api/>
@@ -656,7 +673,7 @@ test redirect navigate to <http://localhost:3000> this will redirect to <http://
 
 now we need to create model/DTO's for all endpoints that have `@Body`
 
-`packages/server/src/participant/dto/register-participant.dto.ts`
+`packages/server-rest/src/participant/dto/register-participant.dto.ts`
 
 ```typescript
 import { ApiModelProperty } from '@nestjs/swagger';
@@ -673,7 +690,7 @@ export class RegisterParticipantDto {
 }
 ```
 
-`packages/server/src/person/dto/add-person-attribute.dto.ts`
+`packages/server-rest/src/person/dto/add-person-attribute.dto.ts`
 
 ```typescript
 import { ApiModelProperty } from '@nestjs/swagger';
@@ -689,7 +706,7 @@ export class AddPersonAttributeDto {
 }
 ```
 
-`packages/server/src/person/dto/create-person.dto.ts`
+`packages/server-rest/src/person/dto/create-person.dto.ts`
 
 ```typescript
 import { ApiModelProperty } from '@nestjs/swagger';
@@ -706,7 +723,7 @@ export class CreatePersonDto {
 }
 ```
 
-`packages/server/src/person/dto/get-person-by-attribute.dto.ts`
+`packages/server-rest/src/person/dto/get-person-by-attribute.dto.ts`
 
 ```typescript
 import { ApiModelProperty } from '@nestjs/swagger';
@@ -719,7 +736,7 @@ export class GetPersonByAttributeDto {
 
 now replace json objects ex { id, name } with DTO's
 
-`packages/server/src/participant/participant.controller.ts`
+`packages/server-rest/src/participant/participant.controller.ts`
 
 ```typescript
 import { RegisterParticipantDto } from './dto';
@@ -735,7 +752,7 @@ public async register(@Body() participantDto: RegisterParticipantDto): Promise<v
 }
 ```
 
-`packages/server/src/person/person.controller.ts`
+`packages/server-rest/src/person/person.controller.ts`
 
 ```typescript
 @Post('/')
@@ -772,7 +789,7 @@ public async getByAttribute(@Param() { id }, @Body() getPersonByAttributeDto: Ge
 
 ### Global constant file
 
-create a `packages/server/src/constants.ts` file to prevent DRY/hard-code strings
+create a `packages/server-rest/src/constants.ts` file to prevent DRY/hard-code strings
 
 ex
 
@@ -788,7 +805,7 @@ const API_RESPONSE_INTERNAL_SERVER_ERROR: string = 'Internal server error';
 
 ### Swagger : @ApiResponse decorators
 
-add `packages/server/src/participant/participant.controller.ts` and `packages/server/src/person/person.controller.ts`
+add `packages/server-rest/src/participant/participant.controller.ts` and `packages/server-rest/src/person/person.controller.ts`
 
 ex
 
@@ -807,14 +824,14 @@ ex
 
 ```shell
 # install dependencies required to use ExpressAdapter
-$ npx lerna add @nestjs/platform-express --scope server --no-bootstrap
+$ npx lerna add @nestjs/platform-express --scope @convector-sample/server-rest --no-bootstrap
 ```
 
 > use let's encrypt certificates, or self-signed, here we use self-signed for a fictitious domain `convector.sample.com`
 
 ```shell
 # create dir to store self-signed certificates
-$ mkdir packages/server/config -p && cd packages/server/config
+$ mkdir packages/server-rest/config -p && cd packages/server-rest/config
 # set/change domain
 $ FICTITIOUS_DOMAIN=convector.sample.com
 $ FILENAME_CERT=server.crt
@@ -861,7 +878,7 @@ $ sudo nano /etc/hosts
 
 now we can use <https://convector.sample.com:3443> or <https://localhost:3443/api/>
 
-one last change, change swagger scheme to https with `.setSchemes('https')` in `packages/server/src/main.ts`
+one last change, change swagger scheme to https with `.setSchemes('https')` in `packages/server-rest/src/main.ts`
 
 ```typescript
 const options = new DocumentBuilder()
@@ -875,7 +892,7 @@ const options = new DocumentBuilder()
 
 ### Add Redirect Middleware (HTTP to HTTPS)
 
-`packages/server/src/middleware/redirect-middleware.ts`
+`packages/server-rest/src/middleware/redirect-middleware.ts`
 
 ```typescript
 import { NextFunction, Request, Response } from 'express';
@@ -892,7 +909,7 @@ export const redirectMiddleware = (req: Request, res: Response, next: NextFuncti
 };
 ```
 
-add `app.use(redirectMiddleware);` to `packages/server/src/main.ts`
+add `app.use(redirectMiddleware);` to `packages/server-rest/src/main.ts`
 
 ```typescript
 ...
@@ -910,14 +927,14 @@ async function bootstrap() {
 
 ```shell
 # launch server
-$ npx lerna run start:debug --scope server --stream
+$ npx lerna run start:debug --scope @convector-sample/server-rest --stream
 ```
 
 now test http to https redirect, and https
 
 ### Enable CORS
 
-add cors to `packages/server/src/main.ts`
+add cors to `packages/server-rest/src/main.ts`
 
 ```typescript
 async function bootstrap() {
@@ -936,10 +953,10 @@ use passport strategy called passport-local that implements a username/password 
 
 ```shell
 # install the required packages
-$ npx lerna add @nestjs/passport --scope server --no-bootstrap
-$ npx lerna add passport --scope server --no-bootstrap
-$ npx lerna add passport-local --scope server --no-bootstrap
-$ npx lerna add @types/passport-local  --scope server --dev --no-bootstrap
+$ npx lerna add @nestjs/passport --scope @convector-sample/server-rest --no-bootstrap
+$ npx lerna add passport --scope @convector-sample/server-rest --no-bootstrap
+$ npx lerna add passport-local --scope @convector-sample/server-rest --no-bootstrap
+$ npx lerna add @types/passport-local  --scope @convector-sample/server-rest --dev --no-bootstrap
 $ npx lerna bootstrap
 ```
 
@@ -947,7 +964,7 @@ start by generating an `AuthModule` and in it, an `AuthService`
 
 ```shell
 # create auth module and service
-$ cd packages/server/
+$ cd packages/server-rest/
 $ nest g module auth
 $ nest g service auth
 $ cd ../..
@@ -957,7 +974,7 @@ as we implement the `AuthService`, we'll find it useful to encapsulate user oper
 
 ```shell
 # create users module and service
-$ cd packages/server/
+$ cd packages/server-rest/
 $ nest g module users
 $ nest g service users
 $ cd ../..
@@ -965,7 +982,7 @@ $ cd ../..
 
 replace the default contents of these generated files as shown below.
 
-`packages/server/src/users/users.service.ts`
+`packages/server-rest/src/users/users.service.ts`
 
 ```typescript
 import { Injectable } from '@nestjs/common';
@@ -1002,7 +1019,7 @@ export class UsersService {
 }
 ```
 
-add `exports: [UsersService],` to `packages/server/src/users/users.module.ts`
+add `exports: [UsersService],` to `packages/server-rest/src/users/users.module.ts`
 
 ```typescript
 import { Module } from '@nestjs/common';
@@ -1018,7 +1035,7 @@ export class UsersModule { }
 
 `AuthService` has the job of retrieving a user and verifying the password. We create a `validateUser()` method for this purpose
 
-`packages/server/src/auth/auth.service.ts`
+`packages/server-rest/src/auth/auth.service.ts`
 
 ```typescript
 import { Injectable } from '@nestjs/common';
@@ -1041,7 +1058,7 @@ export class AuthService {
 
 update our `AuthModule` to import the `UsersModule`
 
-`packages/server/src/auth/auth.module.ts`
+`packages/server-rest/src/auth/auth.module.ts`
 
 ```typescript
 import { Module } from '@nestjs/common';
@@ -1060,7 +1077,7 @@ export class AuthModule { }
 
 implement our Passport local authentication strategy. Create a file called `local.strategy.ts` in the auth folder, and add the following code:
 
-`packages/server/src/auth/local.strategy.ts`
+`packages/server-rest/src/auth/local.strategy.ts`
 
 ```typescript
 import { Strategy } from 'passport-local';
@@ -1086,7 +1103,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 
 configure our `AuthModule` to use the Passport features we just defined. Update `auth.module.ts` to look like this:
 
-`packages/server/src/auth/auth.module.ts`
+`packages/server-rest/src/auth/auth.module.ts`
 
 ```typescript
 import { Module } from '@nestjs/common';
@@ -1109,7 +1126,7 @@ Login route
 
 implement a bare-bones `/api/login` route, and apply the built-in Guard to initiate the passport-local flow.
 
-add `/api/login` to `packages/server/src/app.controller.ts`
+add `/api/login` to `packages/server-rest/src/app.controller.ts`
 
 ```typescript
 import { Controller, Get, HttpStatus, Post, Request, Res, UseGuards } from '@nestjs/common';
@@ -1155,16 +1172,16 @@ $ curl -k -X POST https://localhost:3443/api/login -d '{ "username": "john", "pa
 
 ```shell
 # install the required packages
-$ npx lerna add @nestjs/jwt --scope server --no-bootstrap
-$ npx lerna add passport-jwt --scope server --no-bootstrap
-$ npx lerna add @types/passport-jwt  --scope server --no-bootstrap --dev
+$ npx lerna add @nestjs/jwt --scope @convector-sample/server-rest --no-bootstrap
+$ npx lerna add passport-jwt --scope @convector-sample/server-rest --no-bootstrap
+$ npx lerna add @types/passport-jwt  --scope @convector-sample/server-rest --no-bootstrap --dev
 $ npx lerna bootstrap
 ```
 
 > The `@nest/jwt` package (see more [here](https://github.com/nestjs/jwt)) is a utility package that helps with **JWT manipulation**.
 > The `passport-jwt` package is the Passport package that **implements the JWT strategy** and `@types/passport-jwt` provides the TypeScript type definitions.
 
-update `packages/server/src/auth/auth.service.ts` with `/api/login` route
+update `packages/server-rest/src/auth/auth.service.ts` with `/api/login` route
 
 ```typescript
 import { Injectable } from '@nestjs/common';
@@ -1200,7 +1217,7 @@ export class AuthService {
 
 update the `AuthModule` to import the new dependencies and configure the `JwtModule`
 
-add `packages/server/src/auth/constants.ts`
+add `packages/server-rest/src/auth/constants.ts`
 
 ```typescript
 const jwtSecret = process.env.ACCESS_TOKEN_JWT_SECRET = 'secretKey';
@@ -1214,7 +1231,7 @@ export const jwtConstants = {
 
 add to `.env` `ACCESS_TOKEN_JWT_SECRET` env variable ex `ACCESS_TOKEN_JWT_SECRET=uKxHrE431MRgYoI8G6JKePsKhQ71kdZX`
 
-now update `packages/server/src/auth/auth.module.ts` with
+now update `packages/server-rest/src/auth/auth.module.ts` with
 
 ```typescript
 import { Module } from '@nestjs/common';
@@ -1266,7 +1283,7 @@ We can now address our final requirement: protecting endpoints by requiring a va
 Passport can help us here too. It provides the `passport-jwt` strategy for securing RESTful endpoints with JSON Web Tokens.
 Start by creating a file called `jwt.strategy.ts` in the `auth` folder, and add the following code:
 
-add interface `packages/server/src/auth/types/jwt-payload.interface.ts`
+add interface `packages/server-rest/src/auth/types/jwt-payload.interface.ts`
 
 ```typescript
 export interface JwtPayload {
@@ -1277,7 +1294,7 @@ export interface JwtPayload {
 }
 ```
 
-`packages/server/src/auth/jwt.strategy.ts`
+`packages/server-rest/src/auth/jwt.strategy.ts`
 
 ```typescript
 import { ExtractJwt, Strategy } from 'passport-jwt';
@@ -1318,7 +1335,7 @@ providers: [AuthService, LocalStrategy, JwtStrategy]
 
 implement protected route and its associated Guard.
 
-update `packages/server/src/app.controller.ts` adding `/me` routte
+update `packages/server-rest/src/app.controller.ts` adding `/me` routte
 
 ```typescript
   ...
@@ -1351,7 +1368,7 @@ $ curl -k -X GET https://localhost:3443/api/me -H "Authorization: Bearer ${JWT}"
 We need to do this because we've introduced two Passport strategies (`passport-local` and `passport-jwt`), both of which supply implementations of various Passport components. Passing the name disambiguates which implementation we're linking to. When multiple strategies are included in an application, **we can declare a default strategy so that we no longer have to pass the name in the `@AuthGuard` decorator** if using that default strategy. 
 Here's how to register a default strategy when importing the `PassportModule`. This code would go in the `AuthModule`:
 
-add `PassportModule.register({ defaultStrategy: 'jwt' }` to `packages/server/src/auth/auth.module.ts` imports
+add `PassportModule.register({ defaultStrategy: 'jwt' }` to `packages/server-rest/src/auth/auth.module.ts` imports
 
 ```typescript
 ...
@@ -1370,7 +1387,7 @@ add `PassportModule.register({ defaultStrategy: 'jwt' }` to `packages/server/src
 to use `defaultStrategy` we need to add `PassportModule.register({ defaultStrategy: 'jwt' })` to every import module where you want to use default strategy.
 else we have an erro 500 when try to use `@UseGuards(AuthGuard())` in modules where we dont't add it to import
 
-add to `packages/server/src/participant/participant.module.ts` and `packages/server/src/person/person.module.ts`
+add to `packages/server-rest/src/participant/participant.module.ts` and `packages/server-rest/src/person/person.module.ts`
 
 ```typescript
 @Module({
@@ -1387,9 +1404,9 @@ for more info about issue read [@nestjs/jwt - Cannot read property 'challenge' o
 
 add jwt Guards, BearerAuth and Unauthorized Response decorator to all routes
 
-`packages/server/src/app.controller.ts`
-`packages/server/src/person/person.controller.ts`
-`packages/server/src/participant/participant.controller.ts`
+`packages/server-rest/src/app.controller.ts`
+`packages/server-rest/src/person/person.controller.ts`
+`packages/server-rest/src/participant/participant.controller.ts`
 
 ```typescript
 @ApiBearerAuth()
@@ -1402,13 +1419,13 @@ add jwt Guards, BearerAuth and Unauthorized Response decorator to all routes
 
 first add some DTO's
 
-`packages/server/src/auth/dto/index.ts`
+`packages/server-rest/src/auth/dto/index.ts`
 
 ```typescript
 export * from './login-user.dto';
 ```
 
-`packages/server/src/auth/dto/login-user.dto.ts`
+`packages/server-rest/src/auth/dto/login-user.dto.ts`
 
 ```typescript
 import { ApiModelProperty } from '@nestjs/swagger';
@@ -1427,7 +1444,7 @@ export class LoginUserDto {
 }
 ```
 
-`packages/server/src/auth/dto/login-user-response.dto.ts`
+`packages/server-rest/src/auth/dto/login-user-response.dto.ts`
 
 ```typescript
 import { ApiModelProperty } from '@nestjs/swagger';
@@ -1440,7 +1457,7 @@ export class LoginUserResponseDto {
 }
 ```
 
-`packages/server/src/auth/dto/get-profile-response.dto.ts`
+`packages/server-rest/src/auth/dto/get-profile-response.dto.ts`
 
 ```typescript
 import { ApiModelProperty } from '@nestjs/swagger';
@@ -1459,7 +1476,7 @@ export class GetProfileResponseDto {
 }
 ```
 
-add all decorators and dto's to routes in `packages/server/src/app.controller.ts`
+add all decorators and dto's to routes in `packages/server-rest/src/app.controller.ts`
 
 ```typescript
   ...
@@ -1488,7 +1505,7 @@ add all decorators and dto's to routes in `packages/server/src/app.controller.ts
 }
 ```
 
-note for: `@Body() createPersonDto` to `packages/server/src/app.controller.ts`, require to have the object in swagger parameters
+note for: `@Body() createPersonDto` to `packages/server-rest/src/app.controller.ts`, require to have the object in swagger parameters
 
 ### Authentication: Test Swagger With Authentication
 
@@ -1556,7 +1573,7 @@ export class Person extends ConvectorModel<Person> {
 
 change person controller to use `CreatePersonDto`
 
-`packages/server/src/person/person.controller.ts`
+`packages/server-rest/src/person/person.controller.ts`
 
 replace id, name arguments
 
@@ -1576,7 +1593,7 @@ public async create(@Body() createPersonDto: CreatePersonDto): Promise<void> {
 
 next do the same in, replace `personService.create` arguments signature from id, name to use `CreatePersonDto`
 
-`packages/server/src/person/person.service.ts`
+`packages/server-rest/src/person/person.service.ts`
 
 ```typescript
 public async create(id: string, name: string) {
@@ -1689,7 +1706,7 @@ everything seems working has expected, now we will test chaincode from server re
 
 ```shell
 # boot rest server
-$ npx lerna run start:debug --scope server --stream
+$ npx lerna run start:debug --scope @convector-sample/server-rest --stream
 # login to get fresh accessToken and assign it to env variable with same name $accessToken (require jq installed)
 $ $( curl -k -X POST https://localhost:3443/api/login -d '{ "username": "john", "password": "changeme"}' -H 'Content-Type: application/json' | jq -r 'keys[] as $k | "export \($k)=\(.[$k])"' )
 # copy accessToken to clipboard to use in swagger or ignore and use curl with $accessToken (required xclip installed)
@@ -1726,10 +1743,10 @@ server: }
 
 ```shell
 # install required dependencies
-$ npx lerna add bcrypt --scope person-cc --no-bootstrap
-$ npx lerna add @types/bcrypt --scope person-cc --no-bootstrap
-$ npx lerna add bcrypt --scope server --no-bootstrap
-$ npx lerna add @types/bcrypt --scope server --no-bootstrap
+$ npx lerna add bcrypt --scope @convector-sample/person-cc --no-bootstrap
+$ npx lerna add @types/bcrypt --scope @convector-sample/person-cc --no-bootstrap
+$ npx lerna add bcrypt --scope @convector-sample/server-rest --no-bootstrap
+$ npx lerna add @types/bcrypt --scope @convector-sample/server-rest --no-bootstrap
 $ npx lerna bootstrap
 ```
 
@@ -1861,14 +1878,14 @@ optional can use `--scope` to add only to desired packages
 
 ```shell
 # add to all packages (with scope)
-$ npx lerna add @convector-rest-sample/common@0.1.0 --scope server --no-bootstrap
-$ npx lerna add @convector-rest-sample/common@0.1.0 --scope participant-cc --no-bootstrap
-$ npx lerna add @convector-rest-sample/common@0.1.0 --scope person-cc --no-bootstrap
+$ npx lerna add @convector-rest-sample/common@0.1.0 --scope @convector-sample/server-rest --no-bootstrap
+$ npx lerna add @convector-rest-sample/common@0.1.0 --scope @convector-sample/participant-cc --no-bootstrap
+$ npx lerna add @convector-rest-sample/common@0.1.0 --scope @convector-sample/person-cc --no-bootstrap
 # clean and bootstrap
 $ npx lerna clean -y && npx lerna bootstrap --hoist
 ```
 
-now test `@convector-rest-sample/common` in server, add this lines to top of `packages/server/src/app.ts`
+now test `@convector-rest-sample/common` in server, add this lines to top of `packages/server-rest/src/app.ts`
 to confirm that everything is working has expected
 
 > Note: if don't have a server, skip this step right to **Use common package inside ChainCode** section
@@ -1882,7 +1899,7 @@ Logger.log(JSON.stringify(c, undefined, 2));
 now launch server with debugger, and inspect `c` object or view log result
 
 ```shell
-$ npx lerna run start:debug --scope server --stream
+$ npx lerna run start:debug --scope @convector-sample/server-rest --stream
 ```
 
 if outputs appConstants we are ready to go, and common package works has expected
@@ -2261,7 +2278,7 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
 
 we are done with `PersonController` moving forward to `PersonService` to implement `getByUsername` method, to comunicate with chaincode method with same name, implemented above
 
-`packages/server/src/person/person.service.ts`
+`packages/server-rest/src/person/person.service.ts`
 
 ```typescript
 ...
@@ -2280,7 +2297,7 @@ public async getByUsername(username: string): Promise<Person> {
 
 change `findOne` method on `UsersService` to use both methods moked users and ledger, based on config `AUTH_SERVICE_USE_MOKED_USERS` environment variable
 
-`packages/server/src/users/users.service.ts`
+`packages/server-rest/src/users/users.service.ts`
 
 ```typescript
 async findOne(username: string): Promise<User | undefined> {
@@ -2300,7 +2317,7 @@ async findOne(username: string): Promise<User | undefined> {
 
 to finish authentication we update `AuthService` `validateUser` method
 
-`packages/server/src/auth/auth.service.ts`
+`packages/server-rest/src/auth/auth.service.ts`
 
 ```typescript
 @Injectable()
