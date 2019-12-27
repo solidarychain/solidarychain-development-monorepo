@@ -311,6 +311,60 @@ const App: React.FC = () => {
 export default App;
 ```
 
+### Add Cors Origin to express and apollo server
+
+UPDATE: when working with vm in origin <https://192.168.1.133:3000> we have the traditional cors origin problem, to fix we must configure both express and and apollo server to work with frontend origin, currently only work with default <http://localhost:3000>, we need to use a env variable to use custom origins, in this case we use `CORS_ORIGIN_REACT_FRONTEND=https://192.168.1.133:3000`
+
+add to `packages/server-graphql/.env`
+
+```conf
+# required to define when we don't use default origin http://localhost:3000
+# CORS_ORIGIN_REACT_FRONTEND=https://app.solidary.network
+```
+
+add `corsOriginReactFrontend`  to `packages/server-graphql/src/env.ts`
+
+```typescript
+export const envVariables: any = {
+  ...
+  // cors origin react frontend
+  corsOriginReactFrontend: process.env.CORS_ORIGIN_REACT_FRONTEND || 'http://localhost:3000',
+};
+```
+
+now use `e.corsOriginReactFrontend` in both express and apollo config
+
+`packages/server-graphql/src/app.module.ts`
+
+```typescript
+// ApolloServer config
+GraphQLModule.forRoot({
+  ...
+  // configure graphql cors here
+  cors: {
+    origin: e.corsOriginReactFrontend,
+    credentials: true,
+  },
+}),
+```
+
+`packages/server-graphql/src/main.ts`
+
+```typescript
+async function bootstrap() {
+  ...
+  // rest server cors, before any middleware,
+  // warn cors for graphql is configured in ApplicationModule
+  app.enableCors({
+    origin: e.corsOriginReactFrontend,
+    credentials: true,
+  });
+  ...
+}
+```
+
+restart server-graphql and test from frontend-react uri <https://192.168.1.133:3000>
+
 ## Install GraphQL CodeGen
 
 ```shell
