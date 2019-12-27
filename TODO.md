@@ -81,3 +81,9 @@ add-attribute so funciona se o content for object, se for string or int etc it k
       },
 
 put to work in rest and graphql same way
+
+
+get rid of from add it to .gitignore
+TEMP.md
+NOTES2.md
+TODO.md

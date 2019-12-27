@@ -1,6 +1,6 @@
-# READ ME
+# READ ME: @convector-sample : starters
 
-- [READ ME](#read-me)
+- [READ ME: @convector-sample : starters](#read-me-convector-sample--starters)
   - [Description](#description)
   - [Collaborate to the Convector Suite projects](#collaborate-to-the-convector-suite-projects)
   - [Advice Read Links](#advice-read-links)
@@ -8,23 +8,29 @@
     - [Docker Links](#docker-links)
     - [Node Links](#node-links)
     - [HyperLedger Fabric](#hyperledger-fabric)
+    - [StackOverflow](#stackoverflow)
   - [Install virtual machine and Pre Requisites](#install-virtual-machine-and-pre-requisites)
     - [1. Install VM](#1-install-vm)
-  - [2. Connect to VM via SSH](#2-connect-to-vm-via-ssh)
-    - [2. Install Docker and Docker Compose](#2-install-docker-and-docker-compose)
-    - [3. Install Node.js and NVM](#3-install-nodejs-and-nvm)
-    - [3. Install HyperLedger Fabric](#3-install-hyperledger-fabric)
-    - [4. Install Convalent Convector Tooling](#4-install-convalent-convector-tooling)
+    - [2. Connect to VM via SSH](#2-connect-to-vm-via-ssh)
+    - [3. Install Docker and Docker Compose](#3-install-docker-and-docker-compose)
+    - [4. Install Node.js and NVM](#4-install-nodejs-and-nvm)
+    - [5. Install HyperLedger Fabric](#5-install-hyperledger-fabric)
+    - [6. Install covalent Convector cli tooling](#6-install-covalent-convector-cli-tooling)
+    - [7. Clone repository](#7-clone-repository)
   - [Hurley hyperledger network](#hurley-hyperledger-network)
+    - [Install global cli tools Lerna and typescript](#install-global-cli-tools-lerna-and-typescript)
+    - [Install lerna packages dependencies](#install-lerna-packages-dependencies)
+      - [error#1](#error1)
     - [Start hurley hyperledger network](#start-hurley-hyperledger-network)
     - [Inspect running network containers](#inspect-running-network-containers)
+    - [Invoke chaincode with help of hurley](#invoke-chaincode-with-help-of-hurley)
   - [packages/common](#packagescommon)
   - [packages/participant-cc](#packagesparticipant-cc)
   - [packages/person-cc](#packagesperson-cc)
   - [packages/server-rest](#packagesserver-rest)
-    - [run rest api server](#run-rest-api-server)
   - [packages/server-graphql](#packagesserver-graphql)
   - [packages/frontend-react](#packagesfrontend-react)
+  - [Done](#done)
 
 ## Description
 
@@ -43,13 +49,14 @@ this repo contains a hurley/convector hyperledger network, based on [Covalent: C
 
 ### Covalent Links
 
-- [Covalent: Convector](https://docs.covalentx.com/collection/6-convector)
-- [Covalent: Convector Suite : Getting Started](https://docs.covalentx.com/article/71-getting-started)
-- [Covalent: Tutorials](https://docs.covalentx.com/article/123-tutorials)
-- [Covalent: Tutorial - Getting Started](https://docs.covalentx.com/article/99-tutorial-getting-started)
-- [Covalent: Tutorial - Smart Contract](https://docs.covalentx.com/article/89-tutorial)
-- [Covalent: Tutorial - Back end](https://docs.covalentx.com/article/95-tutorial-back-end)
-- [Covalent: Convector Suite: Install on Ubuntu](https://docs.covalentx.com/article/120-install-on-ubuntu)
+- [Convector](https://docs.covalentx.com/collection/6-convector)
+- [Convector Suite : Getting Started](https://docs.covalentx.com/article/71-getting-started)
+- [Tutorials](https://docs.covalentx.com/article/123-tutorials)
+- [Tutorial - Getting Started](https://docs.covalentx.com/article/99-tutorial-getting-started)
+- [Tutorial - Smart Contract](https://docs.covalentx.com/article/89-tutorial)
+- [Tutorial - Back end](https://docs.covalentx.com/article/95-tutorial-back-end)
+- [Convector Suite: Install on Ubuntu](https://docs.covalentx.com/article/120-install-on-ubuntu)
+- [Learn Hurley](https://docs.covalentx.com/article/71-getting-started#learn-hurley)
 
 ### Docker Links
 
@@ -67,21 +74,26 @@ this repo contains a hurley/convector hyperledger network, based on [Covalent: C
 - [Prerequisites](https://hyperledger-fabric.readthedocs.io/en/latest/prereqs.html)
 - [Building Your First Network](https://hyperledger-fabric.readthedocs.io/en/latest/build_network.html)
 
+### StackOverflow
+
+- [convector](https://stackoverflow.com/questions/tagged/convector)
+- [hyperledger](https://stackoverflow.com/questions/tagged/hyperledger)
+
 ## Install virtual machine and Pre Requisites
 
 > note: you can use your development machine like me, this steps is just for guys that want to work with a clean machine
 
 ### 1. Install VM
 
-Install a virtual machine with `ubuntu server 18.04` with `openssh` server installed, or other linux based machine
+Install a virtual machine with `ubuntu server 18.04` with `openssh` server installed, or other linux based machine, with a minimal of **18gb**
 
-## 2. Connect to VM via SSH
+### 2. Connect to VM via SSH
 
 ```shell
-$ ssh 192.168.1.133
+$ ssh ${YOUR-VM-IP}
 ```
 
-### 2. Install Docker and Docker Compose
+### 3. Install Docker and Docker Compose
 
 ```shell
 # update and install deps
@@ -106,7 +118,7 @@ $ docker-compose -v
 docker-compose version 1.25.0, build 0a186604
 ```
 
-### 3. Install Node.js and NVM
+### 4. Install Node.js and NVM
 
 > IMPORTANT NOTE: recommended node version `v8.16.0`
 
@@ -125,60 +137,103 @@ $ node -v
 v8.16.0
 ```
 
-### 3. Install HyperLedger Fabric
+### 5. Install HyperLedger Fabric
 
 ```shell
 # Prerequisites
 $ sudo apt install git golang python -y
 # Install HyperLedger
 $ curl -sSL https://bit.ly/2ysbOFE | bash -s
+hyperledger/fabric-javaenv     1.4.4               4648059d209e        5 weeks ago         1.7GB
+hyperledger/fabric-javaenv     latest              4648059d209e        5 weeks ago         1.7GB
+hyperledger/fabric-ca          1.4.4               62a60c5459ae        5 weeks ago         150MB
+hyperledger/fabric-ca          latest              62a60c5459ae        5 weeks ago         150MB
+hyperledger/fabric-tools       1.4.4               7552e1968c0b        5 weeks ago         1.49GB
+hyperledger/fabric-tools       latest              7552e1968c0b        5 weeks ago         1.49GB
+hyperledger/fabric-ccenv       1.4.4               ca4780293e4c        5 weeks ago         1.37GB
+hyperledger/fabric-ccenv       latest              ca4780293e4c        5 weeks ago         1.37GB
+hyperledger/fabric-orderer     1.4.4               dbc9f65443aa        5 weeks ago         120MB
+hyperledger/fabric-orderer     latest              dbc9f65443aa        5 weeks ago         120MB
+hyperledger/fabric-peer        1.4.4               9756aed98c6b        5 weeks ago         128MB
+hyperledger/fabric-peer        latest              9756aed98c6b        5 weeks ago         128MB
+hyperledger/fabric-zookeeper   0.4.18              ede9389347db        7 weeks ago         276MB
+hyperledger/fabric-zookeeper   latest              ede9389347db        7 weeks ago         276MB
+hyperledger/fabric-kafka       0.4.18              caaae0474ef2        7 weeks ago         270MB
+hyperledger/fabric-kafka       latest              caaae0474ef2        7 weeks ago         270MB
+hyperledger/fabric-couchdb     0.4.18              d369d4eaa0fd        7 weeks ago         261MB
+hyperledger/fabric-couchdb     latest              d369d4eaa0fd        7 weeks ago         261MB
 ```
 
-### 4. Install Convalent Convector Tooling
+### 6. Install covalent Convector cli tooling
 
 ```shell
-$ npm i -g @worldsibu/hurley
-$ npm i -g @worldsibu/convector-cli
+# install cli tools
+$ sudo npm i -g @worldsibu/hurley @worldsibu/convector-cli
+$ hurl -V
+1.1.2
+$ conv -V
+1.1.7
+```
+
+### 7. Clone repository
+
+```shell
+$ cd ~
+$ git clone https://gitlab.koakh.com/koakh/node-nestjs-hyperledger-convector-rest-starter.git
+$ cd node-nestjs-hyperledger-convector-rest-starter
 ```
 
 ## Hurley hyperledger network
 
+### Install global cli tools Lerna and typescript
+
+```shell
+# install lerna and typescript
+$ sudo npm i -g lerna typescript
+# bootstrap packages dependencies
+$ lerna bootstrap
+# check versions
+$ tsc -v
+Version 3.7.4
+$ lerna -v
+3.19.0
+```
+
+### Install lerna packages dependencies
+
+```shell
+# first build common library: this is required on fresh clones before lerna bootstrap, to prevent the error#1
+$ npx lerna run build --scope @convector-sample/common --stream
+$ npx lerna bootstrap
+lerna success Bootstrapped 6 packages
+```
+
+#### error#1
+
+```shell
+src/participant.controller.ts:1:35 - error TS2307: Cannot find module '@convector-sample/common'.
+1 import { appConstants as c } from '@convector-sample/common';
+```
+
 ### Start hurley hyperledger network
 
-first things first, to start play with convector chaincode we must spin up a hyperledger network with the help of [hurley](https://docs.covalentx.com/category/87-hurley)
+first things first, to start play with convector and chaincodes we must spin up a **hyperledger network** with the help of [hurley](https://docs.covalentx.com/category/87-hurley)
 
-launch `restartEnv.sh`
+and some helper script `restartEnv.sh`, that can be used to start or restart **hyperledger network**
 
 ```shell
 # launch restart network
-$ restartEnv.sh
+$ ./restartEnv.sh
+# in the end we get one valid transaction like this
+[hurley] - Result: {"_attributes":[{"certifierID":"gov","content":null,"id":"birth-year","issuedDate":1554239270}],"_email":"john.doe@mail.com","_firstname":"John","_id":"1-100-100","_lastname":"Doe","_participant":{"id":"gov","identities":[{"fingerprint":"72:BA:6B:03:89:E9:F9:CE:53:AB:14:D0:90:13:3B:A8:DC:99:C2:81","status":true}],"msp":"org1MSP","name":"Big Government","type":"io.worldsibu.examples.participant"},"_password":"$2b$10$H2l30bMr5dhCVNg53M/0BeHrgSh7rdHUokfrQi0HMs.H509MpCs/S","_roles":["USER"],"_type":"io.worldsibu.examples.person","_username":"johndoe"}
+Cleaning up event hubs
 ```
 
-or follow above commands
+> tip: wait a few minutes to download docker images and spin up network, you can watch script logs to learn what's happen
 
-```bash
-# Start your blockchain network and install the smart contract's `participant-cc` and `person-cc`
-$ npm start
+> tip: this first call takes some seconds as it provision the containers needed to run the **smart contract**
 
-# Create some seed data to play with the project, participants, persons and some person attributes
-$ npm run seed
-
-# seed output
-Creating participant: Big Government
-[hurley] - gov
-[hurley] - Big Government
-[hurley] - Sending transaction as admin in org org1...
-[hurley] - Transaction sent! VALID  SUCCESS 76e2ce57540945fac0fb837e40ad17b815b6cc7e96a1c002aab5469e319f2467
-[hurley] - Result: {"type":"Buffer","data":[]}
-...
-
-# create couchbase views
-$ ./views/install.sh
-```
-
-> Important: This first call takes some seconds as it provisions the containers needed to run the **smart contract**
-
-> tip: you can inspect `seed.sh` script to know what is done behind the scene
+> tip: you can inspect `restartEnv.sh`, `seed.sh` and `views/install.sh` scripts to know what is done behind the scene
 
 ### Inspect running network containers
 
@@ -186,32 +241,63 @@ $ ./views/install.sh
 # check containers
 $ docker container ls --format "table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}"
 
+CONTAINER ID        NAMES                                  STATUS              PORTS
+
+# chaincode containers from org1 and org2
+a3354d1b9019        dev-peer0.org2.hurley.lab-person-1.0   Up 3 minutes        
+d59a8cc0ef61        dev-peer0.org1.hurley.lab-person-1.0   Up 5 minutes        
+
+# all the other peer, orderer, ca and couch containers
+1dfc5a1b2c0a        peer0.org2.hurley.lab                  Up 7 minutes        0.0.0.0:7151->7051/tcp, 0.0.0.0:7152->7052/tcp, 0.0.0.0:7153->7053/tcp
+8338c8764a68        peer0.org1.hurley.lab                  Up 7 minutes        0.0.0.0:7051-7053->7051-7053/tcp
+a13a6b71d809        couchdb.peer0.org2.hurley.lab          Up 7 minutes        4369/tcp, 9100/tcp, 0.0.0.0:5184->5984/tcp
+9e8803591b17        orderer.hurley.lab                     Up 8 minutes        0.0.0.0:7050->7050/tcp
+0deea360de99        ca.org1.hurley.lab                     Up 8 minutes        0.0.0.0:7054->7054/tcp
+b37929f7bfc0        couchdb.peer0.org1.hurley.lab          Up 7 minutes        4369/tcp, 9100/tcp, 0.0.0.0:5084->5984/tcp
+c785e4667b02        ca.org2.hurley.lab                     Up 8 minutes        0.0.0.0:7154->7054/tcp
+```
+
+### Invoke chaincode with help of hurley
+
+```shell
 # test/invoke person chaincode (person-cc and participant-cc)
 $ npx hurl invoke person person_get 1-100-100
-$ npx hurl invoke person participant_get gov
+# output
+[hurley] - 1-100-100
+[hurley] - Sending transaction as user1 in org org1...
+[hurley] - Transaction sent! VALID  SUCCESS a824d0a4cd66ed776f6b6ea1ed30a89a76d8d5672b2a482cd0ab00526ec85b49
+[hurley] - Result: {"_attributes":[{"certifierID":"gov","content":null,"id":"birth-year","issuedDate":1554239270}],"_email":"john.doe@mail.com","_firstname":"John","_id":"1-100-100","_lastname":"Doe","_participant":{"id":"gov","identities":[{"fingerprint":"72:BA:6B:03:89:E9:F9:CE:53:AB:14:D0:90:13:3B:A8:DC:99:C2:81","status":true}],"msp":"org1MSP","name":"Big Government","type":"io.worldsibu.examples.participant"},"_password":"$2b$10$H2l30bMr5dhCVNg53M/0BeHrgSh7rdHUokfrQi0HMs.H509MpCs/S","_roles":["USER"],"_type":"io.worldsibu.examples.person","_username":"johndoe"}
+Cleaning up event hubs
 
-# install package dependencies for all lerna packages
-$ lerna bootstrap
+$ npx hurl invoke person participant_get gov
+# output
+[hurley] - gov
+[hurley] - Sending transaction as user1 in org org1...
+[hurley] - Transaction sent! VALID  SUCCESS dda818b7ea77022bdb62c44c0375ee2898307a2cbf7e5968489b63d15e21b90a
+[hurley] - Result: {"_id":"gov","_identities":[{"fingerprint":"72:BA:6B:03:89:E9:F9:CE:53:AB:14:D0:90:13:3B:A8:DC:99:C2:81","status":true}],"_msp":"org1MSP","_name":"Big Government","_type":"io.worldsibu.examples.participant"}
+Cleaning up event hubs
 ```
+
+everything seems working has expected
 
 ## packages/common
 
-a common package to share some code in `person-cc` and `participant-cc` chaincode,
+a common package to share some code in person chaincodd, `person-cc` and `participant-cc` packages,
 with a `common.controller.ts`, `constants.ts`, `enums.ts` and `env.ts`
 
 ## packages/participant-cc
 
 `participant-cc` chaincode to be deployed on hyperledger network
 
+> tip: read [Convector Smart Contracts](https://docs.covalentx.com/category/74-convector-smart-contracts)
+
 ## packages/person-cc
 
 `person-cc` chaincode to be deployed on hyperledger network
 
+> tip: read [Convector Smart Contracts](https://docs.covalentx.com/category/74-convector-smart-contracts)
+
 ## packages/server-rest
-
-rest api server
-
-### run rest api server
 
 > Note: for more info about project check [README.md](packages/server-rest/README.md)
 
@@ -222,3 +308,11 @@ rest api server
 ## packages/frontend-react
 
 > Note: for more info about project check [README.md](packages/frontend-react/README.md)
+
+## Done
+
+ok we are done, if errors occur please contact me in on [Discord chat](https://discord.gg/twRwpWt) with nick **koakh**
+
+thanks for all the swesome team of covalent
+
+and sorry my english, it is not my native language
