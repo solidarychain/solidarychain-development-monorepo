@@ -87,3 +87,8 @@ get rid of from add it to .gitignore
 TEMP.md
 NOTES2.md
 TODO.md
+
+
+packages/server-rest/src/main.ts
+add cors options like we do in 
+packages/server-graphql/src/main.ts

@@ -12,7 +12,8 @@ async function bootstrap() {
   // rest server cors, before any middleware,
   // warn cors for graphql is configured in ApplicationModule
   app.enableCors({
-    origin: 'http://localhost:3000',
+    // origin: 'http://localhost:3000',
+    origin: '*',
     credentials: true,
   });
   // middleware
