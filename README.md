@@ -299,13 +299,35 @@ with a `common.controller.ts`, `constants.ts`, `enums.ts` and `env.ts`
 
 ## packages/server-rest
 
+```shell
+# start server-rest with
+$ npx lerna run start:dev --scope @convector-sample/server-rest --stream
+```
+
 > Note: for more info about project check [README.md](packages/server-rest/README.md)
 
 ## packages/server-graphql
 
+```shell
+# start server-graphql with
+$ npx lerna run start:dev --scope @convector-sample/server-graphql --stream
+```
+
 > Note: for more info about project check [README.md](packages/server-graphql/README.md)
 
 ## packages/frontend-react
+
+```shell
+# if running frontend from other machine first change .env localhost to use host ip, in this case 192.168.1.133
+$ nano packages/frontend-react/.env
+REACT_APP_REST_SERVER_URI=https://192.168.1.133:3443
+REACT_APP_GRAPHQL_SERVER_URI=https://192.168.1.133:3443/graphql
+# uncomment to prevent problems with tls
+NODE_TLS_REJECT_UNAUTHORIZED=0
+
+# start frontend-react with
+$ npx lerna run start --scope @convector-sample/frontend-react --stream
+```
 
 > Note: for more info about project check [README.md](packages/frontend-react/README.md)
 

@@ -42,3 +42,64 @@ $ npx lerna run start:debug --scope @convector-sample/server-graphql --stream
 @convector-sample/server-rest: [Nest] 13860   - 2019-12-25 21:15:15   HTTP Server running on port [3080] +19ms
 @convector-sample/server-rest: [Nest] 13860   - 2019-12-25 21:15:15   HTTPS Server running on port [3443] +1ms
 ```
+
+## Play with GraphQL Playground
+
+- [graphql playground](https://192.168.1.133:3443/graphql)
+
+before fire some graphql queries/mutations we must get `accessToken` with `personLogin` mutation
+
+open graphql playground and fire personLogin mutation to get the `accessToken`
+
+```json
+mutation {
+  personLogin(loginPersonData: {
+    username:"johndoe", password:"12345678"}
+  ) {
+    accessToken
+  }
+}
+```
+
+response with `accessToken`
+
+```json
+{
+  "data": {
+    "personLogin": {
+      "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG5kb2UiLCJpYXQiOjE1Nzc0MDgxMjQsImV4cCI6MTU3NzQwOTAyNH0.u5PqPpgiKkq3Z5Dqsvg798whRromExhLTUOQ8QkYN_o"
+    }
+  }
+}
+```
+
+now add a new query `participants`
+
+```json
+query {
+  participants {
+    id
+    name
+    msp
+    identities {
+      id
+      status
+      fingerprint
+    }
+  }
+}
+```
+
+add the `authorization` http header
+
+```json
+{
+  "authorization":"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG5kb2UiLCJpYXQiOjE1Nzc0MDgxMjQsImV4cCI6MTU3NzQwOTAyNH0.u5PqPpgiKkq3Z5Dqsvg798whRromExhLTUOQ8QkYN_o"
+}
+```
+
+and fire the query. done
+
+to play with all the query and mutations install [insomnia client](https://insomnia.rest/) and import workspace `insomnia-workspace/Insomnia.json`
+
+> insomnia don't work with subscriptions (yet), to use subscriptions use `graphql playground`
