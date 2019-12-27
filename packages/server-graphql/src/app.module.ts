@@ -5,6 +5,7 @@ import { ParticipantModule } from './participant/participant.module';
 import { PersonModule } from './person/person.module';
 import { GqlContext } from './types';
 import { UsersModule } from './users/users.module';
+import { envVariables as e } from './env';
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { UsersModule } from './users/users.module';
       context: ({ req, res, payload }: GqlContext) => ({ req, res, payload }),
       // configure graphql cors here
       cors: {
-        origin: 'http://localhost:3000',
+        origin: e.corsOriginReactFrontend,
         credentials: true,
       },
     }),
