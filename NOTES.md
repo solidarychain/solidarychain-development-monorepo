@@ -106,12 +106,10 @@ $ npx lerna run build --scope @convector-sample/person-cc
 $ npx lerna run build --scope @convector-sample/participant-cc
 # upgrade smart contract
 $ npm run cc:upgrade -- person 1.1
-# note: after deploy/upgrade wait a few second/minutes in first invoke, 
-# when done we have a new container and end with result `Upgraded Chaincode at org1`
+# note: after deploy/upgrade wait a few second/minutes in first invoke,
+# when done we have a new container and command end with result `Upgraded Chaincode at org1`
 # watch for deployed container
 $ watch "docker container ls --format "{{.Names}}" | grep \"person\""
-dev-peer0.org1.hurley.lab-participant-1.2
-dev-peer0.org1.hurley.lab-participant-1.1
 dev-peer0.org2.hurley.lab-person-1.0
 dev-peer0.org1.hurley.lab-person-1.0
 
@@ -125,7 +123,7 @@ $ ./seed.sh
 # after restart hyperledger always create views
 $ ./views/install.sh
 
-# debug chain code
+# debug chain code (remember breakpoint are setted in .js no ts files)
 $ npm run cc:start:debug -- person
 
 # if error occur use target debug version

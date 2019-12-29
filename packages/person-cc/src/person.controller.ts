@@ -135,7 +135,7 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     @Param(yup.string())
     id: string,
     @Param(yup.mixed())  // this convert value to string, to keep the object use below @Param(yup.object())
-    // @Param(yup.object()) this is used to use the value has a json object
+    // @Param(yup.object()) this is used to use the value has a json object, ex "content": { "data": "1971", "work": true }
     value: any
   ) {
     return await Person.query(Person, {
