@@ -321,24 +321,12 @@ $ npx lerna run start:dev --scope @convector-sample/server-graphql --stream
 
 ## packages/frontend-react
 
-```shell
-# if running frontend from other machine first change .env localhost to use host ip, in this case 192.168.1.133
-$ nano packages/frontend-react/.env
-REACT_APP_REST_SERVER_URI=https://192.168.1.133:3443
-REACT_APP_GRAPHQL_SERVER_URI=https://192.168.1.133:3443/graphql
-# uncomment to prevent problems with tls
-NODE_TLS_REJECT_UNAUTHORIZED=0
-
-# start frontend-react with
-$ npx lerna run start --scope @convector-sample/frontend-react --stream
-```
-
 > Note: for more info about project check [README.md](packages/frontend-react/README.md)
 
 ## Done
 
 ok we are done, if errors occur please contact me in on [Discord chat](https://discord.gg/twRwpWt) with nick **koakh**
 
-thanks for all the swesome team of covalent
+thanks for all the awesome team of covalent
 
 and sorry my english, it is not my native language

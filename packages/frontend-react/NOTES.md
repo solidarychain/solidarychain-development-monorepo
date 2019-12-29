@@ -315,6 +315,10 @@ export default App;
 
 UPDATE: when working with vm in origin <https://192.168.1.133:3000> we have the traditional cors origin problem, to fix we must configure both express and and apollo server to work with frontend origin, currently only work with default <http://localhost:3000>, we need to use a env variable to use custom origins, in this case we use `CORS_ORIGIN_REACT_FRONTEND=https://192.168.1.133:3000`
 
+https://dev.to/doylecodes/cors-in-apollo-client-apollo-server-3cbj
+
+
+
 add to `packages/server-graphql/.env`
 
 ```conf
