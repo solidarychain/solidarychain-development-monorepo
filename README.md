@@ -330,3 +330,5 @@ ok we are done, if errors occur please contact me in on [Discord chat](https://d
 thanks for all the awesome team of covalent
 
 and sorry my english, it is not my native language
+
+I have some `NOTES.md` in sub projects dirs, taken in this ride, some links, problem and solutions, maybe they can be useful for others....
