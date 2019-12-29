@@ -34,7 +34,7 @@
 
 ## Description
 
-this repo contains a hurley/convector hyperledger network, based on [Covalent: Convector Tutorial - Smart Contract](https://docs.worldsibu.com/article/89-tutorial), with some additional lerna packages/projects, two backend versions, node/rest and nestjs/graphql versions, and a minimal react frontend with login jwt based on person chaincode
+this repo contains a hurley/convector hyperledger network, based on [Covalent: Convector Tutorial - Smart Contract](https://docs.worldsibu.com/article/89-tutorial), with some additional lerna packages/projects, **two backend versions, node/rest and nestjs/graphql versions**, and a minimal react-hooks frontend with login/logout, jwt, with refresh-token, context state etc, based on person convector chaincode. This useful to start rest or graphql based apps, with minimal stuff implemented.
 
 > Check all the information to work with [Convector](https://worldsibu.github.io/convector) in the [DOCS site](https://docs.worldsibu.com)
 
