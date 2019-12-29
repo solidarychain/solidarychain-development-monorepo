@@ -1,9 +1,23 @@
 # NOTES
 
-## Links
-
-- [JWT Authentication Node.js Tutorial with GraphQL and React](https://www.youtube.com/watch?v=25GS0MLT8JU&t=368s)
-- [benawad/jwt-auth-example](https://github.com/benawad/jwt-auth-example)
+- [NOTES](#notes)
+  - [Start](#start)
+  - [GraphQL project use server-rest auth and users module](#graphql-project-use-server-rest-auth-and-users-module)
+  - [Links](#links)
+  - [TypeGraphQL Notes](#typegraphql-notes)
+  - [JSON Scalar Type](#json-scalar-type)
+  - [Add all Other Query/Mutations](#add-all-other-querymutations)
+  - [How to use content attribute](#how-to-use-content-attribute)
+  - [Problem with RichQueries with Object](#problem-with-richqueries-with-object)
+  - [Authentication Notes](#authentication-notes)
+  - [Problem: Nest can't resolve dependencies of the GqlLocalAuthGuard](#problem-nest-cant-resolve-dependencies-of-the-gqllocalauthguard)
+  - [Awesome Link: Support AuthGuard](#awesome-link-support-authguard)
+  - [Problem with return super.canActivate(new ExecutionContextHost([req]))](#problem-with-return-supercanactivatenew-executioncontexthostreq)
+  - [@CurrentUser() decorator, to get @CurrentUser() in graphql endpoints like in personProfile](#currentuser-decorator-to-get-currentuser-in-graphql-endpoints-like-in-personprofile)
+  - [Getting headers in graphql](#getting-headers-in-graphql)
+  - [Cookie Parser](#cookie-parser)
+- [refreshToken from cookie](#refreshtoken-from-cookie)
+  - [Apollo-Link-Token-Refresh and Migrate apollo-boost to apollo-client](#apollo-link-token-refresh-and-migrate-apollo-boost-to-apollo-client)
 
 ## Start
 

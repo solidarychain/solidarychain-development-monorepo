@@ -1,5 +1,13 @@
 # README
 
+- [README](#readme)
+  - [Description](#description)
+  - [Pre-Requisites](#pre-requisites)
+  - [Configure environment variables](#configure-environment-variables)
+  - [Configure IP and CORS](#configure-ip-and-cors)
+  - [Start React Frontend](#start-react-frontend)
+  - [Now play with Frontend](#now-play-with-frontend)
+
 ## Description
 
 A minimal React Hooks typescript frontend, with **JWT Auth** using **hyperledger network** and **person chaincode** person users, consuming `server-graphql` project, with `apollo/react-hooks`, `react-router` and other cool stuff, ready to use has a base starter for hyperledger/convector/server-graphql

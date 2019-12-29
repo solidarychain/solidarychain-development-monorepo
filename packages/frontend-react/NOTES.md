@@ -1,16 +1,48 @@
 # NOTES
 
+- [NOTES](#notes)
+  - [Links](#links)
+    - [React Apollo](#react-apollo)
+    - [GraphQL CodeGen](#graphql-codegen)
+    - [Ben Awad](#ben-awad)
+  - [Quick Commands](#quick-commands)
+  - [Bootstrap App](#bootstrap-app)
+  - [Setup VSCode Debug](#setup-vscode-debug)
+  - [Clean up and start working on App](#clean-up-and-start-working-on-app)
+  - [Add Apollo](#add-apollo)
+    - [Fix ERR_CERT_AUTHORITY_INVALID](#fix-errcertauthorityinvalid)
+    - [Add CORS](#add-cors)
+    - [Add Cors Origin to express and apollo server](#add-cors-origin-to-express-and-apollo-server)
+  - [Install GraphQL CodeGen](#install-graphql-codegen)
+    - [init project](#init-project)
+  - [Working with GraphQL-CodeGen](#working-with-graphql-codegen)
+    - [Configure hooke plugins](#configure-hooke-plugins)
+  - [Configure react Router](#configure-react-router)
+  - [Apollo resetStore /Cache](#apollo-resetstore-cache)
+  - [Use js-cookie](#use-js-cookie)
+
 ## Links
 
+### React Apollo
+
+- [React Apollo API reference](https://www.apollographql.com/docs/react/api/react-apollo/)
 - [@apollo/react-hooks: API reference](https://www.apollographql.com/docs/react/api/react-hooks/)
 - [Apollo: Authentication](https://www.apollographql.com/docs/react/networking/authentication/)
 - [Apollo client query error: “Network error: Failed to fetch” How to troubleshoot?](https://stackoverflow.com/questions/49394718/apollo-client-query-error-network-error-failed-to-fetch-how-to-troubleshoot)
 - [Apollo Client, now with React Hooks](https://blog.apollographql.com/apollo-client-now-with-react-hooks-676d116eeae2)
 
+### GraphQL CodeGen
+
 - [@graphql-codegen](https://www.npmjs.com/package/@graphql-codegen/cli)
 - [graphql-code-generator.com](https://graphql-code-generator.com/)
 
+### Ben Awad
+
+- [JWT Authentication Node.js Tutorial with GraphQL and React](https://www.youtube.com/watch?v=25GS0MLT8JU&t=368s)
+- [benawad/jwt-auth-example](https://github.com/benawad/jwt-auth-example)
 - [Visual Studio Code Settings Sync Gist](https://gist.github.com/benawad/1e9dd01994f78489306fbfd6f7b01cd3#file-snippets-typescriptreact-json)
+
+> another great video from this wise "kid" [Ben Awad](https://www.youtube.com/channel/UC-8QAzbLcRglXeN_MY9blyw), thanks man your are great
 
 ## Quick Commands
 

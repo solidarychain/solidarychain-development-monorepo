@@ -1,5 +1,23 @@
 # README
 
+- [README](#readme)
+  - [Description](#description)
+  - [Pre-Requisites](#pre-requisites)
+  - [Configure environment variables](#configure-environment-variables)
+  - [Start Rest Api](#start-rest-api)
+  - [Get JWT Access Token](#get-jwt-access-token)
+    - [POST:/api/login](#postapilogin)
+  - [Test Rest API](#test-rest-api)
+    - [Variables](#variables)
+    - [GET:/api/me](#getapime)
+    - [GET:/api/participant](#getapiparticipant)
+    - [POST:/api/participant](#postapiparticipant)
+    - [GET:/api/participant/{id}](#getapiparticipantid)
+    - [GET:/api/person](#getapiperson)
+    - [POST:/api/person](#postapiperson)
+    - [GET:/api/person/{id}](#getapipersonid)
+    - [POST:/api/person/{id}/add-attribute](#postapipersonidadd-attribute)
+
 ## Description
 
 Rest API based on [Nest](https://github.com/nestjs/nest) framework, with http redirect, https, swagger and jwt authentication

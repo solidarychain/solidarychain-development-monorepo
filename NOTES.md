@@ -1,5 +1,73 @@
 # NOTES
 
+- [NOTES](#notes)
+  - [Links Used](#links-used)
+    - [WorldSibu](#worldsibu)
+    - [Medium](#medium)
+    - [Nest Js](#nest-js)
+  - [Commands](#commands)
+  - [Fix's](#fixs)
+  - [Uris and Endpoints](#uris-and-endpoints)
+    - [Tools](#tools)
+    - [Mango Queries](#mango-queries)
+    - [Endpoints](#endpoints)
+  - [Fix's](#fixs-1)
+  - [Clone Worldsibu Repository](#clone-worldsibu-repository)
+  - [Config environment](#config-environment)
+  - [Install/Update Tooling](#installupdate-tooling)
+  - [SetUp](#setup)
+  - [What are we going to build?](#what-are-we-going-to-build)
+    - [Here is a brief explanation of what it is done in the smart contract tutorial](#here-is-a-brief-explanation-of-what-it-is-done-in-the-smart-contract-tutorial)
+      - [Each data structure is defined as](#each-data-structure-is-defined-as)
+      - [Business rules](#business-rules)
+      - [The flow should look like this](#the-flow-should-look-like-this)
+  - [Start Code It: Modules, Controllers and Services](#start-code-it-modules-controllers-and-services)
+  - [Config/ Environment](#config-environment)
+  - [Create files](#create-files)
+  - [Run Convector and Test](#run-convector-and-test)
+  - [Extend tutorial](#extend-tutorial)
+    - [Commit project](#commit-project)
+    - [add Types to Participant and Person Modules and Use it [DEPRECATED]](#add-types-to-participant-and-person-modules-and-use-it-deprecated)
+    - [To Use CouchDB and don't DRY Initialization block in Controllers](#to-use-couchdb-and-dont-dry-initialization-block-in-controllers)
+    - [Couch Views (Require to add to all nodes fabric-couchdb/ couchdb.peer0.org?.hurley.lab)](#couch-views-require-to-add-to-all-nodes-fabric-couchdb-couchdbpeer0orghurleylab)
+  - [Fire All Requests](#fire-all-requests)
+  - [Test/Jest](#testjest)
+    - [Error 1](#error-1)
+    - [error 3](#error-3)
+  - [Implement Swagger Docs](#implement-swagger-docs)
+    - [Install dependencies](#install-dependencies)
+    - [Initialize the Swagger using SwaggerModule](#initialize-the-swagger-using-swaggermodule)
+    - [Redirect root to Api](#redirect-root-to-api)
+    - [Test Swagger Api and Redirect](#test-swagger-api-and-redirect)
+    - [Create Swagger DTO's](#create-swagger-dtos)
+    - [Global constant file](#global-constant-file)
+    - [Swagger : @ApiResponse decorators](#swagger--apiresponse-decorators)
+  - [Add HTTPS to Server](#add-https-to-server)
+    - [Add Redirect Middleware (HTTP to HTTPS)](#add-redirect-middleware-http-to-https)
+    - [Test Https and HTTP to HTTPS Redirect](#test-https-and-http-to-https-redirect)
+    - [Enable CORS](#enable-cors)
+  - [Authentication](#authentication)
+    - [Authentication: Implementing Passport local](#authentication-implementing-passport-local)
+    - [Authentication: Built-in Passport Guards](#authentication-built-in-passport-guards)
+    - [Authentication: JWT functionality](#authentication-jwt-functionality)
+    - [Authentication: Implementing Passport JWT](#authentication-implementing-passport-jwt)
+    - [Authentication: Implement protected route and JWT strategy guards](#authentication-implement-protected-route-and-jwt-strategy-guards)
+    - [Authentication: Default strategy](#authentication-default-strategy)
+    - [Authentication: Guards, BearerAuth and Response decorators](#authentication-guards-bearerauth-and-response-decorators)
+    - [Authentication: Finish App controller Login and Profile routes](#authentication-finish-app-controller-login-and-profile-routes)
+    - [Authentication: Test Swagger With Authentication](#authentication-test-swagger-with-authentication)
+  - [Change/Extend Person model to have authorization credentials](#changeextend-person-model-to-have-authorization-credentials)
+  - [Renew and Deploy new upgraded ChainCode after chaincode model Changes](#renew-and-deploy-new-upgraded-chaincode-after-chaincode-model-changes)
+  - [Start to encrypt passwords with BCrypt](#start-to-encrypt-passwords-with-bcrypt)
+  - [Create common Package to share stuff @convector-rest-sample/common](#create-common-package-to-share-stuff-convector-rest-samplecommon)
+    - [Create lerna common package @convector-rest-sample/common](#create-lerna-common-package-convector-rest-samplecommon)
+    - [Use common package inside ChainCode](#use-common-package-inside-chaincode)
+    - [Use scripts to copy other files to chaincode](#use-scripts-to-copy-other-files-to-chaincode)
+    - [Clean Up](#clean-up)
+  - [Implement UsersService with ledger Persons/Users authentication](#implement-usersservice-with-ledger-personsusers-authentication)
+  - [Clean up and solve problem of @babel/.highlight.DELETE@latest when use lerna bootstrap](#clean-up-and-solve-problem-of-babelhighlightdeletelatest-when-use-lerna-bootstrap)
+  - [Solve custom nestjs packages dependencies](#solve-custom-nestjs-packages-dependencies)
+
 This is a simple NestJs starter, based on above links, I only extended it with a few things like **swagger api**, **https**, **jwt**, and other stuff, thanks m8s
 
 > IMPORTANT NOTE: node version used `v8.16.0` without issues
@@ -37,12 +105,11 @@ $ npm run cc:start -- person
 $ npx lerna run build --scope @convector-sample/person-cc
 $ npx lerna run build --scope @convector-sample/participant-cc
 # upgrade smart contract
-$ npm run cc:upgrade -- person 1.3
-$ npm run cc:upgrade -- participant 1.3
+$ npm run cc:upgrade -- person 1.1
 # note: after deploy/upgrade wait a few second/minutes in first invoke, 
 # when done we have a new container and end with result `Upgraded Chaincode at org1`
 # watch for deployed container
-$ watch "docker container ls --format "{{.Names}}" | grep \"person\|participant\""
+$ watch "docker container ls --format "{{.Names}}" | grep \"person\""
 dev-peer0.org1.hurley.lab-participant-1.2
 dev-peer0.org1.hurley.lab-participant-1.1
 dev-peer0.org2.hurley.lab-person-1.0
