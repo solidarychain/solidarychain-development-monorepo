@@ -47,6 +47,8 @@ $ npx lerna run start:debug --scope @convector-sample/server-graphql --stream
 
 - [graphql playground](https://192.168.1.133:3443/graphql)
 
+![personLogin](./assets/images/010.png)
+
 before fire some graphql queries/mutations we must get `accessToken` with `personLogin` mutation
 
 open graphql playground and fire personLogin mutation to get the `accessToken`
@@ -72,6 +74,8 @@ response with `accessToken`
   }
 }
 ```
+
+![participants](./assets/images/020.png)
 
 now add a new query `participants`
 
@@ -100,6 +104,13 @@ add the `authorization` http header
 
 and fire the query. done
 
+## Insomnia
+
+![import workspace](assets/images/100.png)
+
 to play with all the query and mutations install [insomnia client](https://insomnia.rest/) and import workspace `insomnia-workspace/Insomnia.json`
+
+
+![insomnia](assets/images/110.png)
 
 > insomnia don't work with subscriptions (yet), to use subscriptions use `graphql playground`

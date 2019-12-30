@@ -89,7 +89,7 @@ this repo contains a hurley/convector hyperledger network, based on [Covalent: C
 
 ### 1. Install VM
 
-Install a virtual machine with `ubuntu server 18.04` with `openssh` server installed, or other linux based machine, with a minimal of **18gb**
+Install a virtual machine with `ubuntu server 18.04` with `openssh` server installed, or other linux based machine, with a minimal of **20GB**, recommended **30GB** to prevent out of space problems, I have to resize my virtual disk 2 times.....
 
 ### 2. Connect to VM via SSH
 
@@ -124,7 +124,7 @@ docker-compose version 1.25.0, build 0a186604
 
 ### 4. Install Node.js and NVM
 
-> IMPORTANT NOTE: recommended node version `v8.16.0`
+> recommended hyperledger/convector node version `v8.16.0`
 
 ```shell
 # install node and npm
