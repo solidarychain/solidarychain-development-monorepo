@@ -8,10 +8,16 @@ export class Attribute extends ConvectorModel<Attribute>{
   @Required()
   public readonly type = c.CONVECTOR_MODEL_PATH_ATTRIBUTE;
 
+  // find #STRING-OR-OBJECT
   // Diego: I see, all properties need a @Validate() decorator else convector will ignore it
-  // Required to use nullable(), else content must be a `object` type, but the final value was: `null`
+  // Required to use nullable(), else
+  // ValidationError: content must be a `object` type, but the final value was: `null`. If "null" is intended as an empty value be sure to mark the schema as `.nullable()`
   @Required()
-  @Validate(yup.object().nullable())
+  // use if content is string
+  // @Validate(yup.string())
+  // public content: string;
+  // use if content is object
+  @Validate(yup.object()/*.nullable()*/)
   public content: any;
 
   @Required()

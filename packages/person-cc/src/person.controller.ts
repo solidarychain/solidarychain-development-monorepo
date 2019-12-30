@@ -134,8 +134,11 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
   public async getByAttribute(
     @Param(yup.string())
     id: string,
-    @Param(yup.mixed())  // this convert value to string, to keep the object use below @Param(yup.object())
-    // @Param(yup.object()) this is used to use the value has a json object
+    // find #STRING-OR-OBJECT
+    // use if content is string
+    // @Param(yup.mixed()) // this convert value to string, to keep the object use below @Param(yup.object())
+    // use if content is object
+    @Param(yup.object())   //this is used to use the value has a json object
     value: any
   ) {
     return await Person.query(Person, {
