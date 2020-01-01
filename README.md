@@ -183,8 +183,8 @@ $ conv -V
 
 ```shell
 $ cd ~
-$ git clone https://gitlab.koakh.com/koakh/node-nestjs-hyperledger-convector-rest-starter.git
-$ cd node-nestjs-hyperledger-convector-rest-starter
+$ git clone https://gitlab.koakh.com/koakh/node-nestjs-hyperledger-convector-starter.git
+$ cd node-nestjs-hyperledger-convector-starter
 ```
 
 ## Hurley hyperledger network
