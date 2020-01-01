@@ -108,7 +108,7 @@ and fire the query. done
 
 ![import workspace](assets/images/100.png)
 
-to play with all the query and mutations install [insomnia client](https://insomnia.rest/) and import workspace `insomnia-workspace/Insomnia.json`
+to play with all the query and mutations install [insomnia client](https://insomnia.rest/) and import workspace `insomnia-workspace/Insomnia.json`, this has all the queries, mutations and subscriptions in the graphql api ready to use
 
 
 ![insomnia](assets/images/110.png)

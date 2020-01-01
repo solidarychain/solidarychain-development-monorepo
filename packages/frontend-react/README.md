@@ -10,20 +10,21 @@
 
 ## Description
 
-A minimal React Hooks typescript frontend, with **JWT Auth** using **hyperledger network** and **person chaincode** person users, consuming `server-graphql` project, with `apollo/react-hooks`, `react-router` and other cool stuff, ready to use has a base starter for hyperledger/convector/server-graphql
+A minimal React Hooks typescript frontend, with **JWT Auth** using **hyperledger network** and **person chaincode**, this front end is connected to  `server-graphql` project, use `apollo/react-hooks`, `react-router` and other cool stuff, ready to use has a base starter for hyperledger/convector/server-graphql
 
-- login/logout and auto refresh jwt token
+- login/logout
+- auto refresh jwt token
 - react routes
-- some graphql requests like person profile, and list of persons on ledger
+- some graphql requests like person profile, and list of persons
 - some context state
 
 ## Pre-Requisites
 
 1. Node Js
 
-2. this project must have a running hurley hyperledger network running, with **person chaincode** deployed, follow instructions on [README.me](../../README.md)
+2. this project must have a running **hurley hyperledger network** running, with **person chaincode** deployed follow instructions on [README.me](../../README.md)
 
-> tip: use `restartEnv.sh` script
+> tip: use `restartEnv.sh` script to start / restart **hurley hyperledger network**
 
 3. this project must have a running server-graphql [README.me](../server-graphql/README.md)
 
