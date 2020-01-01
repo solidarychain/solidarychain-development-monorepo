@@ -7,6 +7,7 @@
   - [Configure IP and CORS](#configure-ip-and-cors)
   - [Start React Frontend](#start-react-frontend)
   - [Now play with Frontend](#now-play-with-frontend)
+  - [Solving Problems with Certificates](#solving-problems-with-certificates)
 
 ## Description
 
@@ -50,7 +51,7 @@ SKIP_PREFLIGHT_CHECK=true
 
 ## Configure IP and CORS
 
-> if running frontend from other ip/fqdn than default `localhost:3000`, first you must configure both frontend and graphql server `.env` to your own needs, in below example we use a ip `192.168.1.133` has a example, can be a fqnd like `example.com` etc
+> if running frontend from other ip/fqdn than default `localhost:3000`, you must configure both frontend and graphql server `.env` to your own needs, both uri's must match, in below example we use a ip `192.168.1.133` has a example, but can be any valid fqnd like `example.com` etc
 
 ```shell
 # edit frontend .env
@@ -60,6 +61,9 @@ $ nano packages/frontend-react/.env
 and change `REACT_APP_REST_SERVER_URI` and `REACT_APP_GRAPHQL_SERVER_URI`, we enable https to...
 
 ```conf
+# CRA: use HTTPS
+HTTPS=true
+
 # react env variables must be prefixed by REACT_APP_
 REACT_APP_REST_SERVER_URI=https://192.168.1.133:3443
 REACT_APP_GRAPHQL_SERVER_URI=https://192.168.1.133:3443/graphql
@@ -69,7 +73,6 @@ REACT_APP_GRAPHQL_SERVER_URI=https://192.168.1.133:3443/graphql
 # require to prevent problems with create-react-app and "jest": "24.9.0"
 SKIP_PREFLIGHT_CHECK=true
 NODE_TLS_REJECT_UNAUTHORIZED=0
-HTTPS=true
 ```
 
 change graphql `.env` else we have cors and other problems, using same example of a machine with ip `192.168.1.133`
@@ -110,6 +113,18 @@ $ npx lerna run start --scope @convector-sample/frontend-react --stream
 
 goto <https://localhost:3443> or <https://192.168.1.133:3443/graphql>
 
-1. login with default user `johndoe`, password `12345678`, or other ledger user created with `rest server`, `graphql server` or `hurley`
+1. login with default user `johndoe`, password `12345678`, or other ledger person/user created with `rest server`, `graphql server` or `hurley`
+
+2. wait for loading, remember we are interacting with blockchain, not a database, the operations are more slow...be patient
+
+3. landing on homepage, with person listing
+
+4. now you can play arround with the minimal setup, profile, context state, logout etc
 
 done
+
+## Solving Problems with Certificates
+
+![ERR_CERT_AUTHORITY_INVALID](assets/images/020.png)
+
+if have problems with self signed certifcates read [Fix apollo react ERR_CERT_AUTHORITY_INVALID](NOTES.md#fix-apollo-react-errcertauthorityinvalid) on [NOTES.md](NOTES.md)

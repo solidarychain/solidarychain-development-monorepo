@@ -17,6 +17,7 @@
     - [POST:/api/person](#postapiperson)
     - [GET:/api/person/{id}](#getapipersonid)
     - [POST:/api/person/{id}/add-attribute](#postapipersonidadd-attribute)
+    - [POST:/api/person/{id}/get-attribute](#postapipersonidget-attribute)
 
 ## Description
 
@@ -37,7 +38,7 @@ default `.env`
 ```conf
 # example can be shared, not used in production
 HTTP_SERVER_PORT=3080
-HTTPS_SERVER_PORT=3443
+HTTPS_SERVER_PORT=3444
 ACCESS_TOKEN_JWT_SECRET=rGtqzOjlW9OG47ncUKbPDltTxA3EtZFp
 REFRESH_TOKEN_JWT_SECRET=3XgiizDr35A4H1I9ocOPTFeUkFSfKkSy
 AUTH_SERVICE_USE_MOKED_USERS=false
@@ -56,12 +57,12 @@ $ npx lerna run start:dev --scope @convector-sample/server-rest --stream
 $ npx lerna run start:debug --scope @convector-sample/server-rest --stream
 # output
 @convector-sample/server-rest: [Nest] 13860   - 2019-12-25 21:15:15   HTTP Server running on port [3080] +19ms
-@convector-sample/server-rest: [Nest] 13860   - 2019-12-25 21:15:15   HTTPS Server running on port [3443] +1ms
+@convector-sample/server-rest: [Nest] 13860   - 2019-12-25 21:15:15   HTTPS Server running on port [3444] +1ms
 ```
 
 ## Get JWT Access Token
 
-- access swagger api at <https://localhost:3443/api>
+- access swagger api at <https://localhost:3444/api>
 
 to test some api endpoints, first we need a valid access token, use swagger endpoint `/api/login` with `LoginUserDto` payload `{ "username": "johndoe", "password": "12345678"}`
 
@@ -70,7 +71,7 @@ or below curl
 ### POST:/api/login
 
 ```shell
-$ curl -k -s -X POST https://localhost:3443/api/login -d '{ "username": "johndoe", "password": "12345678"}' -H 'Content-Type: application/json' | jq
+$ curl -k -s -X POST https://localhost:3444/api/login -d '{ "username": "johndoe", "password": "12345678"}' -H 'Content-Type: application/json' | jq
 
 # response
 {
@@ -88,16 +89,15 @@ ex `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxLTEwMC0xMDAiLCJ1c2Vy
 
 ```shell
 # define some variables
-$ URI="https://localhost:3443"
+$ URI="https://localhost:3444"
 # request token and assign it to variable with the help of jq
-$ TOKEN=$(curl -k -s -X POST https://localhost:3443/api/login -d '{ "username": "johndoe", "password": "12345678"}' -H 'Content-Type: application/json' | jq -r ".accessToken"
+$ TOKEN=$(curl -k -s -X POST https://localhost:3444/api/login -d '{ "username": "johndoe", "password": "12345678"}' -H 'Content-Type: application/json' | jq -r ".accessToken"
 )
 ```
 
 ### GET:/api/me
 
 ```shell
-# /api/me
 $ curl -k -s -X GET "${URI}/api/me" -H "accept: application/json" -H "Authorization: Bearer ${TOKEN}" | jq
 ```
 
@@ -111,7 +111,6 @@ $ curl -k -s -X GET "${URI}/api/me" -H "accept: application/json" -H "Authorizat
 ### GET:/api/participant
 
 ```shell
-# /api/participant
 $ curl -k -s -X GET "${URI}/api/participant" -H "accept: application/json" -H "Authorization: Bearer ${TOKEN}" | jq
 ```
 
@@ -129,18 +128,6 @@ $ curl -k -s -X GET "${URI}/api/participant" -H "accept: application/json" -H "A
       }
     ]
   },
-  {
-    "id": "mit",
-    "type": "io.worldsibu.examples.participant",
-    "name": "MIT",
-    "msp": "org1MSP",
-    "identities": [
-      {
-        "fingerprint": "A7:67:30:62:1C:81:30:4F:5C:53:84:3D:DE:47:0E:D0:24:AF:CE:AD",
-        "status": true
-      }
-    ]
-  },
   ...
 ]
 ```
@@ -148,19 +135,13 @@ $ curl -k -s -X GET "${URI}/api/participant" -H "accept: application/json" -H "A
 ### POST:/api/participant
 
 ```shell
-# /api/participant
 $ PAYLOAD="{ \"id\": \"unicef\", \"name\": \"Unicef\"}"
 $ curl -k -s -X POST "${URI}/api/participant" -H "accept: application/json" -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" -d "${PAYLOAD}"
-```
-
-```json
-{"type":"Buffer","data":[]}
 ```
 
 ### GET:/api/participant/{id}
 
 ```shell
-# /api/participant
 $ ID=unicef
 $ curl -k -s -X GET "${URI}/api/participant/${ID}" -H "accept: application/json" -H "Authorization: Bearer ${TOKEN}" | jq
 ```
@@ -183,7 +164,7 @@ $ curl -k -s -X GET "${URI}/api/participant/${ID}" -H "accept: application/json"
 ### GET:/api/person
 
 ```shell
-$ curl -k -s -X GET "${URI}/api/person" -H "accept: application/json" -H "Authorization: Bearer ${TOKEN}"
+$ curl -k -s -X GET "${URI}/api/person" -H "accept: application/json" -H "Authorization: Bearer ${TOKEN}" | jq
 ```
 
 ```json
@@ -207,27 +188,13 @@ $ curl -k -s -X GET "${URI}/api/person" -H "accept: application/json" -H "Author
     "roles": [
       "USER"
     ],
-    "participant": {
-      "id": "gov",
-      "identities": [
-        {
-          "fingerprint": "54:F9:85:11:91:8F:81:F8:54:DB:25:CE:E6:0D:2C:8C:BB:7B:AD:7F",
-          "status": true
-        }
-      ],
-      "msp": "org1MSP",
-      "name": "Big Government",
-      "type": "io.worldsibu.examples.participant"
-    }
-  },
   ...
 ```
 
 ### POST:/api/person
 
 ```shell
-# /api/person
-$ PAYLOAD="{ \"id\": \"koakh\", \"firstname\": \"Mario\", \"lastname\": \"Monteiro\", \"username\": \"koakh\", \"password\": \"12345678\", \"email\": \"mail@koakh.com\" }"
+$ PAYLOAD="{ \"id\": \"1-100-103\", \"firstname\": \"Rick\", \"lastname\": \"Doe\", \"username\": \"rickdoe\", \"password\": \"12345678\", \"email\": \"rick.doe@mail.com\" }"
 $ curl -k -s -X POST "${URI}/api/person" -H "accept: application/json" -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" -d "${PAYLOAD}"
 ```
 
@@ -238,93 +205,104 @@ $ curl -k -s -X POST "${URI}/api/person" -H "accept: application/json" -H "Autho
 ### GET:/api/person/{id}
 
 ```shell
-# /api/participant
 $ ID=koakh
 $ curl -k -s -X GET "${URI}/api/person/${ID}" -H "accept: application/json" -H "Authorization: Bearer ${TOKEN}" | jq
 ```
 
 ```json
 {
-  "id": "koakh",
+  "id": "1-100-103",
   "type": "io.worldsibu.examples.person",
-  "firstname": "Mario",
-  "lastname": "Monteiro",
-  "username": "koakh",
+  "firstname": "Rick",
+  "lastname": "Doe",
+  "username": "rickdoe",
   "password": "$2b$10$.1unf8AGahW3ss.6NkFJsu1lIOUwg6oNGrgm4vGzSk3ztVaXlsn/i",
-  "email": "mail@koakh.com",
-  "roles": [
-    "USER"
-  ],
-  "participant": {
-    "id": "gov",
-    "identities": [
-      {
-        "fingerprint": "54:F9:85:11:91:8F:81:F8:54:DB:25:CE:E6:0D:2C:8C:BB:7B:AD:7F",
-        "status": true
-      }
-    ],
-    "msp": "org1MSP",
-    "name": "Big Government",
-    "type": "io.worldsibu.examples.participant"
-  }
-}
+  "email": "rick.doe@mail.com",
+  ...
 ```
 
 ### POST:/api/person/{id}/add-attribute
 
 ```shell
-# /api/person
-$ ID=koakh
-$ PAYLOAD='{ "attributeId":"birth-year", "content": "1971" }'
+$ ID="1-100-103"
+$ PAYLOAD='{ "attributeId":"born-year", "certifierID": "gov", "content": { "data": "1971", "work": true } }'
 $ curl -k -s -X POST "${URI}/api/person/${ID}/add-attribute" -H "accept: application/json" -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" -d "${PAYLOAD}" | jq
 ```
 
 ```json
-{
-  "id": "koakh",
-  "type": "io.worldsibu.examples.person",
-  "firstname": "Mario",
-  "lastname": "Monteiro",
-  "username": "koakh",
-  "password": "$2b$10$.1unf8AGahW3ss.6NkFJsu1lIOUwg6oNGrgm4vGzSk3ztVaXlsn/i",
-  "email": "mail@koakh.com",
+  "id": "1-100-103",
+  "firstname": "Rick",
+  "lastname": "Doe",
+  "username": "rickdoe",
+  "email": "rick.doe@mail.com",
   "attributes": [
     {
-      "certifierID": "gov",
-      "content": "1971",
-      "id": "birth-year",
-      "issuedDate": 1577318087448,
-      "type": "io.worldsibu.examples.attribute"
+      "id": "born-year",
+      "content": {
+        "data": "1971",
+        "work": true
+      },
+      "issuedDate": 1577911309985,
+      "expiresDate": null,
+      "expired": null,
+      "certifierID": "gov"
     }
-  ],
-  "roles": [
-    "USER"
-  ],
 ...  
 ```
 
+> Note: we can use any valid json object in `content`, this way we can have complex objects, but if one prefer string find in code `find #STRING-OR-OBJECT` and exchange object with string
 
-npx hurl invoke person person_addAttribute 1-100-100 '{"id": "birth-year", "certifierID": "gov", "content": "1993", "issuedDate": 1554239270 }' -u admin
-npx hurl invoke person person_get 1-100-100
-npx hurl invoke person person_getByAttribute birth-year 1993
+### POST:/api/person/{id}/get-attribute
 
-npx hurl invoke person person_addAttribute 1-100-100 '{"id": "attribute1", "certifierID": "gov", "content": "attribute1-value", "issuedDate": 1554239270 }' -u admin
-npx hurl invoke person person_addAttribute 1-100-100 '{"id": "attribute2", "certifierID": "gov", "content": "attribute2-value", "issuedDate": 1554239270 }' -u admin
-npx hurl invoke person person_getByAttribute attribute1 attribute1-value
-npx hurl invoke person person_getByAttribute attribute2 attribute2-value
+> search all persons with `ATTRIBUTE="born-year"` and `PAYLOAD='{ "value": { "data": "1971", "work": true } }'`
 
+```shell
+$ ATTRIBUTE="born-year"
+$ PAYLOAD='{ "value": { "data": "1971", "work": true } }'
+$ curl -k -s -X POST "${URI}/api/person/${ATTRIBUTE}/get-attribute" -H "accept: application/json" -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" -d "${PAYLOAD}" | jq
+```
 
-TOKEN=$(curl -k -s -X POST https://localhost:3443/api/login -d '{ "username": "johndoe", "password": "12345678"}' -H 'Content-Type: application/json' | jq -r ".accessToken"
-)
-curl -k -X POST \
-  https://localhost:3443/api/person/1-100-101/add-attribute \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer ${TOKEN}" \
-  -d '{
-    "attributeId":"birth-year",
-    "content": "1971"
-  }' | jq
-
-
-npx hurl invoke person person_addAttribute 1-100-100 '{"id": "born-year", "certifierID": "gov", "content": "1971", "issuedDate": 1554239270 }' -u admin
-npx hurl invoke person person_addAttribute 1-100-100 '{"id": "born-year", "content": "1971" }' -u admin
+```json
+[
+  {
+    "_attributes": [
+      {
+        "certifierID": "gov",
+        "content": {
+          "data": "1971",
+          "work": true
+        },
+        "id": "born-year",
+        "issuedDate": 1554239270,
+        "type": "io.worldsibu.examples.attribute"
+      }
+    ],
+    "_email": "john.doe@mail.com",
+    "_firstname": "John",
+    "_id": "1-100-100",
+    "_lastname": "Doe",
+    "_participant": {
+      "id": "gov",
+...  
+ {
+    "_attributes": [
+      {
+        "certifierID": "gov",
+        "content": {
+          "data": "1971",
+          "work": true
+        },
+        "id": "born-year",
+        "issuedDate": 1577911309985,
+        "type": "io.worldsibu.examples.attribute"
+      }
+    ],
+    "_email": "mail@koakh.com",
+    "_firstname": "Mario",
+    "_id": "1-100-103",
+    "_lastname": "Monteiro",
+    "_participant": {
+      "id": "gov",
+...
+]
+```

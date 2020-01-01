@@ -231,7 +231,11 @@ app.enableCors({
 
 - [How to avoid "self signed certificate" error?](https://github.com/apollographql/apollo-link/issues/229)
 
-the trick is open nestjs graphql playground (https) on chrome or chrome debugger at <https://localhost:3443/graphql>, and **accept certificate** like we do normally do, with advance in invalid certificates, and it start to work in chrome debug mode, and in non chrome debugger.
+![ERR_CERT_AUTHORITY_INVALID](assets/images/020.png)
+
+the trick is open nestjs graphql playground (https) on chrome or chrome debugger at <https://localhost:3443/graphql> or <https://192.168.1.133:3443/graphql>, and **accept certificate** , and it start to work react app, in chrome debug mode, and in non chrome debugger.
+
+![ERR_CERT_AUTHORITY_INVALID](assets/images/030.png)
 
 working version with a fresh login token
 
