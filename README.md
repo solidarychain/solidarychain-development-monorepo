@@ -31,6 +31,7 @@
   - [packages/server-graphql](#packagesserver-graphql)
   - [packages/frontend-react](#packagesfrontend-react)
   - [Done](#done)
+  - [Modified .env files to work with vm 192.168.1.133](#modified-env-files-to-work-with-vm-1921681133)
 
 ## Description
 
@@ -332,3 +333,43 @@ thanks for all the awesome team of covalent
 and sorry my english, it is not my native language
 
 I have some `NOTES.md` in sub projects dirs, taken in this ride, some links, problem and solutions, maybe they can be useful for others....
+
+## Modified .env files to work with vm 192.168.1.133
+
+`packages/frontend-react/.env`
+
+```conf
+# CRA: use HTTPS
+HTTPS=true
+
+# react env variables must be prefixed by REACT_APP_
+REACT_APP_REST_SERVER_URI=https://192.168.1.133:3443
+REACT_APP_GRAPHQL_SERVER_URI=https://192.168.1.133:3443/graphql
+
+# Apollo
+REACT_APP_APOLLO_FETCH_POLICY=network-only
+REACT_APP_APOLLO_REJECT_UNAUTHORIZED=false
+
+# require to prevent problems with create-react-app and "jest": "24.9.0"
+SKIP_PREFLIGHT_CHECK=true
+
+NODE_TLS_REJECT_UNAUTHORIZED=0
+```
+
+`packages/server-graphql/.env`
+
+```conf
+# HTTP_SERVER_PORT=3001
+HTTPS_SERVER_PORT=3443
+ACCESS_TOKEN_JWT_SECRET=rGtqzOjlW9OG47ncUKbPDltTxA3EtZFp
+REFRESH_TOKEN_JWT_SECRET=3XgiizDr35A4H1I9ocOPTFeUkFSfKkSy
+
+# debug, higher expires time out: use 15s | 1d to debug refreshToken
+ACCESS_TOKEN_EXPIRES_IN=15m
+REFRESH_TOKEN_EXPIRES_IN=7d
+# use only in development mode to skip increment tokenVersion
+REFRESH_TOKEN_SKIP_INCREMENT_VERSION=true
+
+# required to define when we don't use default origin http://localhost:3000
+CORS_ORIGIN_REACT_FRONTEND=https://192.168.1.133:3000
+```
