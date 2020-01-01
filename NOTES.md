@@ -1,6 +1,6 @@
-# NOTES
+# NOTES : Warning : Internal notes, subject to errors and typos
 
-- [NOTES](#notes)
+- [NOTES : Warning : Internal notes, subject to errors and typos](#notes--warning--internal-notes-subject-to-errors-and-typos)
   - [Links Used](#links-used)
     - [WorldSibu](#worldsibu)
     - [Medium](#medium)

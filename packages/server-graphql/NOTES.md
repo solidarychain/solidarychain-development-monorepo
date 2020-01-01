@@ -1,6 +1,6 @@
-# NOTES
+# NOTES : Warning : Internal notes, subject to errors and typos
 
-- [NOTES](#notes)
+- [NOTES : Warning : Internal notes, subject to errors and typos](#notes--warning--internal-notes-subject-to-errors-and-typos)
   - [Start](#start)
   - [GraphQL project use server-rest auth and users module](#graphql-project-use-server-rest-auth-and-users-module)
   - [Links](#links)
@@ -16,7 +16,6 @@
   - [@CurrentUser() decorator, to get @CurrentUser() in graphql endpoints like in personProfile](#currentuser-decorator-to-get-currentuser-in-graphql-endpoints-like-in-personprofile)
   - [Getting headers in graphql](#getting-headers-in-graphql)
   - [Cookie Parser](#cookie-parser)
-- [refreshToken from cookie](#refreshtoken-from-cookie)
   - [Apollo-Link-Token-Refresh and Migrate apollo-boost to apollo-client](#apollo-link-token-refresh-and-migrate-apollo-boost-to-apollo-client)
 
 ## Start
@@ -33,10 +32,10 @@ $ npx lerna run build --scope @convector-sample/common --stream
 $ npx lerna run start:debug --scope @convector-sample/server-graphql --stream
 ```
 
-<http://localhost:3000/graphql>
+- [GraphQL Playground](http://localhost:3000/graphql)
 
 ```shell
-# generate graphql types
+# generate graphql types for frontend
 $ npx lerna run gen:graphql --scope @convector-sample/frontend-react
 ```
 
@@ -99,7 +98,9 @@ export class Attribute {
   public content: any;
 ```
 
-`"message": "JSONObject cannot represent non-object value: 1993"`
+```
+"message": "JSONObject cannot represent non-object value: 1993"
+```
 
 here we must convert "1993" into object ex `{ data: '1993' }` check function `convertAttributes`
 
@@ -285,33 +286,33 @@ async personProfile(@CurrentUser() user: Person): Promise<Person> {
 
 ## Getting headers in graphql
 
-to fix "Cannot read property 'headers' of undefined" graphql request
-https://docs.nestjs.com/graphql/tooling#execution-context
+fix "Cannot read property 'headers' of undefined" graphql request
+
+- [NestJS Execution context](https://docs.nestjs.com/graphql/tooling#execution-context)
+
+- [Applying Middleware-like mechanism to Resolvers' Queries and Mutations](https://stackoverflow.com/questions/54532263/applying-middleware-like-mechanism-to-resolvers-queries-and-mutations)
 
 
-
-Applying Middleware-like mechanism to Resolvers' Queries and Mutations
-https://stackoverflow.com/questions/54532263/applying-middleware-like-mechanism-to-resolvers-queries-and-mutations
-
-
-Authentication: GraphQL Oficial Docs
-https://docs.nestjs.com/techniques/authentication#graphql
-
-
-
+- [Authentication: GraphQL Oficial Docs](https://docs.nestjs.com/techniques/authentication#graphql)
 
 GraphQL Playground accepts cookie must change preferences `"request.credentials": "omit"` to `"request.credentials": "include"`
 
 ## Cookie Parser
 
-curl -k --request POST \
+- [Cookie Parser](https://www.npmjs.com/package/@nest-middlewares/cookie-parser)
+
+- [NestJs Middleware](https://docs.nestjs.com/middleware)
+
+```shell
+$ curl -k --request POST \
   --url https://localhost:3443/refresh-token \
   --cookie jid=j%253A%257B%2522accessToken%2522%253A%2522eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImphbmVkb2UiLCJpYXQiOjE1NjkyNzc0NjAsImV4cCI6MTU2OTg4MjI2MH0.A6XcwTvNZDUoT1MG6lFu7GyxVDg1GrTyTkjEFhvgDtI%2522%257D
+```
 
-https://www.npmjs.com/package/@nest-middlewares/cookie-parser
-https://docs.nestjs.com/middleware
-
-npx lerna add @nest-middlewares/cookie-parser --scope @convector-sample/server-graphql
+```shell
+# add cookie parser
+$ npx lerna add @nest-middlewares/cookie-parser --scope @convector-sample/server-graphql
+```
 
 ```typescript
 export class AuthModule {
@@ -321,18 +322,20 @@ export class AuthModule {
 }
 ```
 
-notes with tokenVersion we must:
+notes with `tokenVersion` we must:
 
 1. login, and get cookie refreshToken
 2. send refreshToken to /refresh-token, keep send this same refreshToken until we login, time when we increase tokenVersion and it will be invalidated
 
-> never use accessToken, wrong secret, don't have tokenVersion
+> never use `accessToken`, wrong secret, don't have `tokenVersion`
 
+```shell
 # refreshToken from cookie
 $ TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImphbmVkb2UiLCJ0b2tlblZlcnNpb24iOjUsImlhdCI6MTU2OTM2Mzg1MCwiZXhwIjoxNTY5OTY4NjUwfQ.ArD1yOMv_xrsUwveKur9Jyy03FKhvdvYZQaoY54KfGw
 $ curl -k -v -X POST \
   --url https://localhost:3443/refresh-token \
   --cookie jid=${TOKEN}
+```
 
 ## Apollo-Link-Token-Refresh and Migrate `apollo-boost` to `apollo-client`
 

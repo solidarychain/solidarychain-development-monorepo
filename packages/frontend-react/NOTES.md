@@ -1,6 +1,6 @@
-# NOTES
+# NOTES : Warning : Internal notes, subject to errors and typos
 
-- [NOTES](#notes)
+- [NOTES : Warning : Internal notes, subject to errors and typos](#notes--warning--internal-notes-subject-to-errors-and-typos)
   - [Links](#links)
     - [React Apollo](#react-apollo)
     - [GraphQL CodeGen](#graphql-codegen)
