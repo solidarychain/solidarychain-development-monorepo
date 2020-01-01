@@ -101,11 +101,11 @@ $ npm run env:restart
 # deploy smart contract (this smart contract have person and participant packages deployed in one unified chaincode)
 $ npm run cc:start -- person
 
-# build chaincode (before upgrade)
+# build person-cc or participant-cc (before upgrade person chaincode)
 $ npx lerna run build --scope @convector-sample/person-cc
 $ npx lerna run build --scope @convector-sample/participant-cc
 # upgrade smart contract
-$ npm run cc:upgrade -- person 1.1
+$ npm run cc:upgrade -- person 1.3
 # note: after deploy/upgrade wait a few second/minutes in first invoke,
 # when done we have a new container and command end with result `Upgraded Chaincode at org1`
 # watch for deployed container
@@ -123,12 +123,10 @@ $ ./seed.sh
 # after restart hyperledger always create views
 $ ./views/install.sh
 
-# debug chain code (remember breakpoint are setted in .js no ts files)
+# debug chain code (remember breakpoint are set in .js no ts files)
 $ npm run cc:start:debug -- person
-
-# if error occur use target debug version
+# if error occur use target debug version, recommend to always use version
 $ npm run cc:start:debug -- person 1.1
-$ npm run cc:start:debug -- participant 1.1
 
 # run dev server
 $ npx lerna run start:dev --scope @convector-sample/server-rest --stream

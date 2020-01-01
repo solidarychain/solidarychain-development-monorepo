@@ -305,7 +305,13 @@ $ curl -k -s -X POST "${URI}/api/person/${ID}/add-attribute" -H "accept: applica
 
 
 npx hurl invoke person person_addAttribute 1-100-100 '{"id": "birth-year", "certifierID": "gov", "content": "1993", "issuedDate": 1554239270 }' -u admin
+npx hurl invoke person person_get 1-100-100
 npx hurl invoke person person_getByAttribute birth-year 1993
+
+npx hurl invoke person person_addAttribute 1-100-100 '{"id": "attribute1", "certifierID": "gov", "content": "attribute1-value", "issuedDate": 1554239270 }' -u admin
+npx hurl invoke person person_addAttribute 1-100-100 '{"id": "attribute2", "certifierID": "gov", "content": "attribute2-value", "issuedDate": 1554239270 }' -u admin
+npx hurl invoke person person_getByAttribute attribute1 attribute1-value
+npx hurl invoke person person_getByAttribute attribute2 attribute2-value
 
 
 TOKEN=$(curl -k -s -X POST https://localhost:3443/api/login -d '{ "username": "johndoe", "password": "12345678"}' -H 'Content-Type: application/json' | jq -r ".accessToken"
