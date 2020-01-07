@@ -1,75 +1,165 @@
-import { appConstants as c } from '@convector-sample/common';
-import { ConvectorModel, Default, ReadOnly, Required, Validate, FlatConvectorModel } from '@worldsibu/convector-core';
-import * as yup from 'yup';
+import { appConstants as c, UserRoles } from '@convector-sample/common';
 import { Participant } from '@convector-sample/participant-cc';
-
-export class Attribute extends ConvectorModel<Attribute>{
-  @ReadOnly()
-  @Required()
-  public readonly type = c.CONVECTOR_MODEL_PATH_ATTRIBUTE;
-
-  // find #STRING-OR-OBJECT
-  // Diego: I see, all properties need a @Validate() decorator else convector will ignore it
-  // Required to use nullable(), else
-  // ValidationError: content must be a `object` type, but the final value was: `null`. If "null" is intended as an empty value be sure to mark the schema as `.nullable()`
-  @Required()
-  // use if content is string
-  // @Validate(yup.string())
-  // public content: string;
-  // use if content is object
-  @Validate(yup.object()/*.nullable()*/)
-  public content: any;
-
-  @Required()
-  @ReadOnly()
-  @Validate(yup.number())
-  public issuedDate: number;
-
-  public expiresDate: Date;
-
-  @Default(false)
-  @Validate(yup.boolean())
-  public expired: boolean;
-
-  @Required()
-  @Validate(yup.string())
-  public certifierID: string;
-}
+import { ConvectorModel, Default, FlatConvectorModel, ReadOnly, Required, Validate } from '@worldsibu/convector-core';
+import * as yup from 'yup';
+import { PersonAttribute } from './person-attribute.model';
 
 export class Person extends ConvectorModel<Person> {
   @ReadOnly()
   @Required()
   public readonly type = c.CONVECTOR_MODEL_PATH_PERSON;
 
+  // citizenCard data
+
+  // Mário Alberto
   @Required()
   @Validate(yup.string())
   public firstname: string;
 
+  // Mendes Monteiro
   @Required()
   @Validate(yup.string())
   public lastname: string;
 
+  // M
   @Required()
   @Validate(yup.string())
+  public gender: string;
+
+  // TODO: convert to 1.81
+  // 1,81
+  @Required()
+  @Validate(yup.string())
+  public height: string;
+
+  // Alberto
+  @Required()
+  @Validate(yup.string())
+  public fatherFirstname: string;
+
+  // De Andrade Monteiro
+  @Required()
+  @Validate(yup.string())
+  public fatherLastname: string;
+
+  // Maria Da Graça De Oliveira Mendes
+  @Required()
+  @Validate(yup.string())
+  public motherFirstname: string;
+
+  // Monteiro
+  @Required()
+  @Validate(yup.string())
+  public motherLastname: string;
+
+  // TODO: use DateTime
+  // 19 12 1971
+  @Required()
+  @Validate(yup.string())
+  public birthDate: string;
+
+  // PRT
+  @Required()
+  @Validate(yup.string())
+  public nationality: string;
+
+  // PRT
+  @Required()
+  @Validate(yup.string())
+  public country: string;
+
+  // 09879462 0 ZZ3
+  @Required()
+  @Validate(yup.string())
+  public documentNumber: string;
+
+  // Cartão De Cidadão
+  @Required()
+  @Validate(yup.string())
+  public documentType: string;
+
+  // 006.007.23
+  @Required()
+  @Validate(yup.string())
+  public cardVersion: string;
+
+  // TODO: use DateTime
+  // 08 05 2018
+  @Required()
+  @Validate(yup.string())
+  public emissionDate: string;
+
+  // TODO: use DateTime
+  // 08 05 2028
+  @Required()
+  @Validate(yup.string())
+  public expirationDate: string;
+
+  // República Portuguesa
+  @Required()
+  @Validate(yup.string())
+  public emittingEntity: string;
+
+  // 098794620
+  @Required()
+  @Validate(yup.string())
+  public identityNumber: string;
+
+  // 182692124
+  @Required()
+  @Validate(yup.string())
+  public fiscalNumber: string;
+
+  // 11103478242
+  @Required()
+  @Validate(yup.string())
+  public socialSecurityNumber: string;
+
+  // 285191659
+  @Required()
+  @Validate(yup.string())
+  public beneficiaryNumber: string; 
+
+  // 0000036014662658
+  @Required()
+  @Validate(yup.string())
+  public pan: string;
+
+  // CRCiv. Figueira da Foz
+  @Required()
+  @Validate(yup.string())
+  public requestLocation: string;
+
+  // @Required()
+  @Validate(yup.string()/*.nullable()*/)
+  public otherInformation: string;
+
+  // non citizenCard data
+  
+  @Required()
+  @Validate(yup.string()
+    .min(6, c.YUP_MESSAGE_USERNAME_TO_SHORT)
+    .max(16, c.YUP_MESSAGE_USERNAME_TO_LONG)
+  )
   public username: string;
 
   @Required()
   @Validate(yup.string()
-    .min(8, 'Password is too short - should be 8 chars minimum.')
-    .matches(/[1-9a-zA-Z]/, 'Password can only contain Latin letters and numbers.')
+    .min(8, c.YUP_MESSAGE_PASSWORD_TO_SHORT)
+    .matches(c.REGEX_PASSWORD, c.YUP_MESSAGE_INVALID_PASSWORD)
   )
   public password: string;
 
   @Required()
   @Validate(yup.string()
-  .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i, 'Invalid email')
+  .matches(c.REGEX_EMAIL, c.YUP_MESSAGE_INVALID_EMAIL)
   )
   public email: string;
 
-  @Validate(yup.array(Attribute.schema()))
-  public attributes: Array<Attribute>;
+  @Validate(yup.array(PersonAttribute.schema()))
+  public attributes: Array<PersonAttribute>;
 
-  @Default(['USER'])
+  @Default([UserRoles.User])
   @Validate(yup.array().of(yup.string()))
   public roles: Array<String>;
 

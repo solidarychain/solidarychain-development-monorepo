@@ -89,3 +89,106 @@ TODO.md
 packages/server-rest/src/main.ts
 add cors options like we do in 
 packages/server-graphql/src/main.ts
+
+
+
+
+- [-] replace `"name": "@convector-sample/` with `"name": "@solidary-network-network/`
+- [-] replace `io.worldsibu.examples` with `network.solidary.model`
+
+Person {
+  BENEFICIARYNUMBER = 285191659
+  BIRTHDATE = 19 12 1971
+  CARDVERSION = 006.007.23
+  COUNTRY = PRT
+  DOCUMENTNUMBER = 09879462 0 ZZ3
+  DOCUMENTTYPE = Cartão De Cidadão
+  EMISSIONDATE = 08 05 2018
+  EMITTINGENTITY = República Portuguesa
+  EXPIRATIONDATE = 08 05 2028
+  FATHERFIRSTNAME = Alberto
+  FATHERLASTNAME = De Andrade Monteiro
+  FIRSTNAME = Mário Alberto
+  FISCALNUMBER = 182692124
+  GENDER = M
+  HEIGHT = 1,81
+  IDENTITYNUMBER = 098794620
+  LASTNAME = Mendes Monteiro
+  MOTHERFIRSTNAME = Maria Da Graça De Oliveira Mendes
+  MOTHERLASTNAME = Monteiro
+  NATIONALITY = PRT
+  OTHERINFORMATION =
+  PAN = 0000036014662658
+  REQUESTLOCATION = CRCiv. Figueira da Foz
+  SOCIALSECURITYNUMBER = 11103478242
+}
+
+Person {
+  firstname = Mário Alberto
+  lastname = Mendes Monteiro
+  beneficiaryNumber = 285191659
+  birthDate = 19 12 1971
+  cardVersion = 006.007.23
+  country = PRT
+  documentNumber = 09879462 0 ZZ3
+  documentType = Cartão De Cidadão
+  emissionDate = 08 05 2018
+  emittingEntity = República Portuguesa
+  expirationDate = 08 05 2028
+  fatherFirstname = Alberto
+  fatherLastname = De Andrade Monteiro
+  fiscalNumber = 182692124
+  gender = M
+  height = 1,81
+  identityNumber = 098794620
+  motherFirstname = Maria Da Graça De Oliveira Mendes
+  motherLastname = Monteiro
+  nationality = PRT
+  otherInformation =
+  pan = 0000036014662658
+  requestLocation = CRCiv. Figueira da Foz
+  socialSecurityNumber = 11103478242
+}
+
+Person {
+  firstname = Mário Alberto
+  lastname = Mendes Monteiro
+  beneficiaryNumber = 285191659
+  birthDate = 19 12 1971
+  cardVersion = 006.007.23
+  country = PRT
+  documentNumber = 09879462 0 ZZ3
+  documentType = Cartão De Cidadão
+  emissionDate = 08 05 2018
+  emittingEntity = República Portuguesa
+  expirationDate = 08 05 2028
+  fatherFirstname = Alberto
+  fatherLastname = De Andrade Monteiro
+  fiscalNumber = 182692124
+  gender = M
+  height = 1,81
+  identityNumber = 098794620
+  motherFirstname = Maria Da Graça De Oliveira Mendes
+  motherLastname = Monteiro
+  nationality = PRT
+  otherInformation =
+  pan = 0000036014662658
+  requestLocation = CRCiv. Figueira da Foz
+  socialSecurityNumber = 11103478242
+}
+
+src/person.model.ts(145,31): error TS2339: Property 'YUP_MESSAGE_INVALID_PASSWORD_FORMAT' does not exist on type '{ CONVECTOR_MODEL_PATH_PARTICIPANT: string; CONVECTOR_MODEL_PATH_PERSON: string; CONVECTOR_MODEL_PATH_ATTRIBUTE: string; CONVECTOR_MODEL_PATH_X509IDENTITY: string; YUP_MESSAGE_INTEGER: string; ... 6 more ...; REGEX_PASSWORD: RegExp; }'.
+
+src/person/person.service.ts(1,10): error TS2305: Module '"../../node_modules/@convector-sample/person-cc/dist/src"' has no exported member 'Attribute'.
+
+src/person/person.service.ts(1,10): error TS2305: Module '"../../node_modules/@convector-sample/person-cc/dist/src"' has no exported member 'Attribute'.
+
+
+debug restartEnv.sh allways wait for build to check that all are working has expected
+
+lerna success run Ran npm script 'build' in 5 packages in 19.2s:
+lerna success - @convector-sample/common
+lerna success - @convector-sample/frontend-react
+lerna success - @convector-sample/participant-cc
+lerna success - @convector-sample/person-cc
+lerna success - @convector-sample/server-graphql

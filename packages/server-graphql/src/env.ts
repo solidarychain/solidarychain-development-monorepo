@@ -21,5 +21,5 @@ export const envVariables: any = {
   refreshTokenSkipIncrementVersion: process.env.REFRESH_TOKEN_SKIP_INCREMENT_VERSION || 'false',
 
   // cors origin react frontend
-  corsOriginReactFrontend: process.env.CORS_ORIGIN_REACT_FRONTEND || 'http://localhost:3000',
+  corsOriginReactFrontend: process.env.CORS_ORIGIN_REACT_FRONTEND || 'https://localhost:3000',
 };

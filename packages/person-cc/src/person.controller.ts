@@ -1,9 +1,10 @@
-import { appConstants as c } from '@convector-sample/common';
+import { appConstants as c, citizenCardDateToIsoDate } from '@convector-sample/common';
+import { Participant } from '@convector-sample/participant-cc';
 import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
-import { Participant } from '@convector-sample/participant-cc';
 import * as yup from 'yup';
-import { Attribute, Person } from './person.model';
+import { PersonAttribute } from './person-attribute.model';
+import { Person } from './person.model';
 import { getParticipantByIdentity, hashPassword } from './utils';
 
 @Controller('person')
@@ -54,7 +55,12 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     person.participant = gov;
     // hashPassword before save model
     person.password = hashPassword(person.password);
-
+    // convert citizen card input
+    person.height = person.height.replace(',', '.');
+    person.birthDate = citizenCardDateToIsoDate(person.birthDate).toString();
+    person.emissionDate = citizenCardDateToIsoDate(person.emissionDate).toString();
+    person.expirationDate = citizenCardDateToIsoDate(person.expirationDate).toString();
+    // save person
     await person.save();
   }
 
@@ -62,8 +68,8 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
   public async addAttribute(
     @Param(yup.string())
     personId: string,
-    @Param(Attribute.schema())
-    attribute: Attribute
+    @Param(PersonAttribute.schema())
+    attribute: PersonAttribute
   ) {
     // Check if the "stated" participant as certifier of the attribute is actually the one making the request
     let participant = await Participant.getOne(attribute.certifierID);

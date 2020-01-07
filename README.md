@@ -27,7 +27,6 @@
   - [packages/common](#packagescommon)
   - [packages/participant-cc](#packagesparticipant-cc)
   - [packages/person-cc](#packagesperson-cc)
-  - [packages/server-rest](#packagesserver-rest)
   - [packages/server-graphql](#packagesserver-graphql)
   - [packages/frontend-react](#packagesfrontend-react)
   - [Done](#done)
@@ -37,7 +36,6 @@
 
 this repo contains a hurley/convector hyperledger network, based on [Covalent: Convector Tutorial - Smart Contract](https://docs.worldsibu.com/article/89-tutorial), with some additional lerna packages/projects, **two backend versions, node/rest and nestjs/graphql versions**, and a minimal react-hooks frontend with login/logout, jwt, with refresh-token, context state etc, based on person convector chaincode. This useful to start rest or graphql based apps, with minimal stuff implemented.
 
-- [Rest Server](#packagesserver-rest)
 - [GraphQL Server](#packagesserver-graphql)
 - [React Frontend](#packagesfrontend-react)
 
@@ -195,8 +193,6 @@ $ cd node-nestjs-hyperledger-convector-starter
 ```shell
 # install lerna and typescript
 $ sudo npm i -g lerna typescript
-# bootstrap packages dependencies
-$ lerna bootstrap
 # check versions
 $ tsc -v
 Version 3.7.4
@@ -207,10 +203,10 @@ $ lerna -v
 ### Install lerna packages dependencies
 
 ```shell
-# first build common library: this is required on fresh clones before lerna bootstrap, to prevent the error#1
+# first build common library: this is required on fresh clones before lerna bootstrap, to prevent the below error#1 Cannot find module '@convector-sample/common'
 $ npx lerna run build --scope @convector-sample/common --stream
-$ npx lerna bootstrap
-lerna success Bootstrapped 6 packages
+# install dependencies, this will trigger lerna bootstrap
+$ npm i
 ```
 
 #### error#1
@@ -301,15 +297,6 @@ with a `common.controller.ts`, `constants.ts`, `enums.ts` and `env.ts`
 `person-cc` chaincode to be deployed on hyperledger network
 
 > tip: read [Convector Smart Contracts](https://docs.covalentx.com/category/74-convector-smart-contracts)
-
-## packages/server-rest
-
-```shell
-# start server-rest with
-$ npx lerna run start:dev --scope @convector-sample/server-rest --stream
-```
-
-> Note: for more info about project check [README.md](packages/server-rest/README.md)
 
 ## packages/server-graphql
 

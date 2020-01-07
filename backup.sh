@@ -14,7 +14,6 @@ touch packages/common/node_modules/${FILE_EXCLUDE}
 touch packages/participant-cc/node_modules/${FILE_EXCLUDE}
 touch packages/person-cc/node_modules/${FILE_EXCLUDE}
 touch packages/server-graphql/node_modules/${FILE_EXCLUDE}
-touch packages/server-rest/node_modules/${FILE_EXCLUDE}
 touch packages/frontend-react/node_modules/${FILE_EXCLUDE}
 
 tar -zcvf $FILE \

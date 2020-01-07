@@ -73,6 +73,28 @@ type Person {
   id: ID!
   firstname: String!
   lastname: String!
+  gender: String!
+  height: String!
+  fatherFirstname: String!
+  fatherLastname: String!
+  motherFirstname: String!
+  motherLastname: String!
+  birthDate: String!
+  nationality: String!
+  country: String!
+  documentNumber: String!
+  documentType: String!
+  cardVersion: String!
+  emissionDate: String!
+  expirationDate: String!
+  emittingEntity: String!
+  identityNumber: String!
+  fiscalNumber: String!
+  socialSecurityNumber: String!
+  beneficiaryNumber: String!
+  pan: String!
+  requestLocation: String!
+  otherInformation: String!
   username: String!
   email: String!
   attributes: [Attribute!]

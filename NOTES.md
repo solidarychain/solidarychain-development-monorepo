@@ -67,6 +67,7 @@
   - [Implement UsersService with ledger Persons/Users authentication](#implement-usersservice-with-ledger-personsusers-authentication)
   - [Clean up and solve problem of @babel/.highlight.DELETE@latest when use lerna bootstrap](#clean-up-and-solve-problem-of-babelhighlightdeletelatest-when-use-lerna-bootstrap)
   - [Solve custom nestjs packages dependencies](#solve-custom-nestjs-packages-dependencies)
+  - [Solve { Error: transaction returned with failure: {&quot;name&quot;:&quot;Error&quot;,&quot;status&quot;:500}](#solve--error-transaction-returned-with-failure-quotnamequotquoterrorquotquotstatusquot500)
 
 This is a simple NestJs starter, based on above links, I only extended it with a few things like **swagger api**, **https**, **jwt**, and other stuff, thanks m8s
 
@@ -97,23 +98,37 @@ $ npm test
 
 # lift hyperledger
 $ npm run env:restart
+You can find the network topology (ports, names) here: ${HOME}/hyperledger-fabric-network/docker-compose.yaml
 
 # deploy smart contract (this smart contract have person and participant packages deployed in one unified chaincode)
 $ npm run cc:start -- person
 
+# every change on @convector-sample/common, must be builded to be used in dependent packages
+$ npx lerna run build --scope @convector-sample/common
+
 # build person-cc or participant-cc (before upgrade person chaincode)
-$ npx lerna run build --scope @convector-sample/person-cc
-$ npx lerna run build --scope @convector-sample/participant-cc
+$ npx lerna run build --scope @convector-sample/person-cc --stream
+$ npx lerna run build --scope @convector-sample/participant-cc --stream
 # upgrade smart contract
-$ npm run cc:upgrade -- person 1.3
+$ VERSION=1.1
+$ npm run cc:upgrade -- person ${VERSION}
 # note: after deploy/upgrade wait a few second/minutes in first invoke,
 # when done we have a new container and command end with result `Upgraded Chaincode at org1`
 # watch for deployed container
-$ watch "docker container ls --format "{{.Names}}" | grep \"person\""
-dev-peer0.org2.hurley.lab-person-1.0
-dev-peer0.org1.hurley.lab-person-1.0
+$ watch "docker container ls --format "{{.Names}}" | grep \"person-${VERSION}\""
+dev-peer0.org2.hurley.lab-person-${VERSION}
+dev-peer0.org1.hurley.lab-person-${VERSION}
 
-# package chain code: force build chaincode-person folders
+# debug chaincode container
+$ docker container logs -f dev-peer0.org1.hurley.lab-person-${VERSION}
+
+# invoke some stuff (after deploy or upgrade chaincode)
+$ npx hurl invoke person participant_get gov
+$ npx hurl invoke person person_get 1-100-100
+$ npx hurl invoke person person_getAll
+
+# package chain code: force build chaincode-person folders, after some strange errors like
+# { Error: transaction returned with failure: {"name":"Error","status":500}, below line seems fixed that problem
 $ npm run cc:package -- person org1
 
 # after restart hyperledger always seed ledger
@@ -132,10 +147,6 @@ $ npm run cc:start:debug -- person 1.1
 $ npx lerna run start:dev --scope @convector-sample/server-rest --stream
 # run debug server
 $ npx lerna run start:debug --scope @convector-sample/server-rest --stream
-
-# invoke some stuff (after deploy or upgrade chaincode)
-$ npx hurl invoke person person_get 1-100-100
-$ npx hurl invoke person participant_get gov
 
 # debug/view logs container person-1.0, person-1.1...
 $ CHAINCODE="person"
@@ -163,6 +174,7 @@ $ sudo docker logs $(docker container ls | grep ${SEARCH_CONTAINER} | awk '{prin
 $ npx lerna run build --scope @convector-sample/person-cc --stream
 $ npx lerna run build --scope @convector-sample/participant-cc --stream
 $ npx lerna run start:debug --scope @convector-sample/server-rest --stream
+$ npx lerna run start:debug --scope @convector-sample/server-graphql --stream
 ```
 
 ## Uris and Endpoints
@@ -2482,3 +2494,49 @@ somehow every `package.json` of packages remains with that lost line
 `"undefined": "/media/mario/Storage/Development/BlockChain/Convector/@koakh/nestjs-easyconfig"`
 
 must remove it from every packages/**/package.json project
+
+## Solve { Error: transaction returned with failure: {"name":"Error","status":500}
+
+```shell
+$ npx hurl invoke person participant_register gov "Big Government" -u admin
+[hurley] - gov
+[hurley] - Big Government
+[hurley] - Sending transaction as admin in org org1...
+[hurley] - No peer ran tx successfully!
+undefined
+{ Error: transaction returned with failure: {"name":"Error","status":500}
+    at self._endorserClient.processProposal (/media/mario/Storage/Development/@Solidary.Network/network/node_modules/fabric-client/lib/Peer.js:140:36)
+    at Object.onReceiveStatus (/media/mario/Storage/Development/@Solidary.Network/network/node_modules/fabric-client/node_modules/grpc/src/client_interceptors.js:1207:9)
+    at InterceptingListener._callNext (/media/mario/Storage/Development/@Solidary.Network/network/node_modules/fabric-client/node_modules/grpc/src/client_interceptors.js:568:42)
+    at InterceptingListener.onReceiveStatus (/media/mario/Storage/Development/@Solidary.Network/network/node_modules/fabric-client/node_modules/grpc/src/client_interceptors.js:618:8)
+    at callback (/media/mario/Storage/Development/@Solidary.Network/network/node_modules/fabric-client/node_modules/grpc/src/client_interceptors.js:845:24)
+  status: 500,
+  payload: <Buffer >,
+  peer: 
+   { url: 'grpc://localhost:7051',
+     name: 'peer0.org1.hurley.lab',
+     options: 
+      { 'grpc.max_receive_message_length': -1,
+        'grpc.max_send_message_length': -1,
+        'grpc.keepalive_time_ms': 600000,
+        'grpc.http2.min_time_between_pings_ms': 120000,
+        'grpc.keepalive_timeout_ms': 20000,
+        'grpc.http2.max_pings_without_data': 0,
+        'grpc.keepalive_permit_without_calls': 1,
+        name: 'peer0.org1.hurley.lab',
+        'grpc.ssl_target_name_override': 'peer0.org1.hurley.lab',
+        'grpc.default_authority': 'peer0.org1.hurley.lab' } },
+  isProposalResponse: true }
+```
+
+enter container to check if chaincode is deployed
+
+```shell
+$ docker exec -it  dev-peer0.org1.hurley.lab-person-1.0 sh
+location of chaincode inside container dev-peer0.org1.hurley.lab-person-1.0
+/usr/local/src/packages/@convector-sample
+```
+
+the fix seems to be `npm run cc:package -- person org1` and it start to work
+
+strange after some fight, I restart other network to check it works, next I execute `npm run cc:package -- person org1` and restart network and now everything work again!!!

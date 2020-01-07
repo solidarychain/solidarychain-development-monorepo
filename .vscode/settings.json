@@ -3,18 +3,26 @@
     ".trash/": true,
     ".src/": true,
     ".bak/": true,
-    "**/dist/": true,
+    // "**/dist/": true,
     "**/node_modules/": true,
     // The following will hide the js and map files in the editor
     "**/*.js": true,
     "**/*.map": true
   },
   "cSpell.words": [
+    "Andrade",
+    "Cartão",
+    "Cidadão",
     "EDOCMISSING",
+    "Figueira",
+    "Graça",
     "Invokable",
     "MSPs",
+    "Mendes",
     "Moked",
     "Monteiro",
+    "Oliveira",
+    "Portuguesa",
     "QLJSON",
     "chaincode",
     "chaincodes",
@@ -36,6 +44,17 @@
     "worldsibu",
     "xclip"
   ],
-  "peacock.color": "#639",
-  "browser-preview.startUrl": "http://localhost:3000"
+  "peacock.color": "#1857a4",
+  "browser-preview.startUrl": "http://localhost:3000",
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#1f6fd0",
+    "activityBar.activeBorder": "#ee90bb",
+    "activityBar.foreground": "#e7e7e7",
+    "activityBar.inactiveForeground": "#e7e7e799",
+    "activityBarBadge.background": "#ee90bb",
+    "activityBarBadge.foreground": "#15202b",
+    "panel.border": "#1f6fd0",
+    "sideBar.border": "#1f6fd0",
+    "editorGroup.border": "#1f6fd0"
+  }
 }
