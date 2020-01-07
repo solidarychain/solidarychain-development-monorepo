@@ -6,6 +6,7 @@ clear
 
 # lift hyperledger
 npm run env:restart
+
 # deploy smart contract
 npm run cc:start -- person
 
@@ -23,9 +24,10 @@ npx lerna run build --scope person-cc
 npx lerna run build --scope participant-cc
 
 # invoke some stuff
-npx hurl invoke person person_get 1-100-100
+# npx hurl invoke person person_get 1-100-100
+npx hurl invoke person person_get 4ea88521-031b-4279-9165-9c10e183928f
 
 # start server/frontend
-echo "start server-rest with: 'npx lerna run start:dev --scope @convector-sample/server-rest --stream'"
+# echo "start server-rest with: 'npx lerna run start:dev --scope @convector-sample/server-rest --stream'"
 echo "start server-graphql with: 'npx lerna run start:dev --scope @convector-sample/server-graphql --stream'"
 echo "start frontend-react with: 'npx lerna run start --scope @convector-sample/frontend-react --stream'"
