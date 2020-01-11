@@ -7,6 +7,8 @@ import GetByAttributeInput from './dto/get-by-attribute.input';
 import NewPersonInput from './dto/new-person.input';
 import PersonArgs from './dto/person.args';
 import Person from './models/person.model';
+import { v4 as uuid } from 'uuid';
+import { generate } from 'generate-password';
 
 @Injectable()
 export class PersonService {
@@ -17,7 +19,6 @@ export class PersonService {
     const convectorModel: PersonConvectorModel = new PersonConvectorModel(fabricModel);
     // call common find method
     const model: Person = await this.findBy(convectorModel, null) as Person;
-    // return model
     return model;
   }
 
@@ -56,9 +57,21 @@ export class PersonService {
 
   async create(data: NewPersonInput): Promise<Person> {
     try {
-      const personToCreate: PersonConvectorModel = new PersonConvectorModel({ ...data });
+      const personToCreate: PersonConvectorModel = new PersonConvectorModel({
+        ...data,
+        // require to inject values
+        id: uuid(),
+        // inn case of omitted default username is fiscalNumber
+        username: (data.username) ? data.username : data.fiscalNumber,
+        // if not password defined generate a new one
+        password: (data.password) ? data.password : generate({ length: 10, numbers: true }),
+        // convert Date to epoch unix time to be stored in convector person model
+        birthDate: ((data.birthDate as unknown) as number)/*.getTime()*/,
+        emissionDate: ((data.emissionDate as unknown) as number)/*.getTime()*/,
+        expirationDate: ((data.expirationDate as unknown) as number)/*.getTime()*/,
+      });
       await PersonControllerBackEnd.create(personToCreate);
-      return await this.findOneById(data.id);
+      return await this.findOneById(personToCreate.id);
     } catch (error) {
       throw error;
     }
