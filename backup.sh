@@ -19,5 +19,4 @@ touch packages/frontend-react/node_modules/${FILE_EXCLUDE}
 tar -zcvf $FILE \
   --exclude-tag-all=$FILE_EXCLUDE \
   --exclude='FILE|DIR' \
-  ../NodeNestPackages \
-  ../NodeNestJsHyperLedgerConvectorRestStarter
+  .

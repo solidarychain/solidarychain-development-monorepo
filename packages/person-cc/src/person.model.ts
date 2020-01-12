@@ -42,127 +42,155 @@ export class Person extends ConvectorModel<Person> {
   @Validate(Participant.schema())
   public participant: FlatConvectorModel<Participant>;
 
-  // extended data
+  // extended non citizenCard data
 
   @Required()
   @Validate(yup.number())
   public registrationDate: number;
 
+  @Validate(yup.number())
+  public mobilePhone: number;
+
+  @Validate(yup.string())
+  public postal: string;
+
+  @Validate(yup.string())
+  public city: string;
+
+  @Validate(yup.string())
+  public region: string;
+
+  @Validate(yup.string())
+  public geoLocation: string;
+  
+  @Validate(yup.string())
+  public timezone: string;
+
+  @Validate(yup.string())
+  public personalInfo: string;
+
+  @Validate(yup.string())
+  public internalInfo: string;
+
+  // store future profile and reputation average object
+  @Validate(yup.object().nullable())
+  public profile: any;
+
   // citizenCard data
 
   // Mário Alberto
-  @Required()
+  // @Required()
   @Validate(yup.string())
   public firstname: string;
 
   // Mendes Monteiro
-  @Required()
+  // @Required()
   @Validate(yup.string())
   public lastname: string;
 
   // M
-  @Required()
+  // @Required()
   @Validate(yup.string().max(20))
   public gender: string;
 
   // TODO: convert to 1.81
   // 1,81
-  @Required()
+  // @Required()
   @Validate(yup.string())
   public height: number;
 
   // Alberto
-  @Required()
+  // @Required()
   @Validate(yup.string())
   public fatherFirstname: string;
 
   // De Andrade Monteiro
-  @Required()
+  // @Required()
   @Validate(yup.string())
   public fatherLastname: string;
 
   // Maria Da Graça De Oliveira Mendes
-  @Required()
+  // @Required()
   @Validate(yup.string())
   public motherFirstname: string;
 
   // Monteiro
-  @Required()
+  // @Required()
   @Validate(yup.string())
   public motherLastname: string;
 
   // 19 12 1971
-  @Required()
+  // @Required()
   @Validate(yup.number())
   public birthDate: number;
 
   // PRT
-  @Required()
+  // @Required()
   @Validate(yup.string())
   public nationality: string;
 
   // PRT
-  @Required()
+  // @Required()
   @Validate(yup.string())
   public country: string;
 
   // 09879462 0 ZZ3
-  @Required()
+  // @Required()
   @Validate(yup.string())
   public documentNumber: string;
 
   // Cartão De Cidadão
-  @Required()
+  // @Required()
   @Validate(yup.string())
   public documentType: string;
 
   // 006.007.23
-  @Required()
+  // @Required()
   @Validate(yup.string())
   public cardVersion: string;
 
   // 08 05 2018
-  @Required()
+  // @Required()
   @Validate(yup.number())
   public emissionDate: number;
 
   // 08 05 2028
-  @Required()
+  // @Required()
   @Validate(yup.number())
   public expirationDate: number;
 
   // República Portuguesa
-  @Required()
+  // @Required()
   @Validate(yup.string())
   public emittingEntity: string;
 
   // 098794620
-  @Required()
+  // @Required()
   @Validate(yup.string())
   public identityNumber: string;
 
   // 182692124
-  @Required()
+  // @Required()
   @Validate(yup.string())
   public fiscalNumber: string;
 
   // 11103478242
-  @Required()
+  // @Required()
   @Validate(yup.string())
   public socialSecurityNumber: string;
 
   // 285191659
-  @Required()
+  // @Required()
   @Validate(yup.string())
   public beneficiaryNumber: string; 
 
   // 0000036014662658
-  @Required()
+  // @Required()
   @Validate(yup.string())
   public pan: string;
 
   // CRCiv. Figueira da Foz
-  @Required()
+  // @Required()
   @Validate(yup.string())
   public requestLocation: string;
 

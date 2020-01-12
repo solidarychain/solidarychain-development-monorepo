@@ -1,5 +1,6 @@
-import { IsEmail, MaxLength, IsDefined, IsDate, IsNumber, MinLength } from 'class-validator';
+import { MaxLength, IsDefined, IsDate, IsNumber, MinLength } from 'class-validator';
 import { Field, InputType } from 'type-graphql';
+import { GraphQLJSONObject } from 'graphql-type-json';
 
 // this serves has the master for person.model and convector person.model in citizen card properties
 
@@ -7,20 +8,63 @@ import { Field, InputType } from 'type-graphql';
 export default class NewPersonInput {
   // optional: generated automatically, but can optionally be used
   @Field({ nullable: true })
+  @IsDefined()
   id: string;
 
   // generated automatically, but can optionally be used
   @Field({ nullable: true })
+  @IsDefined()
   username: string;
 
   // generated automatically, but can optionally be used
   @Field({ nullable: true })
+  @IsDefined()
   password: string;
 
   // generated automatically, but can optionally be used
   @Field({ nullable: true })
   // @IsEmail()
+  @IsDefined()
   email: string;
+
+  // extended non citizenCard data
+
+  @Field({ nullable: true })
+  @IsDefined()
+  public mobilePhone?: number;
+
+  @Field({ nullable: true })
+  @IsDefined()
+  public postal?: string;
+
+  @Field({ nullable: true })
+  @IsDefined()
+  public city?: string;
+
+  @Field({ nullable: true })
+  @IsDefined()
+  public region?: string;
+
+  @Field({ nullable: true })
+  @IsDefined()
+  public geoLocation?: string;
+
+  @Field({ nullable: true })
+  @IsDefined()
+  public timezone?: string;
+
+  @Field({ nullable: true })
+  @IsDefined()
+  public personalInfo?: string;
+
+  @Field({ nullable: true })
+  @IsDefined()
+  public internalInfo?: string;
+
+  // store future profile and reputation average object
+  @Field(type => GraphQLJSONObject, { nullable: true })
+  @IsDefined()
+  public profile?: any;
 
   // citizenCard data
 

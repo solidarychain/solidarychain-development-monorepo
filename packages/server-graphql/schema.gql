@@ -58,6 +58,15 @@ input NewPersonInput {
   username: String
   password: String
   email: String
+  mobilePhone: Float
+  postal: String
+  city: String
+  region: String
+  geoLocation: String
+  timezone: String
+  personalInfo: String
+  internalInfo: String
+  profile: JSONObject
   firstname: String!
   lastname: String!
   gender: String!
@@ -98,30 +107,39 @@ type Person {
   attributes: [Attribute!]
   roles: [String!]
   participant: Participant!
-  registrationDate: Date
-  firstname: String!
-  lastname: String!
-  gender: String!
-  height: Float!
-  fatherFirstname: String!
-  fatherLastname: String!
-  motherFirstname: String!
-  motherLastname: String!
-  birthDate: Date!
-  nationality: String!
-  country: String!
-  documentNumber: String!
-  documentType: String!
-  cardVersion: String!
-  emissionDate: Date!
-  expirationDate: Date!
-  emittingEntity: String!
-  identityNumber: String!
+  registrationDate: Date!
+  mobilePhone: Float
+  postal: String
+  city: String
+  region: String
+  geoLocation: String
+  timezone: String
+  personalInfo: String
+  internalInfo: String
+  profile: JSONObject
+  firstname: String
+  lastname: String
+  gender: String
+  height: Float
+  fatherFirstname: String
+  fatherLastname: String
+  motherFirstname: String
+  motherLastname: String
+  birthDate: Date
+  nationality: String
+  country: String
+  documentNumber: String
+  documentType: String
+  cardVersion: String
+  emissionDate: Date
+  expirationDate: Date
+  emittingEntity: String
+  identityNumber: String
   fiscalNumber: String!
-  socialSecurityNumber: String!
-  beneficiaryNumber: String!
-  pan: String!
-  requestLocation: String!
+  socialSecurityNumber: String
+  beneficiaryNumber: String
+  pan: String
+  requestLocation: String
   otherInformation: String
 }
 

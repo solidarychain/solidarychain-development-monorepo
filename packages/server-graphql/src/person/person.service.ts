@@ -73,7 +73,9 @@ export class PersonService {
       await PersonControllerBackEnd.create(personToCreate);
       return await this.findOneById(personToCreate.id);
     } catch (error) {
-      throw error;
+      // extract error message
+      const errorMessage: string = (error.responses && error.responses[1].error.message) ? error.responses[1].error.message : error;
+      throw errorMessage;
     }
   }
 

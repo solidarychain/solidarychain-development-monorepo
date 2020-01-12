@@ -111,7 +111,8 @@ $ npx lerna run build --scope @convector-sample/person-cc --stream
 $ npx lerna run build --scope @convector-sample/participant-cc --stream
 
 # upgrade smart contract
-$ VERSION=1.1
+$ VERSION=1.4
+# require to build modified modules common, person, participant etc
 $ npm run cc:upgrade -- person ${VERSION}
 # one liner version
 $ VERSION=1.1 && npx lerna run build --scope @convector-sample/person-cc --stream && npm run cc:upgrade -- person ${VERSION}
@@ -143,7 +144,7 @@ $ ./views/install.sh
 
 # is always good to launch above command to log chaincode activity inside vscode, like restartEnv etc
 # debug chain code (remember breakpoint are set in .js no ts files)
-# TRICK: to debug always use hurl, if we start/restart graphql we lost chaincode debugger
+# TRICK: to debug always use hurl, it is possible to debug chainCode and graphql at same time, using both auto attached debuggers
 # TRICK: in case of not stop on breakpoint use debugger; and put breakPoint on start of function is on start of `create`
 # TRICK: we can put some breakpoint into .ts it works too after stop in .js
 # TRICK: if change something on .ts while debug don't forget to build chaincode with 'npx lerna run build --scope @convector-sample/person-cc --stream' and deploy, and restart debug again
