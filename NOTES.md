@@ -22,12 +22,12 @@
       - [Business rules](#business-rules)
       - [The flow should look like this](#the-flow-should-look-like-this)
   - [Start Code It: Modules, Controllers and Services](#start-code-it-modules-controllers-and-services)
-  - [Config/ Environment](#config-environment)
+  - [Config/ Environment](#config-environment-1)
   - [Create files](#create-files)
   - [Run Convector and Test](#run-convector-and-test)
   - [Extend tutorial](#extend-tutorial)
     - [Commit project](#commit-project)
-    - [add Types to Participant and Person Modules and Use it [DEPRECATED]](#add-types-to-participant-and-person-modules-and-use-it-deprecated)
+    - [add Types to `Participant` and `Person` Modules and Use it [DEPRECATED]](#add-types-to-participant-and-person-modules-and-use-it-deprecated)
     - [To Use CouchDB and don't DRY Initialization block in Controllers](#to-use-couchdb-and-dont-dry-initialization-block-in-controllers)
     - [Couch Views (Require to add to all nodes fabric-couchdb/ couchdb.peer0.org?.hurley.lab)](#couch-views-require-to-add-to-all-nodes-fabric-couchdb-couchdbpeer0orghurleylab)
   - [Fire All Requests](#fire-all-requests)
@@ -59,15 +59,15 @@
   - [Change/Extend Person model to have authorization credentials](#changeextend-person-model-to-have-authorization-credentials)
   - [Renew and Deploy new upgraded ChainCode after chaincode model Changes](#renew-and-deploy-new-upgraded-chaincode-after-chaincode-model-changes)
   - [Start to encrypt passwords with BCrypt](#start-to-encrypt-passwords-with-bcrypt)
-  - [Create common Package to share stuff @convector-rest-sample/common](#create-common-package-to-share-stuff-convector-rest-samplecommon)
-    - [Create lerna common package @convector-rest-sample/common](#create-lerna-common-package-convector-rest-samplecommon)
+  - [Create common Package to share stuff `@convector-rest-sample/common`](#create-common-package-to-share-stuff-convector-rest-samplecommon)
+    - [Create lerna common package `@convector-rest-sample/common`](#create-lerna-common-package-convector-rest-samplecommon)
     - [Use common package inside ChainCode](#use-common-package-inside-chaincode)
     - [Use scripts to copy other files to chaincode](#use-scripts-to-copy-other-files-to-chaincode)
     - [Clean Up](#clean-up)
   - [Implement UsersService with ledger Persons/Users authentication](#implement-usersservice-with-ledger-personsusers-authentication)
-  - [Clean up and solve problem of @babel/.highlight.DELETE@latest when use lerna bootstrap](#clean-up-and-solve-problem-of-babelhighlightdeletelatest-when-use-lerna-bootstrap)
+  - [Clean up and solve problem of `@babel/.highlight.DELETE@latest` when use lerna bootstrap](#clean-up-and-solve-problem-of-babelhighlightdeletelatest-when-use-lerna-bootstrap)
   - [Solve custom nestjs packages dependencies](#solve-custom-nestjs-packages-dependencies)
-  - [Solve { Error: transaction returned with failure: {&quot;name&quot;:&quot;Error&quot;,&quot;status&quot;:500}](#solve--error-transaction-returned-with-failure-quotnamequotquoterrorquotquotstatusquot500)
+  - [Solve { Error: transaction returned with failure: {"name":"Error","status":500}](#solve--error-transaction-returned-with-failure-%22name%22%22error%22%22status%22500)
   - [Solve problem Cannot find module 'typescript/bin/tsc'](#solve-problem-cannot-find-module-typescriptbintsc)
 
 This is a simple NestJs starter, based on above links, I only extended it with a few things like **swagger api**, **https**, **jwt**, and other stuff, thanks m8s
@@ -104,18 +104,18 @@ You can find the network topology (ports, names) here: ${HOME}/hyperledger-fabri
 # deploy smart contract (this smart contract have person and participant packages deployed in one unified chaincode)
 $ npm run cc:start -- person
 
-# every change on @convector-sample/common, must be builded to be used in dependent packages
-$ npx lerna run build --scope @convector-sample/common
+# every change on @solidary-network/common, must be builded to be used in dependent packages
+$ npx lerna run build --scope @solidary-network/common --stream
 # build person-cc or participant-cc (before upgrade person chaincode)
-$ npx lerna run build --scope @convector-sample/person-cc --stream
-$ npx lerna run build --scope @convector-sample/participant-cc --stream
+$ npx lerna run build --scope @solidary-network/person-cc --stream
+$ npx lerna run build --scope @solidary-network/participant-cc --stream
 
 # upgrade smart contract
 $ VERSION=1.4
 # require to build modified modules common, person, participant etc
 $ npm run cc:upgrade -- person ${VERSION}
 # one liner version
-$ VERSION=1.1 && npx lerna run build --scope @convector-sample/person-cc --stream && npm run cc:upgrade -- person ${VERSION}
+$ VERSION=1.1 && npx lerna run build --scope @solidary-network/person-cc --stream && npm run cc:upgrade -- person ${VERSION}
 # note: after deploy/upgrade wait a few second/minutes in first invoke,
 # when done we have a new container and command end with result `Upgraded Chaincode at org1`
 # watch for deployed container
@@ -147,16 +147,16 @@ $ ./views/install.sh
 # TRICK: to debug always use hurl, it is possible to debug chainCode and graphql at same time, using both auto attached debuggers
 # TRICK: in case of not stop on breakpoint use debugger; and put breakPoint on start of function is on start of `create`
 # TRICK: we can put some breakpoint into .ts it works too after stop in .js
-# TRICK: if change something on .ts while debug don't forget to build chaincode with 'npx lerna run build --scope @convector-sample/person-cc --stream' and deploy, and restart debug again
-# TRICK don't forget that breakpoint to work must be inside the chaincode-person/packages/@convector-sample/person-cc/src/person.controller.ts folder that is generated on chaincode builds, and not the default packages/person-cc/src/person.controller.ts
+# TRICK: if change something on .ts while debug don't forget to build chaincode with 'npx lerna run build --scope @solidary-network/person-cc --stream' and deploy, and restart debug again
+# TRICK don't forget that breakpoint to work must be inside the chaincode-person/packages/@solidary-network/person-cc/src/person.controller.ts folder that is generated on chaincode builds, and not the default packages/person-cc/src/person.controller.ts
 $ npm run cc:start:debug -- person
 # if error occur use target debug version, recommend to always use current version
 $ npm run cc:start:debug -- person 1.1
 
 # run dev server
-$ npx lerna run start:dev --scope @convector-sample/server-rest --stream
+$ npx lerna run start:dev --scope @solidary-network/server-rest --stream
 # run debug server
-$ npx lerna run start:debug --scope @convector-sample/server-rest --stream
+$ npx lerna run start:debug --scope @solidary-network/server-rest --stream
 
 # debug/view logs container person-1.0, person-1.1...
 $ CHAINCODE="person"
@@ -175,16 +175,16 @@ $ sudo docker logs $(docker container ls | grep ${SEARCH_CONTAINER} | awk '{prin
 
 ```shell
 # when running server, when we build chaincode, we must stop and start server
-@convector-sample/server-graphql: src/convector.ts(35,50): error TS2339: Property 'get' does not exist on type 'ConvectorControllerClient<ConvectorController<any>>'.
-@convector-sample/server-graphql: src/participant/participant.service.ts(13,42): error TS2339: Property 'register' does not exist on type 'ConvectorControllerClient<ConvectorController<any>>'.
-@convector-sample/server-graphql: src/participant/participant.service.ts(23,75): error TS2339: Property 'get' does not exist on type 'ConvectorControllerClient<ConvectorController<any>>'.
-@convector-sample/server-graphql: src/participant/participant.service.ts(35,105): error TS2339: Property 'getAll' does not exist on type 'ConvectorControllerClient<ConvectorController<any>>'.
-@convector-sample/server-graphql: 20:58:05 - Found 4 errors. Watching for file changes.
+@solidary-network/server-graphql: src/convector.ts(35,50): error TS2339: Property 'get' does not exist on type 'ConvectorControllerClient<ConvectorController<any>>'.
+@solidary-network/server-graphql: src/participant/participant.service.ts(13,42): error TS2339: Property 'register' does not exist on type 'ConvectorControllerClient<ConvectorController<any>>'.
+@solidary-network/server-graphql: src/participant/participant.service.ts(23,75): error TS2339: Property 'get' does not exist on type 'ConvectorControllerClient<ConvectorController<any>>'.
+@solidary-network/server-graphql: src/participant/participant.service.ts(35,105): error TS2339: Property 'getAll' does not exist on type 'ConvectorControllerClient<ConvectorController<any>>'.
+@solidary-network/server-graphql: 20:58:05 - Found 4 errors. Watching for file changes.
 # fix build cc's and start server
-$ npx lerna run build --scope @convector-sample/person-cc --stream
-$ npx lerna run build --scope @convector-sample/participant-cc --stream
-$ npx lerna run start:debug --scope @convector-sample/server-rest --stream
-$ npx lerna run start:debug --scope @convector-sample/server-graphql --stream
+$ npx lerna run build --scope @solidary-network/person-cc --stream
+$ npx lerna run build --scope @solidary-network/participant-cc --stream
+$ npx lerna run start:debug --scope @solidary-network/server-rest --stream
+$ npx lerna run start:debug --scope @solidary-network/server-graphql --stream
 ```
 
 ## Uris and Endpoints
@@ -200,7 +200,7 @@ $ npx lerna run start:debug --scope @convector-sample/server-graphql --stream
 ```json
 {
   "selector": {
-    "type": "io.worldsibu.examples.participant",
+    "type": "network.solidary.convector.participant",
     "identities": {
       "$elemMatch": {
         "fingerprint": "C8:B1:6A:5D:67:77:44:99:C6:3F:59:7C:1D:A5:F1:29:40:AE:5B:C9",
@@ -214,7 +214,7 @@ $ npx lerna run start:debug --scope @convector-sample/server-graphql --stream
 ```json
 {
   "selector": {
-    "type": "io.worldsibu.examples.person",
+    "type": "network.solidary.convector.person",
     "attributes": {
       "$elemMatch": {
         "id": "born-year",
@@ -230,7 +230,7 @@ $ npx lerna run start:debug --scope @convector-sample/server-graphql --stream
 ```json
 {
   "selector": {
-    "type": "io.worldsibu.examples.person",
+    "type": "network.solidary.convector.person",
     "username": "282692124",
     "participant": {
       "id": "gov"
@@ -250,7 +250,7 @@ if have problems after install packages with `lerna add` and with chaincodes, ex
 and have error not found chaincode package on npm registry like `'participant-cc@^0.1.0' is not in the npm registry`, just rebuild chaincode, and next `lerna bootstrap`
 
 ```shell
-$ npx lerna run build --scope @convector-sample/participant-cc
+$ npx lerna run build --scope @solidary-network/participant-cc
 lerna success run Ran npm script 'build' in 1 package in 3.2s:
 lerna success - participant-cc
 $ npx lerna bootstrap
@@ -334,13 +334,13 @@ v8.16.0
 
 6. Move to the package folder run `cd packages && nest new server && cd ..`. This is going to scaffold a NestJS project for you.
 
-7. Install `env-cmd` with lerna for handle environmental variables `npx lerna add env-cmd --dev --scope @convector-sample/server-rest --no-bootstrap`
+7. Install `env-cmd` with lerna for handle environmental variables `npx lerna add env-cmd --dev --scope @solidary-network/server-rest --no-bootstrap`
 
 8. Install the smart contract packages that are going to be consumed by NestJS
 
 ```shell
-$ npx lerna add participant-cc --scope @convector-sample/server-rest --no-bootstrap
-$ npx lerna add person-cc --scope @convector-sample/server-rest --no-bootstrap
+$ npx lerna add participant-cc --scope @solidary-network/server-rest --no-bootstrap
+$ npx lerna add person-cc --scope @solidary-network/server-rest --no-bootstrap
 ```
 
 > To avoid typing conflicts add the `skipLibCheck` flag in the `root` and `server` `tsconfig` files.
@@ -481,7 +481,7 @@ $ npm run cc:start -- person
 Instantiated Chaincode at org1
 
 # start your web server
-$ npx lerna run start:dev --scope @convector-sample/server-rest --stream
+$ npx lerna run start:dev --scope @solidary-network/server-rest --stream
 
 # seed some participants, in first invoke wait some seconds more
 $ npx hurl invoke person participant_register gov "Big Government" -u admin
@@ -490,10 +490,10 @@ $ npx hurl invoke person participant_register naba "National Bank" -u user1 -o o
 
 # test endpoints
 $ curl http://localhost:3000/participant/gov
-{"_id":"gov","_identities":[{"fingerprint":"81:C9:69:95:9E:12:BE:5A:98:DE:10:3B:4A:8B:80:03:9F:3E:33:E6","status":true}],"_msp":"org1MSP","_name":"Big Government","_type":"io.worldsibu.examples.participant"}
+{"_id":"gov","_identities":[{"fingerprint":"81:C9:69:95:9E:12:BE:5A:98:DE:10:3B:4A:8B:80:03:9F:3E:33:E6","status":true}],"_msp":"org1MSP","_name":"Big Government","_type":"network.solidary.convector.participant"}
 
 $ curl http://localhost:3000/participant/mit
-{"_id":"mit","_identities":[{"fingerprint":"6F:8E:B9:AF:1E:32:E7:9F:53:8D:28:07:79:0F:9D:39:D1:62:08:45","status":true}],"_msp":"org1MSP","_name":"MIT","_type":"io.worldsibu.examples.participant"}
+{"_id":"mit","_identities":[{"fingerprint":"6F:8E:B9:AF:1E:32:E7:9F:53:8D:28:07:79:0F:9D:39:D1:62:08:45","status":true}],"_msp":"org1MSP","_name":"MIT","_type":"network.solidary.convector.participant"}
 
 # run a few transactions
 
@@ -503,7 +503,7 @@ $ curl -H "Content-Type: application/json" --request POST --data '{ "id":"1-0020
 
 # Add a new attribute
 $ curl -H "Content-Type: application/json" --request POST --data '{ "attributeId":"birth-year", "content": 1993 }' http://localhost:3000/person/1-00200-2222-1/add-attribute
-{"id":"1-00200-2222-1","type":"io.worldsibu.person","name":"John Doe","attributes":[{"certifierID":"gov","content":1993,"id":"birth-year","issuedDate":1565561317567,"type":"io.worldsibu.examples.attribute"}]}
+{"id":"1-00200-2222-1","type":"io.worldsibu.person","name":"John Doe","attributes":[{"certifierID":"gov","content":1993,"id":"birth-year","issuedDate":1565561317567,"type":"network.solidary.convector.attribute"}]}
 
 # orderer logs
 2019-08-11 21:54:02.746 UTC [comm.grpc.server] 1 -> INFO 015 streaming call completed {"grpc.start_time": "2019-08-11T21:54:02.738Z", "grpc.service": "orderer.AtomicBroadcast", "grpc.method": "Broadcast", "grpc.peer_address": "172.23.0.1:45590", "grpc.code": "OK", "grpc.call_duration": "8.294983ms"}
@@ -688,11 +688,11 @@ beforeEach(async () => {
 
 ```shell
 # install the required packages
-$ npx lerna add @nestjs/swagger --scope @convector-sample/server-rest --no-bootstrap
-$ npx lerna add swagger-ui-express --scope @convector-sample/server-rest --no-bootstrap
+$ npx lerna add @nestjs/swagger --scope @solidary-network/server-rest --no-bootstrap
+$ npx lerna add swagger-ui-express --scope @solidary-network/server-rest --no-bootstrap
 # required for models
-$ npx lerna add class-validator --scope @convector-sample/server-rest --no-bootstrap
-$ npx lerna add class-transformer --scope @convector-sample/server-rest --no-bootstrap
+$ npx lerna add class-validator --scope @solidary-network/server-rest --no-bootstrap
+$ npx lerna add class-transformer --scope @solidary-network/server-rest --no-bootstrap
 $ npx lerna bootstrap
 ```
 
@@ -759,7 +759,7 @@ export class AppController {
 
 ```shell
 # boot server and test api docs
-$ npx lerna run start:dev --scope @convector-sample/server-rest --stream
+$ npx lerna run start:dev --scope @solidary-network/server-rest --stream
 ```
 
 open your browser and navigate to <http://localhost:3000/api/>
@@ -921,7 +921,7 @@ ex
 
 ```shell
 # install dependencies required to use ExpressAdapter
-$ npx lerna add @nestjs/platform-express --scope @convector-sample/server-rest --no-bootstrap
+$ npx lerna add @nestjs/platform-express --scope @solidary-network/server-rest --no-bootstrap
 ```
 
 > use let's encrypt certificates, or self-signed, here we use self-signed for a fictitious domain `convector.sample.com`
@@ -1024,7 +1024,7 @@ async function bootstrap() {
 
 ```shell
 # launch server
-$ npx lerna run start:debug --scope @convector-sample/server-rest --stream
+$ npx lerna run start:debug --scope @solidary-network/server-rest --stream
 ```
 
 now test http to https redirect, and https
@@ -1050,10 +1050,10 @@ use passport strategy called passport-local that implements a username/password 
 
 ```shell
 # install the required packages
-$ npx lerna add @nestjs/passport --scope @convector-sample/server-rest --no-bootstrap
-$ npx lerna add passport --scope @convector-sample/server-rest --no-bootstrap
-$ npx lerna add passport-local --scope @convector-sample/server-rest --no-bootstrap
-$ npx lerna add @types/passport-local  --scope @convector-sample/server-rest --dev --no-bootstrap
+$ npx lerna add @nestjs/passport --scope @solidary-network/server-rest --no-bootstrap
+$ npx lerna add passport --scope @solidary-network/server-rest --no-bootstrap
+$ npx lerna add passport-local --scope @solidary-network/server-rest --no-bootstrap
+$ npx lerna add @types/passport-local  --scope @solidary-network/server-rest --dev --no-bootstrap
 $ npx lerna bootstrap
 ```
 
@@ -1269,9 +1269,9 @@ $ curl -k -X POST https://localhost:3443/api/login -d '{ "username": "john", "pa
 
 ```shell
 # install the required packages
-$ npx lerna add @nestjs/jwt --scope @convector-sample/server-rest --no-bootstrap
-$ npx lerna add passport-jwt --scope @convector-sample/server-rest --no-bootstrap
-$ npx lerna add @types/passport-jwt  --scope @convector-sample/server-rest --no-bootstrap --dev
+$ npx lerna add @nestjs/jwt --scope @solidary-network/server-rest --no-bootstrap
+$ npx lerna add passport-jwt --scope @solidary-network/server-rest --no-bootstrap
+$ npx lerna add @types/passport-jwt  --scope @solidary-network/server-rest --no-bootstrap --dev
 $ npx lerna bootstrap
 ```
 
@@ -1636,7 +1636,7 @@ start change person chaincode, adding a few property fields and replace `name` t
 export class Person extends ConvectorModel<Person> {
   @ReadOnly()
   @Required()
-  public readonly type = 'io.worldsibu.examples.person';
+  public readonly type = 'network.solidary.convector.person';
 
   @Required()
   @Validate(yup.string())
@@ -1803,7 +1803,7 @@ everything seems working has expected, now we will test chaincode from server re
 
 ```shell
 # boot rest server
-$ npx lerna run start:debug --scope @convector-sample/server-rest --stream
+$ npx lerna run start:debug --scope @solidary-network/server-rest --stream
 # login to get fresh accessToken and assign it to env variable with same name $accessToken (require jq installed)
 $ $( curl -k -X POST https://localhost:3443/api/login -d '{ "username": "john", "password": "changeme"}' -H 'Content-Type: application/json' | jq -r 'keys[] as $k | "export \($k)=\(.[$k])"' )
 # copy accessToken to clipboard to use in swagger or ignore and use curl with $accessToken (required xclip installed)
@@ -1840,10 +1840,10 @@ server: }
 
 ```shell
 # install required dependencies
-$ npx lerna add bcrypt --scope @convector-sample/person-cc --no-bootstrap
-$ npx lerna add @types/bcrypt --scope @convector-sample/person-cc --no-bootstrap
-$ npx lerna add bcrypt --scope @convector-sample/server-rest --no-bootstrap
-$ npx lerna add @types/bcrypt --scope @convector-sample/server-rest --no-bootstrap
+$ npx lerna add bcrypt --scope @solidary-network/person-cc --no-bootstrap
+$ npx lerna add @types/bcrypt --scope @solidary-network/person-cc --no-bootstrap
+$ npx lerna add bcrypt --scope @solidary-network/server-rest --no-bootstrap
+$ npx lerna add @types/bcrypt --scope @solidary-network/server-rest --no-bootstrap
 $ npx lerna bootstrap
 ```
 
@@ -1947,7 +1947,7 @@ export * from './constants';
 
 ```typescript
 // convector model
-const CONVECTOR_MODEL_PATH_PREFIX: string = 'io.worldsibu.examples';
+const CONVECTOR_MODEL_PATH_PREFIX: string = 'network.solidary.convector.convector';
 const CONVECTOR_MODEL_PATH_PARTICIPANT: string = `${CONVECTOR_MODEL_PATH_PREFIX}.participant`;
 const CONVECTOR_MODEL_PATH_PERSON: string = `${CONVECTOR_MODEL_PATH_PREFIX}.person`;
 const CONVECTOR_MODEL_PATH_ATTRIBUTE: string = `${CONVECTOR_MODEL_PATH_PREFIX}.attribute`;
@@ -1975,9 +1975,9 @@ optional can use `--scope` to add only to desired packages
 
 ```shell
 # add to all packages (with scope)
-$ npx lerna add @convector-rest-sample/common@0.1.0 --scope @convector-sample/server-rest --no-bootstrap
-$ npx lerna add @convector-rest-sample/common@0.1.0 --scope @convector-sample/participant-cc --no-bootstrap
-$ npx lerna add @convector-rest-sample/common@0.1.0 --scope @convector-sample/person-cc --no-bootstrap
+$ npx lerna add @convector-rest-sample/common@0.1.0 --scope @solidary-network/server-rest --no-bootstrap
+$ npx lerna add @convector-rest-sample/common@0.1.0 --scope @solidary-network/participant-cc --no-bootstrap
+$ npx lerna add @convector-rest-sample/common@0.1.0 --scope @solidary-network/person-cc --no-bootstrap
 # clean and bootstrap
 $ npx lerna clean -y && npx lerna bootstrap --hoist
 ```
@@ -1996,7 +1996,7 @@ Logger.log(JSON.stringify(c, undefined, 2));
 now launch server with debugger, and inspect `c` object or view log result
 
 ```shell
-$ npx lerna run start:debug --scope @convector-sample/server-rest --stream
+$ npx lerna run start:debug --scope @solidary-network/server-rest --stream
 ```
 
 if outputs appConstants we are ready to go, and common package works has expected
@@ -2100,7 +2100,7 @@ export class Attribute extends ConvectorModel<Attribute>{
 export class Person extends ConvectorModel<Person> {
   @ReadOnly()
   @Required()
-  public readonly type = 'io.worldsibu.examples.person';
+  public readonly type = 'network.solidary.convector.person';
   ...
 ```
 
@@ -2161,7 +2161,7 @@ $ npx hurl invoke person person_getAll
 
 done, everything is working has expected and we have a `@convector-rest-sample/common` package implemented.
 
-if we check couchdb `1-100-103` person, we can check that is using type `"type": "io.worldsibu.examples.person"` that comes from our constants in our `@convector-rest-sample/common`, proving that it gets its value from `@convector-rest-sample/common`, believe me, if it won't wont find `@convector-rest-sample/common` it crash.....simple
+if we check couchdb `1-100-103` person, we can check that is using type `"type": "network.solidary.convector.person"` that comes from our constants in our `@convector-rest-sample/common`, proving that it gets its value from `@convector-rest-sample/common`, believe me, if it won't wont find `@convector-rest-sample/common` it crash.....simple
 
 for future changes in chaincode, upgrade it with above command
 
@@ -2502,9 +2502,9 @@ $ npx lerna bootstrap
 ## Solve custom nestjs packages dependencies
 
 ```shell
-$ npx lerna add ./packages-nestjs/@koakh/nestjs-auth-quick-config --scope @convector-sample/server-graphql
+$ npx lerna add ./packages-nestjs/@koakh/nestjs-auth-quick-config --scope @solidary-network/server-graphql
 lerna notice cli v3.16.4
-lerna info filter [ '@convector-sample/server-graphql' ]
+lerna info filter [ '@solidary-network/server-graphql' ]
 lerna ERR! TypeError: Invalid comparator: /media/mario/Storage/Development/BlockChain/Convector/@koakh/nestjs-easyconfig
 lerna ERR!     at Comparator.parse (/media/mario/Storage/Development/BlockChain/Convector/
 ```
@@ -2556,7 +2556,7 @@ enter container to check if chaincode is deployed
 ```shell
 $ docker exec -it  dev-peer0.org1.hurley.lab-person-1.0 sh
 location of chaincode inside container dev-peer0.org1.hurley.lab-person-1.0
-/usr/local/src/packages/@convector-sample
+/usr/local/src/packages/@solidary-network
 ```
 
 the fix seems to be `npm run cc:package -- person org1` and it start to work
@@ -2566,19 +2566,19 @@ strange after some fight, I restart other network to check it works, next I exec
 ## Solve problem Cannot find module 'typescript/bin/tsc'
 
 ```shell
-$ npx lerna run build --scope @convector-sample/server-graphql --stream
+$ npx lerna run build --scope @solidary-network/server-graphql --stream
 with start:dev gives only Cannot find module 'typescript/bin/tsc'
 ```
 
-above error appens because of a missing package, to debug launch `lerna run start --scope @convector-sample/server-graphql` and start to figure what package is missing
+above error appens because of a missing package, to debug launch `lerna run start --scope @solidary-network/server-graphql` and start to figure what package is missing
 
 ```shell
-$ lerna run start --scope @convector-sample/server-graphql
+$ lerna run start --scope @solidary-network/server-graphql
 uncaughtException: Cannot find module 'passport-jwt'
 Error: Cannot find module 'passport-jwt'
 # install missing packages
-$ npx lerna add passport-jwt --scope @convector-sample/server-graphql
-$ npx lerna add env-cmd -D --scope @convector-sample/server-graphql
+$ npx lerna add passport-jwt --scope @solidary-network/server-graphql
+$ npx lerna add env-cmd -D --scope @solidary-network/server-graphql
 ```
 
 another problem is can't launch scripts that are using tsc-watch, ex `start:dev` and `start:debug` the problem is the missing `tsc-watch`
@@ -2587,7 +2587,7 @@ another problem is can't launch scripts that are using tsc-watch, ex `start:dev`
 $ tsc-watch -p tsconfig.build.json
 Cannot find module 'typescript/bin/tsc'
 # install it and the problem is fixed
-$ npx lerna add tsc-watch -D --scope @convector-sample/server-graphql
+$ npx lerna add tsc-watch -D --scope @solidary-network/server-graphql
 ```
 
 we can clean all, and bootstrap to chek if all packages are in `package.json files` with
@@ -2597,3 +2597,33 @@ we can clean all, and bootstrap to chek if all packages are in `package.json fil
 $ npx lerna clean -y && npx lerna bootstrap --hoist
 lerna success Bootstrapped 5 packages
 ```
+## Problemn tests/participant.spec.ts(30,11): error TS1005: ':' expected.
+
+```shell
+$ lerna boostsrap
+tests/participant.spec.ts(30,11): error TS1005: ':' expected.
+tests/participant.spec.ts(30,22): error TS1005: ',' expected.
+tests/participant.spec.ts(31,11): error TS1005: ':' expected.
+tests/participant.spec.ts(31,59): error TS1005: ',' expected.
+tests/participant.spec.ts(33,11): error TS1005: ':' expected.
+tests/participant.spec.ts(33,34): error TS1005: ',' expected.
+```
+
+```shell
+# fix build below packages and launch lerna bootstrap ignoring above errors, everything works
+$ npx lerna run build --scope @solidary-network/common --stream
+$ npx lerna run build --scope @solidary-network/person-cc --stream
+$ npx lerna run build --scope @solidary-network/participant-cc --stream
+```
+
+## MOVE TO REACT PROJECT
+
+Invalid regular expression: /\$\{(?<name>[A-Z0-9_]+)(\:((?<value>[^\:]+)|(\"(?<customValue>[^\"]+)\")))?\}/: Invalid group
+
+query personProfile {
+	personProfile {
+		# non citizenCard data
+		id
+		username
+		email
+		attributes {
