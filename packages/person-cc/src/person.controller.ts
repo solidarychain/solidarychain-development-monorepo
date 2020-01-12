@@ -22,10 +22,11 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
 
     // check duplicated id
     const exists = await Person.getOne(person.id);
-    if (!!exists && person.id) {
-      throw new Error('There is a person registered with that Id already');
+    if (!!exists && exists.id) {
+      throw new Error(`There is a person registered with that Id already (${person.id})`);
     }
 
+    // check duplicated username
     const existsUsername = await Person.query(Person, {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_PERSON,
@@ -35,10 +36,11 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
         }
       }
     });
-    if (!!existsUsername && exists.username) {
-      throw new Error('There is a person registered with that username already');
+    if ((existsUsername as Person[]).length > 0) {
+      throw new Error(`There is a person registered with that username already (${person.username})`);
     }
 
+    // check duplicated fiscalNumber
     const existsFiscalnumber = await Person.query(Person, {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_PERSON,
@@ -48,8 +50,8 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
         }
       }
     });
-    if (!!existsFiscalnumber && exists.fiscalNumber) {
-      throw new Error('There is a person registered with that fiscalNumber already');
+    if ((existsFiscalnumber as Person[]).length > 0) {
+      throw new Error(`There is a person registered with that fiscalNumber already (${person.fiscalNumber})`);
     }
 
     let gov = await Participant.getOne('gov');

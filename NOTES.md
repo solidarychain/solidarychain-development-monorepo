@@ -141,9 +141,15 @@ $ ./seed.sh
 # after restart hyperledger always create views
 $ ./views/install.sh
 
+# is always good to launch above command to log chaincode activity inside vscode, like restartEnv etc
 # debug chain code (remember breakpoint are set in .js no ts files)
+# TRICK: to debug always use hurl, if we start/restart graphql we lost chaincode debugger
+# TRICK: in case of not stop on breakpoint use debugger;
+# TRICK: we can put some breakpoint into .ts it works too after stop in .js
+# TRICK: if change something on .ts while debug don't forget to build chaincode with 'npx lerna run build --scope @convector-sample/person-cc --stream' and deploy, and restart debug again
+# TRICK don't forget that breakpoint to work must be inside the chaincode-person/packages/@convector-sample/person-cc/src/person.controller.ts folder that is generated on chaincode builds, and not the default packages/person-cc/src/person.controller.ts
 $ npm run cc:start:debug -- person
-# if error occur use target debug version, recommend to always use version
+# if error occur use target debug version, recommend to always use current version
 $ npm run cc:start:debug -- person 1.1
 
 # run dev server
@@ -215,6 +221,18 @@ $ npx lerna run start:debug --scope @convector-sample/server-graphql --stream
           "data": "1971"
         }
       }
+    }
+  }
+}
+```
+
+```json
+{
+  "selector": {
+    "type": "io.worldsibu.examples.person",
+    "username": "282692124",
+    "participant": {
+      "id": "gov"
     }
   }
 }

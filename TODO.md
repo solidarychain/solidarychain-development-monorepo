@@ -94,7 +94,7 @@ packages/server-graphql/src/main.ts
 
 - [-] replace `"name": "@convector-sample/` with `"name": "@solidary-network-network/`
 - [-] replace `io.worldsibu.examples` with `network.solidary.model`
-
+- [-] io.worldsibu.examples.person
 
 lerna success run Ran npm script 'build' in 5 packages in 19.2s:
 lerna success - @convector-sample/common

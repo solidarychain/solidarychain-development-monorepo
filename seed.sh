@@ -31,9 +31,9 @@ npx hurl invoke person participant_register naba "National Bank" -u user1 -o org
 # npx hurl invoke person person_addAttribute "1-100-102" "{\"id\": \"birth-date\", \"certifierID\": \"gov\", \"content\": { \"year\": \"1988\", \"month\": \"1\", \"day\": \"2\" } , \"issuedDate\": 1554239270 }" -u admin
 
 # 61985472 = 12/19/1971 @ 10:11am (UTC)
-ID=4ea88521-031b-4279-9165-9c10e1839004
-FIRST_NAME=Mário Monteiro
-DATE=61985472
+# ID=4ea88521-031b-4279-9165-9c10e1839004
+# FIRST_NAME="Mário Monteiro"
+# DATE=61985472
 # PAYLOAD="{ \
 #   \"id\": \"${ID}\", \
 #   \"firstname\": \"${FIRST_NAME}\", \
@@ -68,13 +68,13 @@ DATE=61985472
 # PAYLOAD="{\"id\":\"1-100-104\",\"firstname\":\"Mário Alberto\",\"lastname\":\"Mendes Monteiro\",\"beneficiaryNumber\":\"285191659\",\"birthDate\":\"19 12 1971\",\"cardVersion\":\"006.007.23\",\"country\":\"PRT\",\"documentNumber\":\"09879462 0 ZZ3\",\"documentType\":\"Cartão De Cidadão\",\"emissionDate\":\"08 05 2018\",\"emittingEntity\":\"República Portuguesa\",\"expirationDate\":\"08 05 2028\",\"fatherFirstname\":\"Alberto\",\"fatherLastname\":\"De Andrade Monteiro\",\"fiscalNumber\":\"182692124\",\"gender\":\"M\",\"height\":\"1,81\",\"identityNumber\":\"098794620\",\"motherFirstname\":\"Maria Da Graça De Oliveira Mendes\",\"motherLastname\":\"Monteiro\",\"nationality\":\"PRT\",\"otherInformation\":\"\",\"pan\":\"0000036014662658\",\"requestLocation\":\"CRCiv. Figueira da Foz\",\"socialSecurityNumber\":\"11103478242\",\"username\":\"johndoe\",\"password\":\"12345678\",\"email\":\"john.doe@mail.com\"}"
 # echo $PAYLOAD  | jq
 
-npx hurl invoke person person_create "{\"id\":\"4ea88521-031b-4279-9165-9c10e183928f\",\"firstname\":\"Mário Alberto\",\"lastname\":\"Mendes Monteiro\",\"beneficiaryNumber\":\"285191659\",\"birthDate\":\"1971-12-19\",\"cardVersion\":\"006.007.23\",\"country\":\"PRT\",\"documentNumber\":\"09879462 0 ZZ3\",\"documentType\":\"Cartão De Cidadão\",\"emissionDate\":\"2018-08-05\",\"emittingEntity\":\"República Portuguesa\",\"expirationDate\":\"2028-05-08\",\"fatherFirstname\":\"Alberto\",\"fatherLastname\":\"De Andrade Monteiro\",\"fiscalNumber\":\"182692124\",\"gender\":\"M\",\"height\":\"1.81\",\"identityNumber\":\"098794620\",\"motherFirstname\":\"Maria Da Graça De Oliveira Mendes\",\"motherLastname\":\"Monteiro\",\"nationality\":\"PRT\",\"otherInformation\":\"\",\"pan\":\"0000036014662658\",\"requestLocation\":\"CRCiv. Figueira da Foz\",\"socialSecurityNumber\":\"11103478242\",\"username\":\"mariomonteiro\",\"password\":\"12345678\",\"email\":\"mario.monteiro@mail.com\"}" -u admin
-npx hurl invoke person person_get 4ea88521-031b-4279-9165-9c10e183928f
+# npx hurl invoke person person_create "{\"id\":\"4ea88521-031b-4279-9165-9c10e183928f\",\"firstname\":\"Mário Alberto\",\"lastname\":\"Mendes Monteiro\",\"beneficiaryNumber\":\"285191659\",\"birthDate\":\"1971-12-19\",\"cardVersion\":\"006.007.23\",\"country\":\"PRT\",\"documentNumber\":\"09879462 0 ZZ3\",\"documentType\":\"Cartão De Cidadão\",\"emissionDate\":\"2018-08-05\",\"emittingEntity\":\"República Portuguesa\",\"expirationDate\":\"2028-05-08\",\"fatherFirstname\":\"Alberto\",\"fatherLastname\":\"De Andrade Monteiro\",\"fiscalNumber\":\"182692124\",\"gender\":\"M\",\"height\":\"1.81\",\"identityNumber\":\"098794620\",\"motherFirstname\":\"Maria Da Graça De Oliveira Mendes\",\"motherLastname\":\"Monteiro\",\"nationality\":\"PRT\",\"otherInformation\":\"\",\"pan\":\"0000036014662658\",\"requestLocation\":\"CRCiv. Figueira da Foz\",\"socialSecurityNumber\":\"11103478242\",\"username\":\"mariomonteiro\",\"password\":\"12345678\",\"email\":\"mario.monteiro@mail.com\"}" -u admin
+# npx hurl invoke person person_get 4ea88521-031b-4279-9165-9c10e183928f
 
-ID=4ea88521-031b-4279-9165-9c10e1839004
-USERNAME=9c10e1839004
-#DATE=1971-12-19T00:00:00+00:00
-#DATE=1578770794
+ID=4ea88521-031b-4279-9165-9c10e1839001
+FIRST_NAME="Mário Monteiro"
+USER_NAME=mariomonteiro
+FISCAL_NUMBER=182692124
 DATE=61985472
-npx hurl invoke person person_create "{\"id\":\"${ID}\",\"firstname\":\"Jorge Alberto\",\"lastname\":\"Mendes Monteiro\",\"beneficiaryNumber\":\"285191659\",\"birthDate\":\"${DATE}\",\"cardVersion\":\"006.007.23\",\"country\":\"PRT\",\"documentNumber\":\"09879462 0 ZZ3\",\"documentType\":\"Cartão De Cidadão\",\"emissionDate\":\"${DATE}\",\"emittingEntity\":\"República Portuguesa\",\"expirationDate\":\"${DATE}\",\"fatherFirstname\":\"Alberto\",\"fatherLastname\":\"De Andrade Monteiro\",\"fiscalNumber\":\"182692124\",\"gender\":\"M\",\"height\":\"1.81\",\"identityNumber\":\"098794620\",\"motherFirstname\":\"Maria Da Graça De Oliveira Mendes\",\"motherLastname\":\"Monteiro\",\"nationality\":\"PRT\",\"otherInformation\":\"\",\"pan\":\"0000036014662658\",\"requestLocation\":\"CRCiv. Figueira da Foz\",\"socialSecurityNumber\":\"11103478242\",\"username\":\"${USERNAME}\",\"password\":\"12345678\",\"email\":\"mario.monteiro@mail.com\"}" -u admin
+npx hurl invoke person person_create "{\"id\":\"${ID}\",\"firstname\":\"${FIRST_NAME}\",\"lastname\":\"Mendes Monteiro\",\"beneficiaryNumber\":\"285191659\",\"birthDate\":\"${DATE}\",\"cardVersion\":\"006.007.23\",\"country\":\"PRT\",\"documentNumber\":\"09879462 0 ZZ3\",\"documentType\":\"Cartão De Cidadão\",\"emissionDate\":\"${DATE}\",\"emittingEntity\":\"República Portuguesa\",\"expirationDate\":\"${DATE}\",\"fatherFirstname\":\"Alberto\",\"fatherLastname\":\"De Andrade Monteiro\",\"fiscalNumber\":\"${FISCAL_NUMBER}\",\"gender\":\"M\",\"height\":\"1.81\",\"identityNumber\":\"098794620\",\"motherFirstname\":\"Maria Da Graça De Oliveira Mendes\",\"motherLastname\":\"Monteiro\",\"nationality\":\"PRT\",\"otherInformation\":\"\",\"pan\":\"0000036014662658\",\"requestLocation\":\"CRCiv. Figueira da Foz\",\"socialSecurityNumber\":\"11103478242\",\"username\":\"${USER_NAME}\",\"password\":\"12345678\",\"email\":\"mario.monteiro@mail.com\"}" -u admin
 npx hurl invoke person person_get ${ID}
