@@ -1,4 +1,4 @@
-import { Participant as ParticipantConvectorModel } from '@convector-sample/participant-cc';
+import { Participant as ParticipantConvectorModel } from '@solidary-network/participant-cc';
 import { Injectable, Logger } from '@nestjs/common';
 import { FlatConvectorModel } from '@worldsibu/convector-core-model';
 import { ParticipantControllerBackEnd } from '../convector';

@@ -1,6 +1,6 @@
-# READ ME: @convector-sample : starters
+# READ ME: @solidary-network : starters
 
-- [READ ME: @convector-sample : starters](#read-me-convector-sample--starters)
+- [READ ME: @solidary-network : starters](#read-me-convector-sample--starters)
   - [Description](#description)
   - [Collaborate to the Convector Suite projects](#collaborate-to-the-convector-suite-projects)
   - [Advice Read Links](#advice-read-links)
@@ -203,8 +203,8 @@ $ lerna -v
 ### Install lerna packages dependencies
 
 ```shell
-# first build common library: this is required on fresh clones before lerna bootstrap, to prevent the below error#1 Cannot find module '@convector-sample/common'
-$ npx lerna run build --scope @convector-sample/common --stream
+# first build common library: this is required on fresh clones before lerna bootstrap, to prevent the below error#1 Cannot find module '@solidary-network/common'
+$ npx lerna run build --scope @solidary-network/common --stream
 # install dependencies, this will trigger lerna bootstrap
 $ npm i
 ```
@@ -212,8 +212,8 @@ $ npm i
 #### error#1
 
 ```shell
-src/participant.controller.ts:1:35 - error TS2307: Cannot find module '@convector-sample/common'.
-1 import { appConstants as c } from '@convector-sample/common';
+src/participant.controller.ts:1:35 - error TS2307: Cannot find module '@solidary-network/common'.
+1 import { appConstants as c } from '@solidary-network/common';
 ```
 
 ### Start hurley hyperledger network
@@ -226,7 +226,7 @@ and some helper script `restartEnv.sh`, that can be used to start or restart **h
 # launch restart network
 $ ./restartEnv.sh
 # in the end we get one valid transaction like this
-[hurley] - Result: {"_attributes":[{"certifierID":"gov","content":null,"id":"birth-year","issuedDate":1554239270}],"_email":"john.doe@mail.com","_firstname":"John","_id":"1-100-100","_lastname":"Doe","_participant":{"id":"gov","identities":[{"fingerprint":"72:BA:6B:03:89:E9:F9:CE:53:AB:14:D0:90:13:3B:A8:DC:99:C2:81","status":true}],"msp":"org1MSP","name":"Big Government","type":"io.worldsibu.examples.participant"},"_password":"$2b$10$H2l30bMr5dhCVNg53M/0BeHrgSh7rdHUokfrQi0HMs.H509MpCs/S","_roles":["USER"],"_type":"io.worldsibu.examples.person","_username":"johndoe"}
+[hurley] - Result: {"_attributes":[{"certifierID":"gov","content":null,"id":"birth-year","issuedDate":1554239270}],"_email":"john.doe@mail.com","_firstname":"John","_id":"1-100-100","_lastname":"Doe","_participant":{"id":"gov","identities":[{"fingerprint":"72:BA:6B:03:89:E9:F9:CE:53:AB:14:D0:90:13:3B:A8:DC:99:C2:81","status":true}],"msp":"org1MSP","name":"Big Government","type":"network.solidary.convector.participant"},"_password":"$2b$10$H2l30bMr5dhCVNg53M/0BeHrgSh7rdHUokfrQi0HMs.H509MpCs/S","_roles":["USER"],"_type":"network.solidary.convector.person","_username":"johndoe"}
 Cleaning up event hubs
 ```
 
@@ -267,7 +267,7 @@ $ npx hurl invoke person person_get 1-100-100
 [hurley] - 1-100-100
 [hurley] - Sending transaction as user1 in org org1...
 [hurley] - Transaction sent! VALID  SUCCESS a824d0a4cd66ed776f6b6ea1ed30a89a76d8d5672b2a482cd0ab00526ec85b49
-[hurley] - Result: {"_attributes":[{"certifierID":"gov","content":null,"id":"birth-year","issuedDate":1554239270}],"_email":"john.doe@mail.com","_firstname":"John","_id":"1-100-100","_lastname":"Doe","_participant":{"id":"gov","identities":[{"fingerprint":"72:BA:6B:03:89:E9:F9:CE:53:AB:14:D0:90:13:3B:A8:DC:99:C2:81","status":true}],"msp":"org1MSP","name":"Big Government","type":"io.worldsibu.examples.participant"},"_password":"$2b$10$H2l30bMr5dhCVNg53M/0BeHrgSh7rdHUokfrQi0HMs.H509MpCs/S","_roles":["USER"],"_type":"io.worldsibu.examples.person","_username":"johndoe"}
+[hurley] - Result: {"_attributes":[{"certifierID":"gov","content":null,"id":"birth-year","issuedDate":1554239270}],"_email":"john.doe@mail.com","_firstname":"John","_id":"1-100-100","_lastname":"Doe","_participant":{"id":"gov","identities":[{"fingerprint":"72:BA:6B:03:89:E9:F9:CE:53:AB:14:D0:90:13:3B:A8:DC:99:C2:81","status":true}],"msp":"org1MSP","name":"Big Government","type":"network.solidary.convector.participant"},"_password":"$2b$10$H2l30bMr5dhCVNg53M/0BeHrgSh7rdHUokfrQi0HMs.H509MpCs/S","_roles":["USER"],"_type":"network.solidary.convector.person","_username":"johndoe"}
 Cleaning up event hubs
 
 $ npx hurl invoke person participant_get gov
@@ -275,7 +275,7 @@ $ npx hurl invoke person participant_get gov
 [hurley] - gov
 [hurley] - Sending transaction as user1 in org org1...
 [hurley] - Transaction sent! VALID  SUCCESS dda818b7ea77022bdb62c44c0375ee2898307a2cbf7e5968489b63d15e21b90a
-[hurley] - Result: {"_id":"gov","_identities":[{"fingerprint":"72:BA:6B:03:89:E9:F9:CE:53:AB:14:D0:90:13:3B:A8:DC:99:C2:81","status":true}],"_msp":"org1MSP","_name":"Big Government","_type":"io.worldsibu.examples.participant"}
+[hurley] - Result: {"_id":"gov","_identities":[{"fingerprint":"72:BA:6B:03:89:E9:F9:CE:53:AB:14:D0:90:13:3B:A8:DC:99:C2:81","status":true}],"_msp":"org1MSP","_name":"Big Government","_type":"network.solidary.convector.participant"}
 Cleaning up event hubs
 ```
 
@@ -302,7 +302,7 @@ with a `common.controller.ts`, `constants.ts`, `enums.ts` and `env.ts`
 
 ```shell
 # start server-graphql with
-$ npx lerna run start:dev --scope @convector-sample/server-graphql --stream
+$ npx lerna run start:dev --scope @solidary-network/server-graphql --stream
 ```
 
 > Note: for more info about project check [README.md](packages/server-graphql/README.md)

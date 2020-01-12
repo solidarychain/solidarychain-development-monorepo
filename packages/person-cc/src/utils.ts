@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcrypt';
-import { appConstants as c } from '@convector-sample/common';
-import { Participant } from '@convector-sample/participant-cc';
+import { appConstants as c } from '@solidary-network/common';
+import { Participant } from '@solidary-network/participant-cc';
 
 const bcryptSaltRounds: number = 10;
 

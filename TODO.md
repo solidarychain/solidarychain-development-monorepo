@@ -11,7 +11,7 @@
 - [D] Create Endpoint GetAll Participants
 - [D] Https and CORS
 - [D] Create GitLab Repository for project `NodeNestJsHyperLedgerConvectorRestStarter`
-- [D] Change `io.worldsibu.examples.*` to `io.worldsibu.*` (must renew ledger)
+- [D] Change `network.solidary.convector.*` to `io.worldsibu.*` (must renew ledger)
   - [D] use vars from common package
 - [-] Ledger authentication, ex users are created in a ledger by one organization, that creates user and its password, store users auth on ledger on couchdb
   - `packages/server/src/auth/jwt.strategy.ts` For example, we could do a database lookup in our validate() method to extract more information about the user, resulting in a more enriched user object being available in our Request. This is also the place we may decide to do further token validation, such as looking up the userId in a list of revoked tokens, enabling us to perform token revocation  
@@ -52,7 +52,7 @@ all methods cc
     [X] getAll
   person
     [X] create
-    [ ] addAttribute
+    [X] addAttribute
     [X] get
     [X] getAll
     [ ] getByAttribute
@@ -65,21 +65,22 @@ receive transaction id, to store in neo4j
 
 ## Todo: NOTES and README
 
-[ ] Finish `packages/server-rest/README.md`
-[ ] Replace all Curls `curl http://localhost:3000/participant/gov` with auth and https, ex curl -k `https://localhost:3443/api/participant/gov`
-[ ] Checkout whole repo and test all in other folder without dependencies etc
-[ ] all curls add /api/, -h token 
-[ ] all curls all hurley invoke equivalent
+- [-] Finish `packages/server-rest/README.md`
+- [-] Replace all Curls `curl http://localhost:3000/participant/gov` with auth and https, ex curl -k `https://localhost:3443/api/participant/gov`
+- [-] Checkout whole repo and test all in other folder without dependencies etc
+- [-] all curls add /api/, -h token 
+- [-] all curls all hurley invoke equivalent
 
-BUGS
-add-attribute so funciona se o content for object, se for string or int etc it keeps null
-      "content": {
-        "height": "1.80"
-      },
+- [X] Protect from create Person with same username, fiscalNumber and Id
 
 
-- [-] HOW TO UNIQUE VALUES, ex on create CHECK IF FISCALNUMBER and other values are used
-use a complex query in chouch like with ORS
+create user only with fiscalNumber
+start transaction module
+mutations
+	update person with citizenCard data
+	change profile > username, password, email, phone, mobilePhone, district, coordinates, reputation(object), personalInfo, internalInfo
+
+
 
 
 TEMP.md
@@ -92,13 +93,13 @@ add cors options like we do in
 packages/server-graphql/src/main.ts
 
 
-- [-] replace `"name": "@convector-sample/` with `"name": "@solidary-network-network/`
-- [-] replace `io.worldsibu.examples` with `network.solidary.model`
-- [-] io.worldsibu.examples.person
+- [-] replace `"name": "@solidary-network/` with `"name": "@solidary-network-network/`
+- [-] replace `network.solidary.convector` with `network.solidary.model`
+- [-] network.solidary.convector.person
 
 lerna success run Ran npm script 'build' in 5 packages in 19.2s:
-lerna success - @convector-sample/common
-lerna success - @convector-sample/frontend-react
-lerna success - @convector-sample/participant-cc
-lerna success - @convector-sample/person-cc
-lerna success - @convector-sample/server-graphql
+lerna success - @solidary-network/common
+lerna success - @solidary-network/frontend-react
+lerna success - @solidary-network/participant-cc
+lerna success - @solidary-network/person-cc
+lerna success - @solidary-network/server-graphql

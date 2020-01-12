@@ -25,9 +25,9 @@ npx lerna run build --scope participant-cc
 
 # invoke some stuff
 # npx hurl invoke person person_get 1-100-100
-npx hurl invoke person person_get 4ea88521-031b-4279-9165-9c10e183928f
+npx hurl invoke person person_get 4ea88521-031b-4279-9165-9c10e1839001
 
 # start server/frontend
-# echo "start server-rest with: 'npx lerna run start:dev --scope @convector-sample/server-rest --stream'"
-echo "start server-graphql with: 'npx lerna run start:dev --scope @convector-sample/server-graphql --stream'"
-echo "start frontend-react with: 'npx lerna run start --scope @convector-sample/frontend-react --stream'"
+# echo "start server-rest with: 'npx lerna run start:dev --scope @solidary-network/server-rest --stream'"
+echo "start server-graphql with: 'npx lerna run start:dev --scope @solidary-network/server-graphql --stream'"
+echo "start frontend-react with: 'npx lerna run start --scope @solidary-network/frontend-react --stream'"

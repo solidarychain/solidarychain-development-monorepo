@@ -1,7 +1,7 @@
 0 silly argv { _: [ 'add' ],
 0 silly argv   D: true,
 0 silly argv   dev: true,
-0 silly argv   scope: '@convector-sample/server-graphql',
+0 silly argv   scope: '@solidary-network/server-graphql',
 0 silly argv   globs: [],
 0 silly argv   lernaVersion: '3.16.4',
 0 silly argv   '$0': 'node_modules/.bin/lerna',

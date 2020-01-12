@@ -1,4 +1,4 @@
-import { MaxLength, IsDefined, IsDate, IsNumber, MinLength } from 'class-validator';
+import { MaxLength, IsDefined, IsDate, IsNumber, MinLength, IsOptional } from 'class-validator';
 import { Field, InputType } from 'type-graphql';
 import { GraphQLJSONObject } from 'graphql-type-json';
 
@@ -8,185 +8,208 @@ import { GraphQLJSONObject } from 'graphql-type-json';
 export default class NewPersonInput {
   // optional: generated automatically, but can optionally be used
   @Field({ nullable: true })
-  @IsDefined()
+  // @IsDefined()
   id: string;
 
   // generated automatically, but can optionally be used
   @Field({ nullable: true })
-  @IsDefined()
+  // @IsDefined()
   username: string;
 
   // generated automatically, but can optionally be used
   @Field({ nullable: true })
-  @IsDefined()
+  // @IsDefined()
   password: string;
 
   // generated automatically, but can optionally be used
   @Field({ nullable: true })
   // @IsEmail()
-  @IsDefined()
+  // @IsDefined()
   email: string;
 
   // extended non citizenCard data
 
   @Field({ nullable: true })
-  @IsDefined()
+  // @IsDefined()
   public mobilePhone?: number;
 
   @Field({ nullable: true })
-  @IsDefined()
+  // @IsDefined()
   public postal?: string;
 
   @Field({ nullable: true })
-  @IsDefined()
+  // @IsDefined()
   public city?: string;
 
   @Field({ nullable: true })
-  @IsDefined()
+  // @IsDefined()
   public region?: string;
 
   @Field({ nullable: true })
-  @IsDefined()
+  // @IsDefined()
   public geoLocation?: string;
 
   @Field({ nullable: true })
-  @IsDefined()
+  // @IsDefined()
   public timezone?: string;
 
   @Field({ nullable: true })
-  @IsDefined()
+  // @IsDefined()
   public personalInfo?: string;
 
   @Field({ nullable: true })
-  @IsDefined()
+  // @IsDefined()
   public internalInfo?: string;
 
   // store future profile and reputation average object
   @Field(type => GraphQLJSONObject, { nullable: true })
-  @IsDefined()
+  // @IsDefined()
   public profile?: any;
 
-  // citizenCard data
+  // citizenCard data: copy from personModel and add @IsOptional
 
-  @Field()
+  @Field({ nullable: true })
   @IsDefined()
-  public firstname: string;
+  @IsOptional()
+  public firstname?: string;
 
-  @Field()
+  @Field({ nullable: true })
   @IsDefined()
-  public lastname: string;
+  @IsOptional()
+  public lastname?: string;
 
   // M
-  @Field()
+  @Field({ nullable: true })
   @IsDefined()
+  @IsOptional()
   @MaxLength(20)
-  public gender: string;
+  public gender?: string;
 
   // 1,81
-  @Field()
+  @Field({ nullable: true })
   @IsDefined()
+  @IsOptional()
   @IsNumber()
-  public height: number;
+  public height?: number;
 
   // Alberto
-  @Field()
+  @Field({ nullable: true })
   @IsDefined()
-  public fatherFirstname: string;
+  @IsOptional()
+  public fatherFirstname?: string;
 
   // De Andrade Monteiro
-  @Field()
+  @Field({ nullable: true })
   @IsDefined()
-  public fatherLastname: string;
+  @IsOptional()
+  public fatherLastname?: string;
 
   // Maria Da Graça De Oliveira Mendes
-  @Field()
+  @Field({ nullable: true })
   @IsDefined()
-  public motherFirstname: string;
+  @IsOptional()
+  public motherFirstname?: string;
 
   // Monteiro
-  @Field()
+  @Field({ nullable: true })
   @IsDefined()
-  public motherLastname: string;
+  @IsOptional()
+  public motherLastname?: string;
 
   // 19 12 1971
-  @Field(type => Date)
+  @Field(type => Date, { nullable: true })
   @IsDefined()
-  // @IsDate(): must be comment to work
-  public birthDate: Date;
+  @IsDate()
+  @IsOptional()
+  public birthDate?: Date;
 
   // PRT
-  @Field()
+  @Field({ nullable: true })
   @IsDefined()
-  public nationality: string;
+  @IsOptional()
+  public nationality?: string;
 
   // PRT
-  @Field()
+  @Field({ nullable: true })
   @IsDefined()
-  public country: string;
+  @IsOptional()
+  public country?: string;
 
   // 09879462 0 ZZ3
-  @Field()
+  @Field({ nullable: true })
   @IsDefined()
-  public documentNumber: string;
+  @IsOptional()
+  public documentNumber?: string;
 
   // Cartão De Cidadão
-  @Field()
+  @Field({ nullable: true })
   @IsDefined()
-  public documentType: string;
+  @IsOptional()
+  public documentType?: string;
 
   // 006.007.23
-  @Field()
+  @Field({ nullable: true })
   @IsDefined()
-  public cardVersion: string;
+  @IsOptional()
+  public cardVersion?: string;
 
   // 08 05 2018
-  @Field(type => Date)
+  @Field({ nullable: true })
   @IsDefined()
-  // @IsDate(): must be comment to work
-  public emissionDate: Date;
+  @IsDate()
+  @IsOptional()
+  public emissionDate?: Date;
 
   // 08 05 2028
-  @Field(type => Date)
+  @Field(type => Date, { nullable: true })
   @IsDefined()
-  // @IsDate(): must be comment to work
-  public expirationDate: Date;
+  @IsDate()
+  @IsOptional()
+  public expirationDate?: Date;
 
   // República Portuguesa
-  @Field()
+  @Field({ nullable: true })
   @IsDefined()
-  public emittingEntity: string;
+  @IsOptional()
+  public emittingEntity?: string;
 
   // 098794620
-  @Field()
+  @Field({ nullable: true })
   @IsDefined()
-  public identityNumber: string;
+  @IsOptional()
+  public identityNumber?: string;
 
   // 182692124
   @Field()
   @IsDefined()
-  public fiscalNumber: string;
+  @IsOptional()
+  public fiscalNumber?: string;
 
   // 11103478242
-  @Field()
-  @IsDefined()
-  public socialSecurityNumber: string;
-
-  // 285191659
-  @Field()
-  @IsDefined()
-  public beneficiaryNumber: string;
-
-  // 0000036014662658
-  @Field()
-  @IsDefined()
-  public pan: string;
-
-  // CRCiv. Figueira da Foz
-  @Field()
-  @IsDefined()
-  public requestLocation: string;
-
   @Field({ nullable: true })
   @IsDefined()
+  @IsOptional()
+  public socialSecurityNumber?: string;
+
+  // 285191659
+  @Field({ nullable: true })
+  @IsDefined()
+  @IsOptional()
+  public beneficiaryNumber?: string;
+
+  // 0000036014662658
+  @Field({ nullable: true })
+  @IsDefined()
+  @IsOptional()
+  public pan?: string;
+
+  // CRCiv. Figueira da Foz
+  @Field({ nullable: true })
+  @IsDefined()
+  @IsOptional()
+  public requestLocation?: string;
+
+  @Field({ nullable: true })
+  @IsOptional()
   public otherInformation!: string;
 }

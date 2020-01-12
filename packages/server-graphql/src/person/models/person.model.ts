@@ -3,7 +3,7 @@ import { IsDefined, IsDate, MaxLength, IsNumber } from 'class-validator';
 import { Field, ID, ObjectType } from 'type-graphql';
 import Participant from '../../participant/models/participant.model';
 import Attribute from './attribute.model';
-import { UserRoles } from '@convector-sample/common';
+import { UserRoles } from '@solidary-network/common';
 import { GraphQLJSONObject } from 'graphql-type-json';
 
 @ObjectType()

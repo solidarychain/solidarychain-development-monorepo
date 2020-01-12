@@ -1,5 +1,5 @@
 {
-  "name": "@convector-sample/person-cc",
+  "name": "@solidary-network/person-cc",
   "version": "0.1.0",
   "description": "Chaincodes package for person",
   "main": "./dist/src/index.js",
@@ -14,8 +14,8 @@
     "test": "npm run build && mocha -r ts-node/register tests/*.spec.ts --reporter spec"
   },
   "dependencies": {
-    "@convector-sample/common": "0.1.0",
-    "@convector-sample/participant-cc": "^0.1.0",
+    "@solidary-network/common": "0.1.0",
+    "@solidary-network/participant-cc": "^0.1.0",
     "@types/bcrypt": "^3.0.0",
     "@worldsibu/convector-core": "~1.3.0",
     "@worldsibu/convector-platform-fabric": "~1.3.0",

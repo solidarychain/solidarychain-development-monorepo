@@ -21,36 +21,36 @@
 
 ## Start
 
-DONt forget to build common package `@convector-sample/common`, if something change, but first restart server
+DONt forget to build common package `@solidary-network/common`, if something change, but first restart server
 
 ```shell
-# build common library: this is required on fresh clones before lerna bootstrap else `Cannot find module '@convector-sample/common'`
-$ npx lerna run build --scope @convector-sample/common --stream
+# build common library: this is required on fresh clones before lerna bootstrap else `Cannot find module '@solidary-network/common'`
+$ npx lerna run build --scope @solidary-network/common --stream
 ```
 
 ```shell
 # start debug (inside vscode)
-$ npx lerna run start:debug --scope @convector-sample/server-graphql --stream
+$ npx lerna run start:debug --scope @solidary-network/server-graphql --stream
 # start dev
-$ npx lerna run start:dev --scope @convector-sample/server-graphql --stream
+$ npx lerna run start:dev --scope @solidary-network/server-graphql --stream
 ```
 
 - [GraphQL Playground](http://localhost:3000/graphql)
 
 ```shell
 # generate graphql types for frontend
-$ npx lerna run gen:graphql --scope @convector-sample/frontend-react
+$ npx lerna run gen:graphql --scope @solidary-network/frontend-react
 ```
 
 ```shell
 # add dependencies
-$ npx lerna add participant-cc --scope @convector-sample/server-graphql
-$ npx lerna add person-cc --scope @convector-sample/server-graphql
-$ npx lerna add common --scope @convector-sample/server-graphql
+$ npx lerna add participant-cc --scope @solidary-network/server-graphql
+$ npx lerna add person-cc --scope @solidary-network/server-graphql
+$ npx lerna add common --scope @solidary-network/server-graphql
 ```
 
 ```shell
-# in case of errors like Cannot find module '@convector-sample/common'.
+# in case of errors like Cannot find module '@solidary-network/common'.
 $ npx lerna clean
 $ npx lerna bootstrap
 ```
@@ -85,7 +85,7 @@ all input types required to have names `@Args('getByAttributeInput') argument`, 
 
 ```shell
 # install graphql-type-json
-$ npx lerna add graphql-type-json --scope @convector-sample/server-graphql
+$ npx lerna add graphql-type-json --scope @solidary-network/server-graphql
 ```
 
 to use `any` in graphql we must implement a custom scalar type or use the [graphql-type-json](https://github.com/taion/graphql-type-json) package
@@ -143,7 +143,7 @@ without `.nullable()` we get
 
 ```
 500,"message":"Error for field 'attributes' with val '[{\"certifierID\":\"gov\",\"content\":\"1993\",\"id\":\"birth-year\",\"phase2\":\"2013\",\"phase3\":\"2013\"},\"id\":\"reborn5-year\",\"issuedDate\":1554239270,
-\"type\":\"io.worldsibu.examples.attribute\"}]' [0].content must be a `object` type, but the final value was: `null` (cast from the value `\"1993\"`).\n If \"null\" is intended as an empty value be sure to mark the schema as `.nullable()`"}]. Sending ERROR message back to peer  
+\"type\":\"network.solidary.convector.attribute\"}]' [0].content must be a `object` type, but the final value was: `null` (cast from the value `\"1993\"`).\n If \"null\" is intended as an empty value be sure to mark the schema as `.nullable()`"}]. Sending ERROR message back to peer  
 ```
 
 ## Problem with RichQueries with Object
@@ -165,7 +165,7 @@ return await Person.query(Person, {
 in docker logs we can view that value is content is sent has a string and not a object ex `"content":"{\"data\":\"1971\"}"`
 
 ```json
-{"selector":{"type":"io.worldsibu.examples.person","attributes":{"$elemMatch":{"id":"born-year","content":"{\"data\":\"1971\"}"}}}}
+{"selector":{"type":"network.solidary.convector.person","attributes":{"$elemMatch":{"id":"born-year","content":"{\"data\":\"1971\"}"}}}}
 ```
 
 > read the SO post, link on top of notes
@@ -174,14 +174,14 @@ in docker logs we can view that value is content is sent has a string and not a 
 
 ```shell
 # install the required packages
-$ npx lerna add @nestjs/passport --scope @convector-sample/server-graphql --no-bootstrap
-$ npx lerna add @nestjs/jwt --scope @convector-sample/server-graphql --no-bootstrap
-$ npx lerna add passport --scope @convector-sample/server-graphql --no-bootstrap
-$ npx lerna add passport-local --scope @convector-sample/server-graphql --no-bootstrap
-$ npx lerna add bcrypt --scope @convector-sample/server-graphql --no-bootstrap
+$ npx lerna add @nestjs/passport --scope @solidary-network/server-graphql --no-bootstrap
+$ npx lerna add @nestjs/jwt --scope @solidary-network/server-graphql --no-bootstrap
+$ npx lerna add passport --scope @solidary-network/server-graphql --no-bootstrap
+$ npx lerna add passport-local --scope @solidary-network/server-graphql --no-bootstrap
+$ npx lerna add bcrypt --scope @solidary-network/server-graphql --no-bootstrap
 # dev
-$ npx lerna add @types/passport-local --scope @convector-sample/server-graphql --dev --no-bootstrap
-$ npx lerna add @types/passport-jwt --save-dev --scope @convector-sample/server-graphql --dev --no-bootstrap
+$ npx lerna add @types/passport-local --scope @solidary-network/server-graphql --dev --no-bootstrap
+$ npx lerna add @types/passport-jwt --save-dev --scope @solidary-network/server-graphql --dev --no-bootstrap
 # bootstrap
 $ npx lerna bootstrap
 ```
@@ -197,11 +197,11 @@ $ nest g service users
 ## Problem: Nest can't resolve dependencies of the GqlLocalAuthGuard
 
 ```
-@convector-sample/server-graphql: [Nest] 14138   - 2019-09-15 21:21:30   [ExceptionHandler] Nest can't resolve dependencies of the GqlLocalAuthGuard (?). Please make sure that the argument at index [0] is available in the PersonModule context. +4ms
+@solidary-network/server-graphql: [Nest] 14138   - 2019-09-15 21:21:30   [ExceptionHandler] Nest can't resolve dependencies of the GqlLocalAuthGuard (?). Please make sure that the argument at index [0] is available in the PersonModule context. +4ms
 
-@convector-sample/server-graphql: [Nest] 15907   - 2019-09-15 21:25:25   [ExceptionHandler] Nest can't resolve dependencies of the GqlLocalAuthGuard (?). Please make sure that the argument at index [0] is available in the GqlLocalAuthGuard context. +234ms
+@solidary-network/server-graphql: [Nest] 15907   - 2019-09-15 21:25:25   [ExceptionHandler] Nest can't resolve dependencies of the GqlLocalAuthGuard (?). Please make sure that the argument at index [0] is available in the GqlLocalAuthGuard context. +234ms
 
-@convector-sample/server-graphql: [Nest] 6421   - 2019-09-15 22:22:27   [ExceptionHandler] Nest can't resolve dependencies of the PersonService (?). Please make sure that the argument at index [0] is available in the PersonModule context. +69ms
+@solidary-network/server-graphql: [Nest] 6421   - 2019-09-15 22:22:27   [ExceptionHandler] Nest can't resolve dependencies of the PersonService (?). Please make sure that the argument at index [0] is available in the PersonModule context. +69ms
 ```
 
 this occurs because **we are imports services**, **never imports services**, **when we import module we already have access to all exported providers(services etc) from module**
@@ -322,7 +322,7 @@ $ curl -k --request POST \
 
 ```shell
 # add cookie parser
-$ npx lerna add @nest-middlewares/cookie-parser --scope @convector-sample/server-graphql
+$ npx lerna add @nest-middlewares/cookie-parser --scope @solidary-network/server-graphql
 ```
 
 ```typescript
@@ -355,10 +355,10 @@ $ curl -k -v -X POST \
 
 ```shell
 # install deps
-$ npx lerna add apollo-link-token-refresh --scope @convector-sample/frontend-react --no-bootstrap
-$ npx lerna add jwt-decode --scope @convector-sample/frontend-react --no-bootstrap
+$ npx lerna add apollo-link-token-refresh --scope @solidary-network/frontend-react --no-bootstrap
+$ npx lerna add jwt-decode --scope @solidary-network/frontend-react --no-bootstrap
 # types
-$ npx lerna add @types/jwt-decode --scope @convector-sample/frontend-react --dev --no-bootstrap
+$ npx lerna add @types/jwt-decode --scope @solidary-network/frontend-react --dev --no-bootstrap
 # bootstrap
 $ npx lerna bootstrap
 ```

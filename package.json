@@ -1,5 +1,5 @@
 {
-  "name": "@convector-sample/lerna-monorepo",
+  "name": "@solidary-network/lerna-monorepo",
   "version": "0.1.0",
   "description": "Bootstrap project for Chaincodes attributesDb",
   "files": [
@@ -16,9 +16,9 @@
     "cc:start": "f() { npm run cc:package -- $1 org1; npm run cc:install $1; }; f",
     "cc:upgrade": "f() { npm run cc:package -- $1 org1; hurl upgrade $1 node $2  -P ./chaincode-$1; }; f",
     "cc:start:debug": "f() { npm run cc:package -- $1 org1; npm run cc:install:debug $1; }; f",
-    "pkg:graphql:debug": "npx lerna run start:debug --scope @convector-sample/server-graphql --stream",
-    "pkg:graphql:dev": "npx lerna run start:dev --scope @convector-sample/server-graphql --stream",
-    "pkg:react": "npx lerna run start --scope @convector-sample/frontend-react --stream",
+    "pkg:graphql:debug": "npx lerna run start:debug --scope @solidary-network/server-graphql --stream",
+    "pkg:graphql:dev": "npx lerna run start:dev --scope @solidary-network/server-graphql --stream",
+    "pkg:react": "npx lerna run start --scope @solidary-network/frontend-react --stream",
     "===================INTERNALS===================": "===================NO NEED TO CALL THEM DIRECTLY===================",
     "lerna:install": "lerna bootstrap",
     "lerna:build": "lerna run build",

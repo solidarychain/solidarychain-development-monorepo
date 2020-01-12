@@ -33,11 +33,11 @@ REFRESH_TOKEN_SKIP_INCREMENT_VERSION=true
 # in repo root folder
 
 # run in prod mode
-$ npx lerna run start:prod --scope @convector-sample/server-graphql --stream
+$ npx lerna run start:prod --scope @solidary-network/server-graphql --stream
 # run in dev mode
-$ npx lerna run start:dev --scope @convector-sample/server-graphql --stream
+$ npx lerna run start:dev --scope @solidary-network/server-graphql --stream
 # or run in debug mode
-$ npx lerna run start:debug --scope @convector-sample/server-graphql --stream
+$ npx lerna run start:debug --scope @solidary-network/server-graphql --stream
 ```
 
 ## Play with GraphQL Playground

@@ -1,4 +1,4 @@
-import { PersonAttribute as AttributeConvectorModel, Person as PersonConvectorModel } from '@convector-sample/person-cc';
+import { PersonAttribute as AttributeConvectorModel, Person as PersonConvectorModel } from '@solidary-network/person-cc';
 import { Injectable, Logger } from '@nestjs/common';
 import { FlatConvectorModel } from '@worldsibu/convector-core';
 import { PersonControllerBackEnd } from '../convector';

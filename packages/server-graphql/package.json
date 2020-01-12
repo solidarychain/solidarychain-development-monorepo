@@ -1,5 +1,5 @@
 {
-  "name": "@convector-sample/server-graphql",
+  "name": "@solidary-network/server-graphql",
   "version": "1.0.0",
   "description": "",
   "author": "",
@@ -12,9 +12,9 @@
     "start:prod": "npx env-cmd -f .env node dist/main.js"
   },
   "dependencies": {
-    "@convector-sample/common": "^0.1.0",
-    "@convector-sample/participant-cc": "^0.1.0",
-    "@convector-sample/person-cc": "^0.1.0",
+    "@solidary-network/common": "^0.1.0",
+    "@solidary-network/participant-cc": "^0.1.0",
+    "@solidary-network/person-cc": "^0.1.0",
     "@nest-middlewares/cookie-parser": "^6.0.0",
     "@nestjs/common": "^6.5.3",
     "@nestjs/core": "6.5.3",

@@ -1,5 +1,5 @@
 {
-  "name": "@convector-sample/common",
+  "name": "@solidary-network/common",
   "version": "0.1.0",
   "main": "dist/src/index",
   "types": "dist/src/index",

@@ -50,11 +50,11 @@
 
 ```shell
 # run server
-$ npx lerna run start:debug --scope @convector-sample/server-graphql --stream
+$ npx lerna run start:debug --scope @solidary-network/server-graphql --stream
 # run frontend
-$ npx lerna run start --scope @convector-sample/frontend-react --stream --stream
-# gen graphql
-$ npx lerna run gen:graphql --scope @convector-sample/frontend-react
+$ npx lerna run start --scope @solidary-network/frontend-react --stream
+# gen graphql, require graphql server running, and graphql-codegen/cli installed, config in codegen.yml
+$ npx lerna run gen:graphql --scope @solidary-network/frontend-react --stream
 ```
 
 ## Bootstrap App
@@ -70,7 +70,7 @@ $ npx create-react-app frontend-react --typescript
 $ code packages/frontend-react/package.json
 ```
 
-change `"name": "frontend-react"` to `"name": "@convector-sample/frontend-react"`
+change `"name": "frontend-react"` to `"name": "@solidary-network/frontend-react"`
 and `"private": true` to `"private": false`, or remove it from `package.json` else it won't appear in `npx lerna list`, and we must use `npx lerna list -a`
 
 - [@lerna/import](https://github.com/lerna/lerna/tree/master/commands/import)
@@ -79,9 +79,9 @@ and `"private": true` to `"private": false`, or remove it from `package.json` el
 # not clean and hosting all project dependencies
 $ npx lerna clean -y && npx lerna bootstrap --hoist
 # fix build cc and start server (Property 'get' does not exist on type....). require to rebuild -cc packages
-$ npx lerna run build --scope @convector-sample/participant-cc --stream
+$ npx lerna run build --scope @solidary-network/participant-cc --stream
 # test react app
-$ npx lerna run start --scope @convector-sample/frontend-react --stream
+$ npx lerna run start --scope @solidary-network/frontend-react --stream
 ```
 
 ## Fix Jest 24.9.0
@@ -148,7 +148,7 @@ add 3 configs, one for chrome and 2 for `browser-preview` extension
 
 ```shell
 # boot app with a breakpoint and press F5 and done
-$ npx lerna run start --scope @convector-sample/frontend-react --stream
+$ npx lerna run start --scope @solidary-network/frontend-react --stream
 ```
 
 now add `.vscode/chrome` to `.gitignore` to ignore chrome local cache
@@ -203,13 +203,13 @@ export default App;
 
 ```shell
 # add apollo
-$ npx lerna add apollo-boost --scope @convector-sample/frontend-react --no-bootstrap
-$ npx lerna add @apollo/react-hooks --scope @convector-sample/frontend-react --no-bootstrap
-$ npx lerna add graphql --scope @convector-sample/frontend-react --no-bootstrap
-$ npx lerna add graphql --scope @convector-sample/frontend-react --no-bootstrap
+$ npx lerna add apollo-boost --scope @solidary-network/frontend-react --no-bootstrap
+$ npx lerna add @apollo/react-hooks --scope @solidary-network/frontend-react --no-bootstrap
+$ npx lerna add graphql --scope @solidary-network/frontend-react --no-bootstrap
+$ npx lerna add graphql --scope @solidary-network/frontend-react --no-bootstrap
 # extra: required for Authorization: Bearer   
-$ npx lerna add apollo-link-context --scope @convector-sample/frontend-react --no-bootstrap
-$ npx lerna add @types/graphql --scope @convector-sample/frontend-react --no-bootstrap --dev
+$ npx lerna add apollo-link-context --scope @solidary-network/frontend-react --no-bootstrap
+$ npx lerna add @types/graphql --scope @solidary-network/frontend-react --no-bootstrap --dev
 $ npx lerna bootstrap
 ```
 
@@ -410,7 +410,7 @@ now it work without issues
 
 ```shell
 # add graphql-codegen dependency to lerna mono repo
-$ npx lerna add @graphql-codegen/cli --scope @convector-sample/frontend-react --no-bootstrap --dev
+$ npx lerna add @graphql-codegen/cli --scope @solidary-network/frontend-react --no-bootstrap --dev
 # help
 $ npx graphql-codegen --help
 # install deps
@@ -509,7 +509,7 @@ $ npm run gen:graphql
 now test with lerna script
 
 ```shell
-$ npx lerna run gen:graphql --scope @convector-sample/frontend-react
+$ npx lerna run gen:graphql --scope @solidary-network/frontend-react
 ```
 
 it works move on
@@ -556,8 +556,8 @@ now we some good stuff hooks use functions like `useParticipantByIdQuery` and `u
 
 ```shell
 # add apollo
-$ npx lerna add react-router-dom --scope @convector-sample/frontend-react --no-bootstrap
-$ npx lerna add @types/react-router-dom --scope @convector-sample/frontend-react --no-bootstrap --dev
+$ npx lerna add react-router-dom --scope @solidary-network/frontend-react --no-bootstrap
+$ npx lerna add @types/react-router-dom --scope @solidary-network/frontend-react --no-bootstrap --dev
 $ npx lerna bootstrap
 ```
 
@@ -577,7 +577,7 @@ on try to `await client!.resetStore();`
 
 ```shell
 # add js-cookie
-$ npx lerna add js-cookie --scope @convector-sample/frontend-react --no-bootstrap
-$ npx lerna add @types/js-cookie --scope @convector-sample/frontend-react --no-bootstrap --dev
+$ npx lerna add js-cookie --scope @solidary-network/frontend-react --no-bootstrap
+$ npx lerna add @types/js-cookie --scope @solidary-network/frontend-react --no-bootstrap --dev
 $ npx lerna bootstrap
 ```
