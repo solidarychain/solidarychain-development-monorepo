@@ -9,6 +9,45 @@ export class Person extends ConvectorModel<Person> {
   @Required()
   public readonly type = c.CONVECTOR_MODEL_PATH_PERSON;
 
+  // non citizenCard data
+  
+  // @Required()
+  @Validate(yup.string()
+    .min(4, c.YUP_MESSAGE_USERNAME_TO_SHORT)
+    .max(16, c.YUP_MESSAGE_USERNAME_TO_LONG)
+  )
+  public username: string;
+
+  @Required()
+  @Validate(yup.string()
+    .min(8, c.YUP_MESSAGE_PASSWORD_TO_SHORT)
+    .matches(c.REGEX_PASSWORD, c.YUP_MESSAGE_INVALID_PASSWORD)
+  )
+  public password: string;
+
+  // @Required()
+  @Validate(yup.string()
+  .matches(c.REGEX_EMAIL, c.YUP_MESSAGE_INVALID_EMAIL)
+  )
+  public email: string;
+
+  @Validate(yup.array(PersonAttribute.schema()))
+  public attributes: Array<PersonAttribute>;
+
+  @Default([UserRoles.User])
+  @Validate(yup.array().of(yup.string()))
+  public roles: Array<String>;
+
+  @Required()
+  @Validate(Participant.schema())
+  public participant: FlatConvectorModel<Participant>;
+
+  // extended data
+
+  @Required()
+  @Validate(yup.number())
+  public registrationDate: number;
+
   // citizenCard data
 
   // Mário Alberto
@@ -23,14 +62,14 @@ export class Person extends ConvectorModel<Person> {
 
   // M
   @Required()
-  @Validate(yup.string())
+  @Validate(yup.string().max(20))
   public gender: string;
 
   // TODO: convert to 1.81
   // 1,81
   @Required()
   @Validate(yup.string())
-  public height: string;
+  public height: number;
 
   // Alberto
   @Required()
@@ -52,11 +91,10 @@ export class Person extends ConvectorModel<Person> {
   @Validate(yup.string())
   public motherLastname: string;
 
-  // TODO: use DateTime
   // 19 12 1971
   @Required()
-  @Validate(yup.string())
-  public birthDate: string;
+  @Validate(yup.number())
+  public birthDate: number;
 
   // PRT
   @Required()
@@ -83,17 +121,15 @@ export class Person extends ConvectorModel<Person> {
   @Validate(yup.string())
   public cardVersion: string;
 
-  // TODO: use DateTime
   // 08 05 2018
   @Required()
-  @Validate(yup.string())
-  public emissionDate: string;
+  @Validate(yup.number())
+  public emissionDate: number;
 
-  // TODO: use DateTime
   // 08 05 2028
   @Required()
-  @Validate(yup.string())
-  public expirationDate: string;
+  @Validate(yup.number())
+  public expirationDate: number;
 
   // República Portuguesa
   @Required()
@@ -133,37 +169,4 @@ export class Person extends ConvectorModel<Person> {
   // @Required()
   @Validate(yup.string()/*.nullable()*/)
   public otherInformation: string;
-
-  // non citizenCard data
-  
-  @Required()
-  @Validate(yup.string()
-    .min(6, c.YUP_MESSAGE_USERNAME_TO_SHORT)
-    .max(16, c.YUP_MESSAGE_USERNAME_TO_LONG)
-  )
-  public username: string;
-
-  @Required()
-  @Validate(yup.string()
-    .min(8, c.YUP_MESSAGE_PASSWORD_TO_SHORT)
-    .matches(c.REGEX_PASSWORD, c.YUP_MESSAGE_INVALID_PASSWORD)
-  )
-  public password: string;
-
-  @Required()
-  @Validate(yup.string()
-  .matches(c.REGEX_EMAIL, c.YUP_MESSAGE_INVALID_EMAIL)
-  )
-  public email: string;
-
-  @Validate(yup.array(PersonAttribute.schema()))
-  public attributes: Array<PersonAttribute>;
-
-  @Default([UserRoles.User])
-  @Validate(yup.array().of(yup.string()))
-  public roles: Array<String>;
-
-  @Required()
-  @Validate(Participant.schema())
-  public participant: FlatConvectorModel<Participant>;
 }

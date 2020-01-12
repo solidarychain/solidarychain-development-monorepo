@@ -1,4 +1,4 @@
-import { appConstants as c, citizenCardDateToIsoDate } from '@convector-sample/common';
+import { appConstants as c } from '@convector-sample/common';
 import { Participant } from '@convector-sample/participant-cc';
 import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
@@ -20,8 +20,9 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
       throw new Error('There is no participant with that identity');
     }
 
+    // check duplicated id
     const exists = await Person.getOne(person.id);
-    if (!!exists && exists.id) {
+    if (!!exists && person.id) {
       throw new Error('There is a person registered with that Id already');
     }
 
@@ -34,8 +35,21 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
         }
       }
     });
-    if (!!existsUsername && exists.id) {
+    if (!!existsUsername && exists.username) {
       throw new Error('There is a person registered with that username already');
+    }
+
+    const existsFiscalnumber = await Person.query(Person, {
+      selector: {
+        type: c.CONVECTOR_MODEL_PATH_PERSON,
+        fiscalNumber: person.fiscalNumber,
+        participant: {
+          id: participant.id
+        }
+      }
+    });
+    if (!!existsFiscalnumber && exists.fiscalNumber) {
+      throw new Error('There is a person registered with that fiscalNumber already');
     }
 
     let gov = await Participant.getOne('gov');
@@ -55,11 +69,9 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     person.participant = gov;
     // hashPassword before save model
     person.password = hashPassword(person.password);
-    // convert citizen card input
-    person.height = person.height.replace(',', '.');
-    person.birthDate = citizenCardDateToIsoDate(person.birthDate).toString();
-    person.emissionDate = citizenCardDateToIsoDate(person.emissionDate).toString();
-    person.expirationDate = citizenCardDateToIsoDate(person.expirationDate).toString();
+    // add date in epoch unix time
+    person.registrationDate = new Date().getTime();
+
     // save person
     await person.save();
   }
@@ -146,7 +158,7 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     // use if content is object
     @Param(yup.object())   // this is used to use the value has a json object, ex "content": { "data": "1971", "work": true }
     value: any
-  ) {
+  ): Promise<Person | Person[]> {
     return await Person.query(Person, {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_PERSON,
@@ -160,11 +172,14 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     });
   }
 
+  /**
+   * get username from participant
+   */
   @Invokable()
   public async getByUsername(
     @Param(yup.string())
     username: string,
-  ) {
+  ): Promise<Person | Person[]> {
     // get host participant from fingerprint
     const participant: Participant = await getParticipantByIdentity(this.sender);
     const existing = await Person.query(Person, {
@@ -178,6 +193,31 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     });
     if (!existing || !existing[0].id) {
       throw new Error(`No person exists with that username ${username}`);
+    }
+    return existing;
+  }
+
+  /**
+   * get fiscalNumber from participant
+   */
+  @Invokable()
+  public async getByFiscalnumber(
+    @Param(yup.string())
+    fiscalNumber: string,
+  ): Promise<Person | Person[]> {
+    // get host participant from fingerprint
+    const participant: Participant = await getParticipantByIdentity(this.sender);
+    const existing = await Person.query(Person, {
+      selector: {
+        type: c.CONVECTOR_MODEL_PATH_PERSON,
+        username: fiscalNumber,
+        participant: {
+          id: participant.id
+        }
+      }
+    });
+    if (!existing || !existing[0].id) {
+      throw new Error(`No person exists with that fiscalNumber ${fiscalNumber}`);
     }
     return existing;
   }

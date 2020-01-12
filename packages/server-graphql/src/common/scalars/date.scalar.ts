@@ -1,23 +1,28 @@
 import { CustomScalar, Scalar } from '@nestjs/graphql';
 import { Kind } from 'graphql';
 
+/**
+ * this works to convert convector dates stored in 'epoch unix time' to Date, 
+ * if we want default format we must revert <Date, number>
+ */
+
 @Scalar('Date', type => Date)
-export default class DateScalar implements CustomScalar<number, Date> {
+export default class DateScalar implements CustomScalar<Date, number> {
   description = 'Date custom scalar type';
 
-  parseValue(value: number): Date {
+  parseValue(value: Date): number {
     // value from the client
+    return new Date(value).getTime();
+  }
+
+  serialize(value: number): Date {
+    // value sent to the client
     return new Date(value);
   }
 
-  serialize(value: Date): number {
-    // value sent to the client
-    return value.getTime();
-  }
-
-  parseLiteral(ast: any): Date {
+  parseLiteral(ast: any): number {
     if (ast.kind === Kind.INT) {
-      return new Date(ast.value);
+      return ast.value.getTime();
     }
     return null;
   }

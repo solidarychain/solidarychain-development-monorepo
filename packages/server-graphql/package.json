@@ -5,7 +5,7 @@
   "author": "",
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "start": "ts-node src/main",
+    "start": "npx env-cmd -f .env ts-node src/main",
     "prestart:prod": "npm run build",
     "start:dev": "npx env-cmd -f .env tsc-watch -p tsconfig.build.json --onSuccess \"node dist/main.js\"",
     "start:debug": "npx env-cmd -f .env tsc-watch -p tsconfig.build.json --onSuccess \"node --inspect-brk=9230 dist/main.js\"",
@@ -26,20 +26,26 @@
     "bcrypt": "^3.0.6",
     "class-transformer": "^0.2.3",
     "class-validator": "^0.10.0",
+    "generate-password": "^1.4.2",
     "graphql": "14.4.2",
     "graphql-subscriptions": "1.1.0",
     "graphql-type-json": "^0.3.0",
     "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "reflect-metadata": "^0.1.13",
     "type-graphql": "0.17.4",
-    "typescript": "3.5.3"
+    "uuid": "^3.3.3"
   },
   "devDependencies": {
     "@types/node": "^10.14.15",
     "@types/passport-jwt": "^3.0.2",
     "@types/passport-local": "^1.0.33",
+    "env-cmd": "^10.0.1",
     "ts-node": "^8.3.0",
-    "tslint": "5.18.0"
+    "tsc-watch": "^4.0.0",
+    "tslint": "5.18.0",
+    "typescript": "3.5.3",
+    "uuid": "^3.3.3"
   }
 }

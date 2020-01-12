@@ -54,12 +54,34 @@ input NewParticipantInput {
 }
 
 input NewPersonInput {
-  id: String!
+  id: String
+  username: String
+  password: String
+  email: String
   firstname: String!
   lastname: String!
-  username: String!
-  password: String!
-  email: String!
+  gender: String!
+  height: Float!
+  fatherFirstname: String!
+  fatherLastname: String!
+  motherFirstname: String!
+  motherLastname: String!
+  birthDate: Date!
+  nationality: String!
+  country: String!
+  documentNumber: String!
+  documentType: String!
+  cardVersion: String!
+  emissionDate: Date!
+  expirationDate: Date!
+  emittingEntity: String!
+  identityNumber: String!
+  fiscalNumber: String!
+  socialSecurityNumber: String!
+  beneficiaryNumber: String!
+  pan: String!
+  requestLocation: String!
+  otherInformation: String
 }
 
 type Participant {
@@ -71,22 +93,28 @@ type Participant {
 
 type Person {
   id: ID!
+  username: String
+  email: String
+  attributes: [Attribute!]
+  roles: [String!]
+  participant: Participant!
+  registrationDate: Date
   firstname: String!
   lastname: String!
   gender: String!
-  height: String!
+  height: Float!
   fatherFirstname: String!
   fatherLastname: String!
   motherFirstname: String!
   motherLastname: String!
-  birthDate: String!
+  birthDate: Date!
   nationality: String!
   country: String!
   documentNumber: String!
   documentType: String!
   cardVersion: String!
-  emissionDate: String!
-  expirationDate: String!
+  emissionDate: Date!
+  expirationDate: Date!
   emittingEntity: String!
   identityNumber: String!
   fiscalNumber: String!
@@ -94,12 +122,7 @@ type Person {
   beneficiaryNumber: String!
   pan: String!
   requestLocation: String!
-  otherInformation: String!
-  username: String!
-  email: String!
-  attributes: [Attribute!]
-  roles: [String!]
-  participant: Participant!
+  otherInformation: String
 }
 
 type PersonLoginResponse {

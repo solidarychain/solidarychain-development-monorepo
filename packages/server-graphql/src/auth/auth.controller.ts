@@ -15,8 +15,6 @@ export class AuthController {
     private readonly jwtService: JwtService,
     private readonly usersService: UsersService,
   ) { }
-  // TODO: add redirect endpoint/ to /graphql
-
   // for security purposes, refreshToken cookie only works in this specific route,
   // to request a new accessToken, this prevent /graphql to works with cookie
 

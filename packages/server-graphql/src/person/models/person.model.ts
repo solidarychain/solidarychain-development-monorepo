@@ -1,5 +1,5 @@
 // tslint:disable: max-classes-per-file
-import { IsDefined } from 'class-validator';
+import { IsDefined, IsDate, MaxLength, IsNumber } from 'class-validator';
 import { Field, ID, ObjectType } from 'type-graphql';
 import Participant from '../../participant/models/participant.model';
 import Attribute from './attribute.model';
@@ -7,9 +7,37 @@ import { UserRoles } from '@convector-sample/common';
 
 @ObjectType()
 export default class Person {
+  // non citizenCard data
   @Field(type => ID)
   @IsDefined()
   id: string;
+
+  @Field({ nullable: true })
+  @IsDefined()
+  public username: string;
+
+  // not exposed
+  public password: string;
+
+  @Field({ nullable: true })
+  public email: string;
+
+  @Field(type => [Attribute], { nullable: true })
+  public attributes?: Attribute[];
+
+  @Field(type => String, { defaultValue: UserRoles.User })
+  public roles: string[];
+
+  @Field()
+  @IsDefined()
+  public participant: Participant;
+
+  // extended data
+
+  @Field(type => Date, { nullable: true })
+  @IsDefined()
+  @IsDate()
+  public registrationDate: Date;
 
   // citizenCard data
 
@@ -24,12 +52,14 @@ export default class Person {
   // M
   @Field()
   @IsDefined()
+  @MaxLength(20)
   public gender: string;
 
   // 1,81
   @Field()
   @IsDefined()
-  public height: string;
+  @IsNumber()
+  public height: number;
 
   // Alberto
   @Field()
@@ -51,11 +81,11 @@ export default class Person {
   @IsDefined()
   public motherLastname: string;
 
-  // TODO: use DateTime
   // 19 12 1971
-  @Field()
+  @Field(type => Date)
   @IsDefined()
-  public birthDate: string;
+  @IsDate()
+  public birthDate: Date;
 
   // PRT
   @Field()
@@ -82,17 +112,17 @@ export default class Person {
   @IsDefined()
   public cardVersion: string;
 
-  // TODO: use DateTime
   // 08 05 2018
   @Field()
   @IsDefined()
-  public emissionDate: string;
+  @IsDate()
+  public emissionDate: Date;
 
-  // TODO: use DateTime
   // 08 05 2028
-  @Field()
+  @Field(type => Date)
   @IsDefined()
-  public expirationDate: string;
+  @IsDate()
+  public expirationDate: Date;
 
   // República Portuguesa
   @Field()
@@ -117,7 +147,7 @@ export default class Person {
   // 285191659
   @Field()
   @IsDefined()
-  public beneficiaryNumber: string; 
+  public beneficiaryNumber: string;
 
   // 0000036014662658
   @Field()
@@ -129,29 +159,6 @@ export default class Person {
   @IsDefined()
   public requestLocation: string;
 
-  @Field()
-  @IsDefined()
-  public otherInformation: string;
-
-  // non citizenCard data
-
-  @Field()
-  @IsDefined()
-  public username: string;
-
-  // not exposed
-  public password: string;
-
-  @Field()
-  public email: string;
-
-  @Field(type => [Attribute], { nullable: true })
-  public attributes?: Attribute[];
-
-  @Field(type => String, { defaultValue: UserRoles.User })
-  public roles: string[];
-
-  @Field()
-  @IsDefined()
-  public participant: Participant;
+  @Field({ nullable: true })
+  public otherInformation!: string;
 }

@@ -68,6 +68,7 @@
   - [Clean up and solve problem of @babel/.highlight.DELETE@latest when use lerna bootstrap](#clean-up-and-solve-problem-of-babelhighlightdeletelatest-when-use-lerna-bootstrap)
   - [Solve custom nestjs packages dependencies](#solve-custom-nestjs-packages-dependencies)
   - [Solve { Error: transaction returned with failure: {&quot;name&quot;:&quot;Error&quot;,&quot;status&quot;:500}](#solve--error-transaction-returned-with-failure-quotnamequotquoterrorquotquotstatusquot500)
+  - [Solve problem Cannot find module 'typescript/bin/tsc'](#solve-problem-cannot-find-module-typescriptbintsc)
 
 This is a simple NestJs starter, based on above links, I only extended it with a few things like **swagger api**, **https**, **jwt**, and other stuff, thanks m8s
 
@@ -96,7 +97,7 @@ This is a simple NestJs starter, based on above links, I only extended it with a
 # run test
 $ npm test
 
-# lift hyperledger
+# restart hyperledger network
 $ npm run env:restart
 You can find the network topology (ports, names) here: ${HOME}/hyperledger-fabric-network/docker-compose.yaml
 
@@ -105,19 +106,21 @@ $ npm run cc:start -- person
 
 # every change on @convector-sample/common, must be builded to be used in dependent packages
 $ npx lerna run build --scope @convector-sample/common
-
 # build person-cc or participant-cc (before upgrade person chaincode)
 $ npx lerna run build --scope @convector-sample/person-cc --stream
 $ npx lerna run build --scope @convector-sample/participant-cc --stream
+
 # upgrade smart contract
 $ VERSION=1.1
 $ npm run cc:upgrade -- person ${VERSION}
+# one liner version
+$ VERSION=1.1 && npx lerna run build --scope @convector-sample/person-cc --stream && npm run cc:upgrade -- person ${VERSION}
 # note: after deploy/upgrade wait a few second/minutes in first invoke,
 # when done we have a new container and command end with result `Upgraded Chaincode at org1`
 # watch for deployed container
 $ watch "docker container ls --format "{{.Names}}" | grep \"person-${VERSION}\""
-dev-peer0.org2.hurley.lab-person-${VERSION}
 dev-peer0.org1.hurley.lab-person-${VERSION}
+dev-peer0.org2.hurley.lab-person-${VERSION}
 
 # debug chaincode container
 $ docker container logs -f dev-peer0.org1.hurley.lab-person-${VERSION}
@@ -2540,3 +2543,38 @@ location of chaincode inside container dev-peer0.org1.hurley.lab-person-1.0
 the fix seems to be `npm run cc:package -- person org1` and it start to work
 
 strange after some fight, I restart other network to check it works, next I execute `npm run cc:package -- person org1` and restart network and now everything work again!!!
+
+## Solve problem Cannot find module 'typescript/bin/tsc'
+
+```shell
+$ npx lerna run build --scope @convector-sample/server-graphql --stream
+with start:dev gives only Cannot find module 'typescript/bin/tsc'
+```
+
+above error appens because of a missing package, to debug launch `lerna run start --scope @convector-sample/server-graphql` and start to figure what package is missing
+
+```shell
+$ lerna run start --scope @convector-sample/server-graphql
+uncaughtException: Cannot find module 'passport-jwt'
+Error: Cannot find module 'passport-jwt'
+# install missing packages
+$ npx lerna add passport-jwt --scope @convector-sample/server-graphql
+$ npx lerna add env-cmd -D --scope @convector-sample/server-graphql
+```
+
+another problem is can't launch scripts that are using tsc-watch, ex `start:dev` and `start:debug` the problem is the missing `tsc-watch`
+
+```shell
+$ tsc-watch -p tsconfig.build.json
+Cannot find module 'typescript/bin/tsc'
+# install it and the problem is fixed
+$ npx lerna add tsc-watch -D --scope @convector-sample/server-graphql
+```
+
+we can clean all, and bootstrap to chek if all packages are in `package.json files` with
+
+```shell
+# to check that all package are in package.json launch
+$ npx lerna clean -y && npx lerna bootstrap --hoist
+lerna success Bootstrapped 5 packages
+```

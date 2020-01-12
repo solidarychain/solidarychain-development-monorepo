@@ -1,12 +1,13 @@
 0 silly argv { _: [ 'add' ],
-0 silly argv   scope: '@convector-sample/frontend-react',
-0 silly argv   bootstrap: false,
+0 silly argv   D: true,
+0 silly argv   dev: true,
+0 silly argv   scope: '@convector-sample/server-graphql',
 0 silly argv   globs: [],
 0 silly argv   lernaVersion: '3.16.4',
 0 silly argv   '$0': 'node_modules/.bin/lerna',
-0 silly argv   pkg: 'react-router-com' }
+0 silly argv   pkg: '@type/generate-password' }
 1 notice cli v3.16.4
-2 verbose rootPath /media/mario/Storage/Development/BlockChain/Convector/NodeNestJsHyperLedgerConvectorRestStarter
-3 error Error: 404 Not Found - GET https://registry.npmjs.org/react-router-com - Not found
-3 error     at res.buffer.catch.then.body (/media/mario/Storage/Development/BlockChain/Convector/NodeNestJsHyperLedgerConvectorRestStarter/node_modules/@evocateur/npm-registry-fetch/check-response.js:104:15)
+2 verbose rootPath /media/mario/Storage/Development/@Solidary.Network/network
+3 error Error: 404 Not Found - GET https://registry.npmjs.org/@type%2fgenerate-password - Not found
+3 error     at res.buffer.catch.then.body (/media/mario/Storage/Development/@Solidary.Network/network/node_modules/@evocateur/npm-registry-fetch/check-response.js:104:15)
 3 error     at <anonymous>

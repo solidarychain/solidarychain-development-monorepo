@@ -6,6 +6,7 @@
   - [Links](#links)
   - [TypeGraphQL Notes](#typegraphql-notes)
   - [JSON Scalar Type](#json-scalar-type)
+  - [Date Scalars](#date-scalars)
   - [Add all Other Query/Mutations](#add-all-other-querymutations)
   - [How to use content attribute](#how-to-use-content-attribute)
   - [Problem with RichQueries with Object](#problem-with-richqueries-with-object)
@@ -23,13 +24,15 @@
 DONt forget to build common package `@convector-sample/common`, if something change, but first restart server
 
 ```shell
-# build common library: this is required on fresh clones before lerna boostrap else `Cannot find module '@convector-sample/common'`
+# build common library: this is required on fresh clones before lerna bootstrap else `Cannot find module '@convector-sample/common'`
 $ npx lerna run build --scope @convector-sample/common --stream
 ```
 
 ```shell
-# start debug
+# start debug (inside vscode)
 $ npx lerna run start:debug --scope @convector-sample/server-graphql --stream
+# start dev
+$ npx lerna run start:dev --scope @convector-sample/server-graphql --stream
 ```
 
 - [GraphQL Playground](http://localhost:3000/graphql)
@@ -85,7 +88,7 @@ all input types required to have names `@Args('getByAttributeInput') argument`, 
 $ npx lerna add graphql-type-json --scope @convector-sample/server-graphql
 ```
 
-to use `any` in grapl we must implement a custom scalar type or use the [graphql-type-json](https://github.com/taion/graphql-type-json) package
+to use `any` in graphql we must implement a custom scalar type or use the [graphql-type-json](https://github.com/taion/graphql-type-json) package
 
 - [Dynamic (Unique) Objects in GraphQl](https://stackoverflow.com/questions/33819658/dynamic-unique-objects-in-graphql)
 
@@ -111,6 +114,14 @@ after, test with more than on attribute with
 $ npx hurl invoke person person_addAttribute 1-100-101 '{"id": "graduated-year", "certifierID": "gov", "content": "1999", "issuedDate": 1554239270 }' -u admin
 $ npx hurl invoke person person_addAttribute 1-100-101 '{"id": "marriage-year", "certifierID": "gov", "content": "2012", "issuedDate": 1554239270 }' -u admin
 ```
+
+## Date Scalars
+
+- [Date Scalars](https://typegraphql.ml/docs/scalars.html#date-scalars)
+
+use date with convector models [post](Convector: what is the best way to store Date type in convector models?)
+the trick is using epoch time in convector models and a Date scalar to convert from epoch to date and vs
+check `packages/server-graphql/src/common/scalars/date.scalar.ts`
 
 ## Add all Other Query/Mutations
 
