@@ -144,7 +144,7 @@ $ ./views/install.sh
 # is always good to launch above command to log chaincode activity inside vscode, like restartEnv etc
 # debug chain code (remember breakpoint are set in .js no ts files)
 # TRICK: to debug always use hurl, if we start/restart graphql we lost chaincode debugger
-# TRICK: in case of not stop on breakpoint use debugger;
+# TRICK: in case of not stop on breakpoint use debugger; and put breakPoint on start of function is on start of `create`
 # TRICK: we can put some breakpoint into .ts it works too after stop in .js
 # TRICK: if change something on .ts while debug don't forget to build chaincode with 'npx lerna run build --scope @convector-sample/person-cc --stream' and deploy, and restart debug again
 # TRICK don't forget that breakpoint to work must be inside the chaincode-person/packages/@convector-sample/person-cc/src/person.controller.ts folder that is generated on chaincode builds, and not the default packages/person-cc/src/person.controller.ts
