@@ -1,10 +1,12 @@
 import React, { Fragment, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
-import { Loading, ErrorMessage } from '../components';
+import { Loading, ShowMessage } from '../components';
 import { NewPersonInput, usePersonNewMutation } from '../generated/graphql';
 import { Link } from 'react-router-dom';
 import { appConstants as c } from '../constants';
 import { v4 as uuid } from 'uuid';
+import { headerLinksNavStyle } from '../common';
+import { MessageType } from '../types';
 
 // use RouteComponentProps to get history props from Route
 export const Register: React.FC<RouteComponentProps> = ({ history }) => {
@@ -27,7 +29,7 @@ export const Register: React.FC<RouteComponentProps> = ({ history }) => {
 	};
 	const onChangeFiscalNumberHandler = (e: React.SyntheticEvent) => {
 		setFiscalNumber((e.target as HTMLSelectElement).value)
-	};	
+	};
 	const onChangeFirstnameHandler = (e: React.SyntheticEvent) => {
 		setFirstname((e.target as HTMLSelectElement).value)
 	};
@@ -56,7 +58,8 @@ export const Register: React.FC<RouteComponentProps> = ({ history }) => {
 
 			if (response) {
 				// use history to send user to homepage, after awaiting for response object
-				history.push('/');
+				// history.push('/');
+				history.push({pathname: '/', state: { message: `user registered successfully! welcome, you can login with ${username}`}});
 			}
 		} catch (error) {
 			console.error(error);
@@ -65,44 +68,73 @@ export const Register: React.FC<RouteComponentProps> = ({ history }) => {
 
 	return (
 		<Fragment>
+      <div style={headerLinksNavStyle}>
+        <Link to='/'>login</Link>
+      </div>
 			<h2>Register</h2>
 			<form onSubmit={(e) => onSubmitFormHandler(e)}>
-				<input
-					value={id}
-					placeholder='id'
-					onChange={(e) => onChangeIdHandler(e)} />
-				<input
-					value={fiscalNumber}
-					placeholder='fiscalNumber'
-					onChange={(e) => onChangeFiscalNumberHandler(e)} />
-				<input
-					value={firstname}
-					placeholder='firstname'
-					onChange={(e) => onChangeFirstnameHandler(e)} />
-				<input
-					value={lastname}
-					placeholder='lastname'
-					onChange={(e) => onChangeLastnameHandler(e)} />
-				<input
-					value={email}
-					placeholder='email'
-					onChange={(e) => onChangeEmailHandler(e)} />
-				<input
-					value={username}
-					placeholder='username'
-					onChange={(e) => onChangeUsernameHandler(e)} />
-				<input
-					value={password}
-					placeholder='password'
-					type='password'
-					onChange={(e) => onChangePasswordHandler(e)} />
+				{/* id */}
+				<label>{c.KEYWORDS.id}:</label>
+				<div>
+					<input
+						value={id}
+						placeholder='id'
+						onChange={(e) => onChangeIdHandler(e)} />
+				</div>
+				{/* fiscalNumber */}
+				<label>{c.KEYWORDS.fiscalNumber}:</label>
+				<div>
+					<input
+						value={fiscalNumber}
+						placeholder='fiscalNumber'
+						onChange={(e) => onChangeFiscalNumberHandler(e)} />
+				</div>
+				{/* firstname */}
+				<label>{c.KEYWORDS.firstname}:</label>
+				<div>
+					<input
+						value={firstname}
+						placeholder='firstname'
+						onChange={(e) => onChangeFirstnameHandler(e)} />
+				</div>
+				{/* lastname */}
+				<label>{c.KEYWORDS.lastname}:</label>
+				<div>
+					<input
+						value={lastname}
+						placeholder='lastname'
+						onChange={(e) => onChangeLastnameHandler(e)} />
+				</div>
+				{/* email */}
+				<label>{c.KEYWORDS.email}:</label>
+				<div>
+					<input
+						value={email}
+						placeholder='email'
+						onChange={(e) => onChangeEmailHandler(e)} />
+				</div>
+				{/* username */}
+				<label>{c.KEYWORDS.username}:</label>
+				<div>
+					<input
+						value={username}
+						placeholder='username'
+						onChange={(e) => onChangeUsernameHandler(e)} />
+				</div>
+				{/* password */}
+				<label>{c.KEYWORDS.password}:</label>
+				<div>
+					<input
+						value={password}
+						placeholder='password'
+						type='password'
+						onChange={(e) => onChangePasswordHandler(e)} />
+				</div>
+				{/* submit */}
 				<button type='submit'>register</button>
 			</form>
-			<div>
-				<Link to='/'>login</Link>
-			</div>
-			{error && <ErrorMessage error={error.message}/>}
-			{loading && <Loading/>}
+			{error && <ShowMessage type={MessageType.ERROR} message={error.message} />}
+			{loading && <Loading />}
 		</Fragment>
 	);
 }

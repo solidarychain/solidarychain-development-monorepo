@@ -2,13 +2,15 @@ import * as React from 'react';
 import { Fragment } from 'react';
 import { RouteComponentProps } from 'react-router';
 import { ActionType, useStateValue } from '../app/state';
-import { setAccessToken } from '../common';
-import { ErrorMessage, Loading } from '../components';
+import { setAccessToken, headerLinksNavStyle } from '../common';
+import { ShowMessage, Loading } from '../components';
 import { LoginPersonInput, PersonProfileDocument, usePersonLoginMutation } from '../generated/graphql';
 import { Link } from 'react-router-dom';
+import { appConstants as c } from '../constants';
+import { MessageType } from '../types';
 
 // use RouteComponentProps to get history props from Route
-export const Login: React.FC<RouteComponentProps> = ({ history }) => {
+export const Login: React.FC<RouteComponentProps> = ({ history, location }) => {
 	// get hook
 	const [, dispatch] = useStateValue();
 
@@ -86,23 +88,33 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
 
 	return (
 		<Fragment>
+      <div style={headerLinksNavStyle}>
+        <Link to='/register'>register</Link>
+      </div>
 			<h2>Login</h2>
 			<form onSubmit={(e) => onSubmitFormHandler(e)}>
-				<input
-					value={username}
-					placeholder='username'
-					onChange={(e) => onChangeUsernameHandler(e)} />
-				<input
-					value={password}
-					placeholder='password'
-					type='password'
-					onChange={(e) => onChangePasswordHandler(e)} />
+				{/* username */}
+				<label>{c.KEYWORDS.username}:</label>
+				<div>
+					<input
+						value={username}
+						placeholder='username'
+						onChange={(e) => onChangeUsernameHandler(e)} />
+				</div>
+				{/* password */}
+				<label>{c.KEYWORDS.password}:</label>
+				<div>
+					<input
+						value={password}
+						placeholder='password'
+						type='password'
+						onChange={(e) => onChangePasswordHandler(e)} />
+				</div>
+				{/* submit */}
 				<button type='submit'>login</button>
 			</form>
-			<div>
-				<Link to='/register'>register</Link>
-			</div>
-			{error && <ErrorMessage error={error.message} />}
+			{(location.state && location.state.message) && <ShowMessage type={MessageType.SUCCESS} message={location.state.message} />}
+			{error && <ShowMessage type={MessageType.ERROR} message={error.message} />}
 			{loading && <Loading />}
 		</Fragment>
 	);

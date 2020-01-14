@@ -12,11 +12,12 @@ import { PersonService } from './person.service';
 
 const pubSub = new PubSub();
 
-@UseGuards(GqlAuthGuard)
+// @UseGuards(GqlAuthGuard)
 @Resolver(of => Person)
 export class PersonResolver {
   constructor(private readonly personService: PersonService) { }
 
+  @UseGuards(GqlAuthGuard)
   @Query(returns => Person)
   async personById(
     @Args('id') id: string,
@@ -28,6 +29,7 @@ export class PersonResolver {
     return person;
   }
 
+  @UseGuards(GqlAuthGuard)
   @Query(returns => Person)
   async personByUsername(
     @Args('username') username: string,
@@ -39,6 +41,7 @@ export class PersonResolver {
     return person;
   }
 
+  @UseGuards(GqlAuthGuard)
   @Query(returns => [Person])
   async persons(
     @Args() personsArgs: PersonArgs,
@@ -46,6 +49,7 @@ export class PersonResolver {
     return this.personService.findAll(personsArgs);
   }
 
+  @UseGuards(GqlAuthGuard)
   @Query(returns => [Person])
   async personByAttribute(
     @Args('getByAttributeInput') getByAttributeInput: GetByAttributeInput,
@@ -54,11 +58,13 @@ export class PersonResolver {
     return this.personService.findByAttribute(getByAttributeInput, personsArgs);
   }
 
+  @UseGuards(GqlAuthGuard)
   @Query(returns => Person)
   async personProfile(@CurrentUser() user: Person): Promise<Person> {
     return await this.personService.findOneByUsername(user.username);
   }
 
+  // unprotected method
   @Mutation(returns => Person)
   async personNew(
     @Args('newPersonData') newPersonData: NewPersonInput,
@@ -68,6 +74,7 @@ export class PersonResolver {
     return person;
   }
 
+  @UseGuards(GqlAuthGuard)
   @Mutation(returns => Person)
   async personAddAttribute(
     @Args('personId') personId: string,
@@ -77,6 +84,7 @@ export class PersonResolver {
     return person;
   }
 
+  @UseGuards(GqlAuthGuard)
   @Subscription(returns => Person)
   personAdded() {
     return pubSub.asyncIterator('personAdded');

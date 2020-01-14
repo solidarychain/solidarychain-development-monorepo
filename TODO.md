@@ -110,3 +110,8 @@ lerna success - @solidary-network/frontend-react
 lerna success - @solidary-network/participant-cc
 lerna success - @solidary-network/person-cc
 lerna success - @solidary-network/server-graphql
+
+
+## React FrontEnd
+
+- [-] Clean state after logout

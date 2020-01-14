@@ -1,7 +1,7 @@
 
 // stub
 const REGISTER_DEFAULT_USER = {
-  fiscalNumber: '182692124',
+  fiscalNumber: '282692124',
   firstname: 'Mário',
   lastname: 'Monteiro',
   email: 'mario@koakh.com',

@@ -1,3 +1,3 @@
-export * from './ErrorMessage';
+export * from './ShowMessage';
 export * from './Header';
 export * from './Loading';

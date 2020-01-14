@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { getAccessToken } from '../common';
-import { ErrorMessage, Loading } from '../components';
+import { ShowMessage, Loading } from '../components';
 import { envVariables as e } from '../env';
 import { Person, usePersonsLazyQuery } from '../generated/graphql';
+import { MessageType } from '../types';
 
 interface Props { }
 
@@ -23,7 +24,7 @@ export const Home: React.FC<Props> = () => {
 
   // catch error first
   if (error) {
-    return <ErrorMessage error={error.message} />;
+    return <ShowMessage type={MessageType.ERROR} message={error.message} />;
   }
 
   if (loading || !data) {
