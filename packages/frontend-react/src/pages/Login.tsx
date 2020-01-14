@@ -5,6 +5,7 @@ import { ActionType, useStateValue } from '../app/state';
 import { setAccessToken } from '../common';
 import { ErrorMessage, Loading } from '../components';
 import { LoginPersonInput, PersonProfileDocument, usePersonLoginMutation } from '../generated/graphql';
+import { Link } from 'react-router-dom';
 
 // use RouteComponentProps to get history props from Route
 export const Login: React.FC<RouteComponentProps> = ({ history }) => {
@@ -12,7 +13,7 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
 	const [, dispatch] = useStateValue();
 
 	const defaults = {
-		username: 'johndoe',
+		username: 'koakh',
 		password: '12345678',
 	};
 	// hooks: state
@@ -98,6 +99,9 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
 					onChange={(e) => onChangePasswordHandler(e)} />
 				<button type='submit'>login</button>
 			</form>
+			<div>
+				<Link to='/register'>register</Link>
+			</div>
 			{error && <ErrorMessage error={error.message} />}
 			{loading && <Loading />}
 		</Fragment>

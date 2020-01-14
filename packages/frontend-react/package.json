@@ -6,7 +6,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "gen:graphql": "NODE_TLS_REJECT_UNAUTHORIZED=0 graphql-codegen --config codegen.yml"
+    "gen:graphql": "NODE_TLS_REJECT_UNAUTHORIZED=0 graphql-codegen",
+    "gen:graphql:watch": "NODE_TLS_REJECT_UNAUTHORIZED=0 graphql-codegen --watch"
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.1",
@@ -23,7 +24,8 @@
     "react-dom": "^16.9.0",
     "react-router-dom": "^5.1.0",
     "react-scripts": "3.1.2",
-    "typescript": "3.6.3"
+    "typescript": "3.6.3",
+    "uuid": "^3.3.3"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^1.11.2",
@@ -33,7 +35,8 @@
     "@graphql-codegen/typescript-react-apollo": "^1.11.2",
     "@types/graphql": "^14.5.0",
     "@types/jwt-decode": "^2.2.1",
-    "@types/react-router-dom": "^5.1.0"
+    "@types/react-router-dom": "^5.1.0",
+    "@types/uuid": "^3.4.6"
   },
   "eslintConfig": {
     "extends": "react-app"

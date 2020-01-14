@@ -2615,15 +2615,3 @@ $ npx lerna run build --scope @solidary-network/common --stream
 $ npx lerna run build --scope @solidary-network/person-cc --stream
 $ npx lerna run build --scope @solidary-network/participant-cc --stream
 ```
-
-## MOVE TO REACT PROJECT
-
-Invalid regular expression: /\$\{(?<name>[A-Z0-9_]+)(\:((?<value>[^\:]+)|(\"(?<customValue>[^\"]+)\")))?\}/: Invalid group
-
-query personProfile {
-	personProfile {
-		# non citizenCard data
-		id
-		username
-		email
-		attributes {

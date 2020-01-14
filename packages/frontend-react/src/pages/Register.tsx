@@ -2,24 +2,22 @@ import React, { Fragment, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
 import { Loading, ErrorMessage } from '../components';
 import { NewPersonInput, usePersonNewMutation } from '../generated/graphql';
+import { Link } from 'react-router-dom';
+import { appConstants as c } from '../constants';
+import { v4 as uuid } from 'uuid';
 
 // use RouteComponentProps to get history props from Route
 export const Register: React.FC<RouteComponentProps> = ({ history }) => {
-	const defaults = {
-		id: '1-100-200',
-		firstname: 'Mário',
-		lastname: 'Monteiro',
-		email: 'mario@koakh.com',
-		username: 'mario',
-		password: '12345678',
-	};
+	// assign from appConstants
+	const defaultUser = c.REGISTER_DEFAULT_USER;
 	// hooks: state
-	const [id, setId] = useState(defaults.id)
-	const [firstname, setFirstname] = useState(defaults.firstname)
-	const [lastname, setLastname] = useState(defaults.lastname)
-	const [email, setEmail] = useState(defaults.email);
-	const [username, setUsername] = useState(defaults.username)
-	const [password, setPassword] = useState(defaults.password);
+	const [id, setId] = useState(uuid())
+	const [fiscalNumber, setFiscalNumber] = useState(defaultUser.fiscalNumber)
+	const [firstname, setFirstname] = useState(defaultUser.firstname)
+	const [lastname, setLastname] = useState(defaultUser.lastname)
+	const [email, setEmail] = useState(defaultUser.email);
+	const [username, setUsername] = useState(defaultUser.username)
+	const [password, setPassword] = useState(defaultUser.password);
 
 	// hooks: apollo
 	const [personNewMutation, { loading, error }] = usePersonNewMutation();
@@ -27,6 +25,9 @@ export const Register: React.FC<RouteComponentProps> = ({ history }) => {
 	const onChangeIdHandler = (e: React.SyntheticEvent) => {
 		setId((e.target as HTMLSelectElement).value)
 	};
+	const onChangeFiscalNumberHandler = (e: React.SyntheticEvent) => {
+		setFiscalNumber((e.target as HTMLSelectElement).value)
+	};	
 	const onChangeFirstnameHandler = (e: React.SyntheticEvent) => {
 		setFirstname((e.target as HTMLSelectElement).value)
 	};
@@ -47,7 +48,7 @@ export const Register: React.FC<RouteComponentProps> = ({ history }) => {
 		try {
 			e.preventDefault();
 			const newPersonData: NewPersonInput = {
-				id, firstname, lastname, email, username, password
+				id, fiscalNumber, firstname, lastname, email, username, password
 			};
 			const response = await personNewMutation({ variables: { newPersonData } }).catch(error => {
 				throw error;
@@ -71,6 +72,10 @@ export const Register: React.FC<RouteComponentProps> = ({ history }) => {
 					placeholder='id'
 					onChange={(e) => onChangeIdHandler(e)} />
 				<input
+					value={fiscalNumber}
+					placeholder='fiscalNumber'
+					onChange={(e) => onChangeFiscalNumberHandler(e)} />
+				<input
 					value={firstname}
 					placeholder='firstname'
 					onChange={(e) => onChangeFirstnameHandler(e)} />
@@ -93,6 +98,9 @@ export const Register: React.FC<RouteComponentProps> = ({ history }) => {
 					onChange={(e) => onChangePasswordHandler(e)} />
 				<button type='submit'>register</button>
 			</form>
+			<div>
+				<Link to='/'>login</Link>
+			</div>
 			{error && <ErrorMessage error={error.message}/>}
 			{loading && <Loading/>}
 		</Fragment>

@@ -16,9 +16,10 @@
     - [Add Cors Origin to express and apollo server](#add-cors-origin-to-express-and-apollo-server)
   - [Install GraphQL CodeGen](#install-graphql-codegen)
     - [init project](#init-project)
-      - [Debug Mode](#debug-mode)
+    - [Debug Mode](#debug-mode)
   - [Working with GraphQL-CodeGen](#working-with-graphql-codegen)
     - [Configure hooks plugins](#configure-hooks-plugins)
+  - [Problems and Solutions with graphql-codegen](#problems-and-solutions-with-graphql-codegen)
   - [Configure react Router](#configure-react-router)
   - [Apollo resetStore /Cache](#apollo-resetstore-cache)
   - [Use JS-Cookie](#use-js-cookie)
@@ -471,7 +472,7 @@ $ npx lerna bootstrap
 
 - [Codegen Options Config](https://graphql-code-generator.com/docs/getting-started/codegen-config)
 
-#### Debug Mode
+### Debug Mode
 
 - You can set the `DEBUG` environment to 1 in order to tell the Codegen to print debug information.
 - You can set the `VERBOSE` environment to 1 in order to tell the codegen to print more information regarding the CLI output (listr).
@@ -551,6 +552,50 @@ generates:
 ```
 
 now we some good stuff hooks use functions like `useParticipantByIdQuery` and `useParticipantByIdLazyQuery`
+
+## Problems and Solutions with graphql-codegen
+
+> UPDATED: 2020-01-14 20:12:59, after sometime without using codegen, now it gives below error
+
+```shell
+$ npx lerna run gen:graphql --scope @solidary-network/frontend-react --stream
+Invalid regular expression: /\$\{(?<name>[A-Z0-9_]+)(\:((?<value>[^\:]+)|(\"(?<customValue>[^\"]+)\")))?\}/: Invalid group
+```
+
+after a some debug found that is the parameter `--config codegen.yml` that is causing the problem, pure luck, removed `--config codegen.yml` and it from `package.json` start working again
+
+```json
+// KO
+"gen:graphql:watch": "NODE_TLS_REJECT_UNAUTHORIZED=0 graphql-codegen --config codegen.yml",
+// OK
+"gen:graphql:watch": "NODE_TLS_REJECT_UNAUTHORIZED=0 graphql-codegen",
+```
+
+```shell
+$ npx lerna run gen:graphql --scope @solidary-network/frontend-react --stream
+@solidary-network/frontend-react: > @solidary-network/frontend-react@0.1.0 gen:graphql /media/mario/Storage/Development/@Solidary.Network/network/packages/frontend-react
+@solidary-network/frontend-react: > NODE_TLS_REJECT_UNAUTHORIZED=0 graphql-codegen
+@solidary-network/frontend-react: [20:10:05] Parse configuration [started]
+@solidary-network/frontend-react: [20:10:05] Parse configuration [completed]
+@solidary-network/frontend-react: [20:10:05] Generate outputs [started]
+@solidary-network/frontend-react: [20:10:05] Generate src/generated/graphql.tsx [started]
+@solidary-network/frontend-react: [20:10:05] Generate ./graphql.schema.json [started]
+@solidary-network/frontend-react: [20:10:05] Load GraphQL schemas [started]
+@solidary-network/frontend-react: [20:10:05] Load GraphQL schemas [started]
+@solidary-network/frontend-react: [20:10:05] Load GraphQL schemas [completed]
+@solidary-network/frontend-react: [20:10:05] Load GraphQL documents [started]
+@solidary-network/frontend-react: [20:10:05] Load GraphQL schemas [completed]
+@solidary-network/frontend-react: [20:10:05] Load GraphQL documents [started]
+@solidary-network/frontend-react: [20:10:05] Load GraphQL documents [completed]
+@solidary-network/frontend-react: [20:10:05] Generate [started]
+@solidary-network/frontend-react: [20:10:05] Generate [completed]
+@solidary-network/frontend-react: [20:10:05] Generate src/generated/graphql.tsx [completed]
+@solidary-network/frontend-react: [20:10:05] Load GraphQL documents [completed]
+@solidary-network/frontend-react: [20:10:05] Generate [started]
+@solidary-network/frontend-react: [20:10:05] Generate [completed]
+@solidary-network/frontend-react: [20:10:05] Generate ./graphql.schema.json [completed]
+@solidary-network/frontend-react: [20:10:05] Generate outputs [completed
+```
 
 ## Configure react Router
 

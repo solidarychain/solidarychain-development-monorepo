@@ -1,28 +1,64 @@
+# inSync with insomnia
 query persons($skip: Int, $take: Int) {
-  persons(skip: $skip, take: $take) {
-    id
-    firstname
-    lastname
-    username
-    email
-    attributes {
-      id
-      content
-      issuedDate
-      expiresDate
-      expired
-      certifierID
-    }
-    roles
-    participant {
-      id
-      name
-      msp
-      identities {
-        id
-        status
-        fingerprint
-      }
-    }
-  }
+	persons(skip: $skip, take: $take) {
+		# non citizenCard data
+		id
+		username
+		email
+		attributes {
+			id
+			content
+			issuedDate
+			expiresDate
+			expired
+			certifierID
+		}
+		roles
+		participant {
+			id
+			name
+			msp
+			identities {
+				id
+				status
+				fingerprint
+			}
+		}
+		# extended non citizenCard data
+		mobilePhone
+		postal
+		city
+		region
+		geoLocation
+		timezone
+		personalInfo
+		internalInfo
+		profile
+		# citizenCard data
+		firstname
+		lastname
+		gender
+		height
+		fatherFirstname
+		fatherLastname
+		motherFirstname
+		motherLastname
+		birthDate
+		nationality
+		country
+		documentNumber
+		documentType
+		cardVersion
+		emissionDate
+		expirationDate
+		emittingEntity
+		identityNumber
+		fiscalNumber
+		socialSecurityNumber
+		beneficiaryNumber
+		pan
+		requestLocation
+		otherInformation
+		registrationDate
+	}
 }

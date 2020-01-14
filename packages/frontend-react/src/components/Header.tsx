@@ -33,17 +33,11 @@ export const Header: React.FC<Props> = () => {
 
   return (
     <header>
-      {state.user.logged ? (
-        <Fragment>
-          <div><Link to='/'>home</Link></div>
-          <div><Link to='/profile'>profile</Link></div>
-          <div><Link to='/state'>state</Link></div>
-        </Fragment>
-      ) : (
-        <div>
-          <Link to='/register'>register</Link>
-        </div>
-        )}
+      <Fragment>
+        <div><Link to='/'>home</Link></div>
+        <div><Link to='/profile'>profile</Link></div>
+        <div><Link to='/state'>state</Link></div>
+      </Fragment>
       {body}
       <div>
         {/* {!loading && data && data.personProfile ? (} */}

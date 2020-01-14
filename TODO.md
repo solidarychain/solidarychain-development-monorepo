@@ -82,6 +82,13 @@ mutations
 
 
 
+GENERATE solidary.network certificates
+and use it in project graphqlserver etc
+change localhost to domain
+
+
+
+
 
 TEMP.md
 NOTES2.md
