@@ -8,7 +8,7 @@
       "name": "Chrome",
       "type": "chrome",
       "request": "launch",
-      "url": "http://localhost:3000",
+      "url": "https://localhost:3000",
       "webRoot": "${workspaceRoot}/src",
       "userDataDir": "${workspaceRoot}/.vscode/chrome",
       "sourceMapPathOverrides": {
@@ -24,7 +24,7 @@
       "type": "browser-preview",
       "request": "launch",
       "name": "Browser Preview: Launch",
-      "url": "http://localhost:3000"
+      "url": "https://localhost:3000"
     }
   ]
 }

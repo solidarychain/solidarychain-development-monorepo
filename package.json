@@ -20,6 +20,7 @@
     "pkg:graphql:debug": "npx lerna run start:debug --scope @solidary-network/server-graphql --stream",
     "pkg:graphql:dev": "npx lerna run start:dev --scope @solidary-network/server-graphql --stream",
     "pkg:react": "npx lerna run start --scope @solidary-network/frontend-react --stream",
+    "pkg:react:gen:watch:": "npx lerna run gen:graphql:watch --scope @solidary-network/frontend-react --stream",
     "===================INTERNALS===================": "===================NO NEED TO CALL THEM DIRECTLY===================",
     "lerna:install": "lerna bootstrap",
     "lerna:build": "lerna run build",

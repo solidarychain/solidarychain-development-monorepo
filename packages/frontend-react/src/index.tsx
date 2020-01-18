@@ -73,6 +73,7 @@ const refreshLink = new TokenRefreshLink({
 const requestLink = new ApolloLink((operation, forward) =>
   new Observable(observer => {
     let handle: any;
+    // add breakpoint here to debug graphql operations
     Promise.resolve(operation)
       .then(operation => {
         // get inMemory accessToken from global variable

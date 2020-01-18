@@ -16,9 +16,15 @@ const KEYWORDS = {
 	email: "email",
 	username: "username",
 	password: "password",
+};
+const MESSAGES = {
+  ERROR: {
+    LOGIN_FAILED: 'login failed please try again...'
+  }
 }
 
 export const appConstants = {
   KEYWORDS,
+  MESSAGES,
   REGISTER_DEFAULT_USER,
 };

@@ -38,5 +38,15 @@
 				"label": ""
 			}
 		]
+	},
+	{
+		"path": "$ROOTPATH$/packages/frontend-react/src/index.tsx",
+		"bookmarks": [
+			{
+				"line": 110,
+				"column": 11,
+				"label": ""
+			}
+		]
 	}
 ]
