@@ -79,22 +79,24 @@ npx hurl invoke person participant_register naba "National Bank" -u user1 -o org
 
 # create person with all data
 ID=4ea88521-031b-4279-9165-9c10e1839001
-FIRST_NAME="Mário Monteiro"
-USER_NAME=koakh
+FIRST_NAME=John
+LAST_NAME=Doe
+USER_NAME=johndoe
 FISCAL_NUMBER=182692124
 DATE=61985472
-PAYLOAD="{\"id\":\"${ID}\",\"firstname\":\"${FIRST_NAME}\",\"lastname\":\"Mendes Monteiro\",\"beneficiaryNumber\":\"285191659\",\"birthDate\":\"${DATE}\",\"cardVersion\":\"006.007.23\",\"country\":\"PRT\",\"documentNumber\":\"09879462 0 ZZ3\",\"documentType\":\"Cartão De Cidadão\",\"emissionDate\":\"${DATE}\",\"emittingEntity\":\"República Portuguesa\",\"expirationDate\":\"${DATE}\",\"fatherFirstname\":\"Alberto\",\"fatherLastname\":\"De Andrade Monteiro\",\"fiscalNumber\":\"${FISCAL_NUMBER}\",\"gender\":\"M\",\"height\":\"1.81\",\"identityNumber\":\"098794620\",\"motherFirstname\":\"Maria Da Graça De Oliveira Mendes\",\"motherLastname\":\"Monteiro\",\"nationality\":\"PRT\",\"otherInformation\":\"\",\"pan\":\"0000036014662658\",\"requestLocation\":\"CRCiv. Figueira da Foz\",\"socialSecurityNumber\":\"11103478242\",\"username\":\"${USER_NAME}\",\"password\":\"12345678\",\"email\":\"mario.monteiro@mail.com\"}"
+PAYLOAD="{\"id\":\"${ID}\",\"firstname\":\"${FIRST_NAME}\",\"lastname\":\"${LAST_NAME}\",\"beneficiaryNumber\":\"285191659\",\"birthDate\":\"${DATE}\",\"cardVersion\":\"006.007.23\",\"country\":\"PRT\",\"documentNumber\":\"09879462 0 ZZ3\",\"documentType\":\"Cartão De Cidadão\",\"emissionDate\":\"${DATE}\",\"emittingEntity\":\"República Portuguesa\",\"expirationDate\":\"${DATE}\",\"fatherFirstname\":\"Alberto\",\"fatherLastname\":\"De Andrade Monteiro\",\"fiscalNumber\":\"${FISCAL_NUMBER}\",\"gender\":\"M\",\"height\":\"1.81\",\"identityNumber\":\"098794620\",\"motherFirstname\":\"Maria Da Graça De Oliveira Mendes\",\"motherLastname\":\"Monteiro\",\"nationality\":\"PRT\",\"otherInformation\":\"\",\"pan\":\"0000036014662658\",\"requestLocation\":\"CRCiv. Figueira da Foz\",\"socialSecurityNumber\":\"11103478242\",\"username\":\"${USER_NAME}\",\"password\":\"12345678\",\"email\":\"mario.monteiro@mail.com\"}"
 # echo $PAYLOAD  | jq
 npx hurl invoke person person_create "${PAYLOAD}" -u admin
 npx hurl invoke person person_get ${ID}
 
 # create person with all extended data
 ID=4ea88521-031b-4279-9165-9c10e1838009
-FIRST_NAME="Jorge Monteiro"
-USER_NAME=jorge
+FIRST_NAME=Jane
+LAST_NAME=Doe
+USER_NAME=janedoe
 FISCAL_NUMBER=582692177
 DATE=61985472
-PAYLOAD="{\"id\":\"${ID}\",\"firstname\":\"${FIRST_NAME}\",\"lastname\":\"Mendes Monteiro\",\"beneficiaryNumber\":\"285191659\",\"birthDate\":\"${DATE}\",\"cardVersion\":\"006.007.23\",\"country\":\"PRT\",\"documentNumber\":\"09879462 0 ZZ3\",\"documentType\":\"Cartão De Cidadão\",\"emissionDate\":\"${DATE}\",\"emittingEntity\":\"República Portuguesa\",\"expirationDate\":\"${DATE}\",\"fatherFirstname\":\"Alberto\",\"fatherLastname\":\"De Andrade Monteiro\",\"fiscalNumber\":\"${FISCAL_NUMBER}\",\"gender\":\"M\",\"height\":\"1.81\",\"identityNumber\":\"098794620\",\"motherFirstname\":\"Maria Da Graça De Oliveira Mendes\",\"motherLastname\":\"Monteiro\",\"nationality\":\"PRT\",\"otherInformation\":\"\",\"pan\":\"0000036014662658\",\"requestLocation\":\"CRCiv. Figueira da Foz\",\"socialSecurityNumber\":\"11103478242\",\"username\":\"${USER_NAME}\",\"password\":\"12345678\",\"email\":\"mario.monteiro@mail.com\",\"mobilePhone\":\"351936202288\",\"postal\":\"3080-032\",\"city\":\"Figueira da Foz\",\"region\":\"Coimbra\",\"geoLocation\":\"40.1508,-8.8618\",\"timezone\":\"Europe/Lisbon\",\"personalInfo\":\"Just an ordinary man\",\"internalInfo\":\"Aspiring Good Hearth\",\"profile\":{\"data\":{\"key\":\"value\"}}}"
+PAYLOAD="{\"id\":\"${ID}\",\"firstname\":\"${FIRST_NAME}\",\"lastname\":\"${LAST_NAME}\",\"beneficiaryNumber\":\"285191659\",\"birthDate\":\"${DATE}\",\"cardVersion\":\"006.007.23\",\"country\":\"PRT\",\"documentNumber\":\"09879462 0 ZZ3\",\"documentType\":\"Cartão De Cidadão\",\"emissionDate\":\"${DATE}\",\"emittingEntity\":\"República Portuguesa\",\"expirationDate\":\"${DATE}\",\"fatherFirstname\":\"Alberto\",\"fatherLastname\":\"De Andrade Monteiro\",\"fiscalNumber\":\"${FISCAL_NUMBER}\",\"gender\":\"M\",\"height\":\"1.81\",\"identityNumber\":\"098794620\",\"motherFirstname\":\"Maria Da Graça De Oliveira Mendes\",\"motherLastname\":\"Monteiro\",\"nationality\":\"PRT\",\"otherInformation\":\"\",\"pan\":\"0000036014662658\",\"requestLocation\":\"CRCiv. Figueira da Foz\",\"socialSecurityNumber\":\"11103478242\",\"username\":\"${USER_NAME}\",\"password\":\"12345678\",\"email\":\"mario.monteiro@mail.com\",\"mobilePhone\":\"351936202288\",\"postal\":\"3080-032\",\"city\":\"Figueira da Foz\",\"region\":\"Coimbra\",\"geoLocation\":\"40.1508,-8.8618\",\"timezone\":\"Europe/Lisbon\",\"personalInfo\":\"Just an ordinary man\",\"internalInfo\":\"Aspiring Good Hearth\",\"profile\":{\"data\":{\"key\":\"value\"}}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke person person_create "${PAYLOAD}" -u admin
 npx hurl invoke person person_get ${ID}
@@ -108,3 +110,47 @@ PAYLOAD="{\"id\":\"${ID}\",\"fiscalNumber\":\"${FISCAL_NUMBER}\",\"username\":\"
 # echo $PAYLOAD  | jq
 npx hurl invoke person person_create "${PAYLOAD}" -u admin
 npx hurl invoke person person_get ${ID}
+
+# create transaction
+ID=acef70e5-cd25-4533-8392-9fa57e43cf9c
+NAME="transaction#002"
+INPUT_ID=2b2227fa-24ca-4586-bbde-6cff6bf407c1
+INPUT_TYPE=PARTICIPANT
+OUTPUT_ID=dc9f897a-cf46-448a-a679-45096b70ab02
+OUTPUT_TYPE=PERSON
+PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\", \"input\": { \"id\": \"${INPUT_ID}\", \"type\": \"${INPUT_TYPE}\" }, \"output\": { \"id\": \"${OUTPUT_ID}\", \"type\": \"${OUTPUT_TYPE}\" } }"
+# echo $PAYLOAD  | jq
+npx hurl invoke person transaction_create "${PAYLOAD}" -u admin
+npx hurl invoke person transaction_get ${ID}
+
+ID=25a0d90b-a3bd-4ec5-ae05-b334165d63ec
+NAME="transaction#002"
+PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\"}"
+# echo $PAYLOAD  | jq
+npx hurl invoke person transaction_create "${PAYLOAD}" -u admin
+npx hurl invoke person transaction_get ${ID}
+
+# 2b2227fa-24ca-4586-bbde-6cff6bf407c1
+# dc9f897a-cf46-448a-a679-45096b70ab02
+# ee89a51e-3bd6-41be-9cae-d6b1c849325e
+# d04f961a-3df5-45fb-9ae0-f852b982c80e
+# 6e53770d-c347-4ae2-b9a4-4416f90d6ed4
+# bdd78c8d-3810-4ea4-a462-a881b00d685c
+# ecd650fb-4806-443d-9ae9-7bdc495ca52a
+# bff2170a-0b8d-4ee2-8003-ee19bfb77c7b
+# f7b31818-0243-49d0-96c9-888b30da498f
+
+# npm run cc:package -- person org1
+
+# $ npx hurl invoke person person_get ${ID}
+# [hurley] - 4ea88521-031b-4279-9165-9c10e1839051
+# [hurley] - Sending transaction as user1 in org org1...
+# [hurley] - No peer ran tx successfully!
+# undefined
+# { Error: transaction returned with failure: {"name":"Error","status":500}
+
+# Error: Bad response: 500 - error installing chaincode code person:1.0(chaincode /var/hyperledger/production/chaincodes/person.1.0 exists)
+# Installed Chaincode person version 1.0 at org2
+
+# chaincode-org1
+# chaincode-person

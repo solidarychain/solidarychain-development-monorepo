@@ -9,6 +9,7 @@ export class x509Identities extends ConvectorModel<x509Identities>{
   @Validate(yup.boolean())
   @Required()
   status: boolean;
+
   @Validate(yup.string())
   @Required()
   fingerprint: string;

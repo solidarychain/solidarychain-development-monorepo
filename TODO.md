@@ -19,7 +19,7 @@
   [X] User must belong to one organization, else usernames can collide in same Ledger, store Participant relation in Person.Participant
     [-] Create 2 or more users with same username, but in different Participants
 - [X] Nest.js/GraphQL with AuthGuards
-- [X] Refactor `@convector-rest-sample/common` to other name (remove rest for ex to work with graphql and rest)
+- [X] Refactor `@solidary-network/common` to other name (remove rest for ex to work with graphql and rest)
 
 - [-] Add Explore the Blocks <https://docs.worldsibu.com/article/92-explore-blocks>
 - [-] Debug SmartContract in VsCode Notes
