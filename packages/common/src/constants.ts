@@ -23,6 +23,8 @@ const YUP_MESSAGE_INVALID_PASSWORD: string = 'Password can only contain Latin le
 const REGEX_EMAIL: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
 const REGEX_UUID_V4: RegExp = /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/;
 const REGEX_PASSWORD: RegExp = /[1-9a-zA-Z]/;
+const REGEX_LOCATION: RegExp = /^([-+]?)([\d]{1,2})(((\.)(\d+)(,)))(\s*)(([-+]?)([\d]{1,3})((\.)(\d+))?)$/;
+
 
 export const appConstants = {
 	// convector models
@@ -45,4 +47,5 @@ export const appConstants = {
 	REGEX_EMAIL,
 	REGEX_UUID_V4,
 	REGEX_PASSWORD,
+	REGEX_LOCATION, 
 };

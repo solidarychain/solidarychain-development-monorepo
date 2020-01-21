@@ -8,8 +8,20 @@ export enum EntityType {
   Cause = 'CAUSE'
 }
 
+export enum TransactionType {
+  Create = 'CREATE',
+  Transfer = 'TRANSFER',
+}
+
+export enum ResourceType {
+  Funds = 'FUNDS',
+  Time = 'TIME',
+  PhysicalAsset = 'PHYSICAL_ASSET',
+  DigitalAsset = 'DIGITAL_ASSET',
+}
+
 export interface Entity {
   id: string;
   type: EntityType;
-  output: FlatConvectorModel<Participant | Person>;
+  entity: FlatConvectorModel<Participant | Person>;
 }

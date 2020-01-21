@@ -1,7 +1,10 @@
 #!/bin/sh
 
-read -p "Enter chaincode version [1.0]: " VERSION
+FILE_VERSION=upgrade-chaincode.txt
+[ -f $FILE_VERSION ] && VERSION=$(cat ${FILE_VERSION})
+read -p "Enter chaincode version. current VERSION is [${VERSION:-1.0}]: " VERSION
 VERSION=${VERSION:-1.0}
+echo ${VERSION} > ${FILE_VERSION}
 
 if [ $VERSION -eq "" ]
   then

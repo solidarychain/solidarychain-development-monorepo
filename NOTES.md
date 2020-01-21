@@ -71,6 +71,8 @@
   - [Solve problem Cannot find module 'typescript/bin/tsc'](#solve-problem-cannot-find-module-typescriptbintsc)
   - [Problemn tests/participant.spec.ts(30,11): error TS1005: ':' expected.](#problemn-testsparticipantspects3011-error-ts1005--expected)
   - [Add new trasaction-cc module](#add-new-trasaction-cc-module)
+  - [YUP Validation notes](#yup-validation-notes)
+  - [Currency codes iso4217](#currency-codes-iso4217)
 
 This is a simple NestJs starter, based on above links, I only extended it with a few things like **swagger api**, **https**, **jwt**, and other stuff, thanks m8s
 
@@ -2678,3 +2680,11 @@ $ npx lerna add @solidary-network/common --scope @solidary-network/transaction-c
 $ npx lerna add @solidary-network/person-cc --scope @solidary-network/transaction-cc
 $ npx lerna add @solidary-network/participant-cc --scope @solidary-network/transaction-cc
 ```
+
+## YUP Validation notes
+
+- [How Does yup.addMethod() Work? Creating Custom Validation Functions With Yup](https://medium.com/@arkadyt/how-does-yup-addmethod-work-creating-custom-validation-functions-with-yup-8fddb71a5470)
+
+## Currency codes iso4217
+
+- [Very simple lib to check if something is a iso 4217 currency code](https://github.com Boelensman1/validate-currency-code)

@@ -112,16 +112,46 @@ npx hurl invoke person person_create "${PAYLOAD}" -u admin
 npx hurl invoke person person_get ${ID}
 
 # create transaction
-ID=acef70e5-cd25-4533-8392-9fa57e43cf9c
-NAME="transaction#002"
-INPUT_ID=2b2227fa-24ca-4586-bbde-6cff6bf407c1
+# {
+#   "id": "${ID}",
+#   "transactionType": "${TRANSACTION_TYPE}",
+#   "resourceType":"${RESOURCE_TYPE}",
+#   "input": {
+#     "type": "${INPUT_TYPE}",
+#     "id": "${INPUT_ID}"
+#   },
+#   "output": {
+#     "type": "${OUTPUT_TYPE}",
+#     "id": "${OUTPUT_ID}"
+#   },
+#   "quantity": "${QUANTITY}",
+#   "currency": "${CURRENCY}",
+#   "location": "${LOCATION}",
+#   "metaData": {
+#     "key": "value"
+#   },
+#   "metaDataInternal": {
+#     "key": "internal value"
+#   }
+# }
+ID=acef70e5-cd25-4533-8392-9fa57e43cf11
+TRANSACTION_TYPE=CREATE
+RESOURCE_TYPE=FUNDS
 INPUT_TYPE=PARTICIPANT
-OUTPUT_ID=dc9f897a-cf46-448a-a679-45096b70ab02
+INPUT_ID=gov
 OUTPUT_TYPE=PERSON
-PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\", \"input\": { \"id\": \"${INPUT_ID}\", \"type\": \"${INPUT_TYPE}\" }, \"output\": { \"id\": \"${OUTPUT_ID}\", \"type\": \"${OUTPUT_TYPE}\" } }"
+OUTPUT_ID=4ea88521-031b-4279-9165-9c10e1838009
+QUANTITY=1.11
+CURRENCY=EUR
+LOCATION=40.1890144,-8.5171909
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke person transaction_create "${PAYLOAD}" -u admin
 npx hurl invoke person transaction_get ${ID}
+
+
+
+
 
 ID=25a0d90b-a3bd-4ec5-ae05-b334165d63ec
 NAME="transaction#002"
