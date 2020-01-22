@@ -102,8 +102,8 @@ npx hurl invoke person person_create "${PAYLOAD}" -u admin
 npx hurl invoke person person_get ${ID}
 
 # create person with minimal required data
-ID=4ea88521-031b-4279-9165-9c10e1839051
-FISCAL_NUMBER=182692151
+ID=4ea88521-031b-4279-9165-9c10e1839053
+FISCAL_NUMBER=182692152
 USER_NAME=${FISCAL_NUMBER}
 PASS_WORD=12345678
 PAYLOAD="{\"id\":\"${ID}\",\"fiscalNumber\":\"${FISCAL_NUMBER}\",\"username\":\"${USER_NAME}\", \"password\":\"${PASS_WORD}\"}"
@@ -134,14 +134,15 @@ npx hurl invoke person person_get ${ID}
 #     "key": "internal value"
 #   }
 # }
-ID=acef70e5-cd25-4533-8392-9fa57e43cf11
+ID=acef70e5-cd25-4533-8392-9fa57e43cf23
 TRANSACTION_TYPE=CREATE
 RESOURCE_TYPE=FUNDS
 INPUT_TYPE=PARTICIPANT
 INPUT_ID=gov
 OUTPUT_TYPE=PERSON
 OUTPUT_ID=4ea88521-031b-4279-9165-9c10e1838009
-QUANTITY=1.11
+# Was converted to 1.11 :)
+QUANTITY=1.11--ERROR
 CURRENCY=EUR
 LOCATION=40.1890144,-8.5171909
 PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"}}"

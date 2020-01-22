@@ -9,41 +9,49 @@ export class Transaction extends ConvectorModel<Transaction> {
   @Required()
   public readonly type = c.CONVECTOR_MODEL_PATH_TRANSACTION;
 
-  @ReadOnly()
+  // FUCK we can't use // @ReadOnly() else yup validations won't work!!!!!!!
+  // remove all @ReadOnly() from everywhere
+
+  // TODO add identities to person model
+  // TODO add cause model
+  // TODO Fix all transaction validations
+
+  // Error for field 'input' with val '{\"entity\":{\"id\":\"gov\",\"type\":\"network.solidary.convector.participant\",\"name\":\"Big Government\",\"msp\":\"org1MSP\",\"identities\":[{\"fingerprint\":\"80:B8:43:ED:00:3E:1E:C4:ED:F8:11:70:B9:2B:F1:02:0C:C3:8C:F5\",\"status\":true}]}}' id is a required field"}
+
+  // @ReadOnly()
   @Required()
   @Validate(transactionTypeSchema)
   public transactionType: TransactionType;
 
-  @ReadOnly()
+  // @ReadOnly()
   @Required()
   @Validate(resourceTypeSchema)
-  public resourceType: ResourceType;  
+  public resourceType: ResourceType;
 
-  @ReadOnly()
+  // @ReadOnly()
   @Required()
   @Validate(entitySchema)
   public input: Entity;
 
-  @ReadOnly()
+  // @ReadOnly()
   @Required()
   @Validate(entitySchema)
   public output: Entity;
 
-  @ReadOnly()
-  @Required()
+  // @ReadOnly()
+  // @Required()
   @Validate(yup.number())
   public quantity: number;
 
-  @ReadOnly()
+  // @ReadOnly()
   @Required()
   @Validate(currencySchema)
   public currency: string;
 
-  @ReadOnly()
+  // @ReadOnly()
   @Validate(yup.string().matches(c.REGEX_LOCATION))
   public location: string;
 
-  @Required()
   @Validate(yup.object().nullable())
   public metaData: any;
 

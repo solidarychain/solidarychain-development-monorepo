@@ -24,39 +24,14 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     // add date in epoch unix time
     transaction.created = new Date().getTime();
 
-    // inner function
-    // const getEntity = async (entityType: EntityType, id: string) => {
-    //   let result;
-    //   switch (entityType) {
-    //     case EntityType.Participant:
-    //       const participant = await Participant.getOne(id);
-    //       if (!participant || !participant.identities) {
-    //         throw new Error(`No participant found with id ${id}`);
-    //       }
-    //       result = participant;
-    //       break;
-    //     case EntityType.Person:
-    //       const person = await Person.getOne(id);
-    //       if (!person || !person.id) {
-    //         throw new Error(`No person found with id ${id}`);
-    //       }
-    //       result = person;
-    //       break;
-    //     // TODO
-    //     case EntityType.Cause:
-    //       break;
-    //     default:
-    //       throw new Error(`Invalid input EntityType ${transaction.input.type}`);
-    //   }
-    //   return result;
-    // }
-
     // assign input/output
     transaction.input.entity = await getEntity(transaction.input.type, transaction.input.id);
     transaction.output.entity = await getEntity(transaction.output.type, transaction.output.id);
     // clean non useful props, are required only top know sent entityType
-    // delete transaction.input.type;
-    // delete transaction.output.type;
+    delete transaction.input.id;
+    delete transaction.output.id;
+    delete transaction.input.type;
+    delete transaction.output.type;
 
     await transaction.save();
   }
