@@ -114,6 +114,7 @@ $ npx lerna run build --scope @solidary-network/common --stream
 $ npx lerna run build --scope @solidary-network/person-cc --stream
 $ npx lerna run build --scope @solidary-network/participant-cc --stream
 $ npx lerna run build --scope @solidary-network/transaction-cc --stream
+$ npx lerna run build --scope @solidary-network/cause-cc --stream
 
 # upgrade smart contract
 $ VERSION=1.1
@@ -1639,7 +1640,6 @@ start change person chaincode, adding a few property fields and replace `name` t
 ```typescript
 
 export class Person extends ConvectorModel<Person> {
-  @ReadOnly()
   @Required()
   public readonly type = 'network.solidary.convector.person';
 
@@ -2577,7 +2577,6 @@ strange after some fight, I restart other network to check it works, next I exec
 > UPDATE: after one hours, find that the new transaction model **with above code block** gives the error, it build ok, but iot simply don't work, comment lines and start to work again, the problem is the line `@Validate(yup.InferType<typeof entitySchema>())`
 
 ```typescript
-@ReadOnly()
 @Required()
 // THIS cause the classical { Error: transaction returned with failure: {"name":"Error","status":500}
 // @Validate(yup.InferType<typeof entitySchema>())
@@ -2654,8 +2653,7 @@ CREATE org1.transaction.config.json (823 bytes)
 CREATE org2.transaction.config.json (823 bytes)
 ```
 
-edit `packages/transaction-cc/package.json` and change `"name": "@solidary-network/transaction-cc"` to 
-`"name": "@solidary-network/participant-cc"`
+edit `packages/transaction-cc/package.json` and change `"name": "@solidary-network/transaction-cc"` to `"name": "@solidary-network/participant-cc"`
 
 add to `chaincode.config.json`
 
@@ -2680,6 +2678,10 @@ $ npx lerna add @solidary-network/common --scope @solidary-network/transaction-c
 $ npx lerna add @solidary-network/person-cc --scope @solidary-network/transaction-cc
 $ npx lerna add @solidary-network/participant-cc --scope @solidary-network/transaction-cc
 ```
+
+require to `./restartEnv.sh` else we get below error
+
+`{ Error: transaction returned with failure: {"name":"Error","status":400,"message":"no function of name: cause_create found","stack":"Error: no function of name: cause_create found"}`
 
 ## YUP Validation notes
 

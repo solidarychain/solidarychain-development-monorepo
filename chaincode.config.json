@@ -9,6 +9,11 @@
   "//**INSIDE-DOCKER**//networkProfile": "/config/network-profiles/org1.network-profile.inside-docker.yaml",
   "controllers": [
     {
+      "name": "@solidary-network/common",
+      "version": "file:./packages/common",
+      "controller": "CommonController"
+    },
+    {
       "name": "@solidary-network/person-cc",
       "version": "file:./packages/person-cc",
       "controller": "PersonController"
@@ -24,9 +29,9 @@
       "controller": "TransactionController"
     },
     {
-      "name": "@solidary-network/common",
-      "version": "file:./packages/common",
-      "controller": "CommonController"
+      "name": "@solidary-network/cause-cc",
+      "version": "file:./packages/cause-cc",
+      "controller": "CauseController"
     }
   ],
   "policy": {

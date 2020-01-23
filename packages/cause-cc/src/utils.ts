@@ -2,7 +2,7 @@ import { Participant } from '@solidary-network/participant-cc';
 import { Person } from '@solidary-network/person-cc/dist/src/person.model';
 import { EntityType } from '@solidary-network/common';
 
-export const getEntity = (entityType: EntityType, id: string): Promise<Participant|Person> => {
+export const getEntity = (entityType: EntityType, id: string): Promise<Participant | Person> => {
   return new Promise(async (resolve, reject) => {
     try {
       switch (entityType) {
@@ -19,9 +19,6 @@ export const getEntity = (entityType: EntityType, id: string): Promise<Participa
             throw new Error(`No person found with id ${id}`);
           }
           resolve(person);
-          break;
-        // TODO
-        case EntityType.Cause:
           break;
         default:
           throw new Error(`Invalid input EntityType ${entityType}`);

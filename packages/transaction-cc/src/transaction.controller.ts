@@ -2,11 +2,7 @@ import { Controller, ConvectorController, Invokable, Param } from '@worldsibu/co
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
 import * as yup from 'yup';
 import { Transaction } from './transaction.model';
-// import { Participant } from '@solidary-network/participant-cc';
-// import { Person } from '@solidary-network/person-cc/dist/src/person.model';
-// import { EntityType } from './types';
 import { getEntity } from './utils';
-// import {EntityType} from './types';
 
 @Controller('transaction')
 export class TransactionController extends ConvectorController<ChaincodeTx> {
@@ -21,8 +17,7 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
       throw new Error(`There is a transaction with that Id already (${transaction.id})`);
     }
 
-    // add date in epoch unix time
-    transaction.created = new Date().getTime();
+    // TODO: check cause with same name
 
     // assign input/output
     transaction.input.entity = await getEntity(transaction.input.type, transaction.input.id);
@@ -32,6 +27,9 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     delete transaction.output.id;
     delete transaction.input.type;
     delete transaction.output.type;
+
+    // add date in epoch unix time
+    transaction.created = new Date().getTime();
 
     await transaction.save();
   }

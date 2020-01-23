@@ -1,4 +1,4 @@
-import { appConstants as c, UserRoles } from '@solidary-network/common';
+import { appConstants as c, UserRoles, x509Identities } from '@solidary-network/common';
 import { Participant } from '@solidary-network/participant-cc';
 import { ConvectorModel, Default, FlatConvectorModel, ReadOnly, Required, Validate } from '@worldsibu/convector-core';
 import * as yup from 'yup';
@@ -41,6 +41,13 @@ export class Person extends ConvectorModel<Person> {
   @Required()
   @Validate(Participant.schema())
   public participant: FlatConvectorModel<Participant>;
+
+  @Validate(yup.array(x509Identities.schema()))
+  public identities: Array<FlatConvectorModel<x509Identities>>;
+
+  @Required()
+  @Validate(yup.number())
+  public created: number;
 
   // extended non citizenCard data
 

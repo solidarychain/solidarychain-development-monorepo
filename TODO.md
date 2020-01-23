@@ -94,6 +94,7 @@ TEMP.md
 NOTES2.md
 TODO.md
 
+CHANGE CHAINCODE `person` to `solidary-network-chaincode`
 
 packages/server-rest/src/main.ts
 add cors options like we do in

@@ -69,10 +69,17 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
 
     // add participant
     person.participant = gov;
+    // create a new identity
+    person.identities = [{
+      fingerprint: this.sender,
+      status: true
+    }];
     // hashPassword before save model
     person.password = hashPassword(person.password);
     // add date in epoch unix time
     person.registrationDate = new Date().getTime();
+    // add date in epoch unix time
+    person.created = new Date().getTime();
 
     // save person
     await person.save();

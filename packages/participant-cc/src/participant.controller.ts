@@ -26,11 +26,14 @@ export class ParticipantController extends ConvectorController {
       participant.id = id;
       participant.name = name || id;
       participant.msp = this.fullIdentity.getMSPID();
-      // Create a new identity
+      // create a new identity
       participant.identities = [{
         fingerprint: this.sender,
         status: true
       }];
+      // add date in epoch unix time
+      participant.created = new Date().getTime();
+      
       await participant.save();
     } else {
       throw new Error('Identity exists already, please call changeIdentity fn for updates');

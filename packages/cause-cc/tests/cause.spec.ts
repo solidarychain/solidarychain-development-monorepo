@@ -6,39 +6,33 @@ import { MockControllerAdapter } from '@worldsibu/convector-adapter-mock';
 import { ClientFactory, ConvectorControllerClient } from '@worldsibu/convector-core';
 import 'mocha';
 
-import { Transaction, TransactionController } from '../src';
+import { Cause, CauseController } from '../src';
 
-describe('Transaction', () => {
+describe('Cause', () => {
   let adapter: MockControllerAdapter;
-  let transactionCtrl: ConvectorControllerClient<TransactionController>;
-  
+  let causeCtrl: ConvectorControllerClient<CauseController>;
+
   before(async () => {
     // Mocks the blockchain execution environment
     adapter = new MockControllerAdapter();
-    transactionCtrl = ClientFactory(TransactionController, adapter);
+    causeCtrl = ClientFactory(CauseController, adapter);
 
     await adapter.init([
       {
         version: '*',
-        controller: 'TransactionController',
+        controller: 'CauseController',
         name: join(__dirname, '..')
       }
     ]);
   });
-  
+
   it('should create a default model', async () => {
     // TODO Fix Me
-    const modelSample = new Transaction({
-      id: uuid(),
-      name: 'Test',
-      created: Date.now(),
-      modified: Date.now()
-    });
+    const id = uuid();
+    await causeCtrl.create(id, 'Test Cause');
 
-    await transactionCtrl.create(modelSample);
-  
-    const justSavedModel = await adapter.getById<Transaction>(modelSample.id);
-  
+    const justSavedModel = await adapter.getById<Cause>(id);
+
     expect(justSavedModel.id).to.exist;
   });
 });

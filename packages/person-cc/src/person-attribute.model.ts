@@ -19,7 +19,6 @@ export class PersonAttribute extends ConvectorModel<PersonAttribute>{
   public content: any;
 
   @Required()
-  @ReadOnly()
   @Validate(yup.number())
   public issuedDate: number;
 

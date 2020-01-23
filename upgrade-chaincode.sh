@@ -16,6 +16,7 @@ npx lerna run build --scope @solidary-network/common --stream
 npx lerna run build --scope @solidary-network/person-cc --stream
 npx lerna run build --scope @solidary-network/participant-cc --stream
 npx lerna run build --scope @solidary-network/transaction-cc --stream
+npx lerna run build --scope @solidary-network/cause-cc --stream
 
 echo "upgrading chaincode..."
 npm run cc:upgrade -- person ${VERSION}
