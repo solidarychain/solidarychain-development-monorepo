@@ -53,5 +53,15 @@
 				"label": ""
 			}
 		]
+	},
+	{
+		"path": "$ROOTPATH$/packages/transaction-cc/src/utils.ts",
+		"bookmarks": [
+			{
+				"line": 22,
+				"column": 16,
+				"label": ""
+			}
+		]
 	}
 ]

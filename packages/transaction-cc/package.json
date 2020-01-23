@@ -14,6 +14,7 @@
     "test": "npm run build && mocha -r ts-node/register tests/*.spec.ts --reporter spec"
   },
   "dependencies": {
+    "@solidary-network/cause-cc": "^0.1.0",
     "@solidary-network/common": "^0.1.0",
     "@solidary-network/participant-cc": "^0.1.0",
     "@solidary-network/person-cc": "^0.1.0",

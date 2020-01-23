@@ -1,6 +1,6 @@
 import * as yup from 'yup';
 import { TransactionType, ResourceType } from './types';
-import { currencyCodesISO4217 } from '@solidary-network/common/dist/src/data';
+import { currencyCodesISO4217 } from '@solidary-network/common';
 
 export const transactionTypeSchema = yup
   .mixed<TransactionType.Create | TransactionType.Transfer>()

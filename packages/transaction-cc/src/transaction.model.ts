@@ -11,8 +11,6 @@ export class Transaction extends ConvectorModel<Transaction> {
 
   // FUCK we can't use // @ReadOnly() else yup validations won't work!!!!!!! remove all @ReadOnly() from everywhere
 
-  // TODO add cause model
-
   @Required()
   @Validate(transactionTypeSchema)
   public transactionType: TransactionType;

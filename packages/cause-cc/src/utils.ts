@@ -1,5 +1,5 @@
 import { Participant } from '@solidary-network/participant-cc';
-import { Person } from '@solidary-network/person-cc/dist/src/person.model';
+import { Person } from '@solidary-network/person-cc';
 import { EntityType } from '@solidary-network/common';
 
 export const getEntity = (entityType: EntityType, id: string): Promise<Participant | Person> => {

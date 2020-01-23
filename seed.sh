@@ -87,6 +87,16 @@ PAYLOAD="{\"id\":\"${ID}\",\"fiscalNumber\":\"${FISCAL_NUMBER}\",\"username\":\"
 npx hurl invoke person person_create "${PAYLOAD}" -u admin
 npx hurl invoke person person_get ${ID}
 
+# create cause
+ID=acef70e5-cd25-4533-8392-9fa57e43cf69
+NAME=Cause001
+INPUT_TYPE=PARTICIPANT
+INPUT_ID=gov
+PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"}}"
+# echo $PAYLOAD  | jq
+npx hurl invoke person cause_create "${PAYLOAD}" -u admin
+npx hurl invoke person cause_get ${ID}
+
 # create transaction
 # {
 #   "id": "${ID}",
@@ -125,14 +135,13 @@ PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourc
 npx hurl invoke person transaction_create "${PAYLOAD}" -u admin
 npx hurl invoke person transaction_get ${ID}
 
-ID=acef70e5-cd25-4533-8392-9fa57e43cf69
-NAME=Cause001
-INPUT_TYPE=PARTICIPANT
-INPUT_ID=gov
-PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"}}"
+ID=acef70e5-cd25-4533-8392-9fa57e43cf34
+INPUT_TYPE=CAUSE
+INPUT_ID=acef70e5-cd25-4533-8392-9fa57e43cf69
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"}}"
 # echo $PAYLOAD  | jq
-npx hurl invoke person cause_create "${PAYLOAD}" -u admin
-npx hurl invoke person cause_get ${ID}
+npx hurl invoke person transaction_create "${PAYLOAD}" -u admin
+npx hurl invoke person transaction_get ${ID}
 
 # 2b2227fa-24ca-4586-bbde-6cff6bf407c1
 # dc9f897a-cf46-448a-a679-45096b70ab02
