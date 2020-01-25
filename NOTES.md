@@ -98,15 +98,18 @@ This is a simple NestJs starter, based on above links, I only extended it with a
 ## Commands
 
 ```shell
+# star define CHAINCODE_NAME
+$ CHAINCODE_NAME=solidary-network-chaincode
+
 # run test
 $ npm test
 
 # restart hyperledger network
 $ npm run env:restart
-You can find the network topology (ports, names) here: ${HOME}/hyperledger-fabric-network/docker-compose.yaml
+# You can find the network topology (ports, names) here: ${HOME}/hyperledger-fabric-network/docker-compose.yaml
 
 # deploy smart contract (this smart contract have person and participant packages deployed in one unified chaincode)
-$ npm run cc:start -- person
+$ npm run cc:start -- ${CHAINCODE_NAME}
 
 # every change on @solidary-network/common, must be builded to be used in dependent packages
 $ npx lerna run build --scope @solidary-network/common --stream
@@ -119,27 +122,29 @@ $ npx lerna run build --scope @solidary-network/cause-cc --stream
 # upgrade smart contract
 $ VERSION=1.1
 # require to build modified modules common, person, participant etc
-$ npm run cc:upgrade -- person ${VERSION}
-# one liner version
-$ VERSION=1.1 && npx lerna run build --scope @solidary-network/person-cc --stream && npm run cc:upgrade -- person ${VERSION}
+$ npm run cc:upgrade -- ${CHAINCODE_NAME} ${VERSION}
+
+# always use script to update chaincode
+$ ./upgrade-chainde.sh
+
 # note: after deploy/upgrade wait a few second/minutes in first invoke,
 # when done we have a new container and command end with result `Upgraded Chaincode at org1`
 # watch for deployed container
-$ watch "docker container ls --format "{{.Names}}" | grep \"person-${VERSION}\""
-dev-peer0.org1.hurley.lab-person-${VERSION}
-dev-peer0.org2.hurley.lab-person-${VERSION}
+$ watch "docker container ls --format "{{.Names}}" | grep \"${CHAINCODE_NAME}-${VERSION}\""
+dev-peer0.org1.hurley.lab-${CHAINCODE_NAME}-${VERSION}
+dev-peer0.org2.hurley.lab-${CHAINCODE_NAME}-${VERSION}
 
 # debug chaincode container
 $ docker container logs -f dev-peer0.org1.hurley.lab-person-${VERSION}
 
 # invoke some stuff (after deploy or upgrade chaincode)
-$ npx hurl invoke person participant_get gov
-$ npx hurl invoke person person_get 1-100-100
-$ npx hurl invoke person person_getAll
+$ npx hurl invoke ${CHAINCODE_NAME} participant_get gov
+$ npx hurl invoke ${CHAINCODE_NAME} person_get 1-100-100
+$ npx hurl invoke ${CHAINCODE_NAME} person_getAll
 
-# package chain code: force build chaincode-person folders, after some strange errors like
+# package chain code: force build chaincode-${CHAINCODE_NAME} folders, after some strange errors like
 # { Error: transaction returned with failure: {"name":"Error","status":500}, below line seems fixed that problem
-$ npm run cc:package -- person org1
+$ npm run cc:package -- ${CHAINCODE_NAME} org1
 
 # after restart hyperledger always seed ledger
 $ npm run seed
@@ -154,21 +159,20 @@ $ ./views/install.sh
 # TRICK: in case of not stop on breakpoint use debugger; and put breakPoint on start of function is on start of `create`
 # TRICK: we can put some breakpoint into .ts it works too after stop in .js
 # TRICK: if change something on .ts while debug don't forget to build chaincode with 'npx lerna run build --scope @solidary-network/person-cc --stream' and deploy, and restart debug again
-# TRICK don't forget that breakpoint to work must be inside the chaincode-person/packages/@solidary-network/person-cc/src/person.controller.ts folder that is generated on chaincode builds, and not the default packages/person-cc/src/person.controller.ts
-$ npm run cc:start:debug -- person
+# TRICK don't forget that breakpoint to work must be inside the chaincode-${CHAINCODE_NAME}/packages/@solidary-network/person-cc/src/person.controller.ts folder that is generated on chaincode builds, and not the default packages/person-cc/src/person.controller.ts
+$ npm run cc:start:debug -- ${CHAINCODE_NAME}
 # if error occur use target debug version, recommend to always use current version, and if we are in version 1.0, use pass 1.1 to debug a new chaincode
-$ npm run cc:start:debug -- person 1.1
+$ npm run cc:start:debug -- ${CHAINCODE_NAME} 1.1
 
 # run dev server
 $ npx lerna run start:dev --scope @solidary-network/server-rest --stream
 # run debug server
 $ npx lerna run start:debug --scope @solidary-network/server-rest --stream
 
-# debug/view logs container person-1.0, person-1.1...
-$ CHAINCODE="person"
-$ sudo docker container ls | grep ${CHAINCODE} | awk '{print $1" : "$2}'
-f544509eec58 : dev-peer0.org2.hurley.lab-person-1.0-351b0bef3757230f476dec587f92b0d6ec2d60224e983cc32119aafec151bcdd
-32ebfd14677d : dev-peer0.org1.hurley.lab-person-1.0-327a0dd6d92274526a6230611433ce88bc56a5602b3f6036cd5f739662e1d1f5
+# debug/view logs container ${CHAINCODE_NAME}-1.0, ${CHAINCODE_NAME}-1.1...
+$ docker container ls | grep ${CHAINCODE_NAME} | awk '{print $1" : "$2}'
+f544509eec58 : dev-peer0.org2.hurley.lab-solidary-network-chaincode-1.0-351b0bef3757230f476dec587f92b0d6ec2d60224e983cc32119aafec151bcdd
+32ebfd14677d : dev-peer0.org1.hurley.lab-solidary-network-chaincode-1.0-327a0dd6d92274526a6230611433ce88bc56a5602b3f6036cd5f739662e1d1f5
 # or
 $ docker container ls --format "{{.ID}}\t{{.Image}}"
 # with chaincode version
@@ -483,16 +487,16 @@ CONTAINER_ID=$(docker ps | awk '/hyperledger\/fabric-orderer/ { print $1 }')
 $ sudo docker container logs -f $CONTAINER_ID
 
 # install the chaincode
-$ npm run cc:start -- person
+$ npm run cc:start -- ${CHAINCODE_NAME}
 Instantiated Chaincode at org1
 
 # start your web server
 $ npx lerna run start:dev --scope @solidary-network/server-rest --stream
 
 # seed some participants, in first invoke wait some seconds more
-$ npx hurl invoke person participant_register gov "Big Government" -u admin
-$ npx hurl invoke person participant_register mit "MIT" -u user1 -o org1
-$ npx hurl invoke person participant_register naba "National Bank" -u user1 -o org2
+$ npx hurl invoke ${CHAINCODE_NAME} participant_register gov "Big Government" -u admin
+$ npx hurl invoke ${CHAINCODE_NAME} participant_register mit "MIT" -u user1 -o org1
+$ npx hurl invoke ${CHAINCODE_NAME} participant_register naba "National Bank" -u user1 -o org2
 
 # test endpoints
 $ curl http://localhost:3000/participant/gov
@@ -568,7 +572,7 @@ Installed template views
 
 ```shell
 # create participant (chain)
-$ npx hurl invoke person participant_register red "Red Cross"
+$ npx hurl invoke ${CHAINCODE_NAME} participant_register red "Red Cross"
 $ curl -X POST \
   http://localhost:3000/participant \
   -H 'Content-Type: application/json' \
@@ -576,12 +580,12 @@ $ curl -X POST \
     "id":"red",
     "name": "Red Cross"
   }'
-# get participant person (chain)
-$ npx hurl invoke person participant_get red
+# get participant ${CHAINCODE_NAME} (chain)
+$ npx hurl invoke ${CHAINCODE_NAME} participant_get red
 $ curl http://localhost:3000/participant/red | jq
 
-# create person (chain) : REQUIRED to use admin user (belongs to org1/gov)
-$ npx hurl invoke person person_create '{"id":"1-100-104", "name": "1-100-104"}' -u admin
+# create ${CHAINCODE_NAME} (chain) : REQUIRED to use admin user (belongs to org1/gov)
+$ npx hurl invoke ${CHAINCODE_NAME} person_create '{"id":"1-100-104", "name": "1-100-104"}' -u admin
 $ curl -X POST \
   http://localhost:3000/person \
   -H 'Content-Type: application/json' \
@@ -590,16 +594,16 @@ $ curl -X POST \
     "name": "Jane Doe"
   }'
 
-# get person (chain)
-$ npx hurl invoke person person_get 1-100-103
+# get ${CHAINCODE_NAME} (chain)
+$ npx hurl invoke ${CHAINCODE_NAME} person_get 1-100-103
 $ curl http://localhost:3000/person/1-100-103 | jq
 
 # get all persons (worldState/couchdb)
-$ npx hurl invoke person person_getAll
+$ npx hurl invoke ${CHAINCODE_NAME} person_getAll
 $ curl http://localhost:3000/person | jq
 
 # addAttribute
-$ npx hurl invoke person person_addAttribute 1-100-103 '{"id": "birth-year", "certifierID": "gov", "content": "1993", "issuedDate": 1554239270 }' -u admin
+$ npx hurl invoke ${CHAINCODE_NAME} person_addAttribute 1-100-103 '{"id": "birth-year", "certifierID": "gov", "content": "1993", "issuedDate": 1554239270 }' -u admin
 $ curl -X POST \
   http://localhost:3000/person/1-100-103/add-attribute \
   -H 'Content-Type: application/json' \
@@ -609,7 +613,7 @@ $ curl -X POST \
   }' | jq
 
 # getByAttribute
-$ npx hurl invoke person person_getByAttribute birth-year 1971
+$ npx hurl invoke ${CHAINCODE_NAME} person_getByAttribute birth-year 1971
 $ curl -X POST \
   http://localhost:3000/person/birth-year/get-attribute \
   -H 'Content-Type: application/json' \
@@ -1759,25 +1763,25 @@ change `seed.sh` to reflect new model
 
 ```shell
 echo "Creating participant: Big Government"
-npx hurl invoke person participant_register gov "Big Government" -u admin
+npx hurl invoke ${CHAINCODE_NAME} participant_register gov "Big Government" -u admin
 
 echo "Creating participant: MIT"
-npx hurl invoke person participant_register mit "MIT" -u user1 -o org1
+npx hurl invoke ${CHAINCODE_NAME} participant_register mit "MIT" -u user1 -o org1
 
 echo "Creating participant: National Bank"
-npx hurl invoke person participant_register naba "National Bank" -u user1 -o org2
+npx hurl invoke ${CHAINCODE_NAME} participant_register naba "National Bank" -u user1 -o org2
 
 echo "Creating person: John Doe"
-npx hurl invoke person person_create "{ \"id\": \"1-100-100\", \"firstname\": \"John\", \"lastname\": \"Doe\", \"username\": \"johndoe\", \"password\": \"12345678\", \"email\": \"john.doe@mail.com\"}" -u admin
+npx hurl invoke ${CHAINCODE_NAME} person_create "{ \"id\": \"1-100-100\", \"firstname\": \"John\", \"lastname\": \"Doe\", \"username\": \"johndoe\", \"password\": \"12345678\", \"email\": \"john.doe@mail.com\"}" -u admin
 
 echo "Adding attribute 'birth-year' as the Big Government identity"
-npx hurl invoke person person_addAttribute "1-100-100" "{\"id\": \"birth-year\", \"certifierID\": \"gov\", \"content\": \"1993\", \"issuedDate\": 1554239270 }" -u admin
+npx hurl invoke ${CHAINCODE_NAME} person_addAttribute "1-100-100" "{\"id\": \"birth-year\", \"certifierID\": \"gov\", \"content\": \"1993\", \"issuedDate\": 1554239270 }" -u admin
 
-npx hurl invoke person person_create "{ \"id\": \"1-100-101\", \"firstname\": \"Jane\", \"lastname\": \"Doe\", \"username\": \"janedoe\", \"password\": \"12345678\", \"email\": \"jane.doe@mail.com\"}" -u admin
-npx hurl invoke person person_addAttribute "1-100-101" "{\"id\": \"birth-year\", \"certifierID\": \"gov\", \"content\": \"1993\", \"issuedDate\": 1554239270 }" -u admin
+npx hurl invoke ${CHAINCODE_NAME} person_create "{ \"id\": \"1-100-101\", \"firstname\": \"Jane\", \"lastname\": \"Doe\", \"username\": \"janedoe\", \"password\": \"12345678\", \"email\": \"jane.doe@mail.com\"}" -u admin
+npx hurl invoke ${CHAINCODE_NAME} person_addAttribute "1-100-101" "{\"id\": \"birth-year\", \"certifierID\": \"gov\", \"content\": \"1993\", \"issuedDate\": 1554239270 }" -u admin
 
-npx hurl invoke person person_create "{ \"id\": \"1-100-102\", \"firstname\": \"Dick\", \"lastname\": \"Doe\", \"username\": \"dickdoe\", \"password\": \"12345678\", \"email\": \"dick.doe@mail.com\"}" -u admin
-npx hurl invoke person person_addAttribute "1-100-102" "{\"id\": \"birth-year\", \"certifierID\": \"gov\", \"content\": \"1988\", \"issuedDate\": 1554239270 }" -u admin
+npx hurl invoke ${CHAINCODE_NAME} person_create "{ \"id\": \"1-100-102\", \"firstname\": \"Dick\", \"lastname\": \"Doe\", \"username\": \"dickdoe\", \"password\": \"12345678\", \"email\": \"dick.doe@mail.com\"}" -u admin
+npx hurl invoke ${CHAINCODE_NAME} person_addAttribute "1-100-102" "{\"id\": \"birth-year\", \"certifierID\": \"gov\", \"content\": \"1988\", \"issuedDate\": 1554239270 }" -u admin
 ```
 
 ## Renew and Deploy new upgraded ChainCode after chaincode model Changes
@@ -1789,7 +1793,7 @@ to prevent problems with model changes, we must renew hyperledger stack, and upg
 $ npm run env:restart
 # build chainCode
 # deploy smart contract
-$ npm run cc:start -- person
+$ npm run cc:start -- ${CHAINCODE_NAME}
 Instantiated Chaincode at org1
 # seed ledger with new seed.sh with new model properties
 $ npm run seed
@@ -1799,9 +1803,9 @@ Installing template views
 {"ok":true,"id":"_design/person","rev":"1-a1afaedf5e49e4f592a3089e599b0f8f"}
 Installed template views
 # create on more person with hurley. note: after deploy/upgrade wait a few second/minutes in first invoke
-$ npx hurl invoke person person_create "{ \"id\": \"1-100-103\", \"firstname\": \"Pete\", \"lastname\": \"Doe\", \"username\": \"pete\", \"password\": \"12345678\", \"email\": \"pete.doe@example.com\"}" -u admin
+$ npx hurl invoke ${CHAINCODE_NAME} person_create "{ \"id\": \"1-100-103\", \"firstname\": \"Pete\", \"lastname\": \"Doe\", \"username\": \"pete\", \"password\": \"12345678\", \"email\": \"pete.doe@example.com\"}" -u admin
 # invoke ledger to get all persons
-$ npx hurl invoke person person_getAll
+$ npx hurl invoke ${CHAINCODE_NAME} person_getAll
 ```
 
 everything seems working has expected, now we will test chaincode from server requests
@@ -1866,15 +1870,15 @@ export const hashPassword = (password: string): string => {
 
 ```shell
 # upgrade smart contract
-$ npm run cc:upgrade -- person 1.1
-Installed Chaincode person version 1.1  at org2
-Upgrading Chaincode person version 1.1 at org1 for channel ch1
+$ npm run cc:upgrade -- ${CHAINCODE_NAME} 1.1
+Installed Chaincode solidary-network-chaincode version 1.1  at org2
+Upgrading Chaincode solidary-network-chaincode version 1.1 at org1 for channel ch1
 It may take a few minutes depending on the chaincode dependencies
 Upgraded Chaincode at org1
 # create another user
-$ npx hurl invoke person person_create "{ \"id\": \"1-100-105\", \"firstname\": \"Luke\", \"lastname\": \"Doe\", \"username\": \"luke\", \"password\": \"12345678\", \"email\": \"luke.doe@example.com\"}" -u admin
+$ npx hurl invoke ${CHAINCODE_NAME} person_create "{ \"id\": \"1-100-105\", \"firstname\": \"Luke\", \"lastname\": \"Doe\", \"username\": \"luke\", \"password\": \"12345678\", \"email\": \"luke.doe@example.com\"}" -u admin
 # invoke ledger to get all persons
-$ npx hurl invoke person person_get 1-100-105
+$ npx hurl invoke ${CHAINCODE_NAME} person_get 1-100-105
 [hurley] - Result: {"_email":"luke.doe@example.com","_firstname":"Luke","_id":"1-100-105","_lastname":"Doe","_password":"$2b$10$pitp5NpCT62QTLGi.xpvZe6/BgCjxeBbUJBWAMBokdP2rWAtJGqkW","_type":"io.worldsibu.person","_username":"luke"}
 # done we have bcrypt'ed the passwords
 {
@@ -2113,9 +2117,9 @@ now we can `cc:package` the chaincode `chaincode-person`, this will package the 
 
 ```shell
 # first remove chaincode (optional)
-$ rm chaincode-person -r
+$ rm chaincode-${CHAINCODE_NAME} -r
 # now manually invoke package command
-$ npm run cc:package -- person org1
+$ npm run cc:package -- ${CHAINCODE_NAME} org1
 ```
 
 after package our chaincode is advised to check if common package is copied to `chaincode-person` folder to the right path
@@ -2153,15 +2157,15 @@ to check that everything is fine from start, we restart our hyperledger stack, a
 ```shell
 # this recreate environment and destroy all data
 $ npm run env:restart
-$ npm run cc:start -- person
+$ npm run cc:start -- ${CHAINCODE_NAME}
 # seed ledger
 $ npm run seed
 # create couchdb  views
 $ ./views/install.sh
 # invoke person_create
-$ npx hurl invoke person person_create "{ \"id\": \"1-100-103\", \"firstname\": \"Pete\", \"lastname\": \"Doe\", \"username\": \"pete\", \"password\": \"12345678\", \"email\": \"pete.doe@example.com\"}" -u admin
+$ npx hurl invoke ${CHAINCODE_NAME} person_create "{ \"id\": \"1-100-103\", \"firstname\": \"Pete\", \"lastname\": \"Doe\", \"username\": \"pete\", \"password\": \"12345678\", \"email\": \"pete.doe@example.com\"}" -u admin
 # invoke some stuff (wait for first invoke finish)
-$ npx hurl invoke person person_getAll
+$ npx hurl invoke ${CHAINCODE_NAME} person_getAll
 ```
 
 done, everything is working has expected and we have a `@solidary-network/common` package implemented.
@@ -2172,7 +2176,7 @@ for future changes in chaincode, upgrade it with above command
 
 ```shell
 # upgrade chaincode
-$ npm run cc:upgrade -- person 1.1
+$ npm run cc:upgrade -- ${CHAINCODE_NAME} 1.1
 ```
 
 we are done........
@@ -2465,17 +2469,20 @@ export class AuthService {
 }
 ```
 
-now we can start testing the new network authentication
+> now we can start testing the new network authentication
 
 WIP
 
-$ npx hurl invoke person participant_changeIdentity great newIdentity -u admin
+```shell
+$ npx hurl invoke ${CHAINCODE_NAME} participant_changeIdentity great newIdentity -u admin
 { Error: transaction returned with failure: {"name":"Error","status":500,"message":"Unauthorized. Requester identity is not an admin"}
 
-npx hurl invoke person person_create "{ \"id\": \"1-100-103\", \"firstname\": \"Pete\", \"lastname\": \"Doe\", \"username\": \"pete\", \"password\": \"12345678\", \"email\": \"pete.doe@example.com\"}" -u admin
+npx hurl invoke ${CHAINCODE_NAME} person_create "{ \"id\": \"1-100-103\", \"firstname\": \"Pete\", \"lastname\": \"Doe\", \"username\": \"pete\", \"password\": \"12345678\", \"email\": \"pete.doe@example.com\"}" -u admin
 
-npx hurl invoke person person_create "{\"id\": \"1-100-103\",\"firstname\":\"Pete\",\"lastname\":\"Doe\",\"username\": \"pete\",\"password\": \"12345678\",\"email\": \"pete.doe@example.com\",\"roles\": [\"USER\",\"ADMIN\"]}" -u admin
+npx hurl invoke ${CHAINCODE_NAME} person_create "{\"id\": \"1-100-103\",\"firstname\":\"Pete\",\"lastname\":\"Doe\",\"username\": \"pete\",\"password\": \"12345678\",\"email\": \"pete.doe@example.com\",\"roles\": [\"USER\",\"ADMIN\"]}" -u admin
+```
 
+```json
 {
   "id": "1-100-103",
   "firstname": "Pete",
@@ -2487,6 +2494,7 @@ npx hurl invoke person person_create "{\"id\": \"1-100-103\",\"firstname\":\"Pet
     "USER","ADMIN"
   ]
 }
+```
 
 ## Clean up and solve problem of `@babel/.highlight.DELETE@latest` when use lerna bootstrap
 
@@ -2525,7 +2533,7 @@ must remove it from every packages/**/package.json project
 ## Solve { Error: transaction returned with failure: {"name":"Error","status":500}
 
 ```shell
-$ npx hurl invoke person participant_register gov "Big Government" -u admin
+$ npx hurl invoke ${CHAINCODE_NAME} participant_register gov "Big Government" -u admin
 [hurley] - gov
 [hurley] - Big Government
 [hurley] - Sending transaction as admin in org org1...
@@ -2568,9 +2576,9 @@ drwxr-xr-x 5 root root 4096 Jan 19 20:13 person-cc
 drwxr-xr-x 6 root root 4096 Jan 19 20:13 transaction-cc
 ```
 
-the fix seems to be `npm run cc:package -- person org1` and it start to work
+the fix seems to be `npm run cc:package -- ${CHAINCODE_NAME} org1` and it start to work
 
-strange after some fight, I restart other network to check it works, next I execute `npm run cc:package -- person org1` and restart network and now everything work again!!!
+strange after some fight, I restart other network to check it works, next I execute `npm run cc:package -- ${CHAINCODE_NAME} org1` and restart network and now everything work again!!!
 
 > UPDATE: some times it is related to some error in chaincode, like errors in typescript, or imports, and it can't build the chaincode, and install, initiate it, this is the root cause of the problem, and we don't see it on upgrade and try to invoke something without a valid instantiated chaincode, always check off message `Instantiated Chaincode at org1` when upgrade
 

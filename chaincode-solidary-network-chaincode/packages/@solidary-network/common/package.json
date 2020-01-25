@@ -1,0 +1,21 @@
+{
+  "name": "@solidary-network/common",
+  "version": "0.1.0",
+  "main": "dist/src/index",
+  "types": "dist/src/index",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "npm run clean && tsc",
+    "clean": "rm -rf ./dist",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@worldsibu/convector-core": "~1.3.0",
+    "yup": "^0.28.0"
+  },
+  "devDependencies": {
+    "typescript": "3.5.3"
+  }
+}

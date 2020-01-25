@@ -3,32 +3,32 @@
 		"path": "$ROOTPATH$/NOTES.md",
 		"bookmarks": [
 			{
-				"line": 112,
+				"line": 115,
 				"column": 51,
 				"label": ""
 			},
 			{
-				"line": 156,
+				"line": 161,
 				"column": 0,
 				"label": ""
 			},
 			{
-				"line": 163,
+				"line": 168,
 				"column": 51,
 				"label": ""
 			},
 			{
-				"line": 600,
+				"line": 604,
 				"column": 2,
 				"label": ""
 			},
 			{
-				"line": 1812,
+				"line": 1816,
 				"column": 54,
 				"label": ""
 			},
 			{
-				"line": 2584,
+				"line": 2592,
 				"column": 0,
 				"label": ""
 			}
@@ -50,16 +50,6 @@
 			{
 				"line": 110,
 				"column": 11,
-				"label": ""
-			}
-		]
-	},
-	{
-		"path": "$ROOTPATH$/packages/transaction-cc/src/utils.ts",
-		"bookmarks": [
-			{
-				"line": 22,
-				"column": 16,
 				"label": ""
 			}
 		]

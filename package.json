@@ -6,7 +6,7 @@
     "dist/*"
   ],
   "scripts": {
-    "start": "npm run env:restart && npm run cc:start -- person",
+    "start": "npm run env:restart && npm run cc:start -- solidary-network-chaincode",
     "seed": "./seed.sh",
     "install": "npm-run-all -s lerna:install",
     "build": "node ./update-paths.js",
