@@ -17,8 +17,6 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
       throw new Error(`There is a transaction with that Id already (${transaction.id})`);
     }
 
-    // TODO: check cause with same name
-
     // assign input/output
     transaction.input.entity = await getEntity(transaction.input.type, transaction.input.id);
     transaction.output.entity = await getEntity(transaction.output.type, transaction.output.id);

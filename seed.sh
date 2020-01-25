@@ -65,7 +65,7 @@ PAYLOAD="{\"id\":\"${ID}\",\"firstname\":\"${FIRST_NAME}\",\"lastname\":\"${LAST
 npx hurl invoke person person_create "${PAYLOAD}" -u admin
 npx hurl invoke person person_get ${ID}
 
-# create person with all extended data
+# create person with all data
 ID=4ea88521-031b-4279-9165-9c10e1838010
 FIRST_NAME=Jane
 LAST_NAME=Doe
@@ -87,9 +87,22 @@ PAYLOAD="{\"id\":\"${ID}\",\"fiscalNumber\":\"${FISCAL_NUMBER}\",\"username\":\"
 npx hurl invoke person person_create "${PAYLOAD}" -u admin
 npx hurl invoke person person_get ${ID}
 
-# create cause
+# create cause with all data
+ID=acef70e5-cd25-4533-8392-9fa57e43cf72
+NAME=Cause004
+INPUT_TYPE=PARTICIPANT
+INPUT_ID=mit
+START_DATE=1546300800
+END_DATE=1609372800
+LOCATION=40.1890144,-8.5171909
+PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"startDate\":\"${START_DATE}\",\"endDate\":\"${END_DATE}\",\"location\":\"${LOCATION}\",\"metaData\":{\"key\":\"value\"},\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"}}"
+# echo $PAYLOAD  | jq
+npx hurl invoke person cause_create "${PAYLOAD}" -u admin
+npx hurl invoke person cause_get ${ID}
+
+# create cause with minimal required data
 ID=acef70e5-cd25-4533-8392-9fa57e43cf69
-NAME=Cause001
+NAME=Cause002
 INPUT_TYPE=PARTICIPANT
 INPUT_ID=gov
 PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"}}"
@@ -135,6 +148,7 @@ PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourc
 npx hurl invoke person transaction_create "${PAYLOAD}" -u admin
 npx hurl invoke person transaction_get ${ID}
 
+# transaction with cause
 ID=acef70e5-cd25-4533-8392-9fa57e43cf34
 INPUT_TYPE=CAUSE
 INPUT_ID=acef70e5-cd25-4533-8392-9fa57e43cf69
