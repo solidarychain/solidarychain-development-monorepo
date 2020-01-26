@@ -1,44 +1,54 @@
-import { Participant as ParticipantConvectorModel } from '@solidary-network/participant-cc';
+import { v4 as uuid } from 'uuid';
+import { Transaction as TransactionConvectorModel } from '@solidary-network/transaction-cc';
 import { Injectable, Logger } from '@nestjs/common';
 import { FlatConvectorModel } from '@worldsibu/convector-core-model';
-import { ParticipantControllerBackEnd } from '../convector';
-import NewParticipantInput from './dto/new-transaction.input';
-import ParticipantArgs from './dto/transaction.args';
-import Participant from './models/transaction.model';
+import { TransactionControllerBackEnd } from '../convector';
+import NewTransactionInput from './dto/new-transaction.input';
+import TransactionArgs from './dto/transaction.args';
+import Transaction from './models/transaction.model';
 
 @Injectable()
 export class TransactionService {
-  async create(data: NewParticipantInput): Promise<Participant> {
-    try {
-      await ParticipantControllerBackEnd.register(data.id, data.name);
-      return this.findOneById(data.id);
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async findOneById(id: string): Promise<Participant> {
+  async findOneById(id: string): Promise<Transaction> {
     try {
       // get fabric model with _props
-      const fabricModel: Participant = await ParticipantControllerBackEnd.get(id);
+      const fabricModel: TransactionConvectorModel = await TransactionControllerBackEnd.get(id) as TransactionConvectorModel;
       // convert fabric model to convector model (remove _props)
-      const convectorModel = new ParticipantConvectorModel(fabricModel).toJSON();
+      const convectorModel = new TransactionConvectorModel(fabricModel).toJSON();
       // trick: must return convector model as a graphql model, to prevent property conversion problems
-      return (convectorModel as Participant);
+      return (convectorModel as Transaction);
     } catch (error) {
       throw error;
     }
   }
 
-  async findAll(participantArgs: ParticipantArgs): Promise<Participant[]> {
+  async findAll(transactionArgs: TransactionArgs): Promise<Transaction[]> {
     try {
-      const convectorModel: Array<FlatConvectorModel<Participant>> = await ParticipantControllerBackEnd.getAll();
-      // require to map fabric model to graphql Participant[]
-      return (participantArgs)
-        ? convectorModel.splice(participantArgs.skip, participantArgs.take) as Participant[]
-        : convectorModel as Participant[];
+      const convectorModel: Array<FlatConvectorModel<Transaction>> = await TransactionControllerBackEnd.getAll();
+      // require to map fabric model to graphql Transaction[]
+      return (transactionArgs)
+        ? convectorModel.splice(transactionArgs.skip, transactionArgs.take) as Transaction[]
+        : convectorModel as Transaction[];
     } catch (error) {
       Logger.error(JSON.stringify(error));
+      throw error;
+    }
+  }
+
+  async create(data: NewTransactionInput): Promise<Transaction> {
+    try {
+      // compose ConvectorModel from NewInput
+      const transactionToCreate: TransactionConvectorModel = new TransactionConvectorModel({
+        ...data,
+        // require to inject values
+        id: data.id ? data.id : uuid(),
+        // convert Date to epoch unix time to be stored in convector transaction model
+        created: ((new Date().getTime()) as number),
+      });
+
+      await TransactionControllerBackEnd.create(transactionToCreate);
+      return this.findOneById(data.id);
+    } catch (error) {
       throw error;
     }
   }

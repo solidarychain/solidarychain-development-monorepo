@@ -5,6 +5,8 @@ import * as fs from 'fs';
 import { Participant, ParticipantController } from '@solidary-network/participant-cc';
 import { join, resolve } from 'path';
 import { PersonController } from '@solidary-network/person-cc';
+import { CauseController } from '@solidary-network/cause-cc';
+import { TransactionController } from '@solidary-network/transaction-cc';
 import { envVariables as e } from './env';
 
 /**
@@ -23,9 +25,13 @@ const adapter = new FabricControllerAdapter({
   networkProfile: resolve(__dirname, e.networkProfile),
 });
 
+// init adapter
 export const initAdapter = adapter.init();
+// init controllers
 export const ParticipantControllerBackEnd = ClientFactory(ParticipantController, adapter);
 export const PersonControllerBackEnd = ClientFactory(PersonController, adapter);
+export const CauseControllerBackEnd = ClientFactory(CauseController, adapter);
+export const TransactionControllerBackEnd = ClientFactory(TransactionController, adapter);
 
 /**
  * Check if the identity has been initialized in the chaincode.

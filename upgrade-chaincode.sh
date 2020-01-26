@@ -1,10 +1,10 @@
 #!/bin/sh
 
 FILE_VERSION=upgrade-chaincode.txt
+CHAINCODE_NAME=solidary-network-chaincode
 [ -f $FILE_VERSION ] && VERSION=$(cat ${FILE_VERSION})
 read -p "Enter chaincode version. current VERSION is [${VERSION:-1.0}]: " VERSION
 VERSION=${VERSION:-1.0}
-echo ${VERSION} > ${FILE_VERSION}
 
 if [ $VERSION -eq "" ]
   then
@@ -18,7 +18,10 @@ npx lerna run build --scope @solidary-network/participant-cc --stream
 npx lerna run build --scope @solidary-network/transaction-cc --stream
 npx lerna run build --scope @solidary-network/cause-cc --stream
 
-echo "upgrading chaincode..."
-npm run cc:upgrade -- person ${VERSION}
+echo "upgrading chaincode ${CHAINCODE_NAME} ${VERSION}"
+npm run cc:upgrade -- ${CHAINCODE_NAME} ${VERSION}
+
+# increase after done without errors
+echo ${VERSION} > ${FILE_VERSION}
 
 echo "done..."

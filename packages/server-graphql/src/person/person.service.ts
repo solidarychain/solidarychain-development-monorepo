@@ -57,11 +57,12 @@ export class PersonService {
 
   async create(data: NewPersonInput): Promise<Person> {
     try {
+      // compose ConvectorModel from NewInput
       const personToCreate: PersonConvectorModel = new PersonConvectorModel({
         ...data,
         // require to inject values
-        id: uuid(),
-        // inn case of omitted default username is fiscalNumber
+        id: data.id ? data.id : uuid(),
+        // in case of omitted default username is fiscalNumber
         username: (data.username) ? data.username : data.fiscalNumber,
         // if not password defined generate a new one
         password: (data.password) ? data.password : generate({ length: 10, numbers: true }),

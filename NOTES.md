@@ -70,7 +70,7 @@
   - [Solve { Error: transaction returned with failure: {"name":"Error","status":500}](#solve--error-transaction-returned-with-failure-%22name%22%22error%22%22status%22500)
   - [Solve problem Cannot find module 'typescript/bin/tsc'](#solve-problem-cannot-find-module-typescriptbintsc)
   - [Problemn tests/participant.spec.ts(30,11): error TS1005: ':' expected.](#problemn-testsparticipantspects3011-error-ts1005--expected)
-  - [Add new trasaction-cc module](#add-new-trasaction-cc-module)
+  - [Add new transaction-cc module](#add-new-transaction-cc-module)
   - [YUP Validation notes](#yup-validation-notes)
   - [Currency codes iso4217](#currency-codes-iso4217)
 
@@ -116,8 +116,8 @@ $ npx lerna run build --scope @solidary-network/common --stream
 # build person-cc or participant-cc (before upgrade person chaincode, seems strange we have to that, because we see lerna building all packages in mono repo, but it is a fact that if we not do that it deploys the cc with same code...., causing some problems to get it)
 $ npx lerna run build --scope @solidary-network/person-cc --stream
 $ npx lerna run build --scope @solidary-network/participant-cc --stream
-$ npx lerna run build --scope @solidary-network/transaction-cc --stream
 $ npx lerna run build --scope @solidary-network/cause-cc --stream
+$ npx lerna run build --scope @solidary-network/transaction-cc --stream
 
 # upgrade smart contract
 $ VERSION=1.1
@@ -165,9 +165,9 @@ $ npm run cc:start:debug -- ${CHAINCODE_NAME}
 $ npm run cc:start:debug -- ${CHAINCODE_NAME} 1.1
 
 # run dev server
-$ npx lerna run start:dev --scope @solidary-network/server-rest --stream
+$ npx lerna run start:dev --scope @solidary-network/server-graphql --stream
 # run debug server
-$ npx lerna run start:debug --scope @solidary-network/server-rest --stream
+$ npx lerna run start:debug --scope @solidary-network/server-graphql --stream
 
 # debug/view logs container ${CHAINCODE_NAME}-1.0, ${CHAINCODE_NAME}-1.1...
 $ docker container ls | grep ${CHAINCODE_NAME} | awk '{print $1" : "$2}'
@@ -179,6 +179,15 @@ $ docker container ls --format "{{.ID}}\t{{.Image}}"
 $ CHAINCODE_VERSION="1.0"
 $ SEARCH_CONTAINER="${CHAINCODE}-${CHAINCODE_VERSION}"
 $ sudo docker logs $(docker container ls | grep ${SEARCH_CONTAINER} | awk '{print $1}' | head -n 1) -f
+```
+
+lerna
+
+```shell
+# add package to package
+$ ADD_PACKAGE=@solidary-network/common
+$ TO_PACKAGE=@solidary-network/server-graphql
+$ npx lerna add ${ADD_PACKAGE} --scope ${TO_PACKAGE}
 ```
 
 ## Fix's
@@ -193,7 +202,6 @@ $ sudo docker logs $(docker container ls | grep ${SEARCH_CONTAINER} | awk '{prin
 # fix build cc's and start server
 $ npx lerna run build --scope @solidary-network/person-cc --stream
 $ npx lerna run build --scope @solidary-network/participant-cc --stream
-$ npx lerna run start:debug --scope @solidary-network/server-rest --stream
 $ npx lerna run start:debug --scope @solidary-network/server-graphql --stream
 ```
 
@@ -2646,7 +2654,7 @@ $ npx lerna run build --scope @solidary-network/person-cc --stream
 $ npx lerna run build --scope @solidary-network/participant-cc --stream
 ```
 
-## Add new trasaction-cc module
+## Add new transaction-cc module
 
 ```shell
 # in network folder
@@ -2690,6 +2698,34 @@ $ npx lerna add @solidary-network/participant-cc --scope @solidary-network/trans
 require to `./restartEnv.sh` else we get below error
 
 `{ Error: transaction returned with failure: {"name":"Error","status":400,"message":"no function of name: cause_create found","stack":"Error: no function of name: cause_create found"}`
+
+add the chaincode package to graphql package
+
+```shell
+$ npx lerna add @solidary-network/transaction-cc --scope @solidary-network/server-graphql
+```
+
+add Controlers `packages/server-graphql/src/convector.ts`
+
+```typescript
+import { TransactionController } from '@solidary-network/transaction-cc';
+...
+export const TransactionControllerBackEnd = ClientFactory(TransactionController, adapter);
+```
+
+now add modules to `app.module.ts`
+
+`packages/server-graphql/src/app.module.ts`
+
+```typescript
+@Module({
+  imports: [
+    ...
+    TransactionModule,
+```
+
+`packages/server-graphql/src/transaction/transaction.service.ts`
+Property 'register' does not exist on type 'ConvectorControllerClient<TransactionController>'
 
 ## YUP Validation notes
 

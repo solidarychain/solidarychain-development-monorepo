@@ -5,7 +5,7 @@ const identityOrg: string = process.env.ORG || 'org1';
 
 export const envVariables: any = {
   // chaincode: the name of the smart contract. This is given when you installed it with hurl install <name> <language>
-  chaincode: process.env.CHAINCODE || 'person',
+  chaincode: process.env.CHAINCODE || 'solidary-network-chaincode',
   // channel: by default a channel (ledger) is created for you with Hurley. Its name is ch1 and each subsequent channel will follow that
   // pattern (ch2, ch3, ch4) check more on channels [here](https://github.com/worldsibu/hurley#hurl-install).
   channel: process.env.CHANNEL || 'ch1',

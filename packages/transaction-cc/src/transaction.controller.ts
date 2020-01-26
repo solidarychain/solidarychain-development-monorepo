@@ -1,4 +1,5 @@
-import { Controller, ConvectorController, Invokable, Param } from '@worldsibu/convector-core';
+import { appConstants as c } from '@solidary-network/common';
+import { Controller, ConvectorController, Invokable, Param, FlatConvectorModel } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
 import * as yup from 'yup';
 import { Transaction } from './transaction.model';
@@ -42,6 +43,11 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
       throw new Error(`No transaction exists with that ID ${id}`);
     }
     return existing;
+  }
+
+  @Invokable()
+  public async getAll(): Promise<FlatConvectorModel<Transaction>[]> {
+    return (await Transaction.getAll(c.CONVECTOR_MODEL_PATH_TRANSACTION)).map(transaction => transaction.toJSON() as any);
   }
 
 }

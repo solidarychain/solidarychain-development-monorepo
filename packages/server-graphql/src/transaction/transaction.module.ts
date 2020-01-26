@@ -9,7 +9,7 @@ import { TransactionService } from './transaction.service';
     TransactionService,
     DateScalar,
   ],
-  exports: [ParticipantService],
+  exports: [TransactionService],
 })
 
 export class TransactionModule { }

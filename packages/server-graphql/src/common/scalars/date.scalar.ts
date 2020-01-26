@@ -2,7 +2,7 @@ import { CustomScalar, Scalar } from '@nestjs/graphql';
 import { Kind } from 'graphql';
 
 /**
- * this works to convert convector dates stored in 'epoch unix time' to Date, 
+ * this works to convert convector dates stored in 'epoch unix time' to Date,
  * if we want default format we must revert <Date, number>
  */
 
@@ -26,4 +26,5 @@ export default class DateScalar implements CustomScalar<Date, number> {
     }
     return null;
   }
+
 }

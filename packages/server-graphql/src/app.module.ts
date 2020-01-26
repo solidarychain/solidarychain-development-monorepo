@@ -6,14 +6,17 @@ import { PersonModule } from './person/person.module';
 import { GqlContext } from './types';
 import { UsersModule } from './users/users.module';
 import { envVariables as e } from './env';
+import { TransactionModule } from './transaction/transaction.module';
 
 @Module({
   imports: [
     AuthModule,
+    UsersModule,
+    // chaincode modules
     ParticipantModule,
     PersonModule,
-    UsersModule,
-    // ApolloServer config
+    TransactionModule,
+    // apolloServer config
     GraphQLModule.forRoot({
       installSubscriptionHandlers: true,
       autoSchemaFile: 'schema.gql',

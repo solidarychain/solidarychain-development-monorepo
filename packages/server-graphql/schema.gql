@@ -46,6 +46,7 @@ type Mutation {
   participantNew(newParticipantData: NewParticipantInput!): Participant!
   personNew(newPersonData: NewPersonInput!): Person!
   personAddAttribute(addPersonAttributeData: AddPersonAttributeInput!, personId: String!): Person!
+  transactionNew(newTransactionData: NewTransactionInput!): Transaction!
 }
 
 input NewParticipantInput {
@@ -91,6 +92,19 @@ input NewPersonInput {
   pan: String
   requestLocation: String
   otherInformation: String
+}
+
+input NewTransactionInput {
+  id: String
+  transactionType: String!
+  resourceType: String!
+  input: JSONObject!
+  output: JSONObject!
+  quantity: Float!
+  currency: String!
+  location: String!
+  metaData: JSONObject
+  metaDataInternal: JSONObject
 }
 
 type Participant {
@@ -156,12 +170,28 @@ type Query {
   persons(skip: Int = 0, take: Int = 25): [Person!]!
   personByAttribute(skip: Int = 0, take: Int = 25, getByAttributeInput: GetByAttributeInput!): [Person!]!
   personProfile: Person!
+  transactionById(id: String!): Transaction!
+  transactions(skip: Int = 0, take: Int = 25): [Transaction!]!
 }
 
 type Subscription {
   personLogged: String!
   participantAdded: Participant!
   personAdded: Person!
+  transactionAdded: Transaction!
+}
+
+type Transaction {
+  id: ID!
+  transactionType: String!
+  resourceType: String!
+  input: JSONObject!
+  output: JSONObject!
+  quantity: Float!
+  currency: String!
+  location: String!
+  metaData: JSONObject
+  metaDataInternal: JSONObject
 }
 
 type x509Identities {

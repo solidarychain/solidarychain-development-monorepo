@@ -89,29 +89,25 @@ change localhost to domain
 
 
 
-
-TEMP.md
-NOTES2.md
-TODO.md
-
-CHANGE CHAINCODE `person` to `solidary-network-chaincode`
-
-packages/server-rest/src/main.ts
-add cors options like we do in
-packages/server-graphql/src/main.ts
+packages/server-graphql/src/participant/models/x509Identities.model.ts
+move to
+packages/server-graphql/src/common/models
 
 
-- [-] replace `"name": "@solidary-network/` with `"name": "@solidary-network-network/`
-- [-] replace `network.solidary.convector` with `network.solidary.model`
-- [-] network.solidary.convector.person
+  // public transactionType: TransactionType;
+  // public resourceType: ResourceType;
+  // public input: Entity;
+  // public output: Entity;
+  // public quantity: number;
+  // public currency: string;
+  // public location: string;
+  // public metaData: any;
+  // public metaDataInternal: any;
+  // public created: number;
 
-lerna success run Ran npm script 'build' in 5 packages in 19.2s:
-lerna success - @solidary-network/common
-lerna success - @solidary-network/frontend-react
-lerna success - @solidary-network/participant-cc
-lerna success - @solidary-network/person-cc
-lerna success - @solidary-network/server-graphql
-
+- [-] add CREATED to Person and all models, change to createdDate
+- [-] rename `common` to `common-cc`
+- [-] add cause graphql module
 
 ## React FrontEnd
 

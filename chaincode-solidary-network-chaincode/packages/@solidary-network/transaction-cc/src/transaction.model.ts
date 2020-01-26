@@ -2,14 +2,15 @@ import { appConstants as c, entitySchema } from '@solidary-network/common';
 import { ConvectorModel, ReadOnly, Required, Validate } from '@worldsibu/convector-core-model';
 import * as yup from 'yup';
 import { transactionTypeSchema, resourceTypeSchema, currencySchema } from './validation';
-import { Entity, TransactionType, ResourceType } from './types';
+import { Entity } from './types';
+import { TransactionType, ResourceType } from '.';
 
 export class Transaction extends ConvectorModel<Transaction> {
   @ReadOnly()
   @Required()
   public readonly type = c.CONVECTOR_MODEL_PATH_TRANSACTION;
 
-  // FUCK we can't use // @ReadOnly() else yup validations won't work!!!!!!! remove all @ReadOnly() from everywhere
+  // FUCK we can't use @ReadOnly() else yup validations won't work!!!!!!! remove all @ReadOnly() from everywhere
 
   @Required()
   @Validate(transactionTypeSchema)

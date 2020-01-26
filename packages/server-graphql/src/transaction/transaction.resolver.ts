@@ -1,49 +1,50 @@
 import { NotFoundException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'apollo-server-express';
-import NewParticipantInput from './dto/new-transaction.input';
-import ParticipantArgs from './dto/transaction.args';
-import Participant from './models/participant.model';
-import { ParticipantService } from './transaction.service';
+import NewTransactionInput from './dto/new-transaction.input';
+import TransactionArgs from './dto/transaction.args';
+import Transaction from './models/transaction.model';
+import { TransactionService } from './transaction.service';
 import { GqlAuthGuard } from '../auth/guards';
 
 const pubSub = new PubSub();
 
 @UseGuards(GqlAuthGuard)
-@Resolver(of => Participant)
+@Resolver(of => Transaction)
 export class TransactionResolver {
-  constructor(private readonly participantService: ParticipantService) { }
+  constructor(private readonly transactionService: TransactionService) { }
 
-  @Query(returns => Participant)
-  async participantById(
+  @Query(returns => Transaction)
+  async transactionById(
     @Args('id') id: string,
-  ): Promise<Participant> {
-    const participant = await this.participantService.findOneById(id);
-    if (!participant) {
+  ): Promise<Transaction> {
+    const transaction = await this.transactionService.findOneById(id);
+    if (!transaction) {
       throw new NotFoundException(id);
     }
-    return participant;
+    return transaction;
   }
 
-  @Query(returns => [Participant])
-  participants(
-    @Args() participantsArgs: ParticipantArgs,
-  ): Promise<Participant[]> {
-    return this.participantService.findAll(participantsArgs);
+  @Query(returns => [Transaction])
+  transactions(
+    @Args() transactionsArgs: TransactionArgs,
+  ): Promise<Transaction[]> {
+    return this.transactionService.findAll(transactionsArgs);
   }
 
-  @Mutation(returns => Participant)
-  async participantNew(
-    @Args('newParticipantData') newParticipantData: NewParticipantInput,
-  ): Promise<Participant> {
-    const participant = await this.participantService.create(newParticipantData);
+  @Mutation(returns => Transaction)
+  async transactionNew(
+    @Args('newTransactionData') newTransactionData: NewTransactionInput,
+  ): Promise<Transaction> {
+    const transaction = await this.transactionService.create(newTransactionData);
     // fire subscription
-    pubSub.publish('participantAdded', { participantAdded: participant });
-    return participant;
+    pubSub.publish('transactionAdded', { transactionAdded: transaction });
+    return transaction;
   }
 
-  @Subscription(returns => Participant)
-  participantAdded() {
-    return pubSub.asyncIterator('participantAdded');
+  @Subscription(returns => Transaction)
+  transactionAdded() {
+    return pubSub.asyncIterator('transactionAdded');
   }
+
 }
