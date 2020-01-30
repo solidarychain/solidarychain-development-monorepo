@@ -185,7 +185,8 @@ lerna
 
 ```shell
 # add package to package
-$ ADD_PACKAGE=@solidary-network/common
+# $ ADD_PACKAGE=@solidary-network/common
+$ ADD_PACKAGE=type-graphql:^0.17.6
 $ TO_PACKAGE=@solidary-network/server-graphql
 $ npx lerna add ${ADD_PACKAGE} --scope ${TO_PACKAGE}
 ```
