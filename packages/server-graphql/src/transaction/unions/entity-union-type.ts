@@ -1,27 +1,29 @@
+import { createUnionType } from 'type-graphql';
+import Participant from './../../participant/models/participant.model';
+import Person from './../../person/models/person.model';
+
+// NOT USED
+
 // https://typegraphql.ml/docs/unions.html
+// https://graphql.org/learn/schema/#union-types
 
-import { createUnionType, Field, ObjectType, Int } from 'type-graphql';
+// query{
+//   search(phrase:""){
+//     __typename
+//     ...on Movie {
+//       name
+//       rating
+//     }
+//     ... on  Actor{
+//       name
+//       age
+//     }
+//   }
+// }
 
-@ObjectType()
-class Movie {
-  @Field()
-  name: string;
-
-  @Field()
-  rating: number;
-}
-
-// tslint:disable-next-line: max-classes-per-file
-@ObjectType()
-class Actor {
-  @Field()
-  name: string;
-
-  @Field(type => Int)
-  age: number;
-}
-
-export const SearchResult = createUnionType({
-  name: 'SearchResult',
-  types: () => [Movie, Actor],
+export const EntityResultUnion = createUnionType({
+  // the name of the GraphQL union
+  name: 'EntityResultUnion',
+  // function that returns array of object types classes
+  types: () => [Participant, Person],
 });

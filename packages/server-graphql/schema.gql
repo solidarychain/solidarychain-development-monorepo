@@ -24,6 +24,17 @@ type Attribute {
 """Date custom scalar type"""
 scalar Date
 
+type Entity {
+  id: ID!
+  type: String!
+  created: Float!
+  identities: [x509Identities!]!
+}
+
+type EntityResult {
+  entity: Entity!
+}
+
 input GetByAttributeInput {
   id: String!
   content: JSONObject
@@ -185,8 +196,8 @@ type Transaction {
   id: ID!
   transactionType: String!
   resourceType: String!
-  input: JSONObject!
-  output: JSONObject!
+  input: EntityResult!
+  output: EntityResult!
   quantity: Float!
   currency: String!
   location: String!

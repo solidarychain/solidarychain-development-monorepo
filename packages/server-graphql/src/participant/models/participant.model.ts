@@ -12,6 +12,7 @@ export default class Participant {
   @Field()
   public msp: string;
 
+  // TODO: use x509Identities from common package
   @Field(type => [x509Identities])
   public identities: x509Identities[];
 }

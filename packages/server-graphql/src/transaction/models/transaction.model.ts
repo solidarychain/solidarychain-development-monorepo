@@ -1,10 +1,8 @@
+import { Entity, ResourceType, TransactionType } from '@solidary-network/transaction-cc';
+import { IsDefined, IsNumber } from 'class-validator';
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, ID, ObjectType } from 'type-graphql';
-import { IsDefined, IsNumber } from 'class-validator';
-import { TransactionType,ResourceType } from '@solidary-network/transaction-cc';
-// import { Person } from '@solidary-network/person-cc';
-// import { Cause } from '@solidary-network/cause-cc';
-// import { Participant } from '@solidary-network/participant-cc';
+import EntityResult from './entity-result.model';
 
 @ObjectType()
 export default class Transaction {
@@ -12,6 +10,7 @@ export default class Transaction {
   id: string;
 
   // above is equal dto/new-transaction.input.ts and models/transaction.model.ts
+  // minus input and output type
 
   @Field()
   @IsDefined()
@@ -21,15 +20,16 @@ export default class Transaction {
   @IsDefined()
   resourceType: ResourceType;
 
-  // TODO: Participant | Person | Cause;
-  @Field(type => GraphQLJSONObject)
+  // @Field(type => GraphQLJSONObject)
+  // @IsDefined()
+  // input?: Entity;
+  @Field(type => EntityResult)
   @IsDefined()
-  input?: any;
+  input?: Entity;
 
-  // TODO: Participant | Person | Cause;
-  @Field(type => GraphQLJSONObject)
+  @Field(type => EntityResult)
   @IsDefined()
-  output?: any;
+  output?: Entity;
 
   @Field()
   @IsDefined()
