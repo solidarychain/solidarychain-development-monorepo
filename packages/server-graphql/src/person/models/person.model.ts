@@ -5,6 +5,7 @@ import Participant from '../../participant/models/participant.model';
 import Attribute from './attribute.model';
 import { UserRoles } from '@solidary-network/common';
 import { GraphQLJSONObject } from 'graphql-type-json';
+import { x509Identities } from '../../common/models/x509Identities.model';
 
 @ObjectType()
 export default class Person {
@@ -32,6 +33,9 @@ export default class Person {
   @Field()
   @IsDefined()
   public participant: Participant;
+
+  @Field(type => [x509Identities])
+  public identities: x509Identities[];
 
   // extended non citizenCard data
 

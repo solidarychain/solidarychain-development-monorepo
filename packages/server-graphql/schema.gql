@@ -132,6 +132,7 @@ type Person {
   attributes: [Attribute!]
   roles: [String!]
   participant: Participant!
+  identities: [x509Identities!]!
   registrationDate: Date!
   mobilePhone: Float
   postal: String
