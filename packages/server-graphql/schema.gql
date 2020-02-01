@@ -124,6 +124,7 @@ type Participant {
   msp: String!
   participant: Participant
   identities: [x509Identities!]!
+  created: Float!
 }
 
 type Person {
@@ -134,6 +135,7 @@ type Person {
   roles: [String!]
   participant: Participant!
   identities: [x509Identities!]!
+  created: Float!
   registrationDate: Date!
   mobilePhone: Float
   postal: String
@@ -205,8 +207,9 @@ type Transaction {
   location: String!
   metaData: JSONObject
   metaDataInternal: JSONObject
-  participant: Participant!
-  identities: [x509Identities!]!
+  participant: Participant
+  identities: [x509Identities!]
+  created: Float!
 }
 
 type x509Identities {

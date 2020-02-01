@@ -14,7 +14,7 @@ export class Participant extends ConvectorModel<Participant> {
   @Validate(yup.string())
   public msp: string;
 
-  // @Required()
+  // @Required() Don't enable here
   @Validate(Participant.schema())
   public participant: FlatConvectorModel<Participant>;
   

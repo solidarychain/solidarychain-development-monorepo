@@ -39,16 +39,16 @@ export class Person extends ConvectorModel<Person> {
   public roles: Array<String>;
 
   @Required()
-  @Validate(yup.number())
-  public created: number;
-
-  @Required()
   @Validate(Participant.schema())
   public participant: FlatConvectorModel<Participant>;
 
   @Required()
   @Validate(yup.array(x509Identities.schema()))
   public identities: Array<FlatConvectorModel<x509Identities>>;
+
+  @Required()
+  @Validate(yup.number())
+  public created: number;
 
   // extended non citizenCard data
 
@@ -101,7 +101,6 @@ export class Person extends ConvectorModel<Person> {
   @Validate(yup.string().max(20))
   public gender: string;
 
-  // TODO: convert to 1.81
   // 1,81
   // @Required()
   @Validate(yup.string())

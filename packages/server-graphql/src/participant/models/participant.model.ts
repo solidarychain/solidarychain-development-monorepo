@@ -15,7 +15,6 @@ export default class Participant {
   @Field()
   public msp: string;
 
-  // TODO
   @Field({nullable: true})
   @IsDefined()
   public participant: Participant;
@@ -24,8 +23,9 @@ export default class Participant {
   @IsDefined()
   public identities: x509Identities[];
 
-  @Validate(yup.number())
+  @Field()
   @IsDefined()
+  @Validate(yup.number())
   public created: number;
 
 }

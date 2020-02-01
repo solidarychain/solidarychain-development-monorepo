@@ -101,7 +101,6 @@ export class Person extends ConvectorModel<Person> {
   @Validate(yup.string().max(20))
   public gender: string;
 
-  // TODO: convert to 1.81
   // 1,81
   // @Required()
   @Validate(yup.string())

@@ -38,17 +38,17 @@ export default class Cause {
   @IsDefined()
   input?: Entity;
 
-  // TODO
-  // @Field()
-  // @IsDefined()
-  // public participant: Participant;
+  @Field()
+  @IsDefined()
+  public participant: Participant;
 
   @Field(type => [x509Identities])
   @IsDefined()
   public identities: x509Identities[];
 
-  @Validate(yup.number())
+  @Field()
   @IsDefined()
+  @Validate(yup.number())
   public created: number;
 
 }

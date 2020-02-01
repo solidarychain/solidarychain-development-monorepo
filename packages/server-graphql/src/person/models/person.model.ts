@@ -39,8 +39,9 @@ export default class Person {
   @IsDefined()
   public identities: x509Identities[];
 
-  @Validate(yup.number())
+  @Field()
   @IsDefined()
+  @Validate(yup.number())
   public created: number;
 
   // extended non citizenCard data

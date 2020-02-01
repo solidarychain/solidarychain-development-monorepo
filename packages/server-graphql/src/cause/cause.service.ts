@@ -42,7 +42,7 @@ export class CauseService {
 
   async findAll(paginationArgs: PaginationArgs): Promise<Cause[]> {
     try {
-      const convectorModel: Array<FlatConvectorModel<Cause>> = await CauseControllerBackEnd.getAll();
+      const convectorModel: Array<FlatConvectorModel<CauseConvectorModel>> = await CauseControllerBackEnd.getAll();
       // require to map fabric model to graphql Cause[]
       return (paginationArgs)
         ? convectorModel.splice(paginationArgs.skip, paginationArgs.take) as Cause[]

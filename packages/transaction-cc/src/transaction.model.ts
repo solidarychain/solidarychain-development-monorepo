@@ -33,6 +33,7 @@ export class Transaction extends ConvectorModel<Transaction> {
   @Validate(yup.number())
   public quantity: number;
 
+  @Required()
   @Validate(currencySchema)
   public currency: string;
 
@@ -49,11 +50,11 @@ export class Transaction extends ConvectorModel<Transaction> {
   @Validate(yup.number())
   public created: number;
 
-  // TODO: DON'T add @Required else it won't pass the validations, because we don't pass it in invoke
+  // DON'T add @Required
   @Validate(Participant.schema())
   public participant: FlatConvectorModel<Participant>;
     
-  // TODO: DON'T add @Required else it won't pass the validations, because we don't pass it in invoke
+  // DON'T add @Required
   @Validate(yup.array(x509Identities.schema()))
   public identities: Array<FlatConvectorModel<x509Identities>>;
 
