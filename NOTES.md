@@ -125,7 +125,7 @@ $ VERSION=1.1
 $ npm run cc:upgrade -- ${CHAINCODE_NAME} ${VERSION}
 
 # always use script to update chaincode
-$ ./upgrade-chainde.sh
+$ ./upgrade-chaincode.sh
 
 # note: after deploy/upgrade wait a few second/minutes in first invoke,
 # when done we have a new container and command end with result `Upgraded Chaincode at org1`

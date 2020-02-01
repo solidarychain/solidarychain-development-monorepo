@@ -6,5 +6,5 @@ export * from './util';
 export * from './x509-identities.model';
 export * from './validation';
 export * from './types';
-// whole dir
+// whole data dir
 export * from './data';
