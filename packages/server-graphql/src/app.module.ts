@@ -7,6 +7,7 @@ import { GqlContext } from './types';
 import { UsersModule } from './users/users.module';
 import { envVariables as e } from './env';
 import { TransactionModule } from './transaction/transaction.module';
+import { CauseModule } from './cause/cause.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { TransactionModule } from './transaction/transaction.module';
     // chaincode modules
     ParticipantModule,
     PersonModule,
+    CauseModule,
     TransactionModule,
     // apolloServer config
     GraphQLModule.forRoot({

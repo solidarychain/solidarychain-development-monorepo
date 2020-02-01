@@ -21,6 +21,19 @@ type Attribute {
   certifierID: String
 }
 
+type Cause {
+  id: ID!
+  name: String!
+  startDate: Float
+  endDate: Float
+  location: String
+  metaData: JSONObject
+  input: EntityResult!
+  participant: Participant!
+  identities: [x509Identities!]!
+  created: Float!
+}
+
 """Date custom scalar type"""
 scalar Date
 
@@ -58,6 +71,17 @@ type Mutation {
   personNew(newPersonData: NewPersonInput!): Person!
   personAddAttribute(addPersonAttributeData: AddPersonAttributeInput!, personId: String!): Person!
   transactionNew(newTransactionData: NewTransactionInput!): Transaction!
+  causeNew(newCauseData: NewCauseInput!): Cause!
+}
+
+input NewCauseInput {
+  id: String
+  name: String!
+  startDate: Date
+  endDate: Date
+  location: String
+  metaData: JSONObject
+  input: JSONObject!
 }
 
 input NewParticipantInput {
@@ -187,6 +211,8 @@ type Query {
   personProfile: Person!
   transactionById(id: String!): Transaction!
   transactions(skip: Int = 0, take: Int = 25): [Transaction!]!
+  causeById(id: String!): Cause!
+  causes(skip: Int = 0, take: Int = 25): [Cause!]!
 }
 
 type Subscription {
@@ -194,6 +220,7 @@ type Subscription {
   participantAdded: Participant!
   personAdded: Person!
   transactionAdded: Transaction!
+  causeAdded: Cause!
 }
 
 type Transaction {

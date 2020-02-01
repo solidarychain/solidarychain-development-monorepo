@@ -11,32 +11,34 @@ import Participant from '../../participant/models/participant.model';
 @ObjectType()
 export default class Cause {
   @Field(type => ID)
-  id: string;
+  public id: string;
 
   // above is equal dto/new-x.input.ts and models/x.model.ts
   // minus input and output type, and new-x-input don't have participant, identities and created
 
   @Field()
   @IsDefined()
-  name: string;
+  public name: string;
 
+  @Field({ nullable: true })
   @Validate(yup.number())
   public startDate: number;
 
+  @Field({ nullable: true })
   @Validate(yup.number())
   public endDate: number;
 
-  @Field()
+  @Field({ nullable: true })
   @IsDefined()
-  location: string;
+  public location: string;
 
   @Field(type => GraphQLJSONObject, { nullable: true })
   @IsDefined()
-  metaData: any;
+  public metaData: any;
 
   @Field(type => EntityResult)
   @IsDefined()
-  input?: Entity;
+  public input?: Entity;
 
   @Field()
   @IsDefined()

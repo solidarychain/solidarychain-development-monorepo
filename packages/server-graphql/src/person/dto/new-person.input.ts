@@ -119,7 +119,7 @@ export default class NewPersonInput {
   // 19 12 1971
   @Field(type => Date, { nullable: true })
   @IsDefined()
-  @IsDate()
+  // @IsDate() don't enable on new-x-input's
   @IsOptional()
   public birthDate?: Date;
 
@@ -163,7 +163,7 @@ export default class NewPersonInput {
   // 08 05 2028
   @Field(type => Date, { nullable: true })
   @IsDefined()
-  @IsDate()
+  // @IsDate() don't enable on new-x-input's
   @IsOptional()
   public expirationDate?: Date;
 

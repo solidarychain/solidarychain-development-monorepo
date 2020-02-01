@@ -2745,5 +2745,6 @@ Property 'register' does not exist on type 'ConvectorControllerClient<Transactio
 ## Add new module to nestjs graphql
 
 1. create dir `packages/server-graphql/src/cause`
-2. create`cause/cause.module.ts`, `cause.service.ts`, `cause/cause.resolver.ts`
-3. create `src/cause/dto` and `src/cause/models`
+2. create`packages/server-graphql/src/cause/cause.module.ts`, `packages/server-graphql/src/cause.service.ts`, `packages/server-graphql/src/cause/cause.resolver.ts`
+3. create dirs `src/cause/dto` and `src/cause/models` and populate with files
+4. add module to `packages/server-graphql/src/app.module.ts`

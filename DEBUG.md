@@ -8,7 +8,11 @@ to start debug and develop chaincode always follow this steps to prevent some ha
 $ npm run env:restart
 ```
 
-2. 
+
+
+IT IS POSSIBLE to debug all night the chaincode and the grapqqhl at same time :) just follow the above stps
+
+
 
 
 { message: 'Cannot read property \'id\' of undefined',

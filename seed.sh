@@ -92,7 +92,7 @@ npx hurl invoke ${CHAINCODE_NAME} person_get ${ID}
 
 # create cause with all data
 ID=acef70e5-cd25-4533-8392-9fa57e43cf72
-NAME=Cause004
+NAME=Cause001
 INPUT_TYPE=PARTICIPANT
 INPUT_ID=mit
 START_DATE=1546300800

@@ -67,9 +67,9 @@ export class PersonService {
         // if not password defined generate a new one
         password: (data.password) ? data.password : generate({ length: 10, numbers: true }),
         // convert Date to epoch unix time to be stored in convector person model
-        birthDate: ((data.birthDate as unknown) as number)/*.getTime()*/,
-        emissionDate: ((data.emissionDate as unknown) as number)/*.getTime()*/,
-        expirationDate: ((data.expirationDate as unknown) as number)/*.getTime()*/,
+        birthDate: ((data.birthDate as unknown) as number),
+        emissionDate: ((data.emissionDate as unknown) as number),
+        expirationDate: ((data.expirationDate as unknown) as number),
       });
       await PersonControllerBackEnd.create(personToCreate);
       return await this.findOneById(personToCreate.id);

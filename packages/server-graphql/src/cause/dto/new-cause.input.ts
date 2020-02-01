@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import { IsDefined, Validate } from 'class-validator';
+import { IsDefined, Validate, IsDate, IsOptional } from 'class-validator';
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, InputType } from 'type-graphql';
 import { Entity } from '@solidary-network/transaction-cc';
@@ -15,25 +15,31 @@ export default class NewCauseInput {
 
   @Field()
   @IsDefined()
-  name: string;
+  public name: string;
 
-  @Validate(yup.number())
-  public startDate: number;
-
-  @Validate(yup.number())
-  public endDate: number;
-
-  @Field()
+  @Field(type => Date, { nullable: true })
   @IsDefined()
-  location: string;
+  // @IsDate() don't enable on new-x-input's
+  @IsOptional()
+  public startDate?: Date;
+
+  @Field(type => Date, { nullable: true })
+  @IsDefined()
+  // @IsDate() don't enable on new-x-input's
+  @IsOptional()
+  public endDate?: Date;
+
+  @Field({ nullable: true })
+  @IsDefined()
+  public location: string;
 
   @Field(type => GraphQLJSONObject, { nullable: true })
   @IsDefined()
-  metaData: any;
+  public metaData: any;
 
   // different from x.model.ts
   @Field(type => GraphQLJSONObject)
   @IsDefined()
-  input?: Entity;
+  public input?: Entity;
 
 }
