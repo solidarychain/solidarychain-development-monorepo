@@ -10,6 +10,7 @@ npx hurl invoke ${CHAINCODE_NAME} participant_register mit "MIT" -u user1 -o org
 # org2
 echo "Creating participant: National Bank"
 npx hurl invoke ${CHAINCODE_NAME} participant_register naba "National Bank" -u user1 -o org2
+# npx hurl invoke ${CHAINCODE_NAME} participant_get naba
 
 # {
 #   "id": "${ID}",
@@ -151,7 +152,7 @@ npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u admin
 npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID}
 
 # transaction with cause
-ID=acef70e5-cd25-4533-8392-9fa57e43cf34
+ID=acef70e5-cd25-4533-8392-9fa57e43cf32
 INPUT_TYPE=CAUSE
 INPUT_ID=acef70e5-cd25-4533-8392-9fa57e43cf69
 PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"}}"

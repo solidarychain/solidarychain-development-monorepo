@@ -3,6 +3,7 @@ import { BaseStorage, Controller, ConvectorController, FlatConvectorModel, Invok
 import { ClientIdentity } from 'fabric-shim';
 import * as yup from 'yup';
 import { Participant } from './participant.model';
+import { getParticipantByIdentity } from './utils';
 
 @Controller('participant')
 export class ParticipantController extends ConvectorController {
@@ -18,23 +19,34 @@ export class ParticipantController extends ConvectorController {
     @Param(yup.string())
     name: string,
   ) {
+    // get host participant from fingerprint, only if not gov, in this case it don't have been registered and fail to get it
+    let participant: Participant;
+    if (id !== 'gov') {
+      participant = await getParticipantByIdentity(this.sender);
+      if (!!participant && !participant.id) {
+        throw new Error('There is no participant with that identity');
+      }
+    }
+
     // Retrieve to see if exists
     const existing = await Participant.getOne(id);
 
     if (!existing || !existing.id) {
-      let participant = new Participant();
-      participant.id = id;
-      participant.name = name || id;
-      participant.msp = this.fullIdentity.getMSPID();
+      let newParticipant = new Participant();
+      newParticipant.id = id;
+      newParticipant.name = name || id;
+      newParticipant.msp = this.fullIdentity.getMSPID();
+      // add participant, if exists
+      if (participant) newParticipant.participant = participant;
       // create a new identity
-      participant.identities = [{
+      newParticipant.identities = [{
         fingerprint: this.sender,
         status: true
       }];
       // add date in epoch unix time
-      participant.created = new Date().getTime();
-      
-      await participant.save();
+      newParticipant.created = new Date().getTime();
+
+      await newParticipant.save();
     } else {
       throw new Error('Identity exists already, please call changeIdentity fn for updates');
     }

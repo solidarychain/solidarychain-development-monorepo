@@ -155,15 +155,16 @@ $ ./seed.sh
 $ ./views/install.sh
 
 # is always good to launch above command to log chaincode activity inside vscode, like restartEnv etc
-# debug chain code (remember breakpoint are set in .js no ts files)
+# debug chain code (remember breakpoint are set in .js or in .ts files)
 # TRICK: to debug always use hurl, it is possible to debug chainCode and graphql at same time, using both auto attached debuggers
 # TRICK: in case of not stop on breakpoint use debugger; and put breakPoint on start of function is on start of `create`
 # TRICK: we can put some breakpoint into .ts it works too after stop in .js
 # TRICK: if change something on .ts while debug don't forget to build chaincode with 'npx lerna run build --scope @solidary-network/person-cc --stream' and deploy, and restart debug again
-# TRICK don't forget that breakpoint to work must be inside the chaincode-${CHAINCODE_NAME}/packages/@solidary-network/person-cc/src/person.controller.ts folder that is generated on chaincode builds, and not the default packages/person-cc/src/person.controller.ts
+# TRICK: don't forget that breakpoint to work must be inside the chaincode-${CHAINCODE_NAME}/packages/@solidary-network/person-cc/src/person.controller.ts folder that is generated on chaincode builds, and not the default packages/person-cc/src/person.controller.ts
 $ npm run cc:start:debug -- ${CHAINCODE_NAME}
-# if error occur use target debug version, recommend to always use current version, and if we are in version 1.0, use pass 1.1 to debug a new chaincode
-$ npm run cc:start:debug -- ${CHAINCODE_NAME} 1.1
+# if error occur use target debug version, recommend to always use current version, or if we are in version 1.3, use pass 1.4 to deploy and debug a new chaincode, and watch
+$ npm run cc:start:debug -- ${CHAINCODE_NAME} 1.4
+# TRICK: Error: could not assemble transaction, err proposal response was not successful, error code 500, msg chaincode with name 'solidary-network-chaincode' already exists
 
 # run dev server
 $ npx lerna run start:dev --scope @solidary-network/server-graphql --stream
@@ -2577,13 +2578,17 @@ undefined
 enter container to check if chaincode is deployed
 
 ```shell
-$ docker exec -it  dev-peer0.org1.hurley.lab-person-1.0 sh
-location of chaincode inside container dev-peer0.org1.hurley.lab-person-1.0
+$ VERSION=1.1
+$ CONTAINER=dev-peer0.org1.hurley.lab-solidary-network-chaincode-${VERSION}
+# enter in container
+$ docker exec -it ${CONTAINER} sh
+# location of chaincode inside container ${CONTAINER}
 $ ls -la /usr/local/src/packages/@solidary-network
-drwxr-xr-x 4 root root 4096 Jan 19 20:13 common
-drwxr-xr-x 5 root root 4096 Jan 19 20:13 participant-cc
-drwxr-xr-x 5 root root 4096 Jan 19 20:13 person-cc
-drwxr-xr-x 6 root root 4096 Jan 19 20:13 transaction-cc
+drwxr-xr-x 5 root root 4096 Feb  1 19:38 cause-cc
+drwxr-xr-x 5 root root 4096 Feb  1 19:38 common
+drwxr-xr-x 5 root root 4096 Feb  1 19:38 participant-cc
+drwxr-xr-x 5 root root 4096 Feb  1 19:38 person-cc
+drwxr-xr-x 6 root root 4096 Feb  1 19:38 transaction-cc
 ```
 
 the fix seems to be `npm run cc:package -- ${CHAINCODE_NAME} org1` and it start to work
@@ -2592,7 +2597,7 @@ strange after some fight, I restart other network to check it works, next I exec
 
 > UPDATE: some times it is related to some error in chaincode, like errors in typescript, or imports, and it can't build the chaincode, and install, initiate it, this is the root cause of the problem, and we don't see it on upgrade and try to invoke something without a valid instantiated chaincode, always check off message `Instantiated Chaincode at org1` when upgrade
 
-> UPDATE: after one hours, find that the new transaction model **with above code block** gives the error, it build ok, but iot simply don't work, comment lines and start to work again, the problem is the line `@Validate(yup.InferType<typeof entitySchema>())`
+> UPDATE: after one hours, find that the new transaction model **with below code block** gives the error, it build ok, but it simply don't work, comment lines and start to work again, the problem is the line `@Validate(yup.InferType<typeof entitySchema>())`
 
 ```typescript
 @Required()

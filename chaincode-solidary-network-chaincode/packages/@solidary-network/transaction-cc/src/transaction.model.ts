@@ -1,9 +1,10 @@
-import { appConstants as c, entitySchema } from '@solidary-network/common';
-import { ConvectorModel, ReadOnly, Required, Validate } from '@worldsibu/convector-core-model';
+import { appConstants as c, entitySchema, x509Identities } from '@solidary-network/common';
+import { ConvectorModel, ReadOnly, Required, Validate, FlatConvectorModel } from '@worldsibu/convector-core-model';
 import * as yup from 'yup';
 import { transactionTypeSchema, resourceTypeSchema, currencySchema } from './validation';
 import { Entity } from './types';
 import { TransactionType, ResourceType } from '.';
+import { Participant } from '@solidary-network/participant-cc';
 
 export class Transaction extends ConvectorModel<Transaction> {
   @ReadOnly()
@@ -48,11 +49,14 @@ export class Transaction extends ConvectorModel<Transaction> {
   @Validate(yup.number())
   public created: number;
 
+  // TODO: added: DO TO add @Required else it won't pass the validations, because we don't pass it in invoke
   // @Required()
-  // @Validate(Participant.schema())
-  // public input: FlatConvectorModel<Participant>;
+  @Validate(Participant.schema())
+  public participant: FlatConvectorModel<Participant>;
+    
+  // TODO: added
+  // @Required()
+  @Validate(yup.array(x509Identities.schema()))
+  public identities: Array<FlatConvectorModel<x509Identities>>;
 
-  // @Required()
-  // @Validate(Participant.schema())
-  // public output: FlatConvectorModel<Participant>;
 }

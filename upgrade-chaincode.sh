@@ -15,8 +15,8 @@ echo "building packages..."
 npx lerna run build --scope @solidary-network/common --stream
 npx lerna run build --scope @solidary-network/person-cc --stream
 npx lerna run build --scope @solidary-network/participant-cc --stream
-npx lerna run build --scope @solidary-network/transaction-cc --stream
 npx lerna run build --scope @solidary-network/cause-cc --stream
+npx lerna run build --scope @solidary-network/transaction-cc --stream
 
 echo "upgrading chaincode ${CHAINCODE_NAME} ${VERSION}"
 npm run cc:upgrade -- ${CHAINCODE_NAME} ${VERSION}

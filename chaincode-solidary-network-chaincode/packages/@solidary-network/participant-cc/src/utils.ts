@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcrypt';
 import { appConstants as c } from '@solidary-network/common';
-import { Participant } from '@solidary-network/participant-cc';
+import { Participant } from '.';
 
 // duplicated with 
 // packages/person-cc/src/utils.ts

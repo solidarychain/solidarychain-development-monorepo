@@ -1,5 +1,5 @@
 import { appConstants as c } from '@solidary-network/common';
-import { Controller, ConvectorController, Invokable, Param } from '@worldsibu/convector-core';
+import { Controller, ConvectorController, Invokable, Param, FlatConvectorModel } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
 import * as yup from 'yup';
 import { Cause } from './cause.model';
@@ -70,6 +70,11 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
       throw new Error(`No cause exists with that ID ${id}`);
     }
     return existing;
+  }
+
+  @Invokable()
+  public async getAll(): Promise<FlatConvectorModel<Cause>[]> {
+    return (await Cause.getAll(c.CONVECTOR_MODEL_PATH_CAUSE)).map(cause => cause.toJSON() as any);
   }
 
 }

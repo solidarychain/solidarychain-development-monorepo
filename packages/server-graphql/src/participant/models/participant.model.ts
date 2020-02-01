@@ -16,7 +16,7 @@ export default class Participant {
   public msp: string;
 
   // TODO
-  @Field()
+  @Field({nullable: true})
   @IsDefined()
   public participant: Participant;
 
