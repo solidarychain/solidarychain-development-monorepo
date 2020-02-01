@@ -32,6 +32,10 @@ export default class Cause {
   @IsDefined()
   public location: string;
 
+  // TODO: tags
+  @Field(type => String, { nullable: true })
+  public tags: string[];
+
   @Field(type => GraphQLJSONObject, { nullable: true })
   @IsDefined()
   public metaData: any;

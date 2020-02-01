@@ -99,7 +99,7 @@ This is a simple NestJs starter, based on above links, I only extended it with a
 ## Commands
 
 ```shell
-# star define CHAINCODE_NAME
+# start define CHAINCODE_NAME
 $ CHAINCODE_NAME=solidary-network-chaincode
 
 # run test

@@ -98,7 +98,8 @@ INPUT_ID=mit
 START_DATE=1546300800
 END_DATE=1609372800
 LOCATION=40.1890144,-8.5171909
-PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"startDate\":\"${START_DATE}\",\"endDate\":\"${END_DATE}\",\"location\":\"${LOCATION}\",\"metaData\":{\"key\":\"value\"},\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"}}"
+TAGS="[\"red\", \"blue\"]"
+PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"startDate\":\"${START_DATE}\",\"endDate\":\"${END_DATE}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"metaData\":{\"key\":\"value\"},\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} cause_create "${PAYLOAD}" -u admin
 npx hurl invoke ${CHAINCODE_NAME} cause_get ${ID}
@@ -129,6 +130,10 @@ npx hurl invoke ${CHAINCODE_NAME} cause_get ${ID}
 #   "quantity": "${QUANTITY}",
 #   "currency": "${CURRENCY}",
 #   "location": "${LOCATION}",
+#   "tags":  [
+#     "red",
+#     "blue"
+#   ],
 #   "metaData": {
 #     "key": "value"
 #   },
@@ -146,7 +151,8 @@ OUTPUT_ID=4ea88521-031b-4279-9165-9c10e1839053
 QUANTITY=1.11
 CURRENCY=EUR
 LOCATION=40.1890144,-8.5171909
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"}}"
+TAGS="[\"red\", \"blue\"]"
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u admin
 npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID}

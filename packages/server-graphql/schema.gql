@@ -27,6 +27,7 @@ type Cause {
   startDate: Float
   endDate: Float
   location: String
+  tags: [String!]
   metaData: JSONObject
   input: EntityResult!
   participant: Participant!
@@ -80,6 +81,7 @@ input NewCauseInput {
   startDate: Date
   endDate: Date
   location: String
+  tags: [String!]
   metaData: JSONObject
   input: JSONObject!
 }
@@ -138,6 +140,7 @@ input NewTransactionInput {
   quantity: Float!
   currency: String!
   location: String!
+  tags: [String!]
   metaData: JSONObject
   metaDataInternal: JSONObject
 }
@@ -232,6 +235,7 @@ type Transaction {
   quantity: Float!
   currency: String!
   location: String!
+  tags: [String!]
   metaData: JSONObject
   metaDataInternal: JSONObject
   participant: Participant

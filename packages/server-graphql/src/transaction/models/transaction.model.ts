@@ -47,6 +47,10 @@ export default class Transaction {
   @IsDefined()
   location: string;
 
+  // TODO: tags
+  @Field(type => String, { nullable: true })
+  public tags: string[];
+
   @Field(type => GraphQLJSONObject, { nullable: true })
   @IsDefined()
   metaData: any;

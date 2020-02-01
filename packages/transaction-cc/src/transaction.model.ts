@@ -40,6 +40,7 @@ export class Transaction extends ConvectorModel<Transaction> {
   @Validate(yup.string().matches(c.REGEX_LOCATION))
   public location: string;
 
+  // TODO: tags
   @Validate(yup.array().of(yup.string()))
   public tags: Array<String>;
   
