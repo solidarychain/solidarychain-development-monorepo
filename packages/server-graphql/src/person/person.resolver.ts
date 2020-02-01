@@ -6,9 +6,9 @@ import { CurrentUser } from '../common/decorators';
 import AddPersonAttributeInput from './dto/add-person-attribute.input';
 import GetByAttributeInput from './dto/get-by-attribute.input';
 import NewPersonInput from './dto/new-person.input';
-import PersonArgs from './dto/person.args';
 import Person from './models/person.model';
 import { PersonService } from './person.service';
+import { PaginationArgs } from '@solidary-network/common';
 
 const pubSub = new PubSub();
 
@@ -44,7 +44,7 @@ export class PersonResolver {
   @UseGuards(GqlAuthGuard)
   @Query(returns => [Person])
   async persons(
-    @Args() personsArgs: PersonArgs,
+    @Args() personsArgs: PaginationArgs,
   ): Promise<Person[]> {
     return this.personService.findAll(personsArgs);
   }
@@ -53,7 +53,7 @@ export class PersonResolver {
   @Query(returns => [Person])
   async personByAttribute(
     @Args('getByAttributeInput') getByAttributeInput: GetByAttributeInput,
-    @Args() personsArgs: PersonArgs,
+    @Args() personsArgs: PaginationArgs,
   ): Promise<Person | Person[]> {
     return this.personService.findByAttribute(getByAttributeInput, personsArgs);
   }

@@ -9,8 +9,8 @@ export default class NewTransactionInput {
   @Field({ nullable: true })
   public id: string;
 
-  // above is equal dto/new-transaction.input.ts and models/transaction.model.ts
-  // minus input and output type
+  // above is equal dto/new-x.input.ts and models/x.model.ts
+  // minus input and output type, and new-x-input don't have participant, identities and created
 
   @Field()
   @IsDefined()
@@ -20,10 +20,12 @@ export default class NewTransactionInput {
   @IsDefined()
   resourceType: ResourceType;
 
+  // different from x.model.ts
   @Field(type => GraphQLJSONObject)
   @IsDefined()
   input?: Entity;
 
+  // different from x.model.ts
   @Field(type => GraphQLJSONObject)
   @IsDefined()
   output?: Entity;

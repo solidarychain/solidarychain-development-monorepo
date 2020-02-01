@@ -24,19 +24,21 @@ export class Cause extends ConvectorModel<Cause> {
 
   @Validate(yup.object().nullable())
   public metaData: any;
-  
+
   @Required()
   @Validate(entitySchema)
   public input: Entity;
 
   @Required()
+  @Validate(yup.number())
+  public created: number;
+
+  @Required()
   @Validate(Participant.schema())
   public participant: FlatConvectorModel<Participant>;
 
+  @Required()
   @Validate(yup.array(x509Identities.schema()))
   public identities: Array<FlatConvectorModel<x509Identities>>;
-  
-  @Required()
-  @Validate(yup.number())
-  public created: number;
+
 }

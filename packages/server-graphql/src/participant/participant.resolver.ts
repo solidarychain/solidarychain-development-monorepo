@@ -2,7 +2,7 @@ import { NotFoundException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'apollo-server-express';
 import NewParticipantInput from './dto/new-participant.input';
-import ParticipantArgs from './dto/participant.args';
+import { PaginationArgs } from '@solidary-network/common';
 import Participant from './models/participant.model';
 import { ParticipantService } from './participant.service';
 import { GqlAuthGuard } from '../auth/guards';
@@ -27,7 +27,7 @@ export class ParticipantResolver {
 
   @Query(returns => [Participant])
   participants(
-    @Args() participantsArgs: ParticipantArgs,
+    @Args() participantsArgs: PaginationArgs,
   ): Promise<Participant[]> {
     return this.participantService.findAll(participantsArgs);
   }

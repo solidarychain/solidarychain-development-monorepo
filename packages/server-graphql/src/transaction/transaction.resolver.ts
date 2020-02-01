@@ -1,11 +1,11 @@
 import { NotFoundException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
+import { PaginationArgs } from '@solidary-network/common';
 import { PubSub } from 'apollo-server-express';
+import { GqlAuthGuard } from '../auth/guards';
 import NewTransactionInput from './dto/new-transaction.input';
-import TransactionArgs from './dto/transaction.args';
 import Transaction from './models/transaction.model';
 import { TransactionService } from './transaction.service';
-import { GqlAuthGuard } from '../auth/guards';
 
 const pubSub = new PubSub();
 
@@ -27,7 +27,7 @@ export class TransactionResolver {
 
   @Query(returns => [Transaction])
   transactions(
-    @Args() transactionsArgs: TransactionArgs,
+    @Args() transactionsArgs: PaginationArgs,
   ): Promise<Transaction[]> {
     return this.transactionService.findAll(transactionsArgs);
   }

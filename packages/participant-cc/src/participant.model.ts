@@ -14,10 +14,17 @@ export class Participant extends ConvectorModel<Participant> {
   @Validate(yup.string())
   public msp: string;
 
-  @Validate(yup.array(x509Identities.schema()))
-  public identities: Array<FlatConvectorModel<x509Identities>>;
-
   @Required()
   @Validate(yup.number())
   public created: number;
+
+  // TODO: added
+  @Required()
+  @Validate(Participant.schema())
+  public participant: FlatConvectorModel<Participant>;
+
+  @Required()
+  @Validate(yup.array(x509Identities.schema()))
+  public identities: Array<FlatConvectorModel<x509Identities>>;
+
 }

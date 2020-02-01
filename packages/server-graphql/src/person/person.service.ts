@@ -1,14 +1,14 @@
-import { PersonAttribute as AttributeConvectorModel, Person as PersonConvectorModel } from '@solidary-network/person-cc';
 import { Injectable, Logger } from '@nestjs/common';
+import { PaginationArgs } from '@solidary-network/common';
+import { Person as PersonConvectorModel, PersonAttribute as AttributeConvectorModel } from '@solidary-network/person-cc';
 import { FlatConvectorModel } from '@worldsibu/convector-core';
+import { generate } from 'generate-password';
+import { v4 as uuid } from 'uuid';
 import { PersonControllerBackEnd } from '../convector';
 import AddPersonAttributeInput from './dto/add-person-attribute.input';
 import GetByAttributeInput from './dto/get-by-attribute.input';
 import NewPersonInput from './dto/new-person.input';
-import PersonArgs from './dto/person.args';
 import Person from './models/person.model';
-import { v4 as uuid } from 'uuid';
-import { generate } from 'generate-password';
 
 @Injectable()
 export class PersonService {
@@ -33,7 +33,7 @@ export class PersonService {
     return model;
   }
 
-  async findByAttribute({ id, content }: GetByAttributeInput, personArgs: PersonArgs): Promise<Person | Person[]> {
+  async findByAttribute({ id, content }: GetByAttributeInput, personArgs: PaginationArgs): Promise<Person | Person[]> {
     // get fabric model with _props
     const fabricModel: PersonConvectorModel[] = await PersonControllerBackEnd.getByAttribute(id, content) as PersonConvectorModel[];
     // convert fabric model to convector model (remove _props)
@@ -44,7 +44,7 @@ export class PersonService {
     return model;
   }
 
-  async findAll(personArgs: PersonArgs): Promise<Person[]> {
+  async findAll(personArgs: PaginationArgs): Promise<Person[]> {
     // get convector model
     const flatConvectorModel: Array<FlatConvectorModel<PersonConvectorModel[]>> = await PersonControllerBackEnd.getAll();
     // convert flat convector model to convector model
@@ -98,7 +98,7 @@ export class PersonService {
   /**
    * shared findBy method
    */
-  async findBy(convectorModel: PersonConvectorModel | PersonConvectorModel[], personArgs: PersonArgs): Promise<Person | Person[]> {
+  async findBy(convectorModel: PersonConvectorModel | PersonConvectorModel[], personArgs: PaginationArgs): Promise<Person | Person[]> {
     try {
       // working in array mode
       if (Array.isArray(convectorModel)) {

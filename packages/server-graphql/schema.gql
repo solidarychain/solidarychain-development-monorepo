@@ -122,6 +122,7 @@ type Participant {
   id: ID!
   name: String!
   msp: String!
+  participant: Participant!
   identities: [x509Identities!]!
 }
 
@@ -204,6 +205,8 @@ type Transaction {
   location: String!
   metaData: JSONObject
   metaDataInternal: JSONObject
+  participant: Participant!
+  identities: [x509Identities!]!
 }
 
 type x509Identities {

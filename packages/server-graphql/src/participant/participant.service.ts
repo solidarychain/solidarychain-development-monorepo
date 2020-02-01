@@ -3,7 +3,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { FlatConvectorModel } from '@worldsibu/convector-core-model';
 import { ParticipantControllerBackEnd } from '../convector';
 import NewParticipantInput from './dto/new-participant.input';
-import ParticipantArgs from './dto/participant.args';
+import { PaginationArgs } from '@solidary-network/common';
 import Participant from './models/participant.model';
 
 @Injectable()
@@ -20,7 +20,7 @@ export class ParticipantService {
   async findOneById(id: string): Promise<Participant> {
     try {
       // get fabric model with _props
-      const fabricModel: Participant = await ParticipantControllerBackEnd.get(id);
+      const fabricModel: ParticipantConvectorModel = await ParticipantControllerBackEnd.get(id) as ParticipantConvectorModel;
       // convert fabric model to convector model (remove _props)
       const convectorModel = new ParticipantConvectorModel(fabricModel).toJSON();
       // trick: must return convector model as a graphql model, to prevent property conversion problems
@@ -30,12 +30,12 @@ export class ParticipantService {
     }
   }
 
-  async findAll(participantArgs: ParticipantArgs): Promise<Participant[]> {
+  async findAll(paginationArgs: PaginationArgs): Promise<Participant[]> {
     try {
-      const convectorModel: Array<FlatConvectorModel<Participant>> = await ParticipantControllerBackEnd.getAll();
+      const convectorModel: Array<FlatConvectorModel<ParticipantConvectorModel>> = await ParticipantControllerBackEnd.getAll();
       // require to map fabric model to graphql Participant[]
-      return (participantArgs)
-        ? convectorModel.splice(participantArgs.skip, participantArgs.take) as Participant[]
+      return (paginationArgs)
+        ? convectorModel.splice(paginationArgs.skip, paginationArgs.take) as Participant[]
         : convectorModel as Participant[];
     } catch (error) {
       Logger.error(JSON.stringify(error));

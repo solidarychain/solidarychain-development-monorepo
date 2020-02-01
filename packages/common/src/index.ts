@@ -8,3 +8,4 @@ export * from './validation';
 export * from './types';
 // whole dir
 export * from './data';
+export * from './dto';

@@ -1,6 +1,7 @@
 import { x509Identities } from '../../common/models/x509Identities.model';
-import { Entity, ResourceType, TransactionType } from '@solidary-network/transaction-cc';
-import { IsDefined, IsNumber, Validate } from 'class-validator';
+import { Entity } from '@solidary-network/transaction-cc';
+import { Validate } from '@worldsibu/convector-core';
+import { IsDefined } from 'class-validator';
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, ID, ObjectType } from 'type-graphql';
 import * as yup from 'yup';
@@ -8,7 +9,7 @@ import EntityResult from '../../common/models/entity-result.model';
 import Participant from '../../participant/models/participant.model';
 
 @ObjectType()
-export default class Transaction {
+export default class Cause {
   @Field(type => ID)
   id: string;
 
@@ -17,31 +18,13 @@ export default class Transaction {
 
   @Field()
   @IsDefined()
-  transactionType: TransactionType;
+  name: string;
 
-  @Field()
-  @IsDefined()
-  resourceType: ResourceType;
+  @Validate(yup.number())
+  public startDate: number;
 
-  // @Field(type => GraphQLJSONObject)
-  // @IsDefined()
-  // input?: Entity;
-  @Field(type => EntityResult)
-  @IsDefined()
-  input?: Entity;
-
-  @Field(type => EntityResult)
-  @IsDefined()
-  output?: Entity;
-
-  @Field()
-  @IsDefined()
-  @IsNumber()
-  quantity: number;
-
-  @Field()
-  @IsDefined()
-  currency: string;
+  @Validate(yup.number())
+  public endDate: number;
 
   @Field()
   @IsDefined()
@@ -51,21 +34,19 @@ export default class Transaction {
   @IsDefined()
   metaData: any;
 
-  @Field(type => GraphQLJSONObject, { nullable: true })
+  @Field(type => EntityResult)
   @IsDefined()
-  metaDataInternal: any;
+  input?: Entity;
 
-  // TODO: added
-  @Field()
-  @IsDefined()
-  public participant: Participant;
+  // TODO
+  // @Field()
+  // @IsDefined()
+  // public participant: Participant;
 
-  // TODO: added
   @Field(type => [x509Identities])
   @IsDefined()
   public identities: x509Identities[];
 
-  // TODO: added
   @Validate(yup.number())
   @IsDefined()
   public created: number;

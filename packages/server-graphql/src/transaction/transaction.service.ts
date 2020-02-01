@@ -4,7 +4,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { FlatConvectorModel } from '@worldsibu/convector-core-model';
 import { TransactionControllerBackEnd } from '../convector';
 import NewTransactionInput from './dto/new-transaction.input';
-import TransactionArgs from './dto/transaction.args';
+import { PaginationArgs } from '@solidary-network/common';
 import Transaction from './models/transaction.model';
 
 @Injectable()
@@ -22,12 +22,12 @@ export class TransactionService {
     }
   }
 
-  async findAll(transactionArgs: TransactionArgs): Promise<Transaction[]> {
+  async findAll(paginationArgs: PaginationArgs): Promise<Transaction[]> {
     try {
-      const convectorModel: Array<FlatConvectorModel<Transaction>> = await TransactionControllerBackEnd.getAll();
+      const convectorModel: Array<FlatConvectorModel<TransactionConvectorModel>> = await TransactionControllerBackEnd.getAll();
       // require to map fabric model to graphql Transaction[]
-      return (transactionArgs)
-        ? convectorModel.splice(transactionArgs.skip, transactionArgs.take) as Transaction[]
+      return (paginationArgs)
+        ? convectorModel.splice(paginationArgs.skip, paginationArgs.take) as Transaction[]
         : convectorModel as Transaction[];
     } catch (error) {
       Logger.error(JSON.stringify(error));

@@ -69,10 +69,11 @@
   - [Solve custom nestjs packages dependencies](#solve-custom-nestjs-packages-dependencies)
   - [Solve { Error: transaction returned with failure: {"name":"Error","status":500}](#solve--error-transaction-returned-with-failure-%22name%22%22error%22%22status%22500)
   - [Solve problem Cannot find module 'typescript/bin/tsc'](#solve-problem-cannot-find-module-typescriptbintsc)
-  - [Problemn tests/participant.spec.ts(30,11): error TS1005: ':' expected.](#problemn-testsparticipantspects3011-error-ts1005--expected)
-  - [Add new transaction-cc module](#add-new-transaction-cc-module)
+  - [Problem tests/participant.spec.ts(30,11): error TS1005: ':' expected](#problem-testsparticipantspects3011-error-ts1005--expected)
+  - [Add new transaction-cc module to chaincode](#add-new-transaction-cc-module-to-chaincode)
   - [YUP Validation notes](#yup-validation-notes)
   - [Currency codes iso4217](#currency-codes-iso4217)
+  - [Add new module to nestjs graphql](#add-new-module-to-nestjs-graphql)
 
 This is a simple NestJs starter, based on above links, I only extended it with a few things like **swagger api**, **https**, **jwt**, and other stuff, thanks m8s
 
@@ -2636,7 +2637,7 @@ $ npx lerna clean -y && npx lerna bootstrap --hoist
 lerna success Bootstrapped 5 packages
 ```
 
-## Problemn tests/participant.spec.ts(30,11): error TS1005: ':' expected.
+## Problem tests/participant.spec.ts(30,11): error TS1005: ':' expected
 
 ```shell
 $ lerna boostsrap
@@ -2655,7 +2656,7 @@ $ npx lerna run build --scope @solidary-network/person-cc --stream
 $ npx lerna run build --scope @solidary-network/participant-cc --stream
 ```
 
-## Add new transaction-cc module
+## Add new transaction-cc module to chaincode
 
 ```shell
 # in network folder
@@ -2735,3 +2736,9 @@ Property 'register' does not exist on type 'ConvectorControllerClient<Transactio
 ## Currency codes iso4217
 
 - [Very simple lib to check if something is a iso 4217 currency code](https://github.com Boelensman1/validate-currency-code)
+
+## Add new module to nestjs graphql
+
+1. create dir `packages/server-graphql/src/cause`
+2. create`cause/cause.module.ts`, `cause.service.ts`, `cause/cause.resolver.ts`
+3. create `src/cause/dto` and `src/cause/models`

@@ -10,7 +10,7 @@ export class Person extends ConvectorModel<Person> {
   public readonly type = c.CONVECTOR_MODEL_PATH_PERSON;
 
   // non citizenCard data
-  
+
   // @Required()
   @Validate(yup.string()
     .min(4, c.YUP_MESSAGE_USERNAME_TO_SHORT)
@@ -27,7 +27,7 @@ export class Person extends ConvectorModel<Person> {
 
   // @Required()
   @Validate(yup.string()
-  .matches(c.REGEX_EMAIL, c.YUP_MESSAGE_INVALID_EMAIL)
+    .matches(c.REGEX_EMAIL, c.YUP_MESSAGE_INVALID_EMAIL)
   )
   public email: string;
 
@@ -39,15 +39,16 @@ export class Person extends ConvectorModel<Person> {
   public roles: Array<String>;
 
   @Required()
+  @Validate(yup.number())
+  public created: number;
+
+  @Required()
   @Validate(Participant.schema())
   public participant: FlatConvectorModel<Participant>;
 
+  @Required()
   @Validate(yup.array(x509Identities.schema()))
   public identities: Array<FlatConvectorModel<x509Identities>>;
-
-  @Required()
-  @Validate(yup.number())
-  public created: number;
 
   // extended non citizenCard data
 
@@ -69,7 +70,7 @@ export class Person extends ConvectorModel<Person> {
 
   @Validate(yup.string())
   public geoLocation: string;
-  
+
   @Validate(yup.string())
   public timezone: string;
 
@@ -189,7 +190,7 @@ export class Person extends ConvectorModel<Person> {
   // 285191659
   // @Required()
   @Validate(yup.string())
-  public beneficiaryNumber: string; 
+  public beneficiaryNumber: string;
 
   // 0000036014662658
   // @Required()
