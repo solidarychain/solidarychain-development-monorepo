@@ -1,7 +1,6 @@
 import { x509Identities } from '../../common/models/x509Identities.model';
 import { Entity } from '@solidary-network/transaction-cc';
-import { Validate } from '@worldsibu/convector-core';
-import { IsDefined } from 'class-validator';
+import { IsDefined, Validate } from 'class-validator';
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, ID, ObjectType } from 'type-graphql';
 import * as yup from 'yup';

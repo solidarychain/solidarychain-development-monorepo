@@ -59,17 +59,14 @@ export default class Transaction {
   @IsDefined()
   metaDataInternal: any;
 
-  // TODO: added
   @Field({nullable: true})
   @IsDefined()
   public participant: Participant;
 
-  // TODO: added
   @Field(type => [x509Identities], {nullable: true})
   @IsDefined()
   public identities: x509Identities[];
 
-  // TODO: added
   @Field()
   @IsDefined()
   @Validate(yup.number())

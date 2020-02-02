@@ -28,3 +28,11 @@ $ watch "docker container ls --format "{{.Names}}" | grep \"${CHAINCODE_NAME}\""
 
 IT IS POSSIBLE to debug all night the chaincode and the grapqqhl at same time :) just follow the above stps
 Every 2.0s: docker container ls --format {{.Names}} | grep "solidary-network-chaincode"   KoakhLaptop: Sat Feb  1 23:13:36 2020
+
+
+
+
+
+
+
+add notes to debug graphql at same time to
