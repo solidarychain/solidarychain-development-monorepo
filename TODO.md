@@ -112,3 +112,38 @@ packages/server-graphql/src/common/models
 ## React FrontEnd
 
 - [-] Clean state after logout
+
+
+
+
+
+
+
+change created to createdDate
+
+
+and add
+
+
+
+mail dont have validate rule
+
+
+graphql models dont have any validation?
+
+add participant, identities and created, to all gql queries and mutations
+
+change common to common-cc
+
+rename file x090 identities para nao dar confusao ex um e -cc
+
+
+use same 
+  @Field()
+  @IsDefined()
+  public participant: Participant;
+in all
+
+
+
+return good message when user not exists etc
