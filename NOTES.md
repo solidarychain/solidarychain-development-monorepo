@@ -74,6 +74,7 @@
   - [YUP Validation notes](#yup-validation-notes)
   - [Currency codes iso4217](#currency-codes-iso4217)
   - [Add new module to nestjs graphql](#add-new-module-to-nestjs-graphql)
+  - [Manage Chaincode to GraphQL Error messages](#manage-chaincode-to-graphql-error-messages)
 
 This is a simple NestJs starter, based on above links, I only extended it with a few things like **swagger api**, **https**, **jwt**, and other stuff, thanks m8s
 
@@ -2748,3 +2749,35 @@ Property 'register' does not exist on type 'ConvectorControllerClient<Transactio
 2. create`packages/server-graphql/src/cause/cause.module.ts`, `packages/server-graphql/src/cause.service.ts`, `packages/server-graphql/src/cause/cause.resolver.ts`
 3. create dirs `src/cause/dto` and `src/cause/models` and populate with files
 4. add module to `packages/server-graphql/src/app.module.ts`
+
+## Manage Chaincode to GraphQL Error messages
+
+- [Exception filters](https://docs.nestjs.com/exception-filters)
+
+ex `packages/server-graphql/src/person/person.service.ts`
+
+```typescript
+async create(data: NewPersonInput): Promise<Person> {
+  try {
+    ....
+  } catch (error) {
+    // extract error message
+    const errorMessage: string = (error.responses && error.responses[1].error.message) ? error.responses[1].error.message : error;
+    // override default 'throw errorMessage;' with a customized version
+    throw new HttpException({errorMessage, HttpStatus.CONFLICT}, HttpStatus.CONFLICT);
+  }
+}
+```
+
+we get customized error from chaincode
+
+```json
+{
+  "errors": [
+    {
+      "message": {
+        "status": 409,
+        "error": "There is a person registered with that username already (johndoe)"
+      },
+    ...
+```

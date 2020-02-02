@@ -52,7 +52,7 @@ export class Transaction extends ConvectorModel<Transaction> {
 
   @Required()
   @Validate(yup.number())
-  public created: number;
+  public createdDate: number;
 
   // DON'T add @Required
   @Validate(Participant.schema())

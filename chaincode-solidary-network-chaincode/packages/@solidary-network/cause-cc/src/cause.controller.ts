@@ -55,7 +55,7 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
     delete cause.input.type;
 
     // add date in epoch unix time
-    cause.created = new Date().getTime();
+    cause.createdDate = new Date().getTime();
 
     await cause.save();
   }

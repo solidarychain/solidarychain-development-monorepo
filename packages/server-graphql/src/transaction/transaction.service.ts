@@ -43,7 +43,7 @@ export class TransactionService {
         // require to inject values
         id: data.id ? data.id : uuid(),
         // convert Date to epoch unix time to be stored in convector transaction model
-        created: ((new Date().getTime()) as number),
+        createdDate: ((new Date().getTime()) as number),
       });
 
       await TransactionControllerBackEnd.create(transactionToCreate);

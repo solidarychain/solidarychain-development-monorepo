@@ -44,7 +44,7 @@ export class ParticipantController extends ConvectorController {
         status: true
       }];
       // add date in epoch unix time
-      newParticipant.created = new Date().getTime();
+      newParticipant.createdDate = new Date().getTime();
 
       await newParticipant.save();
     } else {

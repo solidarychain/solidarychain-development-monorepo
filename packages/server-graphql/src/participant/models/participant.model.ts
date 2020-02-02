@@ -7,7 +7,7 @@ import * as yup from 'yup';
 export default class Participant {
   @Field(type => ID)
   @IsDefined()
-  id: string;
+  public id: string;
 
   @Field()
   public name: string;
@@ -26,6 +26,6 @@ export default class Participant {
   @Field()
   @IsDefined()
   @Validate(yup.number())
-  public created: number;
+  public createdDate: number;
 
 }

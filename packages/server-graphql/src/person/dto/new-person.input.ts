@@ -9,23 +9,23 @@ export default class NewPersonInput {
   // optional: generated automatically, but can optionally be used
   @Field({ nullable: true })
   // @IsDefined()
-  id: string;
+  public id: string;
 
   // generated automatically, but can optionally be used
   @Field({ nullable: true })
   // @IsDefined()
-  username: string;
+  public username: string;
 
   // generated automatically, but can optionally be used
   @Field({ nullable: true })
   // @IsDefined()
-  password: string;
+  public password: string;
 
   // generated automatically, but can optionally be used
   @Field({ nullable: true })
   // @IsEmail()
   // @IsDefined()
-  email: string;
+  public email: string;
 
   // extended non citizenCard data
 
@@ -154,9 +154,9 @@ export default class NewPersonInput {
   public cardVersion?: string;
 
   // 08 05 2018
-  @Field({ nullable: true })
+  @Field(type => Date, { nullable: true })
   @IsDefined()
-  @IsDate()
+  // @IsDate() don't enable on new-x-input's
   @IsOptional()
   public emissionDate?: Date;
 

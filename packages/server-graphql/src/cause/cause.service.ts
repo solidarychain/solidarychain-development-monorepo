@@ -19,7 +19,7 @@ export class CauseService {
         // convert Date to epoch unix time to be stored in convector cause model
         startDate: ((data.startDate as unknown) as number),
         endDate: ((data.endDate as unknown) as number),
-        created: ((new Date().getTime()) as number),
+        createdDate: ((new Date().getTime()) as number),
       });
 
       await CauseControllerBackEnd.create(causeToCreate);

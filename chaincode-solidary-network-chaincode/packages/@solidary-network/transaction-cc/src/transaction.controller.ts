@@ -28,7 +28,7 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     delete transaction.output.type;
 
     // add date in epoch unix time
-    transaction.created = new Date().getTime();
+    transaction.createdDate = new Date().getTime();
 
     await transaction.save();
   }

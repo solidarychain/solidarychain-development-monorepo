@@ -31,7 +31,7 @@ describe('Transaction', () => {
     const modelSample = new Transaction({
       id: uuid(),
       name: 'Test',
-      created: Date.now(),
+      createdDate: Date.now(),
       modified: Date.now()
     });
 

@@ -121,6 +121,7 @@ packages/server-graphql/src/common/models
 
 change created to createdDate
 
+some class don't have public
 
 and add
 

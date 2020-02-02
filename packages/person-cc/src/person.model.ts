@@ -48,7 +48,7 @@ export class Person extends ConvectorModel<Person> {
 
   @Required()
   @Validate(yup.number())
-  public created: number;
+  public createdDate: number;
 
   // extended non citizenCard data
 

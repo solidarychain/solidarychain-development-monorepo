@@ -11,15 +11,15 @@ import { x509Identities } from './x509Identities.model';
 @ObjectType()
 class Entity {
   @Field(type => ID)
-  id: string;
+  public id: string;
 
   @Field()
   @IsDefined()
-  type: string;
+  public type: string;
 
   @Field()
   @IsDefined()
-  created: number;
+  public createdDate: number;
 
   @IsDefined()
   @Field(type => [x509Identities])
@@ -30,5 +30,5 @@ class Entity {
 @ObjectType()
 export default class EntityResult {
   @Field()
-  entity: Entity;
+  public entity: Entity;
 }

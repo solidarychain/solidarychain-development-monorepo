@@ -35,7 +35,7 @@ export class Cause extends ConvectorModel<Cause> {
 
   @Required()
   @Validate(yup.number())
-  public created: number;
+  public createdDate: number;
 
   @Required()
   @Validate(Participant.schema())

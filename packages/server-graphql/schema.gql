@@ -32,7 +32,7 @@ type Cause {
   input: EntityResult!
   participant: Participant!
   identities: [x509Identities!]!
-  created: Float!
+  createdDate: Float!
 }
 
 """Date custom scalar type"""
@@ -41,7 +41,7 @@ scalar Date
 type Entity {
   id: ID!
   type: String!
-  created: Float!
+  createdDate: Float!
   identities: [x509Identities!]!
 }
 
@@ -151,7 +151,7 @@ type Participant {
   msp: String!
   participant: Participant
   identities: [x509Identities!]!
-  created: Float!
+  createdDate: Float!
 }
 
 type Person {
@@ -162,7 +162,7 @@ type Person {
   roles: [String!]
   participant: Participant!
   identities: [x509Identities!]!
-  created: Float!
+  createdDate: Float!
   registrationDate: Date!
   mobilePhone: Float
   postal: String
@@ -240,7 +240,7 @@ type Transaction {
   metaDataInternal: JSONObject
   participant: Participant
   identities: [x509Identities!]
-  created: Float!
+  createdDate: Float!
 }
 
 type x509Identities {

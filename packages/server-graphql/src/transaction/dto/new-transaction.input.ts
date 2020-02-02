@@ -10,7 +10,7 @@ export default class NewTransactionInput {
   public id: string;
 
   // above is equal dto/new-x.input.ts and models/x.model.ts
-  // minus input and output type, and new-x-input don't have participant, identities and created
+  // minus input and output type, and new-x-input don't have participant, identities and createdDate
 
   @Field()
   @IsDefined()

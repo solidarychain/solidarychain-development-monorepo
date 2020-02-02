@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
 import { PaginationArgs } from '@solidary-network/common';
 import { Person as PersonConvectorModel, PersonAttribute as AttributeConvectorModel } from '@solidary-network/person-cc';
 import { FlatConvectorModel } from '@worldsibu/convector-core';
@@ -9,6 +9,7 @@ import AddPersonAttributeInput from './dto/add-person-attribute.input';
 import GetByAttributeInput from './dto/get-by-attribute.input';
 import NewPersonInput from './dto/new-person.input';
 import Person from './models/person.model';
+import { graphQLResultHasError } from 'apollo-utilities';
 
 @Injectable()
 export class PersonService {
@@ -76,7 +77,8 @@ export class PersonService {
     } catch (error) {
       // extract error message
       const errorMessage: string = (error.responses && error.responses[1].error.message) ? error.responses[1].error.message : error;
-      throw errorMessage;
+      // override default 'throw errorMessage;' with a customized version
+      throw new HttpException({ status: HttpStatus.CONFLICT, error: errorMessage }, HttpStatus.CONFLICT);
     }
   }
 

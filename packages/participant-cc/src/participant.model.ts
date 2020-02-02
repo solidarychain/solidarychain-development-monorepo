@@ -24,5 +24,5 @@ export class Participant extends ConvectorModel<Participant> {
 
   @Required()
   @Validate(yup.number())
-  public created: number;
+  public createdDate: number;
 }

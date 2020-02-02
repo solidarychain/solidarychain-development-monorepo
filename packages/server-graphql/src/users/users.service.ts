@@ -17,10 +17,10 @@ export class UsersService {
   async findOneByUsername(username: string): Promise<Person | undefined> {
     try {
       return await this.personService.findOneByUsername(username);
-    } catch (err) {
-      Logger.error(JSON.stringify(err));
-      const message: string = (err.responses[0]) ? err.responses[0].error.message : c.API_RESPONSE_INTERNAL_SERVER_ERROR;
-      throw new HttpException(message, HttpStatus.INTERNAL_SERVER_ERROR);
+    } catch (error) {
+      Logger.error(JSON.stringify(error));
+      const errorMessage: string = (error.responses[0]) ? error.responses[0].error.message : c.API_RESPONSE_INTERNAL_SERVER_ERROR;
+      throw new HttpException({ status: HttpStatus.CONFLICT, error: errorMessage }, HttpStatus.NOT_FOUND);
     }
   }
 }

@@ -79,7 +79,7 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     // add date in epoch unix time
     person.registrationDate = new Date().getTime();
     // add date in epoch unix time
-    person.created = new Date().getTime();
+    person.createdDate = new Date().getTime();
 
     // save person
     await person.save();
@@ -200,7 +200,8 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
         }
       }
     });
-    if (!existing || !existing[0].id) {
+    // require to check if existing before try to access existing[0].id prop
+    if (!existing || !existing[0] || !existing[0].id) {
       throw new Error(`No person exists with that username ${username}`);
     }
     return existing;

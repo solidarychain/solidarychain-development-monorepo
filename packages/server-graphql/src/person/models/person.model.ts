@@ -44,7 +44,7 @@ export default class Person {
   @Field()
   @IsDefined()
   @Validate(yup.number())
-  public created: number;
+  public createdDate: number;
 
   // extended non citizenCard data
 
