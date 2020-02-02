@@ -4,6 +4,7 @@
 
 1. to change chaincode while debug, use `dist/**/*.js` file versions
 2. if change are made in `chaincode-solidary-network-chaincode/**/*.ts` source code, don't forget to apply the sames on `packages/**/*.ts` to
+3. 
 
 ## Start in debug chaincode
 
