@@ -3,13 +3,13 @@
 
 // convector models
 const CONVECTOR_MODEL_PATH_PREFIX: string = 'network.solidary.convector';
+const CONVECTOR_MODEL_PATH_ENTITY: string = `${CONVECTOR_MODEL_PATH_PREFIX}.entity`;
 const CONVECTOR_MODEL_PATH_PARTICIPANT: string = `${CONVECTOR_MODEL_PATH_PREFIX}.participant`;
 const CONVECTOR_MODEL_PATH_PERSON: string = `${CONVECTOR_MODEL_PATH_PREFIX}.person`;
+const CONVECTOR_MODEL_PATH_CAUSE: string = `${CONVECTOR_MODEL_PATH_PREFIX}.cause`;
+const CONVECTOR_MODEL_PATH_TRANSACTION: string = `${CONVECTOR_MODEL_PATH_PREFIX}.transaction`;
 const CONVECTOR_MODEL_PATH_ATTRIBUTE: string = `${CONVECTOR_MODEL_PATH_PREFIX}.attribute`;
 const CONVECTOR_MODEL_PATH_X509IDENTITY: string = `${CONVECTOR_MODEL_PATH_PREFIX}.x509identity`;
-const CONVECTOR_MODEL_PATH_TRANSACTION: string = `${CONVECTOR_MODEL_PATH_PREFIX}.transaction`;
-const CONVECTOR_MODEL_PATH_ENTITY: string = `${CONVECTOR_MODEL_PATH_PREFIX}.entity`;
-const CONVECTOR_MODEL_PATH_CAUSE: string = `${CONVECTOR_MODEL_PATH_PREFIX}.cause`;
 
 // yup messages
 const YUP_MESSAGE_INTEGER: string = 'Should be a integer number.';

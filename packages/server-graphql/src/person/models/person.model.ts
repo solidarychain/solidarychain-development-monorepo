@@ -25,9 +25,11 @@ export default class Person {
   @Field({ nullable: true })
   public email?: string;
 
+  // TODO add attributes to new-person.input.ts
   @Field(type => [Attribute], { nullable: true })
   public attributes?: Attribute[];
 
+  // TODO add roles to new-person.input.ts
   @Field(type => String, { defaultValue: UserRoles.User })
   public roles: string[];
 
