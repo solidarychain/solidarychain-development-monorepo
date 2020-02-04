@@ -13,11 +13,17 @@
   - [Authentication Notes](#authentication-notes)
   - [Problem: Nest can't resolve dependencies of the GqlLocalAuthGuard](#problem-nest-cant-resolve-dependencies-of-the-gqllocalauthguard)
   - [Awesome Link: Support AuthGuard](#awesome-link-support-authguard)
-  - [Problem with return super.canActivate(new ExecutionContextHost([req]))](#problem-with-return-supercanactivatenew-executioncontexthostreq)
+  - [Problem with `return super.canActivate(new ExecutionContextHost([req]))`](#problem-with-return-supercanactivatenew-executioncontexthostreq)
   - [@CurrentUser() decorator, to get @CurrentUser() in graphql endpoints like in personProfile](#currentuser-decorator-to-get-currentuser-in-graphql-endpoints-like-in-personprofile)
-  - [Getting headers in graphql](#getting-headers-in-graphql)
+  - [GraphQL Playground: ERR_INSECURE_RESPONSE](#graphql-playground-errinsecureresponse)
+  - [Getting headers in GraphQL](#getting-headers-in-graphql)
   - [Cookie Parser](#cookie-parser)
-  - [Apollo-Link-Token-Refresh and Migrate apollo-boost to apollo-client](#apollo-link-token-refresh-and-migrate-apollo-boost-to-apollo-client)
+  - [Apollo-Link-Token-Refresh and Migrate `apollo-boost` to `apollo-client`](#apollo-link-token-refresh-and-migrate-apollo-boost-to-apollo-client)
+  - [How to use AuthGuard/Authentication with Apollo Subscriptions](#how-to-use-authguardauthentication-with-apollo-subscriptions)
+    - [Links used](#links-used)
+    - [1. Add connection to GqlContext](#1-add-connection-to-gqlcontext)
+    - [2. change AppModule with subscriptions and forRootAsync](#2-change-appmodule-with-subscriptions-and-forrootasync)
+    - [3. Change GqlAuthGuard to return subscription connection.context.headers to passport-jwt service](#3-change-gqlauthguard-to-return-subscription-connectioncontextheaders-to-passport-jwt-service)
 
 ## Start
 
@@ -295,7 +301,11 @@ async personProfile(@CurrentUser() user: Person): Promise<Person> {
 }
 ```
 
-## Getting headers in graphql
+## GraphQL Playground: ERR_INSECURE_RESPONSE
+
+using `https://localhost:3443/graphql` ERR_INSECURE_RESPONSE, fix using browser version and accept certificate
+
+## Getting headers in GraphQL
 
 fix "Cannot read property 'headers' of undefined" graphql request
 
@@ -303,8 +313,7 @@ fix "Cannot read property 'headers' of undefined" graphql request
 
 - [Applying Middleware-like mechanism to Resolvers' Queries and Mutations](https://stackoverflow.com/questions/54532263/applying-middleware-like-mechanism-to-resolvers-queries-and-mutations)
 
-
-- [Authentication: GraphQL Oficial Docs](https://docs.nestjs.com/techniques/authentication#graphql)
+- [Authentication: GraphQL Official Docs](https://docs.nestjs.com/techniques/authentication#graphql)
 
 GraphQL Playground accepts cookie must change preferences `"request.credentials": "omit"` to `"request.credentials": "include"`
 
@@ -362,3 +371,132 @@ $ npx lerna add @types/jwt-decode --scope @solidary-network/frontend-react --dev
 # bootstrap
 $ npx lerna bootstrap
 ```
+
+## How to use AuthGuard/Authentication with Apollo Subscriptions
+
+### Links used
+
+- [Authentication Over WebSocket](https://www.apollographql.com/docs/apollo-server/data/subscriptions/#authentication-over-websocket)
+- [Authorization middleware do not work with @Subscription()](https://github.com/nestjs/graphql/issues/82)
+- [nestjs/graphql:Support AuthGuard](https://github.com/nestjs/graphql/issues/48)
+- [A WebSocket client + server for GraphQL subscriptions](https://github.com/apollographql/subscriptions-transport-ws)
+- [Document how authentication guards for GraphQL Subscriptions work](https://github.com/nestjs/docs.nestjs.com/issues/394)
+
+> posted my solution to above link
+
+this seems tricky but it is currently working with headers, consistent with queries and mutations
+
+![insomnia](assets/images/200.png)
+
+### 1. Add connection to GqlContext
+
+`gql-context.ts`
+
+```typescript
+export interface GqlContext {
+  req: Request;
+  res: Response;
+  payload?: GqlContextPayload;
+  // required for subscription
+  connection: any;
+}
+```
+
+### 2. change AppModule with subscriptions and forRootAsync
+
+here we must inject AuthModule/AuthService to check Authorization headers JWT, for this we must replace `GraphQLModule.forRoot` with `GraphQLModule.forRootAsync` and import AuthModule with `imports: [AuthModule]`, and inject service with `inject: [AuthService]`
+
+`app.module.ts`
+
+```typescript
+@Module({
+  imports: [
+    AuthModule,
+    UsersModule,
+    // chaincode modules
+    ParticipantModule,
+    PersonModule,
+    CauseModule,
+    TransactionModule,
+    // apolloServer config: use forRootAsync to import AuthModule and inject AuthService
+    GraphQLModule.forRootAsync({
+      // import AuthModule
+      imports: [AuthModule],
+      // inject authService
+      useFactory: async (authService: AuthService) => ({
+        debug: true,
+        playground: true,
+        installSubscriptionHandlers: true,
+        autoSchemaFile: 'schema.gql',
+        // pass the original req and res object into the graphql context,
+        // get context with decorator `@Context() { req, res, payload, connection }: GqlContext`
+        // req, res used in http/query&mutations, connection used in webSockets/subscriptions
+        context: ({ req, res, payload, connection }: GqlContext) => ({ req, res, payload, connection }),
+        // configure graphql cors here
+        cors: {
+          origin: e.corsOriginReactFrontend,
+          credentials: true,
+        },
+        // subscriptions/webSockets authentication
+        subscriptions: {
+          // get headers
+          onConnect: (connectionParams: ConnectionParams) => {
+            // convert header keys to lowercase
+            const connectionParamsLowerKeys = mapKeysToLowerCase(connectionParams);
+            // get authToken from authorization header
+            const authToken: string = ('authorization' in connectionParamsLowerKeys)
+              && connectionParamsLowerKeys.authorization.split(' ')[1];
+            if (authToken) {
+              // verify authToken/getJwtPayLoad
+              const jwtPayload: GqlContextPayload = authService.getJwtPayLoad(authToken);
+              // the user/jwtPayload object found will be available as context.currentUser/jwtPayload in your GraphQL resolvers
+              return { currentUser: jwtPayload.username, jwtPayload, headers: connectionParamsLowerKeys };
+            }
+            throw new AuthenticationError('authToken must be provided');
+          },
+        },
+      }),
+      // inject: AuthService
+      inject: [AuthService],
+    }),
+    // Old code without GraphQLModule.forRootAsync used to inject AuthService from AuthModule to get subscription authentication work
+    // GraphQLModule.forRoot({
+    //   debug: true,
+    //   playground: true,
+    //   installSubscriptionHandlers: true,
+    //   autoSchemaFile: 'schema.gql',
+    //   // pass the original req and res object into the graphql context,
+    //   // get context with decorator `@Context() { req, res, payload }: GqlContext`
+    //   context: ({ req, res, payload }: GqlContext) => ({ req, res, payload }),
+    //   // configure graphql cors here
+    //   cors: {
+    //     origin: e.corsOriginReactFrontend,
+    //     credentials: true,
+    //   },
+    // }),
+  ],
+})
+```
+
+### 3. Change GqlAuthGuard to return subscription connection.context.headers to passport-jwt service
+
+`gql-auth.guard.ts`
+
+```typescript
+@Injectable()
+export class GqlAuthGuard extends AuthGuard('jwt') {
+
+  getRequest(context: ExecutionContext) {
+    const ctx = GqlExecutionContext.create(context);
+    // req used in http queries and mutations, connection is used in websocket subscription connections, check AppModule
+    const { req, connection } = ctx.getContext();
+
+    // if subscriptions/webSockets, let it pass headers from connection.context to passport-jwt
+    return (connection && connection.context && connection.context.headers)
+      ? connection.context
+      : req;
+  }
+}
+```
+
+done
