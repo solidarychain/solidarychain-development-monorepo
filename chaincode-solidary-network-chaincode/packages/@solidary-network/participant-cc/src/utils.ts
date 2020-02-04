@@ -28,7 +28,8 @@ export const getParticipantByIdentity = async (fingerprint: string): Promise<Par
     }
   });
 
-  if (!!participant && !participant[0].id) {
+  // TODO: if (!!participant && !participant[0].id) {
+  if (!participant || !participant[0] || !participant[0].id) {
     throw new Error('Cant find a participant with that fingerprint');
   }
   return participant[0];

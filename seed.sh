@@ -1,11 +1,15 @@
 CHAINCODE_NAME=solidary-network-chaincode
 
 echo "Creating participant: Big Government"
+
+# gov
 npx hurl invoke ${CHAINCODE_NAME} participant_register gov "Big Government" -u admin
+# npx hurl invoke ${CHAINCODE_NAME} participant_get gov
 
 # org1
 echo "Creating participant: MIT"
 npx hurl invoke ${CHAINCODE_NAME} participant_register mit "MIT" -u user1 -o org1
+# npx hurl invoke ${CHAINCODE_NAME} participant_get mit
 
 # org2
 echo "Creating participant: National Bank"
@@ -91,12 +95,12 @@ npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" -u admin
 npx hurl invoke ${CHAINCODE_NAME} person_get ${ID}
 
 # create cause with all data
-ID=acef70e5-cd25-4533-8392-9fa57e43cf72
+ID=acef70e5-cd25-4533-8392-9fa57e43cf11
 NAME=Cause001
-INPUT_TYPE=PARTICIPANT
+INPUT_TYPE=network.solidary.convector.participant
 INPUT_ID=mit
 START_DATE=1546300800
-END_DATE=1609372800
+END_DATE=1546300800
 LOCATION=40.1890144,-8.5171909
 TAGS="[\"red\", \"blue\"]"
 PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"startDate\":\"${START_DATE}\",\"endDate\":\"${END_DATE}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"metaData\":{\"key\":\"value\"},\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"}}"
@@ -107,7 +111,7 @@ npx hurl invoke ${CHAINCODE_NAME} cause_get ${ID}
 # create cause with minimal required data
 ID=acef70e5-cd25-4533-8392-9fa57e43cf69
 NAME=Cause002
-INPUT_TYPE=PARTICIPANT
+INPUT_TYPE=network.solidary.convector.participant
 INPUT_ID=gov
 PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"}}"
 # echo $PAYLOAD  | jq
@@ -144,9 +148,9 @@ npx hurl invoke ${CHAINCODE_NAME} cause_get ${ID}
 ID=acef70e5-cd25-4533-8392-9fa57e43cf32
 TRANSACTION_TYPE=CREATE
 RESOURCE_TYPE=FUNDS
-INPUT_TYPE=PARTICIPANT
+INPUT_TYPE=network.solidary.convector.participant
 INPUT_ID=gov
-OUTPUT_TYPE=PERSON
+OUTPUT_TYPE=network.solidary.convector.person
 OUTPUT_ID=4ea88521-031b-4279-9165-9c10e1839053
 QUANTITY=1.11
 CURRENCY=EUR
@@ -155,13 +159,13 @@ TAGS="[\"red\", \"blue\"]"
 PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u admin
-npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID}
+# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID}
 
 # transaction with cause
-ID=acef70e5-cd25-4533-8392-9fa57e43cf32
-INPUT_TYPE=CAUSE
+ID=acef70e5-cd25-4533-8392-9fa57e43cf33
+INPUT_TYPE=network.solidary.convector.cause
 INPUT_ID=acef70e5-cd25-4533-8392-9fa57e43cf69
 PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u admin
-npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID}
+# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID}

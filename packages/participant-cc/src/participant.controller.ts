@@ -19,12 +19,15 @@ export class ParticipantController extends ConvectorController {
     @Param(yup.string())
     name: string,
   ) {
-    // get host participant from fingerprint, only if not gov, in this case it don't have been registered and fail to get it
+    // get participant is if not gov, else gov will be assign after create
     let participant: Participant;
     if (id !== 'gov') {
-      participant = await getParticipantByIdentity(this.sender);
+      // deprecated now always use gov to create participants
+      // participant = await getParticipantByIdentity(this.sender);
+      participant = await Participant.getOne('gov');
       if (!!participant && !participant.id) {
-        throw new Error('There is no participant with that identity');
+        // throw new Error('There is no participant with that identity');
+        throw new Error('There is no participant with that id');
       }
     }
 
@@ -36,8 +39,6 @@ export class ParticipantController extends ConvectorController {
       newParticipant.id = id;
       newParticipant.name = name || id;
       newParticipant.msp = this.fullIdentity.getMSPID();
-      // add participant, if exists
-      if (participant) newParticipant.participant = participant;
       // create a new identity
       newParticipant.identities = [{
         fingerprint: this.sender,
@@ -45,6 +46,10 @@ export class ParticipantController extends ConvectorController {
       }];
       // add date in epoch unix time
       newParticipant.createdDate = new Date().getTime();
+      // if participant is null, it is the gov that is created right now, assign newParticipant to it
+      if (!participant) { participant = newParticipant };
+      // always add gov participant
+      newParticipant.participant = participant;
 
       await newParticipant.save();
     } else {
