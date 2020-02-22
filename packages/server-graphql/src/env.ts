@@ -1,5 +1,5 @@
 // tslint:disable-next-line:no-var-requires
-import { envVariables as envVariablesCommon } from '@solidary-network/common';
+import { envVariables as envVariablesCommon } from '@solidary-network/common-cc';
 
 export const envVariables: any = {
   // merge common envVariables

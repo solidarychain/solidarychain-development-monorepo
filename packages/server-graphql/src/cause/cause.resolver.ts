@@ -5,7 +5,7 @@ import NewCauseInput from './dto/new-cause.input';
 import Cause from './models/cause.model';
 import { CauseService } from './cause.service';
 import { GqlAuthGuard } from '../auth/guards';
-import { PaginationArgs } from '@solidary-network/common';
+import { PaginationArgs } from '@solidary-network/common-cc';
 
 const pubSub = new PubSub();
 

@@ -1,7 +1,7 @@
-import { appConstants as c, entitySchema } from '@solidary-network/common';
+import { appConstants as c, entitySchema } from '@solidary-network/common-cc';
 import { ConvectorModel, FlatConvectorModel, ReadOnly, Required, Validate } from '@worldsibu/convector-core';
 import * as yup from 'yup';
-import { x509Identities } from '@solidary-network/common';
+import { x509Identities } from '@solidary-network/common-cc';
 import { Entity } from './types';
 import { Participant } from '@solidary-network/participant-cc';
 

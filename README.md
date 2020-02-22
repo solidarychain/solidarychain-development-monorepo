@@ -203,8 +203,8 @@ $ lerna -v
 ### Install lerna packages dependencies
 
 ```shell
-# first build common library: this is required on fresh clones before lerna bootstrap, to prevent the below error#1 Cannot find module '@solidary-network/common'
-$ npx lerna run build --scope @solidary-network/common --stream
+# first build -cc library: this is required on fresh clones before lerna bootstrap, to prevent the below error#1 Cannot find module '@solidary-network/common-cc'
+$ npx lerna run build --scope @solidary-network/common-cc --stream
 # install dependencies, this will trigger lerna bootstrap
 $ npm i
 ```
@@ -212,8 +212,8 @@ $ npm i
 #### error#1
 
 ```shell
-src/participant.controller.ts:1:35 - error TS2307: Cannot find module '@solidary-network/common'.
-1 import { appConstants as c } from '@solidary-network/common';
+src/participant.controller.ts:1:35 - error TS2307: Cannot find module '@solidary-network/common-cc'.
+1 import { appConstants as c } from '@solidary-network/common-cc';
 ```
 
 ### Start hurley hyperledger network

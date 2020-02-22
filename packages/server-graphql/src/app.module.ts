@@ -64,21 +64,6 @@ import { ConnectionParams } from 'subscriptions-transport-ws';
       // inject: AuthService
       inject: [AuthService],
     }),
-    // Old code without GraphQLModule.forRootAsync used to inject AuthService from AuthModule to get subscription authentication work
-    // GraphQLModule.forRoot({
-    //   debug: true,
-    //   playground: true,
-    //   installSubscriptionHandlers: true,
-    //   autoSchemaFile: 'schema.gql',
-    //   // pass the original req and res object into the graphql context,
-    //   // get context with decorator `@Context() { req, res, payload }: GqlContext`
-    //   context: ({ req, res, payload }: GqlContext) => ({ req, res, payload }),
-    //   // configure graphql cors here
-    //   cors: {
-    //     origin: e.corsOriginReactFrontend,
-    //     credentials: true,
-    //   },
-    // }),
   ],
 })
 

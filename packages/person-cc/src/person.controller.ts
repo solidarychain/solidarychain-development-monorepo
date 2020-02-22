@@ -1,4 +1,4 @@
-import { appConstants as c } from '@solidary-network/common';
+import { appConstants as c } from '@solidary-network/common-cc';
 import { Participant } from '@solidary-network/participant-cc';
 import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';

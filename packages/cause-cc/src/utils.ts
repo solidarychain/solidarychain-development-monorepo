@@ -1,6 +1,6 @@
 import { Participant } from '@solidary-network/participant-cc';
 import { Person } from '@solidary-network/person-cc';
-import { EntityType } from '@solidary-network/common';
+import { EntityType } from '@solidary-network/common-cc';
 
 export const getEntity = (entityType: EntityType, id: string): Promise<Participant | Person> => {
   return new Promise(async (resolve, reject) => {

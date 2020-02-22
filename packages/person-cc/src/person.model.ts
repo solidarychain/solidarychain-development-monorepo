@@ -1,4 +1,4 @@
-import { appConstants as c, UserRoles, x509Identities } from '@solidary-network/common';
+import { appConstants as c, UserRoles, x509Identities } from '@solidary-network/common-cc';
 import { Participant } from '@solidary-network/participant-cc';
 import { ConvectorModel, Default, FlatConvectorModel, ReadOnly, Required, Validate } from '@worldsibu/convector-core';
 import * as yup from 'yup';

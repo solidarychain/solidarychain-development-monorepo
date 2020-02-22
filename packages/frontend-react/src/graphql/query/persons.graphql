@@ -23,6 +23,12 @@ query persons($skip: Int, $take: Int) {
 				status
 				fingerprint
 			}
+			identities {
+				id
+				status
+				fingerprint
+			}
+			createdDate
 		}
 		# extended non citizenCard data
 		mobilePhone
@@ -60,5 +66,11 @@ query persons($skip: Int, $take: Int) {
 		requestLocation
 		otherInformation
 		registrationDate
+		identities {
+			id
+			status
+			fingerprint
+		}
+		createdDate
 	}
 }

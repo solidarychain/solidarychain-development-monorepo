@@ -27,11 +27,11 @@
 
 ## Start
 
-DONt forget to build common package `@solidary-network/common`, if something change, but first restart server
+DONt forget to build common package `@solidary-network/common-cc`, if something change, but first restart server
 
 ```shell
-# build common library: this is required on fresh clones before lerna bootstrap else `Cannot find module '@solidary-network/common'`
-$ npx lerna run build --scope @solidary-network/common --stream
+# build common library: this is required on fresh clones before lerna bootstrap else `Cannot find module '@solidary-network/common-cc'`
+$ npx lerna run build --scope @solidary-network/common-cc --stream
 ```
 
 ```shell
@@ -56,7 +56,7 @@ $ npx lerna add common --scope @solidary-network/server-graphql
 ```
 
 ```shell
-# in case of errors like Cannot find module '@solidary-network/common'.
+# in case of errors like Cannot find module '@solidary-network/common-cc'.
 $ npx lerna clean
 $ npx lerna bootstrap
 ```

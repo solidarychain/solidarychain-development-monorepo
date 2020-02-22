@@ -4,7 +4,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { FlatConvectorModel } from '@worldsibu/convector-core-model';
 import { TransactionControllerBackEnd } from '../convector';
 import NewTransactionInput from './dto/new-transaction.input';
-import { PaginationArgs } from '@solidary-network/common';
+import { PaginationArgs } from '@solidary-network/common-cc';
 import Transaction from './models/transaction.model';
 
 @Injectable()

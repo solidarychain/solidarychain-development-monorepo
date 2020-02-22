@@ -9,8 +9,8 @@
   "//**INSIDE-DOCKER**//networkProfile": "/config/network-profiles/org1.network-profile.inside-docker.yaml",
   "controllers": [
     {
-      "name": "@solidary-network/common",
-      "version": "file:./packages/common",
+      "name": "@solidary-network/common-cc",
+      "version": "file:./packages/common-cc",
       "controller": "CommonController"
     },
     {

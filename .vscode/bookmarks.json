@@ -58,5 +58,15 @@
 				"label": ""
 			}
 		]
+	},
+	{
+		"path": "$ROOTPATH$/packages/frontend-react/src/generated/graphql.tsx",
+		"bookmarks": [
+			{
+				"line": 202,
+				"column": 22,
+				"label": ""
+			}
+		]
 	}
 ]

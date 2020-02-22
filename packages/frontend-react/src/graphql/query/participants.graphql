@@ -3,10 +3,16 @@ query participants($skip: Int, $take: Int) {
     id
     name
     msp
+    participant {
+      id
+      name
+      msp
+    }
     identities {
       id
       status
       fingerprint
     }
+    createdDate    
   }
 }

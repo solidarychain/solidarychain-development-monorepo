@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcrypt';
-import { appConstants as c } from '@solidary-network/common';
+import { appConstants as c } from '@solidary-network/common-cc';
 import { Participant } from '@solidary-network/participant-cc';
 
 // duplicated with 

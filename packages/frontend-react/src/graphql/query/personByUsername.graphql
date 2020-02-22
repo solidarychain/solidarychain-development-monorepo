@@ -24,5 +24,11 @@ query personByUsername($username: String!) {
 				fingerprint
 			}
 		}
+		identities {
+			id
+			status
+			fingerprint
+		}
+		createdDate		
 	}
 }

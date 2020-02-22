@@ -59,8 +59,8 @@
   - [Change/Extend Person model to have authorization credentials](#changeextend-person-model-to-have-authorization-credentials)
   - [Renew and Deploy new upgraded ChainCode after chaincode model Changes](#renew-and-deploy-new-upgraded-chaincode-after-chaincode-model-changes)
   - [Start to encrypt passwords with BCrypt](#start-to-encrypt-passwords-with-bcrypt)
-  - [Create common Package to share stuff `@solidary-network/common`](#create-common-package-to-share-stuff-solidary-networkcommon)
-    - [Create lerna common package `@solidary-network/common`](#create-lerna-common-package-solidary-networkcommon)
+  - [Create common Package to share stuff `@solidary-network/common-cc`](#create-common-package-to-share-stuff-solidary-networkcommon-cc)
+    - [Create lerna common package `@solidary-network/common-cc`](#create-lerna-common-package-solidary-networkcommon-cc)
     - [Use common package inside ChainCode](#use-common-package-inside-chaincode)
     - [Use scripts to copy other files to chaincode](#use-scripts-to-copy-other-files-to-chaincode)
     - [Clean Up](#clean-up)
@@ -71,6 +71,7 @@
   - [Solve problem Cannot find module 'typescript/bin/tsc'](#solve-problem-cannot-find-module-typescriptbintsc)
   - [Problem tests/participant.spec.ts(30,11): error TS1005: ':' expected](#problem-testsparticipantspects3011-error-ts1005--expected)
   - [Add new transaction-cc module to chaincode](#add-new-transaction-cc-module-to-chaincode)
+    - [Add new package to other files](#add-new-package-to-other-files)
   - [YUP Validation notes](#yup-validation-notes)
   - [Currency codes iso4217](#currency-codes-iso4217)
   - [Add new module to nestjs graphql](#add-new-module-to-nestjs-graphql)
@@ -113,8 +114,8 @@ $ npm run env:restart
 # deploy smart contract (this smart contract have person and participant packages deployed in one unified chaincode)
 $ npm run cc:start -- ${CHAINCODE_NAME}
 
-# every change on @solidary-network/common, must be builded to be used in dependent packages
-$ npx lerna run build --scope @solidary-network/common --stream
+# every change on @solidary-network/common-cc, must be builded to be used in dependent packages
+$ npx lerna run build --scope @solidary-network/common-cc --stream
 # build person-cc or participant-cc (before upgrade person chaincode, seems strange we have to that, because we see lerna building all packages in mono repo, but it is a fact that if we not do that it deploys the cc with same code...., causing some problems to get it)
 $ npx lerna run build --scope @solidary-network/person-cc --stream
 $ npx lerna run build --scope @solidary-network/participant-cc --stream
@@ -188,7 +189,7 @@ lerna
 
 ```shell
 # add package to package
-# $ ADD_PACKAGE=@solidary-network/common
+# $ ADD_PACKAGE=@solidary-network/common-cc
 $ ADD_PACKAGE=type-graphql:^0.17.6
 $ TO_PACKAGE=@solidary-network/server-graphql
 $ npx lerna add ${ADD_PACKAGE} --scope ${TO_PACKAGE}
@@ -1907,7 +1908,7 @@ $ npx hurl invoke ${CHAINCODE_NAME} person_get 1-100-105
 }
 ```
 
-## Create common Package to share stuff `@solidary-network/common`
+## Create common Package to share stuff `@solidary-network/common-cc`
 
 > this post belongs to a github project that have a `nest.js` server, but currently is not created, when I have the link I update this post
 
@@ -1915,7 +1916,7 @@ $ npx hurl invoke ${CHAINCODE_NAME} person_get 1-100-105
 
 first we start to create a lerna package for typescript, by hand
 
-### Create lerna common package `@solidary-network/common`
+### Create lerna common package `@solidary-network/common-cc`
 
 `packages/common/tsconfig.json`
 
@@ -1936,7 +1937,7 @@ first we start to create a lerna package for typescript, by hand
 
 ```json
 {
-  "name": "@solidary-network/common",
+  "name": "@solidary-network/common-cc",
   "version": "0.1.0",
   "main": "dist/src/index",
   "types": "dist/src/index",
@@ -1986,7 +1987,7 @@ now add the common package to all packages in monorepo
 
 ```shell
 # add to all packages (without scope)
-$ npx lerna add @solidary-network/common@0.1.0
+$ npx lerna add @solidary-network/common-cc@0.1.0
 # to prevent some problems always use same version has in local package
 # clean and bootstrap
 $ npx lerna clean -y && npx lerna bootstrap
@@ -1996,20 +1997,20 @@ optional can use `--scope` to add only to desired packages
 
 ```shell
 # add to all packages (with scope)
-$ npx lerna add @solidary-network/common@0.1.0 --scope @solidary-network/server-rest --no-bootstrap
-$ npx lerna add @solidary-network/common@0.1.0 --scope @solidary-network/participant-cc --no-bootstrap
-$ npx lerna add @solidary-network/common@0.1.0 --scope @solidary-network/person-cc --no-bootstrap
+$ npx lerna add @solidary-network/common-cc@0.1.0 --scope @solidary-network/server-rest --no-bootstrap
+$ npx lerna add @solidary-network/common-cc@0.1.0 --scope @solidary-network/participant-cc --no-bootstrap
+$ npx lerna add @solidary-network/common-cc@0.1.0 --scope @solidary-network/person-cc --no-bootstrap
 # clean and bootstrap
 $ npx lerna clean -y && npx lerna bootstrap --hoist
 ```
 
-now test `@solidary-network/common` in server, add this lines to top of `packages/server-rest/src/app.ts`
+now test `@solidary-network/common-cc` in server, add this lines to top of `packages/server-rest/src/app.ts`
 to confirm that everything is working has expected
 
 > Note: if don't have a server, skip this step right to **Use common package inside ChainCode** section
 
 ```typescript
-import { appConstants as c } from '@solidary-network/common';
+import { appConstants as c } from '@solidary-network/common-cc';
 debugger;
 Logger.log(JSON.stringify(c, undefined, 2));
 ```
@@ -2025,13 +2026,13 @@ if outputs appConstants we are ready to go, and common package works has expecte
 ### Use common package inside ChainCode
 
 To use common package inside chaincode, is very tricky, and I lost a few hours to get it work, thanks to Walter and Diego from WorldSibu I get it.
-The problem is that currently, in convector there is no easy way to use packages, that are not controllers, for this to work we must create a fake controller in `@solidary-network/common` to put it to work
+The problem is that currently, in convector there is no easy way to use packages, that are not controllers, for this to work we must create a fake controller in `@solidary-network/common-cc` to put it to work
 
-first install required controller dependency in our `@solidary-network/common`, this is required ut use `{ Controller, Invokable }`
+first install required controller dependency in our `@solidary-network/common-cc`, this is required ut use `{ Controller, Invokable }`
 
 ```shell
 # install dependency
-$ npx lerna add @worldsibu/convector-core --scope @solidary-network/common
+$ npx lerna add @worldsibu/convector-core --scope @solidary-network/common-cc
 ```
 
 next we must create a fake controller in `packages/common/src/common.controller.ts`
@@ -2055,7 +2056,7 @@ export * from './constants';
 export * from './common.controller';
 ```
 
-after that we must change `chaincode.config.json` to add the fake controller, this is a hell of a hack, we use a fake controller to force the `@solidary-network/common` to be copied inside `chaincode-person` dir, without this, the `@solidary-network/common` is not copied and we have a broken chain code when we try deploy it with `cc:start` or `cc:upgrade` it always show the annoying error `npm ERR! 404 Not Found: @solidary-network/common@0.1.0`
+after that we must change `chaincode.config.json` to add the fake controller, this is a hell of a hack, we use a fake controller to force the `@solidary-network/common-cc` to be copied inside `chaincode-person` dir, without this, the `@solidary-network/common-cc` is not copied and we have a broken chain code when we try deploy it with `cc:start` or `cc:upgrade` it always show the annoying error `npm ERR! 404 Not Found: @solidary-network/common-cc@0.1.0`
 
 first change `chaincode.config.json`
 
@@ -2081,7 +2082,7 @@ ok let's change `chaincode.config.json` and add another controller above `person
   },
   // BO : ADD THIS
   {
-    "name": "@solidary-network/common",
+    "name": "@solidary-network/common-cc",
     "version": "file:./packages/common",
     "controller": "CommonController"
   }
@@ -2091,12 +2092,12 @@ ok let's change `chaincode.config.json` and add another controller above `person
 
 > Note: this is another clever tricky part, the `name` is the **package name**, like the one we use in imports, `version` is the **path location** inside of our build `chaincode-person`
 
-before build chaincode we must change our models to use the new common constants from `@solidary-network/common` ex `c.CONVECTOR_MODEL_PATH_X509IDENTITY`, currently this common package only use simple constants, to keep it simple, the point is created common logic for all the packages, rest-server, front-end, packages-cc, cli-tools, etc
+before build chaincode we must change our models to use the new common constants from `@solidary-network/common-cc` ex `c.CONVECTOR_MODEL_PATH_X509IDENTITY`, currently this common package only use simple constants, to keep it simple, the point is created common logic for all the packages, rest-server, front-end, packages-cc, cli-tools, etc
 
 `packages/participant-cc/src/participant.model.ts`
 
 ```typescript
-import { appConstants as c } from '@solidary-network/common';
+import { appConstants as c } from '@solidary-network/common-cc';
 ...
 export class x509Identities extends ConvectorModel<x509Identities>{
   @ReadOnly()
@@ -2111,7 +2112,7 @@ export class Participant extends ConvectorModel<Participant> {
 `packages/person-cc/src/person.model.ts`
 
 ```typescript
-import { appConstants as c } from '@solidary-network/common';
+import { appConstants as c } from '@solidary-network/common-cc';
 ...
 export class Attribute extends ConvectorModel<Attribute>{
   @ReadOnly()
@@ -2125,7 +2126,7 @@ export class Person extends ConvectorModel<Person> {
   ...
 ```
 
-now we can `cc:package` the chaincode `chaincode-person`, this will package the chaincode with our `@solidary-network/common` inside it with packages `person-cc` and `participant-cc` using our `@solidary-network/common` constants
+now we can `cc:package` the chaincode `chaincode-person`, this will package the chaincode with our `@solidary-network/common-cc` inside it with packages `person-cc` and `participant-cc` using our `@solidary-network/common-cc` constants
 
 ```shell
 # first remove chaincode (optional)
@@ -2143,7 +2144,7 @@ chaincode-person/packages/participant-cc
 chaincode-person/packages/person-cc
 ```
 
-another good practice is check if inside `chaincode-person` folder, in file `chaincode-person/package.json`, if our `@solidary-network/common` was added to `dependencies`, in above json block we can see `cc:package` script add line `"@solidary-network/common": "file:./package/@solidary-network/common"`, this is created based on our changes in `chaincode.config.json` remember, when we add the fake controller
+another good practice is check if inside `chaincode-person` folder, in file `chaincode-person/package.json`, if our `@solidary-network/common-cc` was added to `dependencies`, in above json block we can see `cc:package` script add line `"@solidary-network/common-cc": "file:./package/@solidary-network/common-cc"`, this is created based on our changes in `chaincode.config.json` remember, when we add the fake controller
 
 ```json
 "dependencies": {
@@ -2155,7 +2156,7 @@ another good practice is check if inside `chaincode-person` folder, in file `cha
   "participant-cc": "file:./packages/participant-cc",
   "person-cc": "file:./packages/person-cc",
   // BO: magic line here
-  "@solidary-network/common": "file:./packages/@solidary-network/common"
+  "@solidary-network/common-cc": "file:./packages/@solidary-network/common-cc"
   // EO: magic line here
 },
 ```
@@ -2180,9 +2181,9 @@ $ npx hurl invoke ${CHAINCODE_NAME} person_create "{ \"id\": \"1-100-103\", \"fi
 $ npx hurl invoke ${CHAINCODE_NAME} person_getAll
 ```
 
-done, everything is working has expected and we have a `@solidary-network/common` package implemented.
+done, everything is working has expected and we have a `@solidary-network/common-cc` package implemented.
 
-if we check couchdb `1-100-103` person, we can check that is using type `"type": "network.solidary.convector.person"` that comes from our constants in our `@solidary-network/common`, proving that it gets its value from `@solidary-network/common`, believe me, if it won't wont find `@solidary-network/common` it crash.....simple
+if we check couchdb `1-100-103` person, we can check that is using type `"type": "network.solidary.convector.person"` that comes from our constants in our `@solidary-network/common-cc`, proving that it gets its value from `@solidary-network/common-cc`, believe me, if it won't wont find `@solidary-network/common-cc` it crash.....simple
 
 for future changes in chaincode, upgrade it with above command
 
@@ -2195,7 +2196,7 @@ we are done........
 
 ### Use scripts to copy other files to chaincode
 
-another thing that I tried to hack before find the solution, is using `npm scripts` but it won't work because we need the modified `chaincode-person/package.json` with `"@solidary-network/common": "file:./packages/@solidary-network/common"` in the `dependencies`, but I try it......
+another thing that I tried to hack before find the solution, is using `npm scripts` but it won't work because we need the modified `chaincode-person/package.json` with `"@solidary-network/common-cc": "file:./packages/@solidary-network/common-cc"` in the `dependencies`, but I try it......
 
 leave it here, maybe can be useful for other kind of stuff, like copy other type of stuff
 
@@ -2221,7 +2222,7 @@ leave it here, maybe can be useful for other kind of stuff, like copy other type
   "participant-cc": "file:./packages/participant-cc",
   "person-cc": "file:./packages/person-cc",
   // BO: magic line here
-  "@solidary-network/common": "file:./packages/@solidary-network/common"
+  "@solidary-network/common-cc": "file:./packages/@solidary-network/common-cc"
   // EO: magic line here
 }
 ```
@@ -2282,7 +2283,7 @@ next add `getParticipantByIdentity` function to utils, useful to get current par
 `packages/person-cc/src/utils.ts`
 
 ```typescript
-import { appConstants as c } from '@solidary-network/common';
+import { appConstants as c } from '@solidary-network/common-cc';
 ...
 import { Participant } from 'participant-cc';
 ...
@@ -2311,7 +2312,7 @@ next we move to `PersonController` to extend `create` method with new `participa
 `packages/person-cc/src/person.controller.ts`
 
 ```typescript
-import { appConstants as c } from '@solidary-network/common';
+import { appConstants as c } from '@solidary-network/common-cc';
 ...
 import { getParticipantByIdentity, hashPassword } from './utils';
 
@@ -2657,7 +2658,7 @@ tests/participant.spec.ts(33,34): error TS1005: ',' expected.
 
 ```shell
 # fix build below packages and launch lerna bootstrap ignoring above errors, everything works
-$ npx lerna run build --scope @solidary-network/common --stream
+$ npx lerna run build --scope @solidary-network/common-cc --stream
 $ npx lerna run build --scope @solidary-network/person-cc --stream
 $ npx lerna run build --scope @solidary-network/participant-cc --stream
 ```
@@ -2698,7 +2699,7 @@ $ npx lerna run build --scope @solidary-network/participant-cc @solidary-network
 add dependencies
 
 ```shell
-$ npx lerna add @solidary-network/common --scope @solidary-network/transaction-cc
+$ npx lerna add @solidary-network/common-cc --scope @solidary-network/transaction-cc
 $ npx lerna add @solidary-network/person-cc --scope @solidary-network/transaction-cc
 $ npx lerna add @solidary-network/participant-cc --scope @solidary-network/transaction-cc
 ```
@@ -2734,6 +2735,14 @@ now add modules to `app.module.ts`
 
 `packages/server-graphql/src/transaction/transaction.service.ts`
 Property 'register' does not exist on type 'ConvectorControllerClient<TransactionController>'
+
+### Add new package to other files
+
+`backup.sh`
+
+`touch packages/transaction-cc/node_modules/${FILE_EXCLUDE}`
+
+
 
 ## YUP Validation notes
 

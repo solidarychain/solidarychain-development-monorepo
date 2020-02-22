@@ -1,5 +1,5 @@
 import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
-import { PaginationArgs } from '@solidary-network/common';
+import { PaginationArgs } from '@solidary-network/common-cc';
 import { Person as PersonConvectorModel, PersonAttribute as AttributeConvectorModel } from '@solidary-network/person-cc';
 import { FlatConvectorModel } from '@worldsibu/convector-core';
 import { generate } from 'generate-password';

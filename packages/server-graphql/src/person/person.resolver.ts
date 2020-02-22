@@ -8,7 +8,7 @@ import GetByAttributeInput from './dto/get-by-attribute.input';
 import NewPersonInput from './dto/new-person.input';
 import Person from './models/person.model';
 import { PersonService } from './person.service';
-import { PaginationArgs } from '@solidary-network/common';
+import { PaginationArgs } from '@solidary-network/common-cc';
 
 const pubSub = new PubSub();
 

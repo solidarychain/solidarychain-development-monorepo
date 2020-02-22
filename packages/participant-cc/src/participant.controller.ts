@@ -1,4 +1,4 @@
-import { appConstants as c } from '@solidary-network/common';
+import { appConstants as c } from '@solidary-network/common-cc';
 import { BaseStorage, Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ClientIdentity } from 'fabric-shim';
 import * as yup from 'yup';
@@ -19,13 +19,13 @@ export class ParticipantController extends ConvectorController {
     @Param(yup.string())
     name: string,
   ) {
-    // get participant is if not gov, else gov will be assign after create
-    let participant: Participant;
+    // get participant if not gov, in case of gov it won't exists yet and will be without participant
+    let gov: Participant;
     if (id !== 'gov') {
       // deprecated now always use gov to create participants
       // participant = await getParticipantByIdentity(this.sender);
-      participant = await Participant.getOne('gov');
-      if (!!participant && !participant.id) {
+      gov = await Participant.getOne('gov');
+      if (!!gov && !gov.id) {
         // throw new Error('There is no participant with that identity');
         throw new Error('There is no participant with that id');
       }
@@ -35,23 +35,21 @@ export class ParticipantController extends ConvectorController {
     const existing = await Participant.getOne(id);
 
     if (!existing || !existing.id) {
-      let newParticipant = new Participant();
-      newParticipant.id = id;
-      newParticipant.name = name || id;
-      newParticipant.msp = this.fullIdentity.getMSPID();
+      let participant = new Participant();
+      participant.id = id;
+      participant.name = name || id;
+      participant.msp = this.fullIdentity.getMSPID();
       // create a new identity
-      newParticipant.identities = [{
+      participant.identities = [{
         fingerprint: this.sender,
         status: true
       }];
       // add date in epoch unix time
-      newParticipant.createdDate = new Date().getTime();
-      // if participant is null, it is the gov that is created right now, assign newParticipant to it
-      if (!participant) { participant = newParticipant };
-      // always add gov participant
-      newParticipant.participant = participant;
+      participant.createdDate = new Date().getTime();
+      // always add gov participant if its is not the gov itself
+      if (gov) participant.participant = gov;
 
-      await newParticipant.save();
+      await participant.save();
     } else {
       throw new Error('Identity exists already, please call changeIdentity fn for updates');
     }

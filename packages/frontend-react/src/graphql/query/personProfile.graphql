@@ -60,5 +60,11 @@ query personProfile {
 		requestLocation
 		otherInformation
 		registrationDate
+		identities {
+			id
+			status
+			fingerprint
+		}
+		createdDate
 	}
 }

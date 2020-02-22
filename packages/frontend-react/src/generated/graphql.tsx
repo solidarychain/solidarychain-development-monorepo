@@ -32,6 +32,34 @@ export type Attribute = {
   certifierID?: Maybe<Scalars['String']>,
 };
 
+export type Cause = {
+   __typename?: 'Cause',
+  id: Scalars['ID'],
+  name: Scalars['String'],
+  startDate?: Maybe<Scalars['Float']>,
+  endDate?: Maybe<Scalars['Float']>,
+  location?: Maybe<Scalars['String']>,
+  tags?: Maybe<Array<Scalars['String']>>,
+  metaData?: Maybe<Scalars['JSONObject']>,
+  input: EntityResult,
+  participant: Participant,
+  identities: Array<X509Identities>,
+  createdDate: Scalars['Float'],
+};
+
+
+export type Entity = {
+   __typename?: 'Entity',
+  id: Scalars['ID'],
+  type: Scalars['String'],
+  createdDate: Scalars['Float'],
+  identities: Array<X509Identities>,
+};
+
+export type EntityResult = {
+   __typename?: 'EntityResult',
+  entity: Entity,
+};
 
 export type GetByAttributeInput = {
   id: Scalars['String'],
@@ -52,6 +80,8 @@ export type Mutation = {
   participantNew: Participant,
   personNew: Person,
   personAddAttribute: Person,
+  transactionNew: Transaction,
+  causeNew: Cause,
 };
 
 
@@ -78,6 +108,27 @@ export type MutationPersonNewArgs = {
 export type MutationPersonAddAttributeArgs = {
   addPersonAttributeData: AddPersonAttributeInput,
   personId: Scalars['String']
+};
+
+
+export type MutationTransactionNewArgs = {
+  newTransactionData: NewTransactionInput
+};
+
+
+export type MutationCauseNewArgs = {
+  newCauseData: NewCauseInput
+};
+
+export type NewCauseInput = {
+  id?: Maybe<Scalars['String']>,
+  name: Scalars['String'],
+  startDate?: Maybe<Scalars['Date']>,
+  endDate?: Maybe<Scalars['Date']>,
+  location?: Maybe<Scalars['String']>,
+  tags?: Maybe<Array<Scalars['String']>>,
+  metaData?: Maybe<Scalars['JSONObject']>,
+  input: Scalars['JSONObject'],
 };
 
 export type NewParticipantInput = {
@@ -125,12 +176,28 @@ export type NewPersonInput = {
   otherInformation?: Maybe<Scalars['String']>,
 };
 
+export type NewTransactionInput = {
+  id?: Maybe<Scalars['String']>,
+  transactionType: Scalars['String'],
+  resourceType: Scalars['String'],
+  input: Scalars['JSONObject'],
+  output: Scalars['JSONObject'],
+  quantity: Scalars['Float'],
+  currency: Scalars['String'],
+  location: Scalars['String'],
+  tags?: Maybe<Array<Scalars['String']>>,
+  metaData?: Maybe<Scalars['JSONObject']>,
+  metaDataInternal?: Maybe<Scalars['JSONObject']>,
+};
+
 export type Participant = {
    __typename?: 'Participant',
   id: Scalars['ID'],
   name: Scalars['String'],
   msp: Scalars['String'],
+  participant?: Maybe<Participant>,
   identities: Array<X509Identities>,
+  createdDate: Scalars['Float'],
 };
 
 export type Person = {
@@ -141,6 +208,8 @@ export type Person = {
   attributes?: Maybe<Array<Attribute>>,
   roles?: Maybe<Array<Scalars['String']>>,
   participant: Participant,
+  identities: Array<X509Identities>,
+  createdDate: Scalars['Float'],
   registrationDate: Scalars['Date'],
   mobilePhone?: Maybe<Scalars['Float']>,
   postal?: Maybe<Scalars['String']>,
@@ -192,6 +261,10 @@ export type Query = {
   persons: Array<Person>,
   personByAttribute: Array<Person>,
   personProfile: Person,
+  transactionById: Transaction,
+  transactions: Array<Transaction>,
+  causeById: Cause,
+  causes: Array<Cause>,
 };
 
 
@@ -228,11 +301,53 @@ export type QueryPersonByAttributeArgs = {
   getByAttributeInput: GetByAttributeInput
 };
 
+
+export type QueryTransactionByIdArgs = {
+  id: Scalars['String']
+};
+
+
+export type QueryTransactionsArgs = {
+  skip?: Maybe<Scalars['Int']>,
+  take?: Maybe<Scalars['Int']>
+};
+
+
+export type QueryCauseByIdArgs = {
+  id: Scalars['String']
+};
+
+
+export type QueryCausesArgs = {
+  skip?: Maybe<Scalars['Int']>,
+  take?: Maybe<Scalars['Int']>
+};
+
 export type Subscription = {
    __typename?: 'Subscription',
   personLogged: Scalars['String'],
   participantAdded: Participant,
   personAdded: Person,
+  transactionAdded: Transaction,
+  causeAdded: Cause,
+};
+
+export type Transaction = {
+   __typename?: 'Transaction',
+  id: Scalars['ID'],
+  transactionType: Scalars['String'],
+  resourceType: Scalars['String'],
+  input: EntityResult,
+  output: EntityResult,
+  quantity: Scalars['Float'],
+  currency: Scalars['String'],
+  location: Scalars['String'],
+  tags?: Maybe<Array<Scalars['String']>>,
+  metaData?: Maybe<Scalars['JSONObject']>,
+  metaDataInternal?: Maybe<Scalars['JSONObject']>,
+  participant?: Maybe<Participant>,
+  identities?: Maybe<Array<X509Identities>>,
+  createdDate: Scalars['Float'],
 };
 
 export type X509Identities = {
@@ -361,6 +476,27 @@ export type PersonNewMutation = (
   ) }
 );
 
+export type CausesQueryVariables = {
+  skip?: Maybe<Scalars['Int']>,
+  take?: Maybe<Scalars['Int']>
+};
+
+
+export type CausesQuery = (
+  { __typename?: 'Query' }
+  & { causes: Array<(
+    { __typename?: 'Cause' }
+    & Pick<Cause, 'id' | 'name' | 'startDate' | 'endDate' | 'location' | 'tags' | 'metaData' | 'createdDate'>
+    & { input: (
+      { __typename?: 'EntityResult' }
+      & { entity: (
+        { __typename?: 'Entity' }
+        & Pick<Entity, 'id'>
+      ) }
+    ) }
+  )> }
+);
+
 export type ParticipantByIdQueryVariables = {
   id: Scalars['String']
 };
@@ -370,8 +506,11 @@ export type ParticipantByIdQuery = (
   { __typename?: 'Query' }
   & { participantById: (
     { __typename?: 'Participant' }
-    & Pick<Participant, 'id' | 'name' | 'msp'>
-    & { identities: Array<(
+    & Pick<Participant, 'id' | 'name' | 'msp' | 'createdDate'>
+    & { participant: Maybe<(
+      { __typename?: 'Participant' }
+      & Pick<Participant, 'id' | 'name' | 'msp'>
+    )>, identities: Array<(
       { __typename?: 'x509Identities' }
       & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
     )> }
@@ -388,8 +527,11 @@ export type ParticipantsQuery = (
   { __typename?: 'Query' }
   & { participants: Array<(
     { __typename?: 'Participant' }
-    & Pick<Participant, 'id' | 'name' | 'msp'>
-    & { identities: Array<(
+    & Pick<Participant, 'id' | 'name' | 'msp' | 'createdDate'>
+    & { participant: Maybe<(
+      { __typename?: 'Participant' }
+      & Pick<Participant, 'id' | 'name' | 'msp'>
+    )>, identities: Array<(
       { __typename?: 'x509Identities' }
       & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
     )> }
@@ -407,7 +549,7 @@ export type PersonByAttributeQuery = (
   { __typename?: 'Query' }
   & { personByAttribute: Array<(
     { __typename?: 'Person' }
-    & Pick<Person, 'id' | 'username' | 'email' | 'roles' | 'mobilePhone' | 'postal' | 'city' | 'region' | 'geoLocation' | 'timezone' | 'personalInfo' | 'internalInfo' | 'profile' | 'firstname' | 'lastname' | 'gender' | 'height' | 'fatherFirstname' | 'fatherLastname' | 'motherFirstname' | 'motherLastname' | 'birthDate' | 'nationality' | 'country' | 'documentNumber' | 'documentType' | 'cardVersion' | 'emissionDate' | 'expirationDate' | 'emittingEntity' | 'identityNumber' | 'fiscalNumber' | 'socialSecurityNumber' | 'beneficiaryNumber' | 'pan' | 'requestLocation' | 'otherInformation' | 'registrationDate'>
+    & Pick<Person, 'id' | 'username' | 'email' | 'roles' | 'mobilePhone' | 'postal' | 'city' | 'region' | 'geoLocation' | 'timezone' | 'personalInfo' | 'internalInfo' | 'profile' | 'firstname' | 'lastname' | 'gender' | 'height' | 'fatherFirstname' | 'fatherLastname' | 'motherFirstname' | 'motherLastname' | 'birthDate' | 'nationality' | 'country' | 'documentNumber' | 'documentType' | 'cardVersion' | 'emissionDate' | 'expirationDate' | 'emittingEntity' | 'identityNumber' | 'fiscalNumber' | 'socialSecurityNumber' | 'beneficiaryNumber' | 'pan' | 'requestLocation' | 'otherInformation' | 'registrationDate' | 'createdDate'>
     & { attributes: Maybe<Array<(
       { __typename?: 'Attribute' }
       & Pick<Attribute, 'id' | 'content' | 'issuedDate' | 'expiresDate' | 'expired' | 'certifierID'>
@@ -418,7 +560,10 @@ export type PersonByAttributeQuery = (
         { __typename?: 'x509Identities' }
         & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
       )> }
-    ) }
+    ), identities: Array<(
+      { __typename?: 'x509Identities' }
+      & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
+    )> }
   )> }
 );
 
@@ -431,7 +576,7 @@ export type PersonByIdQuery = (
   { __typename?: 'Query' }
   & { personById: (
     { __typename?: 'Person' }
-    & Pick<Person, 'id' | 'username' | 'email' | 'roles' | 'mobilePhone' | 'postal' | 'city' | 'region' | 'geoLocation' | 'timezone' | 'personalInfo' | 'internalInfo' | 'profile' | 'firstname' | 'lastname' | 'gender' | 'height' | 'fatherFirstname' | 'fatherLastname' | 'motherFirstname' | 'motherLastname' | 'birthDate' | 'nationality' | 'country' | 'documentNumber' | 'documentType' | 'cardVersion' | 'emissionDate' | 'expirationDate' | 'emittingEntity' | 'identityNumber' | 'fiscalNumber' | 'socialSecurityNumber' | 'beneficiaryNumber' | 'pan' | 'requestLocation' | 'otherInformation' | 'registrationDate'>
+    & Pick<Person, 'id' | 'username' | 'email' | 'roles' | 'mobilePhone' | 'postal' | 'city' | 'region' | 'geoLocation' | 'timezone' | 'personalInfo' | 'internalInfo' | 'profile' | 'firstname' | 'lastname' | 'gender' | 'height' | 'fatherFirstname' | 'fatherLastname' | 'motherFirstname' | 'motherLastname' | 'birthDate' | 'nationality' | 'country' | 'documentNumber' | 'documentType' | 'cardVersion' | 'emissionDate' | 'expirationDate' | 'emittingEntity' | 'identityNumber' | 'fiscalNumber' | 'socialSecurityNumber' | 'beneficiaryNumber' | 'pan' | 'requestLocation' | 'otherInformation' | 'registrationDate' | 'createdDate'>
     & { attributes: Maybe<Array<(
       { __typename?: 'Attribute' }
       & Pick<Attribute, 'id' | 'content' | 'issuedDate' | 'expiresDate' | 'expired' | 'certifierID'>
@@ -442,7 +587,10 @@ export type PersonByIdQuery = (
         { __typename?: 'x509Identities' }
         & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
       )> }
-    ) }
+    ), identities: Array<(
+      { __typename?: 'x509Identities' }
+      & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
+    )> }
   ) }
 );
 
@@ -455,7 +603,7 @@ export type PersonByUsernameQuery = (
   { __typename?: 'Query' }
   & { personByUsername: (
     { __typename?: 'Person' }
-    & Pick<Person, 'id' | 'firstname' | 'lastname' | 'username' | 'email' | 'roles'>
+    & Pick<Person, 'id' | 'firstname' | 'lastname' | 'username' | 'email' | 'roles' | 'createdDate'>
     & { attributes: Maybe<Array<(
       { __typename?: 'Attribute' }
       & Pick<Attribute, 'id' | 'content' | 'issuedDate' | 'expiresDate' | 'expired' | 'certifierID'>
@@ -466,7 +614,10 @@ export type PersonByUsernameQuery = (
         { __typename?: 'x509Identities' }
         & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
       )> }
-    ) }
+    ), identities: Array<(
+      { __typename?: 'x509Identities' }
+      & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
+    )> }
   ) }
 );
 
@@ -477,7 +628,7 @@ export type PersonProfileQuery = (
   { __typename?: 'Query' }
   & { personProfile: (
     { __typename?: 'Person' }
-    & Pick<Person, 'id' | 'username' | 'email' | 'roles' | 'mobilePhone' | 'postal' | 'city' | 'region' | 'geoLocation' | 'timezone' | 'personalInfo' | 'internalInfo' | 'profile' | 'firstname' | 'lastname' | 'gender' | 'height' | 'fatherFirstname' | 'fatherLastname' | 'motherFirstname' | 'motherLastname' | 'birthDate' | 'nationality' | 'country' | 'documentNumber' | 'documentType' | 'cardVersion' | 'emissionDate' | 'expirationDate' | 'emittingEntity' | 'identityNumber' | 'fiscalNumber' | 'socialSecurityNumber' | 'beneficiaryNumber' | 'pan' | 'requestLocation' | 'otherInformation' | 'registrationDate'>
+    & Pick<Person, 'id' | 'username' | 'email' | 'roles' | 'mobilePhone' | 'postal' | 'city' | 'region' | 'geoLocation' | 'timezone' | 'personalInfo' | 'internalInfo' | 'profile' | 'firstname' | 'lastname' | 'gender' | 'height' | 'fatherFirstname' | 'fatherLastname' | 'motherFirstname' | 'motherLastname' | 'birthDate' | 'nationality' | 'country' | 'documentNumber' | 'documentType' | 'cardVersion' | 'emissionDate' | 'expirationDate' | 'emittingEntity' | 'identityNumber' | 'fiscalNumber' | 'socialSecurityNumber' | 'beneficiaryNumber' | 'pan' | 'requestLocation' | 'otherInformation' | 'registrationDate' | 'createdDate'>
     & { attributes: Maybe<Array<(
       { __typename?: 'Attribute' }
       & Pick<Attribute, 'id' | 'content' | 'issuedDate' | 'expiresDate' | 'expired' | 'certifierID'>
@@ -488,7 +639,10 @@ export type PersonProfileQuery = (
         { __typename?: 'x509Identities' }
         & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
       )> }
-    ) }
+    ), identities: Array<(
+      { __typename?: 'x509Identities' }
+      & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
+    )> }
   ) }
 );
 
@@ -502,18 +656,21 @@ export type PersonsQuery = (
   { __typename?: 'Query' }
   & { persons: Array<(
     { __typename?: 'Person' }
-    & Pick<Person, 'id' | 'username' | 'email' | 'roles' | 'mobilePhone' | 'postal' | 'city' | 'region' | 'geoLocation' | 'timezone' | 'personalInfo' | 'internalInfo' | 'profile' | 'firstname' | 'lastname' | 'gender' | 'height' | 'fatherFirstname' | 'fatherLastname' | 'motherFirstname' | 'motherLastname' | 'birthDate' | 'nationality' | 'country' | 'documentNumber' | 'documentType' | 'cardVersion' | 'emissionDate' | 'expirationDate' | 'emittingEntity' | 'identityNumber' | 'fiscalNumber' | 'socialSecurityNumber' | 'beneficiaryNumber' | 'pan' | 'requestLocation' | 'otherInformation' | 'registrationDate'>
+    & Pick<Person, 'id' | 'username' | 'email' | 'roles' | 'mobilePhone' | 'postal' | 'city' | 'region' | 'geoLocation' | 'timezone' | 'personalInfo' | 'internalInfo' | 'profile' | 'firstname' | 'lastname' | 'gender' | 'height' | 'fatherFirstname' | 'fatherLastname' | 'motherFirstname' | 'motherLastname' | 'birthDate' | 'nationality' | 'country' | 'documentNumber' | 'documentType' | 'cardVersion' | 'emissionDate' | 'expirationDate' | 'emittingEntity' | 'identityNumber' | 'fiscalNumber' | 'socialSecurityNumber' | 'beneficiaryNumber' | 'pan' | 'requestLocation' | 'otherInformation' | 'registrationDate' | 'createdDate'>
     & { attributes: Maybe<Array<(
       { __typename?: 'Attribute' }
       & Pick<Attribute, 'id' | 'content' | 'issuedDate' | 'expiresDate' | 'expired' | 'certifierID'>
     )>>, participant: (
       { __typename?: 'Participant' }
-      & Pick<Participant, 'id' | 'name' | 'msp'>
+      & Pick<Participant, 'id' | 'name' | 'msp' | 'createdDate'>
       & { identities: Array<(
         { __typename?: 'x509Identities' }
         & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
       )> }
-    ) }
+    ), identities: Array<(
+      { __typename?: 'x509Identities' }
+      & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
+    )> }
   )> }
 );
 
@@ -903,17 +1060,69 @@ export function usePersonNewMutation(baseOptions?: ApolloReactHooks.MutationHook
 export type PersonNewMutationHookResult = ReturnType<typeof usePersonNewMutation>;
 export type PersonNewMutationResult = ApolloReactCommon.MutationResult<PersonNewMutation>;
 export type PersonNewMutationOptions = ApolloReactCommon.BaseMutationOptions<PersonNewMutation, PersonNewMutationVariables>;
+export const CausesDocument = gql`
+    query causes($skip: Int, $take: Int) {
+  causes(skip: $skip, take: $take) {
+    id
+    name
+    startDate
+    endDate
+    location
+    tags
+    metaData
+    input {
+      entity {
+        id
+      }
+    }
+    createdDate
+  }
+}
+    `;
+
+/**
+ * __useCausesQuery__
+ *
+ * To run a query within a React component, call `useCausesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCausesQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCausesQuery({
+ *   variables: {
+ *      skip: // value for 'skip'
+ *      take: // value for 'take'
+ *   },
+ * });
+ */
+export function useCausesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<CausesQuery, CausesQueryVariables>) {
+        return ApolloReactHooks.useQuery<CausesQuery, CausesQueryVariables>(CausesDocument, baseOptions);
+      }
+export function useCausesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<CausesQuery, CausesQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<CausesQuery, CausesQueryVariables>(CausesDocument, baseOptions);
+        }
+export type CausesQueryHookResult = ReturnType<typeof useCausesQuery>;
+export type CausesLazyQueryHookResult = ReturnType<typeof useCausesLazyQuery>;
+export type CausesQueryResult = ApolloReactCommon.QueryResult<CausesQuery, CausesQueryVariables>;
 export const ParticipantByIdDocument = gql`
     query participantById($id: String!) {
   participantById(id: $id) {
     id
     name
     msp
+    participant {
+      id
+      name
+      msp
+    }
     identities {
       id
       status
       fingerprint
     }
+    createdDate
   }
 }
     `;
@@ -949,11 +1158,17 @@ export const ParticipantsDocument = gql`
     id
     name
     msp
+    participant {
+      id
+      name
+      msp
+    }
     identities {
       id
       status
       fingerprint
     }
+    createdDate
   }
 }
     `;
@@ -1043,6 +1258,12 @@ export const PersonByAttributeDocument = gql`
     requestLocation
     otherInformation
     registrationDate
+    identities {
+      id
+      status
+      fingerprint
+    }
+    createdDate
   }
 }
     `;
@@ -1133,6 +1354,12 @@ export const PersonByIdDocument = gql`
     requestLocation
     otherInformation
     registrationDate
+    identities {
+      id
+      status
+      fingerprint
+    }
+    createdDate
   }
 }
     `;
@@ -1189,6 +1416,12 @@ export const PersonByUsernameDocument = gql`
         fingerprint
       }
     }
+    identities {
+      id
+      status
+      fingerprint
+    }
+    createdDate
   }
 }
     `;
@@ -1277,6 +1510,12 @@ export const PersonProfileDocument = gql`
     requestLocation
     otherInformation
     registrationDate
+    identities {
+      id
+      status
+      fingerprint
+    }
+    createdDate
   }
 }
     `;
@@ -1329,6 +1568,12 @@ export const PersonsDocument = gql`
         status
         fingerprint
       }
+      identities {
+        id
+        status
+        fingerprint
+      }
+      createdDate
     }
     mobilePhone
     postal
@@ -1364,6 +1609,12 @@ export const PersonsDocument = gql`
     requestLocation
     otherInformation
     registrationDate
+    identities {
+      id
+      status
+      fingerprint
+    }
+    createdDate
   }
 }
     `;

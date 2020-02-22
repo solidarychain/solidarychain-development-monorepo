@@ -3,7 +3,7 @@ import { IsDefined, IsDate, MaxLength, IsNumber, Validate } from 'class-validato
 import { Field, ID, ObjectType } from 'type-graphql';
 import Participant from '../../participant/models/participant.model';
 import Attribute from './attribute.model';
-import { UserRoles } from '@solidary-network/common';
+import { UserRoles } from '@solidary-network/common-cc';
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { x509Identities } from '../../common/models/x509Identities.model';
 import * as yup from 'yup';

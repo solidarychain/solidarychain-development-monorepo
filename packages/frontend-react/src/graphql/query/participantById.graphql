@@ -1,13 +1,18 @@
-query participantById($id: String!){
-  participantById(id:$id)
-  {
+query participantById($id: String!) {
+  participantById(id: $id) {
     id
     name
-    msp,
-    identities{
+    msp
+    participant {
+      id
+      name
+      msp
+    }
+    identities {
       id
       status
       fingerprint
     }
+    createdDate    
   }
 }

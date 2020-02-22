@@ -1,4 +1,4 @@
-import { appConstants as c, entitySchema, x509Identities } from '@solidary-network/common';
+import { appConstants as c, entitySchema, x509Identities } from '@solidary-network/common-cc';
 import { ConvectorModel, ReadOnly, Required, Validate, FlatConvectorModel } from '@worldsibu/convector-core-model';
 import * as yup from 'yup';
 import { transactionTypeSchema, resourceTypeSchema, currencySchema } from './validation';

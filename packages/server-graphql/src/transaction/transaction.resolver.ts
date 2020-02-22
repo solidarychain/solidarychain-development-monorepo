@@ -1,6 +1,6 @@
 import { NotFoundException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
-import { PaginationArgs } from '@solidary-network/common';
+import { PaginationArgs } from '@solidary-network/common-cc';
 import { PubSub } from 'apollo-server-express';
 import { GqlAuthGuard } from '../auth/guards';
 import NewTransactionInput from './dto/new-transaction.input';

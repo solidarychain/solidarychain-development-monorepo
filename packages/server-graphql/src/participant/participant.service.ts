@@ -3,7 +3,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { FlatConvectorModel } from '@worldsibu/convector-core-model';
 import { ParticipantControllerBackEnd } from '../convector';
 import NewParticipantInput from './dto/new-participant.input';
-import { PaginationArgs } from '@solidary-network/common';
+import { PaginationArgs } from '@solidary-network/common-cc';
 import Participant from './models/participant.model';
 
 @Injectable()

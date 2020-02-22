@@ -2,7 +2,7 @@ import { NotFoundException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'apollo-server-express';
 import NewParticipantInput from './dto/new-participant.input';
-import { PaginationArgs } from '@solidary-network/common';
+import { PaginationArgs } from '@solidary-network/common-cc';
 import Participant from './models/participant.model';
 import { ParticipantService } from './participant.service';
 import { GqlAuthGuard } from '../auth/guards';

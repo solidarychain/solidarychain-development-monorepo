@@ -23,6 +23,8 @@
   - [Configure react Router](#configure-react-router)
   - [Apollo resetStore /Cache](#apollo-resetstore-cache)
   - [Use JS-Cookie](#use-js-cookie)
+  - [When we change cc models like adding new props to model...missing the following properties from type  'Person': identities, createdDate](#when-we-change-cc-models-like-adding-new-props-to-modelmissing-the-following-properties-from-type-person-identities-createddate)
+  - [Error: GraphQL error: [object Object]](#error-graphql-error-object-object)
 
 ## Links
 
@@ -626,3 +628,86 @@ $ npx lerna add js-cookie --scope @solidary-network/frontend-react --no-bootstra
 $ npx lerna add @types/js-cookie --scope @solidary-network/frontend-react --no-bootstrap --dev
 $ npx lerna bootstrap
 ```
+
+## When we change cc models like adding new props to model...missing the following properties from type  'Person': identities, createdDate
+
+![fix missing property](assets/images/060.png)
+
+![fix missing property](assets/images/050.png)
+
+![fix missing property](assets/images/040.png)
+
+```shell
+solidary-network/frontend-react:   Types of parameters 'e' and 'value' are incompatible.
+@solidary-network/frontend-react:     Type '{ __typename?: "Person"; } & Pick<Person, "id" | "username" | "email" | "roles" | "mobilePhone" | "postal" | "city" | "region" | "geoLocation" | "timezone" | "personalInfo" | ... 26 more ... | "registrationDate"> & { ...; }' is missing the following properties from type 'Person': identities, createdDate  TS2345
+```
+
+...fuck after an hour struggling, it seems that it's because fields are required in offended querie `PersonsQuery` in `packages/frontend-react/src/graphql/query/persons.graphql`, even after I add it, and generate with `npm run pkg:graphql:debug`, this is because it gives the next error for participant and seems the same error, but is not, is other
+
+we can check generated model
+
+```typescript
+export type PersonsQuery = (
+  { __typename?: 'Query' }
+  & { persons: Array<(
+    { __typename?: 'Person' }
+    & Pick<Person, 'id' | 'username' | 'email' | 'roles' | 'mobilePhone' | 'postal' | 'city' | 'region' | 'geoLocation' | 'timezone' | 'personalInfo' | 'internalInfo' | 'profile' | 'firstname' | 'lastname' | 'gender' | 'height' | 'fatherFirstname' | 'fatherLastname' | 'motherFirstname' | 'motherLastname' | 'birthDate' | 'nationality' | 'country' | 'documentNumber' | 'documentType' | 'cardVersion' | 'emissionDate' | 'expirationDate' | 'emittingEntity' | 'identityNumber' | 'fiscalNumber' | 'socialSecurityNumber' | 'beneficiaryNumber' | 'pan' | 'requestLocation' | 'otherInformation' | 'registrationDate'>
+```
+
+this fix is tricky after adding `identities` and `createdDate` to `graphql/query/persons.graphql` it gives other error related with participant, the problem is that we need to add the `identities` and `createdDate` to chiled field participant too :(
+
+```graphql
+query persons($skip: Int, $take: Int) {
+  persons(skip: $skip, take: $take) {
+    # non citizenCard data
+    id
+    username
+    ....
+    # ADDED new Properties
+    participant {
+      id
+      name
+      msp
+      identities {
+        id
+        status
+        fingerprint
+      }
+      identities {
+        id
+        status
+        fingerprint
+      }
+      createdDate
+    }
+    ...
+    otherInformation
+    registrationDate
+    # ADDED new Properties
+    identities {
+      id
+      status
+      fingerprint
+    }
+    createdDate
+  }
+}
+```
+
+## Error: GraphQL error: [object Object]
+
+![GraphQL error](assets/images/070.png)
+
+{ Error: transaction returned with failure: {"name":"Error","status":500,"message":"Maximum call stack size exceeded"}
+
+```
+info: [Chaincode] =========== Invoked Chaincode Chaincode ===========
+info: [Chaincode] Transaction ID: bcdfeb3df925023ffe29fbe132b3a7fa86c72b975c4898b90084ae2dca452db6
+info: [Chaincode] Args: participant_register,gov,Big Government
+debug: [Chaincode] ============= START : participant_register ===========
+error: [Chaincode]  
+{ message: 'Maximum call stack size exceeded',
+  stack: 'RangeError: Maximum call stack size exceeded\n
+```
+
+it seems that the problem stack is assign gov to participant in goc, maybe a cliclic reference or a sort of

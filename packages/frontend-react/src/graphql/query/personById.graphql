@@ -60,5 +60,11 @@ query personById($id: String!) {
 		requestLocation
 		otherInformation
 		registrationDate
+		identities {
+			id
+			status
+			fingerprint
+		}
+		createdDate		
 	}
 }
