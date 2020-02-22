@@ -19,30 +19,24 @@
   [X] User must belong to one organization, else usernames can collide in same Ledger, store Participant relation in Person.Participant
     [-] Create 2 or more users with same username, but in different Participants
 - [X] Nest.js/GraphQL with AuthGuards
-- [X] Refactor `@solidary-network/common` to other name (remove rest for ex to work with graphql and rest)
+- [X] Refactor `@solidary-network/common-cc` to other name (remove rest for ex to work with graphql and rest)
 
 - [-] Add Explore the Blocks <https://docs.worldsibu.com/article/92-explore-blocks>
-- [-] Debug SmartContract in VsCode Notes
-- [-] Debug SmartContract Logs Notes
+- [X] Debug SmartContract in VsCode Notes
+- [X] Debug SmartContract Logs Notes
 - [-] Static Content: Redirect to front end. Root show Read Me or Redirect to React FrontEnd
 - [-] Add more tests, ex add from couchdb tutorial
 - [-] CouchDb UserService <https://docs.worldsibu.com/article/101-tutorial-advanced-couchdb#direct-couchdb>
 
-add filter Participant
-nao e o gov e a entidade q esta a rolar ligada ao blockchain
-
 ## GraphQL API
 
-use new ts-node....
-Add Yup Validations
-
-[ ] roles array?
+[X] roles array?
   add user with roles array
   invoke and graphql / rest
 
 [X] https and http to https redirect
-[ ] roles
-[ ] paginate
+[X] roles
+[X] paginate
 
 all methods cc
   participant
@@ -55,11 +49,12 @@ all methods cc
     [X] addAttribute
     [X] get
     [X] getAll
-    [ ] getByAttribute
-    [ ] getByUsername
-  
-login mutation > jwt
-authentication/authorization
+    [X] getByAttribute
+    [X] getByUsername
+    [X] getByFiscalnumber
+auth  
+  [x] login mutation > jwt
+  [x] authentication/authorization
 
 receive transaction id, to store in neo4j
 
@@ -68,13 +63,13 @@ receive transaction id, to store in neo4j
 - [-] Finish `packages/server-rest/README.md`
 - [-] Replace all Curls `curl http://localhost:3000/participant/gov` with auth and https, ex curl -k `https://localhost:3443/api/participant/gov`
 - [-] Checkout whole repo and test all in other folder without dependencies etc
-- [-] all curls add /api/, -h token 
+- [-] all curls add /api/, -h token
 - [-] all curls all hurley invoke equivalent
 
 - [X] Protect from create Person with same username, fiscalNumber and Id
+- [X] create user only with fiscalNumber
 
 
-create user only with fiscalNumber
 start transaction module
 mutations
 	update person with citizenCard data
