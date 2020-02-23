@@ -209,6 +209,7 @@ type Query {
   participants(skip: Int = 0, take: Int = 25): [Participant!]!
   personById(id: String!): Person!
   personByUsername(username: String!): Person!
+  personByFiscalnumber(fiscalNumber: String!): Person!
   persons(skip: Int = 0, take: Int = 25): [Person!]!
   personByAttribute(skip: Int = 0, take: Int = 25, getByAttributeInput: GetByAttributeInput!): [Person!]!
   personProfile: Person!

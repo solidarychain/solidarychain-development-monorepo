@@ -42,6 +42,18 @@ export class PersonResolver {
   }
 
   @UseGuards(GqlAuthGuard)
+  @Query(returns => Person)
+  async personByFiscalnumber(
+    @Args('fiscalNumber') fiscalNumber: string,
+  ): Promise<Person> {
+    const person = await this.personService.findOneByUsername(fiscalNumber);
+    if (!person) {
+      throw new NotFoundException(fiscalNumber);
+    }
+    return person;
+  }
+
+  @UseGuards(GqlAuthGuard)
   @Query(returns => [Person])
   async persons(
     @Args() personsArgs: PaginationArgs,

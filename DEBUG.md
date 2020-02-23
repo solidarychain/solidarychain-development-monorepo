@@ -61,14 +61,14 @@ add some breakpoints on `chaincode-solidary-network-chaincode/packages/@solidary
 
 ### 5. Edit and deploy chaincode again
 
-after edit code changes, stop current debug with ctrl+c and re-launch chaincode in debug mode again and that's all
+after edit code changes, stop current debug with ctrl+c and re-launch chaincode in debug mode again and that's all, it is VERY FAST and we asure we edit the source *.ts
 
 ```shell
 # start define CHAINCODE_NAME
 $ CHAINCODE_NAME=solidary-network-chaincode
 $ npm run cc:start:debug -- ${CHAINCODE_NAME}
+# require to restart graphql server
+$ npx lerna run start:debug
 ```
 
-## Start GraphQL Server
-
-done
+or edit files in `chaincode-solidary-network-chaincode/packages/@solidary-network/${PACKAGE}-cc/src/*.ts`

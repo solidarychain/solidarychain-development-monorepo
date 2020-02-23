@@ -70,7 +70,7 @@ DATE=61985472
 PAYLOAD="{\"id\":\"${ID}\",\"firstname\":\"${FIRST_NAME}\",\"lastname\":\"${LAST_NAME}\",\"beneficiaryNumber\":\"285191659\",\"birthDate\":\"${DATE}\",\"cardVersion\":\"006.007.23\",\"country\":\"PRT\",\"documentNumber\":\"09879462 0 ZZ3\",\"documentType\":\"Cartão De Cidadão\",\"emissionDate\":\"${DATE}\",\"emittingEntity\":\"República Portuguesa\",\"expirationDate\":\"${DATE}\",\"fatherFirstname\":\"Alberto\",\"fatherLastname\":\"De Andrade Monteiro\",\"fiscalNumber\":\"${FISCAL_NUMBER}\",\"gender\":\"M\",\"height\":\"1.81\",\"identityNumber\":\"098794620\",\"motherFirstname\":\"Maria Da Graça De Oliveira Mendes\",\"motherLastname\":\"Monteiro\",\"nationality\":\"PRT\",\"otherInformation\":\"\",\"pan\":\"0000036014662658\",\"requestLocation\":\"CRCiv. Figueira da Foz\",\"socialSecurityNumber\":\"11103478242\",\"username\":\"${USER_NAME}\",\"password\":\"12345678\",\"email\":\"mario.monteiro@mail.com\"}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" -u admin
-npx hurl invoke ${CHAINCODE_NAME} person_get ${ID}
+# npx hurl invoke ${CHAINCODE_NAME} person_get ${ID}
 
 # create person with all data
 ID=4ea88521-031b-4279-9165-9c10e1838010
@@ -87,12 +87,14 @@ npx hurl invoke ${CHAINCODE_NAME} person_get ${ID}
 # create person with minimal required data
 ID=4ea88521-031b-4279-9165-9c10e1839053
 FISCAL_NUMBER=182692152
+# same as fiscalNumber
 USER_NAME=${FISCAL_NUMBER}
 PASS_WORD=12345678
 PAYLOAD="{\"id\":\"${ID}\",\"fiscalNumber\":\"${FISCAL_NUMBER}\",\"username\":\"${USER_NAME}\", \"password\":\"${PASS_WORD}\"}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" -u admin
-npx hurl invoke ${CHAINCODE_NAME} person_get ${ID}
+# npx hurl invoke ${CHAINCODE_NAME} person_getByUsername ${USER_NAME}
+# npx hurl invoke ${CHAINCODE_NAME} person_getByFiscalnumber ${FISCAL_NUMBER}
 
 # create cause with all data
 ID=acef70e5-cd25-4533-8392-9fa57e43cf11

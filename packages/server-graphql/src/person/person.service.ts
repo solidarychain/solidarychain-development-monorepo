@@ -34,6 +34,17 @@ export class PersonService {
     return model;
   }
 
+  async findOneByFiscalnumber(fiscalNumber: string): Promise<Person> {
+    // get fabric model with _props
+    const fabricModel: PersonConvectorModel | PersonConvectorModel[] = await PersonControllerBackEnd.getByFiscalnumber(fiscalNumber) as PersonConvectorModel;
+    // convert fabric model to convector model (remove _props)
+    const convectorModel: PersonConvectorModel = new PersonConvectorModel(fabricModel[0]);
+    // call common find method
+    const model: Person = await this.findBy(convectorModel, null) as Person;
+    // return model
+    return model;
+  }
+
   async findByAttribute({ id, content }: GetByAttributeInput, personArgs: PaginationArgs): Promise<Person | Person[]> {
     // get fabric model with _props
     const fabricModel: PersonConvectorModel[] = await PersonControllerBackEnd.getByAttribute(id, content) as PersonConvectorModel[];

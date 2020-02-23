@@ -245,8 +245,8 @@ $ docker container ls --format "table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Ports
 CONTAINER ID        NAMES                                  STATUS              PORTS
 
 # chaincode containers from org1 and org2
-a3354d1b9019        dev-peer0.org2.hurley.lab-person-1.0   Up 3 minutes        
-d59a8cc0ef61        dev-peer0.org1.hurley.lab-person-1.0   Up 5 minutes        
+a3354d1b9019        dev-peer0.org2.hurley.lab-solidary-network-1.0   Up 3 minutes        
+d59a8cc0ef61        dev-peer0.org1.hurley.lab-solidary-network-1.0   Up 5 minutes        
 
 # all the other peer, orderer, ca and couch containers
 1dfc5a1b2c0a        peer0.org2.hurley.lab                  Up 7 minutes        0.0.0.0:7151->7051/tcp, 0.0.0.0:7152->7052/tcp, 0.0.0.0:7153->7053/tcp

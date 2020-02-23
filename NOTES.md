@@ -138,7 +138,7 @@ dev-peer0.org1.hurley.lab-${CHAINCODE_NAME}-${VERSION}
 dev-peer0.org2.hurley.lab-${CHAINCODE_NAME}-${VERSION}
 
 # debug chaincode container
-$ docker container logs -f dev-peer0.org1.hurley.lab-person-${VERSION}
+$ docker container logs -f dev-peer0.org2.hurley.lab-solidary-network-chaincode-${VERSION}
 
 # invoke some stuff (after deploy or upgrade chaincode)
 $ npx hurl invoke ${CHAINCODE_NAME} participant_get gov
