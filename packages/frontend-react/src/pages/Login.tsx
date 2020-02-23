@@ -15,7 +15,7 @@ export const Login: React.FC<RouteComponentProps> = ({ history, location }) => {
 	const [, dispatch] = useStateValue();
 
 	const defaults = {
-		username: 'koakh',
+		username: 'johndoe',
 		password: '12345678',
 	};
 	// hooks: state

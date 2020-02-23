@@ -19,14 +19,14 @@ npm run seed
 # create views
 ./views/install.sh
 
-# prevent lost props, rebuild chaincode packages
-npx lerna run build --scope person-cc
-npx lerna run build --scope participant-cc
-npx lerna run build --scope cause-cc
-npx lerna run build --scope transaction-cc
+# prevent lost props, rebuild chaincode packages: comment this already is executed in cc:start above
+# npx lerna run build --scope @solidary-network/common-cc --stream
+# npx lerna run build --scope @solidary-network/person-cc
+# npx lerna run build --scope @solidary-network/participant-cc
+# npx lerna run build --scope @solidary-network/cause-cc
+# npx lerna run build --scope @solidary-network/transaction-cc
 
 # invoke some stuff
-# npx hurl invoke solidary-network-chaincode person_get 1-100-100
 npx hurl invoke solidary-network-chaincode person_get 4ea88521-031b-4279-9165-9c10e1839001
 
 # start server/frontend

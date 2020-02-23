@@ -14,6 +14,21 @@ const pubSub = new PubSub();
 export class CauseResolver {
   constructor(private readonly causeService: CauseService) { }
 
+  @Query(returns => [Cause])
+  causes(
+    @Args() causesArgs: PaginationArgs,
+  ): Promise<Cause[]> {
+    return this.causeService.findAll(causesArgs);
+  }
+
+  @Query(returns => [Cause])
+  causeByDateRange(
+    @Args('date') date: number,
+    @Args() causesArgs: PaginationArgs,
+  ): Promise<Cause | Cause[]> {
+    return this.causeService.findByDateRange(date, causesArgs);
+  }
+
   @Query(returns => Cause)
   async causeById(
     @Args('id') id: string,
@@ -23,13 +38,6 @@ export class CauseResolver {
       throw new NotFoundException(id);
     }
     return cause;
-  }
-
-  @Query(returns => [Cause])
-  causes(
-    @Args() causesArgs: PaginationArgs,
-  ): Promise<Cause[]> {
-    return this.causeService.findAll(causesArgs);
   }
 
   @Mutation(returns => Cause)

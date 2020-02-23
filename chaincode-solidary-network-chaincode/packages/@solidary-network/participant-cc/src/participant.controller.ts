@@ -19,17 +19,17 @@ export class ParticipantController extends ConvectorController {
     @Param(yup.string())
     name: string,
   ) {
-    // get participant is if not gov, in this case it won't exists, else gov will be assign after create
-    let gov: Participant;
-    if (id !== 'gov') {
-      // deprecated now always use gov to create participants
-      // participant = await getParticipantByIdentity(this.sender);
-      gov = await Participant.getOne('gov');
-      if (!!gov && !gov.id) {
-        // throw new Error('There is no participant with that identity');
-        throw new Error('There is no participant with that id');
-      }
-    }
+    // get participant if not gov, in case of gov it won't exists yet and will be without participant
+//    let gov: Participant;
+//    if (id !== 'gov') {
+//      // deprecated now always use gov to create participants
+//      // participant = await getParticipantByIdentity(this.sender);
+//      gov = await Participant.getOne('gov');
+//      if (!!gov && !gov.id) {
+//        // throw new Error('There is no participant with that identity');
+//        throw new Error('There is no participant with that id');
+//      }
+//    }
 
     // Retrieve to see if exists
     const existing = await Participant.getOne(id);
@@ -46,10 +46,8 @@ export class ParticipantController extends ConvectorController {
       }];
       // add date in epoch unix time
       participant.createdDate = new Date().getTime();
-      // if participant is null, it is the gov that is created right now, assign newParticipant to it
-      // if (!gov) { gov = participant };
-      // always add gov participant
-      if (gov) participant.participant = gov;
+      // always add gov participant if its is not the gov itself
+//      if (gov) participant.participant = gov;
 
       await participant.save();
     } else {

@@ -96,13 +96,15 @@ npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" -u admin
 # npx hurl invoke ${CHAINCODE_NAME} person_getByUsername ${USER_NAME}
 # npx hurl invoke ${CHAINCODE_NAME} person_getByFiscalnumber ${FISCAL_NUMBER}
 
-# create cause with all data
+# create cause with all data (filter with date=1582414657)
 ID=acef70e5-cd25-4533-8392-9fa57e43cf11
 NAME=Cause001
 INPUT_TYPE=network.solidary.convector.participant
 INPUT_ID=mit
-START_DATE=1546300800
-END_DATE=1546300800
+# Date and time (GMT): Wednesday, 1 January 2020 00:00:00
+START_DATE=1577836800
+# Date and time (GMT): Friday, 31 December 2021 23:59:59
+END_DATE=1640995199
 LOCATION=40.1890144,-8.5171909
 TAGS="[\"red\", \"blue\"]"
 PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"startDate\":\"${START_DATE}\",\"endDate\":\"${END_DATE}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"metaData\":{\"key\":\"value\"},\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"}}"

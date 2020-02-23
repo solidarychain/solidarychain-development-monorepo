@@ -220,13 +220,14 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     const existing = await Person.query(Person, {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_PERSON,
-        username: fiscalNumber,
+        fiscalNumber,
         participant: {
           id: participant.id
         }
       }
     });
-    if (!existing || !existing[0].id) {
+    // require to check if existing before try to access existing[0].id prop
+    if (!existing || !existing[0] || !existing[0].id) {
       throw new Error(`No person exists with that fiscalNumber ${fiscalNumber}`);
     }
     return existing;

@@ -77,4 +77,25 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
     return (await Cause.getAll(c.CONVECTOR_MODEL_PATH_CAUSE)).map(cause => cause.toJSON() as any);
   }
 
+  /**
+   * get cause inside dateRange startDate < date && endDate > date
+   */
+  @Invokable()
+  public async getByDateRange(
+    @Param(yup.number())
+    date: number,
+  ): Promise<Cause | Cause[]> {
+    return await Cause.query(Cause, {
+      // require to parseInt string parameter
+      selector: {
+        type: c.CONVECTOR_MODEL_PATH_CAUSE,
+        startDate:{
+          $lte: date
+        },
+        endDate:{
+          $gte: date
+        }
+      }
+    });
+  }
 }

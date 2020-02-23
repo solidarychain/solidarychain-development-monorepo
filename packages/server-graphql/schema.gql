@@ -215,8 +215,9 @@ type Query {
   personProfile: Person!
   transactionById(id: String!): Transaction!
   transactions(skip: Int = 0, take: Int = 25): [Transaction!]!
-  causeById(id: String!): Cause!
   causes(skip: Int = 0, take: Int = 25): [Cause!]!
+  causeByDateRange(skip: Int = 0, take: Int = 25, date: Float!): [Cause!]!
+  causeById(id: String!): Cause!
 }
 
 type Subscription {

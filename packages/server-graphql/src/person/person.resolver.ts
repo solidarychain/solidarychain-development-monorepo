@@ -46,7 +46,7 @@ export class PersonResolver {
   async personByFiscalnumber(
     @Args('fiscalNumber') fiscalNumber: string,
   ): Promise<Person> {
-    const person = await this.personService.findOneByUsername(fiscalNumber);
+    const person = await this.personService.findOneByFiscalnumber(fiscalNumber);
     if (!person) {
       throw new NotFoundException(fiscalNumber);
     }
