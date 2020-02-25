@@ -17,6 +17,7 @@
     "cc:upgrade": "f() { npm run cc:package -- $1 org1; hurl upgrade $1 node $2  -P ./chaincode-$1; }; f",
     "cc:start:debug": "f() { npm run cc:package -- $1 org1; npm run cc:install:debug $1; }; f",
     "===================PACKAGES===================": "====================================================================",
+    "pkg:graphql:build": "npx lerna run build --scope @solidary-network/server-graphql --stream",
     "pkg:graphql:debug": "npx lerna run start:debug --scope @solidary-network/server-graphql --stream",
     "pkg:graphql:dev": "npx lerna run start:dev --scope @solidary-network/server-graphql --stream",
     "pkg:react": "npx lerna run start --scope @solidary-network/frontend-react --stream",

@@ -6,6 +6,7 @@ import { GqlAuthGuard } from '../auth/guards';
 import NewTransactionInput from './dto/new-transaction.input';
 import Transaction from './models/transaction.model';
 import { TransactionService } from './transaction.service';
+import GetByComplexQueryInput from '../common/dto/get-by-complex-query.input';
 
 const pubSub = new PubSub();
 
@@ -13,6 +14,21 @@ const pubSub = new PubSub();
 @Resolver(of => Transaction)
 export class TransactionResolver {
   constructor(private readonly transactionService: TransactionService) { }
+
+  @Query(returns => [Transaction])
+  transactions(
+    @Args() transactionsArgs: PaginationArgs,
+  ): Promise<Transaction[]> {
+    return this.transactionService.findAll(transactionsArgs);
+  }
+
+  @Query(returns => [Transaction])
+  transactionComplexQuery(
+    @Args('getByComplexQueryInput') getByComplexQueryInput: GetByComplexQueryInput,
+    @Args() transactionsArgs: PaginationArgs,
+  ): Promise<Transaction | Transaction[]> {
+    return this.transactionService.findComplexQuery(getByComplexQueryInput, transactionsArgs);
+  }
 
   @Query(returns => Transaction)
   async transactionById(
@@ -23,13 +39,6 @@ export class TransactionResolver {
       throw new NotFoundException(id);
     }
     return transaction;
-  }
-
-  @Query(returns => [Transaction])
-  transactions(
-    @Args() transactionsArgs: PaginationArgs,
-  ): Promise<Transaction[]> {
-    return this.transactionService.findAll(transactionsArgs);
   }
 
   @Mutation(returns => Transaction)

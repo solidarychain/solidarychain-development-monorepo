@@ -1,18 +1,92 @@
-import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { PaginationArgs } from '@solidary-network/common-cc';
 import { Person as PersonConvectorModel, PersonAttribute as AttributeConvectorModel } from '@solidary-network/person-cc';
 import { FlatConvectorModel } from '@worldsibu/convector-core';
 import { generate } from 'generate-password';
 import { v4 as uuid } from 'uuid';
+import GetByComplexQueryInput from '../common/dto/get-by-complex-query.input';
 import { PersonControllerBackEnd } from '../convector';
 import AddPersonAttributeInput from './dto/add-person-attribute.input';
 import GetByAttributeInput from './dto/get-by-attribute.input';
 import NewPersonInput from './dto/new-person.input';
 import Person from './models/person.model';
-import { graphQLResultHasError } from 'apollo-utilities';
 
 @Injectable()
 export class PersonService {
+  async create(data: NewPersonInput): Promise<Person> {
+    try {
+      // compose ConvectorModel from NewInput
+      const personToCreate: PersonConvectorModel = new PersonConvectorModel({
+        ...data,
+        // require to inject values
+        id: data.id ? data.id : uuid(),
+        // in case of omitted default username is fiscalNumber
+        username: (data.username) ? data.username : data.fiscalNumber,
+        // if not password defined generate a new one
+        password: (data.password) ? data.password : generate({ length: 10, numbers: true }),
+        // convert Date to epoch unix time to be stored in convector person model
+        birthDate: ((data.birthDate as unknown) as number),
+        emissionDate: ((data.emissionDate as unknown) as number),
+        expirationDate: ((data.expirationDate as unknown) as number),
+      });
+      await PersonControllerBackEnd.create(personToCreate);
+      return await this.findOneById(personToCreate.id);
+    } catch (error) {
+      // extract error message
+      const errorMessage: string = (error.responses && error.responses[1].error.message) ? error.responses[1].error.message : error;
+      // override default 'throw errorMessage;' with a customized version
+      throw new HttpException({ status: HttpStatus.CONFLICT, error: errorMessage }, HttpStatus.CONFLICT);
+    }
+  }
+
+  async addAttribute(personId: string, addPersonAttributeInput: AddPersonAttributeInput): Promise<Person> {
+    try {
+      const attributeConvectorModel: AttributeConvectorModel = new AttributeConvectorModel(
+        { ...addPersonAttributeInput },
+      );
+      // leave above line has a reminder, this is the hack to use content when it
+      // don't have a @Validate annotation, read comments on Attribute person-cc
+      // attributeConvectorModel.content = addPersonAttributeInput.content;
+      await PersonControllerBackEnd.addAttribute(personId, attributeConvectorModel);
+      return await this.findOneById(personId);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async findAll(personArgs: PaginationArgs): Promise<Person[]> {
+    // get convector model
+    const flatConvectorModel: Array<FlatConvectorModel<PersonConvectorModel[]>> = await PersonControllerBackEnd.getAll();
+    // convert flat convector model to convector model
+    const convectorModel: PersonConvectorModel[] = flatConvectorModel.map((e: PersonConvectorModel) => new PersonConvectorModel(e));
+    // call common find method
+    const model: Person[] = await this.findBy(convectorModel, personArgs) as Person[];
+    // return model
+    return model;
+  }
+
+  async findByAttribute({ id, content }: GetByAttributeInput, personArgs: PaginationArgs): Promise<Person | Person[]> {
+    // get fabric model with _props
+    const fabricModel: PersonConvectorModel[] = await PersonControllerBackEnd.getByAttribute(id, content) as PersonConvectorModel[];
+    // convert fabric model to convector model (remove _props)
+    const convectorModel: PersonConvectorModel[] = fabricModel.map((e: PersonConvectorModel) => new PersonConvectorModel(e));
+    // call common find method
+    const model: Person[] = await this.findBy(convectorModel, personArgs) as Person[];
+    // return model
+    return model;
+  }
+
+  async findComplexQuery(getByComplexQueryInput: GetByComplexQueryInput, personArgs: PaginationArgs): Promise<Person | Person[]> {
+    // get fabric model with _props
+    const fabricModel: Array<FlatConvectorModel<PersonConvectorModel>> = await PersonControllerBackEnd.getComplexQuery(getByComplexQueryInput) as PersonConvectorModel[];
+    // convert fabric model to convector model (remove _props)
+    const convectorModel: PersonConvectorModel[] = fabricModel.map((e: PersonConvectorModel) => new PersonConvectorModel(e));
+    // call common find method
+    const model: Person[] = await this.findBy(convectorModel, personArgs) as Person[];
+    // return model
+    return model;
+  }
+
   async findOneById(id: string): Promise<Person> {
     // get fabric model with _props
     const fabricModel: PersonConvectorModel = await PersonControllerBackEnd.get(id) as PersonConvectorModel;
@@ -43,69 +117,6 @@ export class PersonService {
     const model: Person = await this.findBy(convectorModel, null) as Person;
     // return model
     return model;
-  }
-
-  async findByAttribute({ id, content }: GetByAttributeInput, personArgs: PaginationArgs): Promise<Person | Person[]> {
-    // get fabric model with _props
-    const fabricModel: PersonConvectorModel[] = await PersonControllerBackEnd.getByAttribute(id, content) as PersonConvectorModel[];
-    // convert fabric model to convector model (remove _props)
-    const convectorModel: PersonConvectorModel[] = fabricModel.map((e: PersonConvectorModel) => new PersonConvectorModel(e));
-    // call common find method
-    const model: Person[] = await this.findBy(convectorModel, personArgs) as Person[];
-    // return model
-    return model;
-  }
-
-  async findAll(personArgs: PaginationArgs): Promise<Person[]> {
-    // get convector model
-    const flatConvectorModel: Array<FlatConvectorModel<PersonConvectorModel[]>> = await PersonControllerBackEnd.getAll();
-    // convert flat convector model to convector model
-    const convectorModel: PersonConvectorModel[] = flatConvectorModel.map((e: PersonConvectorModel) => new PersonConvectorModel(e));
-    // call common find method
-    const model: Person[] = await this.findBy(convectorModel, personArgs) as Person[];
-    // return model
-    return model;
-  }
-
-  async create(data: NewPersonInput): Promise<Person> {
-    try {
-      // compose ConvectorModel from NewInput
-      const personToCreate: PersonConvectorModel = new PersonConvectorModel({
-        ...data,
-        // require to inject values
-        id: data.id ? data.id : uuid(),
-        // in case of omitted default username is fiscalNumber
-        username: (data.username) ? data.username : data.fiscalNumber,
-        // if not password defined generate a new one
-        password: (data.password) ? data.password : generate({ length: 10, numbers: true }),
-        // convert Date to epoch unix time to be stored in convector person model
-        birthDate: ((data.birthDate as unknown) as number),
-        emissionDate: ((data.emissionDate as unknown) as number),
-        expirationDate: ((data.expirationDate as unknown) as number),
-      });
-      await PersonControllerBackEnd.create(personToCreate);
-      return await this.findOneById(personToCreate.id);
-    } catch (error) {
-      // extract error message
-      const errorMessage: string = (error.responses && error.responses[1].error.message) ? error.responses[1].error.message : error;
-      // override default 'throw errorMessage;' with a customized version
-      throw new HttpException({ status: HttpStatus.CONFLICT, error: errorMessage }, HttpStatus.CONFLICT);
-    }
-  }
-
-  async personAddAttribute(personId: string, addPersonAttributeInput: AddPersonAttributeInput): Promise<Person> {
-    try {
-      const attributeConvectorModel: AttributeConvectorModel = new AttributeConvectorModel(
-        { ...addPersonAttributeInput },
-      );
-      // leave above line has a reminder, this is the hack to use content when it
-      // don't have a @Validate annotation, read comments on Attribute person-cc
-      // attributeConvectorModel.content = addPersonAttributeInput.content;
-      await PersonControllerBackEnd.addAttribute(personId, attributeConvectorModel);
-      return await this.findOneById(personId);
-    } catch (error) {
-      throw error;
-    }
   }
 
   /**

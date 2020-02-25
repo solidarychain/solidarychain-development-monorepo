@@ -6,6 +6,7 @@ import { PaginationArgs } from '@solidary-network/common-cc';
 import Participant from './models/participant.model';
 import { ParticipantService } from './participant.service';
 import { GqlAuthGuard } from '../auth/guards';
+import GetByComplexQueryInput from '../common/dto/get-by-complex-query.input';
 
 const pubSub = new PubSub();
 
@@ -13,6 +14,21 @@ const pubSub = new PubSub();
 @Resolver(of => Participant)
 export class ParticipantResolver {
   constructor(private readonly participantService: ParticipantService) { }
+
+  @Query(returns => [Participant])
+  participants(
+    @Args() participantsArgs: PaginationArgs,
+  ): Promise<Participant[]> {
+    return this.participantService.findAll(participantsArgs);
+  }
+
+  @Query(returns => [Participant])
+  participantComplexQuery(
+    @Args('getByComplexQueryInput') getByComplexQueryInput: GetByComplexQueryInput,
+    @Args() participantsArgs: PaginationArgs,
+  ): Promise<Participant | Participant[]> {
+    return this.participantService.findComplexQuery(getByComplexQueryInput, participantsArgs);
+  }
 
   @Query(returns => Participant)
   async participantById(
@@ -23,13 +39,6 @@ export class ParticipantResolver {
       throw new NotFoundException(id);
     }
     return participant;
-  }
-
-  @Query(returns => [Participant])
-  participants(
-    @Args() participantsArgs: PaginationArgs,
-  ): Promise<Participant[]> {
-    return this.participantService.findAll(participantsArgs);
   }
 
   @Mutation(returns => Participant)

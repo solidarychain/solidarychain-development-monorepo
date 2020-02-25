@@ -54,6 +54,12 @@ input GetByAttributeInput {
   content: JSONObject
 }
 
+input GetByComplexQueryInput {
+  filter: JSONObject!
+  fields: [String!]
+  sort: [JSONObject!]
+}
+
 """
 The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -205,18 +211,22 @@ type PersonLoginResponse {
 }
 
 type Query {
-  participantById(id: String!): Participant!
   participants(skip: Int = 0, take: Int = 25): [Participant!]!
+  participantComplexQuery(skip: Int = 0, take: Int = 25, getByComplexQueryInput: GetByComplexQueryInput!): [Participant!]!
+  participantById(id: String!): Participant!
+  persons(skip: Int = 0, take: Int = 25): [Person!]!
+  personByAttribute(skip: Int = 0, take: Int = 25, getByAttributeInput: GetByAttributeInput!): [Person!]!
+  personComplexQuery(skip: Int = 0, take: Int = 25, getByComplexQueryInput: GetByComplexQueryInput!): [Person!]!
   personById(id: String!): Person!
   personByUsername(username: String!): Person!
   personByFiscalnumber(fiscalNumber: String!): Person!
-  persons(skip: Int = 0, take: Int = 25): [Person!]!
-  personByAttribute(skip: Int = 0, take: Int = 25, getByAttributeInput: GetByAttributeInput!): [Person!]!
   personProfile: Person!
-  transactionById(id: String!): Transaction!
   transactions(skip: Int = 0, take: Int = 25): [Transaction!]!
+  transactionComplexQuery(skip: Int = 0, take: Int = 25, getByComplexQueryInput: GetByComplexQueryInput!): [Transaction!]!
+  transactionById(id: String!): Transaction!
   causes(skip: Int = 0, take: Int = 25): [Cause!]!
-  causeByDateRange(skip: Int = 0, take: Int = 25, date: Float!): [Cause!]!
+  causeOngoing(skip: Int = 0, take: Int = 25, date: Float!): [Cause!]!
+  causeComplexQuery(skip: Int = 0, take: Int = 25, getByComplexQueryInput: GetByComplexQueryInput!): [Cause!]!
   causeById(id: String!): Cause!
 }
 

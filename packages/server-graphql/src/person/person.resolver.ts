@@ -9,6 +9,7 @@ import NewPersonInput from './dto/new-person.input';
 import Person from './models/person.model';
 import { PersonService } from './person.service';
 import { PaginationArgs } from '@solidary-network/common-cc';
+import GetByComplexQueryInput from '../common/dto/get-by-complex-query.input';
 
 const pubSub = new PubSub();
 
@@ -16,6 +17,31 @@ const pubSub = new PubSub();
 @Resolver(of => Person)
 export class PersonResolver {
   constructor(private readonly personService: PersonService) { }
+
+  @UseGuards(GqlAuthGuard)
+  @Query(returns => [Person])
+  async persons(
+    @Args() personsArgs: PaginationArgs,
+  ): Promise<Person[]> {
+    return this.personService.findAll(personsArgs);
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Query(returns => [Person])
+  async personByAttribute(
+    @Args('getByAttributeInput') getByAttributeInput: GetByAttributeInput,
+    @Args() personsArgs: PaginationArgs,
+  ): Promise<Person | Person[]> {
+    return this.personService.findByAttribute(getByAttributeInput, personsArgs);
+  }
+
+  @Query(returns => [Person])
+  personComplexQuery(
+    @Args('getByComplexQueryInput') getByComplexQueryInput: GetByComplexQueryInput,
+    @Args() personsArgs: PaginationArgs,
+  ): Promise<Person | Person[]> {
+    return this.personService.findComplexQuery(getByComplexQueryInput, personsArgs);
+  }
 
   @UseGuards(GqlAuthGuard)
   @Query(returns => Person)
@@ -54,23 +80,6 @@ export class PersonResolver {
   }
 
   @UseGuards(GqlAuthGuard)
-  @Query(returns => [Person])
-  async persons(
-    @Args() personsArgs: PaginationArgs,
-  ): Promise<Person[]> {
-    return this.personService.findAll(personsArgs);
-  }
-
-  @UseGuards(GqlAuthGuard)
-  @Query(returns => [Person])
-  async personByAttribute(
-    @Args('getByAttributeInput') getByAttributeInput: GetByAttributeInput,
-    @Args() personsArgs: PaginationArgs,
-  ): Promise<Person | Person[]> {
-    return this.personService.findByAttribute(getByAttributeInput, personsArgs);
-  }
-
-  @UseGuards(GqlAuthGuard)
   @Query(returns => Person)
   async personProfile(@CurrentUser() user: Person): Promise<Person> {
     return await this.personService.findOneByUsername(user.username);
@@ -92,7 +101,7 @@ export class PersonResolver {
     @Args('personId') personId: string,
     @Args('addPersonAttributeData') addPersonAttributeData: AddPersonAttributeInput,
   ): Promise<Person> {
-    const person = await this.personService.personAddAttribute(personId, addPersonAttributeData);
+    const person = await this.personService.addAttribute(personId, addPersonAttributeData);
     return person;
   }
 

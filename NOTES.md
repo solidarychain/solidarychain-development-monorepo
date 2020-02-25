@@ -72,10 +72,7 @@
   - [Problem tests/participant.spec.ts(30,11): error TS1005: ':' expected](#problem-testsparticipantspects3011-error-ts1005--expected)
   - [Add new transaction-cc module to chaincode](#add-new-transaction-cc-module-to-chaincode)
     - [Add new package to other files](#add-new-package-to-other-files)
-  - [YUP Validation notes](#yup-validation-notes)
-  - [Currency codes iso4217](#currency-codes-iso4217)
-  - [Add new module to nestjs graphql](#add-new-module-to-nestjs-graphql)
-  - [Manage Chaincode to GraphQL Error messages](#manage-chaincode-to-graphql-error-messages)
+  - [GraphQL ComplexQuery problem: How to send arbitrayGraphQL and ComplexQuery and the big sort problem](#graphql-complexquery-problem-how-to-send-arbitraygraphql-and-complexquery-and-the-big-sort-problem)
 
 This is a simple NestJs starter, based on above links, I only extended it with a few things like **swagger api**, **https**, **jwt**, and other stuff, thanks m8s
 
@@ -2490,6 +2487,19 @@ WIP
 $ npx hurl invoke ${CHAINCODE_NAME} participant_changeIdentity great newIdentity -u admin
 { Error: transaction returned with failure: {"name":"Error","status":500,"message":"Unauthorized. Requester identity is not an admin"}
 
+@koakh  My best guess is admin doesn't have an attribute "admin" as such (I think you are following pattern identity demo). So, run registeridentity.js node file to register a new user "chaincodeAdmin" which has attribute "admin"
+
+https://github.com/worldsibu/convector-identity-patterns
+https://github.com/worldsibu/convector-identity-patterns/blob/master/packages/administrative/registerIdentitiesManager.js
+
+
+
+
+
+
+
+
+
 npx hurl invoke ${CHAINCODE_NAME} person_create "{ \"id\": \"1-100-103\", \"firstname\": \"Pete\", \"lastname\": \"Doe\", \"username\": \"pete\", \"password\": \"12345678\", \"email\": \"pete.doe@example.com\"}" -u admin
 
 npx hurl invoke ${CHAINCODE_NAME} person_create "{\"id\": \"1-100-103\",\"firstname\":\"Pete\",\"lastname\":\"Doe\",\"username\": \"pete\",\"password\": \"12345678\",\"email\": \"pete.doe@example.com\",\"roles\": [\"USER\",\"ADMIN\"]}" -u admin
@@ -2742,51 +2752,73 @@ Property 'register' does not exist on type 'ConvectorControllerClient<Transactio
 
 `touch packages/transaction-cc/node_modules/${FILE_EXCLUDE}`
 
+## GraphQL ComplexQuery problem: How to send arbitrayGraphQL and ComplexQuery and the big sort problem
 
+- [Cloudant: No index exists for this sort, try indexing by the sort fields](https://stackoverflow.com/questions/46689286/cloudant-no-index-exists-for-this-sort-try-indexing-by-the-sort-fields)
+- [1.3.7. /db/_index](https://docs.couchdb.org/en/3.0.0/api/database/find.html#post--db-_index)
+- 
+the problem is just that, when we try to create a ComplexQuery graphql endpoint we found that when we use anything inside `sort` field it crash with error `error handling CouchDB request. Error:no_usable_index,  Status Code:400,  Reason:No index exists for this sort, try indexing by the sort fields.',`, the problem is that everything work, couchdb queries and even hurley request `npx hurl invoke ${CHAINCODE_NAME} cause_getComplexQuery "{\"filter\":{\"startDate\":{\"\$lte\":1582414657},\"endDate\":{\"\$gte\":1582414657}},\"sort\":[{\"name\":\"asc\"}]}"` with exact same payload `filter` and `sort`, after a an hour hitting with head I found that the solution is that **we must create the index in both running containers**, and when we start to implement we only create in one container....this is the best way to learn, hit the head on the wall
 
-## YUP Validation notes
+> side note: to use sort we require to NEED TO CREATE INDEXS in every container
 
-- [How Does yup.addMethod() Work? Creating Custom Validation Functions With Yup](https://medium.com/@arkadyt/how-does-yup-addmethod-work-creating-custom-validation-functions-with-yup-8fddb71a5470)
+```shell
+$ docker container ls --filter "name=couchdb.peer0.org" --format '{{.Names}}, {{.Ports}}'
+couchdb.peer0.org2.hurley.lab, 4369/tcp, 9100/tcp, 0.0.0.0:5184->5984/tcp
+couchdb.peer0.org1.hurley.lab, 4369/tcp, 9100/tcp, 0.0.0.0:5084->5984/tcp
+```
 
-## Currency codes iso4217
+- [http://localhost:5084/_utils/#database/ch1_solidary-network-chaincode/_index](http://localhost:5184/_utils/#database/ch1_solidary-network-chaincode/_index)
+- [http://localhost:5184/_utils/#database/ch1_solidary-network-chaincode/_index](http://localhost:5184/_utils/#database/ch1_solidary-network-chaincode/_index)
 
-- [Very simple lib to check if something is a iso 4217 currency code](https://github.com Boelensman1/validate-currency-code)
+create index on both containers/couchdb
 
-## Add new module to nestjs graphql
+```shell
+$ ORG_PORT=5084
+# ORG_PORT=5184
+$ curl --request POST \
+  --url http://localhost:${ORG_PORT}/ch1_solidary-network-chaincode//_index \
+  --header 'content-type: application/json' \
+  --data '{
+   "index": {
+      "fields": [
+         "name"
+      ]
+   },
+   "name": "name-json-index",
+   "type": "json"
+}'
+```
 
-1. create dir `packages/server-graphql/src/cause`
-2. create`packages/server-graphql/src/cause/cause.module.ts`, `packages/server-graphql/src/cause.service.ts`, `packages/server-graphql/src/cause/cause.resolver.ts`
-3. create dirs `src/cause/dto` and `src/cause/models` and populate with files
-4. add module to `packages/server-graphql/src/app.module.ts`
+and it simply start to work! **the solution is we need the sort in both containers**, the strange thing is why hurley works and graphql request not!
 
-## Manage Chaincode to GraphQL Error messages
+graphql working payload
 
-- [Exception filters](https://docs.nestjs.com/exception-filters)
-
-ex `packages/server-graphql/src/person/person.service.ts`
-
-```typescript
-async create(data: NewPersonInput): Promise<Person> {
-  try {
-    ....
-  } catch (error) {
-    // extract error message
-    const errorMessage: string = (error.responses && error.responses[1].error.message) ? error.responses[1].error.message : error;
-    // override default 'throw errorMessage;' with a customized version
-    throw new HttpException({errorMessage, HttpStatus.CONFLICT}, HttpStatus.CONFLICT);
+```json
+{
+  "getByComplexQueryInput": {
+    "filter":{
+      "startDate":{"$lte":1582414657},
+      "endDate":{"$gte":1582414657}
+    },
+    "sort":[
+      {"name":"asc"}
+    ]
   }
 }
 ```
 
-we get customized error from chaincode
+add `index` to both organizations/containers in `views\install.sh`
 
-```json
-{
-  "errors": [
-    {
-      "message": {
-        "status": 409,
-        "error": "There is a person registered with that username already (johndoe)"
-      },
-    ...
+```shell
+$ curl -X POST "${COUCH_URL_ORG1}/${DB_PATH}/_index" \
+  --header 'content-type: application/json' \
+  --data '{
+  "index": {
+    "fields": [
+      "name"
+    ]
+  },
+  "name": "name-json-index",
+  "type": "json"
+}'
 ```

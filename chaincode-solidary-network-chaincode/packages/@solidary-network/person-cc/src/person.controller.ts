@@ -67,7 +67,7 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
       throw new Error(`Just the government - ID=gov - can create people - requesting organization was ${this.sender}`);
     }
 
-    // add participant
+    // add person
     person.participant = gov;
     // create a new identity
     person.identities = [{
@@ -232,4 +232,29 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     }
     return existing;
   }
+
+  /**
+   * get causes, with complex query filter
+   */
+  @Invokable()
+  public async getComplexQuery(
+    @Param(yup.object())
+    complexQueryInput: any,
+  ): Promise<Person | Person[]> {
+    if (!complexQueryInput || !complexQueryInput.filter) {
+      throw new Error(c.EXCEPTION_ERROR_NO_COMPLEX_QUERY);
+    }
+    const complexQuery: any = {
+      selector: {
+        type: c.CONVECTOR_MODEL_PATH_PERSON,
+        // spread arbitrary query filter
+        ...complexQueryInput.filter
+      },
+      // not useful
+      // fields: (complexQueryInput.fields) ? complexQueryInput.fields : undefined,
+      sort: (complexQueryInput.sort) ? complexQueryInput.sort : undefined,
+    };
+    const resultSet: Person | Person[] = await Person.query(Person, complexQuery);
+    return resultSet;
+  }  
 }

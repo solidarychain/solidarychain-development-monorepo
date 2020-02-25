@@ -16,6 +16,7 @@
   - [Problem with `return super.canActivate(new ExecutionContextHost([req]))`](#problem-with-return-supercanactivatenew-executioncontexthostreq)
   - [@CurrentUser() decorator, to get @CurrentUser() in graphql endpoints like in personProfile](#currentuser-decorator-to-get-currentuser-in-graphql-endpoints-like-in-personprofile)
   - [GraphQL Playground: ERR_INSECURE_RESPONSE](#graphql-playground-errinsecureresponse)
+  - [GraphQL Playground: Server cannot be reached](#graphql-playground-server-cannot-be-reached)
   - [Getting headers in GraphQL](#getting-headers-in-graphql)
   - [Cookie Parser](#cookie-parser)
   - [Apollo-Link-Token-Refresh and Migrate `apollo-boost` to `apollo-client`](#apollo-link-token-refresh-and-migrate-apollo-boost-to-apollo-client)
@@ -24,6 +25,11 @@
     - [1. Add connection to GqlContext](#1-add-connection-to-gqlcontext)
     - [2. change AppModule with subscriptions and forRootAsync](#2-change-appmodule-with-subscriptions-and-forrootasync)
     - [3. Change GqlAuthGuard to return subscription connection.context.headers to passport-jwt service](#3-change-gqlauthguard-to-return-subscription-connectioncontextheaders-to-passport-jwt-service)
+  - [YUP Validation notes](#yup-validation-notes)
+  - [Currency codes iso4217](#currency-codes-iso4217)
+  - [Add new module to nestjs graphql](#add-new-module-to-nestjs-graphql)
+  - [Manage Chaincode to GraphQL Error messages](#manage-chaincode-to-graphql-error-messages)
+  - [TS5055: Cannot write file](#ts5055-cannot-write-file)
 
 ## Start
 
@@ -305,6 +311,30 @@ async personProfile(@CurrentUser() user: Person): Promise<Person> {
 
 using `https://localhost:3443/graphql` ERR_INSECURE_RESPONSE, fix using browser version and accept certificate
 
+## GraphQL Playground: Server cannot be reached
+
+and requests result with:
+
+```json
+{
+  "error": "Failed to fetch schema. Please check your connection"
+}
+```
+
+this is related with self signed certificate, to override this launch graphql playground with `--ignore-certificate-errors` flag ex `/opt/@AppImage/graphql-playground-electron-1.8.5-x86_64.AppImage --ignore-certificate-errors`
+
+to persiste flag in `.desktop` app 
+
+```shell
+$ nano ~/.local/share/applications/appimagekit-graphql-playground-electron.desktop
+
+[Desktop Entry]
+Name=GraphQL Playground
+Comment=GraphQL IDE for better development workflows (GraphQL Subscriptions, interactive docs & collaboration)
+Exec="/opt/@AppImage/graphql-playground-electron-1.8.5-x86_64.AppImage" %U --ignore-certificate-errors
+...
+```
+
 ## Getting headers in GraphQL
 
 fix "Cannot read property 'headers' of undefined" graphql request
@@ -500,3 +530,63 @@ export class GqlAuthGuard extends AuthGuard('jwt') {
 ```
 
 done
+
+## YUP Validation notes
+
+- [How Does yup.addMethod() Work? Creating Custom Validation Functions With Yup](https://medium.com/@arkadyt/how-does-yup-addmethod-work-creating-custom-validation-functions-with-yup-8fddb71a5470)
+
+## Currency codes iso4217
+
+- [Very simple lib to check if something is a iso 4217 currency code](https://github.com Boelensman1/validate-currency-code)
+
+## Add new module to nestjs graphql
+
+1. create dir `packages/server-graphql/src/cause`
+2. create`packages/server-graphql/src/cause/cause.module.ts`, `packages/server-graphql/src/cause.service.ts`, `packages/server-graphql/src/cause/cause.resolver.ts`
+3. create dirs `src/cause/dto` and `src/cause/models` and populate with files
+4. add module to `packages/server-graphql/src/app.module.ts`
+
+## Manage Chaincode to GraphQL Error messages
+
+- [Exception filters](https://docs.nestjs.com/exception-filters)
+
+ex `packages/server-graphql/src/person/person.service.ts`
+
+```typescript
+async create(data: NewPersonInput): Promise<Person> {
+  try {
+    ....
+  } catch (error) {
+    // extract error message
+    const errorMessage: string = (error.responses && error.responses[1].error.message) ? error.responses[1].error.message : error;
+    // override default 'throw errorMessage;' with a customized version
+    throw new HttpException({errorMessage, HttpStatus.CONFLICT}, HttpStatus.CONFLICT);
+  }
+}
+```
+
+we get customized error from chaincode
+
+```json
+{
+  "errors": [
+    {
+      "message": {
+        "status": 409,
+        "error": "There is a person registered with that username already (johndoe)"
+      },
+    ...
+```
+
+## TS5055: Cannot write file
+
+```shell
+@solidary-network/server-graphql: 20:16:08 - File change detected. Starting incremental compilation...
+@solidary-network/server-graphql: error TS5055: Cannot write file '/media/mario/Storage/Development/@Solidary.Network/network/packages/server-graphql/dist_/common/dto/get-by-complex-query.input.d.ts' because it would overwrite input file.
+```
+
+find by `'dist/` some file is import a `dist` file ex `packages/server-graphql/src/person/person.service.ts`
+
+```typescript
+import GetByComplexQueryInput from 'dist_/common/dto/get-by-complex-query.input';
+```

@@ -20,12 +20,13 @@ const YUP_MESSAGE_PASSWORD_TO_SHORT: string = 'Password is too short - should be
 const YUP_MESSAGE_INVALID_EMAIL: string = 'Should be a valid email.';
 const YUP_MESSAGE_INVALID_UUID_V4: string = 'Should be a valid uuid v4.';
 const YUP_MESSAGE_INVALID_PASSWORD: string = 'Password can only contain Latin letters and numbers.';
-// regex
+// regex expressions
 const REGEX_EMAIL: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
 const REGEX_UUID_V4: RegExp = /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/;
 const REGEX_PASSWORD: RegExp = /[1-9a-zA-Z]/;
 const REGEX_LOCATION: RegExp = /^([-+]?)([\d]{1,2})(((\.)(\d+)(,)))(\s*)(([-+]?)([\d]{1,3})((\.)(\d+))?)$/;
-
+// exception error messages
+const EXCEPTION_ERROR_NO_COMPLEX_QUERY: string = 'You must supply a valid filter in complex query.';
 
 export const appConstants = {
 	// convector models
@@ -50,4 +51,6 @@ export const appConstants = {
 	REGEX_UUID_V4,
 	REGEX_PASSWORD,
 	REGEX_LOCATION, 
+	// exception error messages
+	EXCEPTION_ERROR_NO_COMPLEX_QUERY,
 };

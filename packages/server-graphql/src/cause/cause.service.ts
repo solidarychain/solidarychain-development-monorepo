@@ -6,6 +6,7 @@ import { v4 as uuid } from 'uuid';
 import { CauseControllerBackEnd } from '../convector';
 import NewCauseInput from './dto/new-cause.input';
 import Cause from './models/cause.model';
+import GetByComplexQueryInput from 'src/common/dto/get-by-complex-query.input';
 
 @Injectable()
 export class CauseService {
@@ -42,9 +43,20 @@ export class CauseService {
     }
   }
 
-  async findByDateRange(date: number, causeArgs: PaginationArgs): Promise<Cause | Cause[]> {
+  async findOngoing(date: number, causeArgs: PaginationArgs): Promise<Cause | Cause[]> {
     // get fabric model with _props
-    const fabricModel: Array<FlatConvectorModel<CauseConvectorModel>> = await CauseControllerBackEnd.getByDateRange(date) as CauseConvectorModel[];
+    const fabricModel: Array<FlatConvectorModel<CauseConvectorModel>> = await CauseControllerBackEnd.getOngoing(date) as CauseConvectorModel[];
+    // convert fabric model to convector model (remove _props)
+    const convectorModel: CauseConvectorModel[] = fabricModel.map((e: CauseConvectorModel) => new CauseConvectorModel(e));
+    // call common find method
+    const model: Cause[] = await this.findBy(convectorModel, causeArgs) as Cause[];
+    // return model
+    return model;
+  }
+
+  async findComplexQuery(getByComplexQueryInput: GetByComplexQueryInput, causeArgs: PaginationArgs): Promise<Cause | Cause[]> {
+    // get fabric model with _props
+    const fabricModel: Array<FlatConvectorModel<CauseConvectorModel>> = await CauseControllerBackEnd.getComplexQuery(getByComplexQueryInput) as CauseConvectorModel[];
     // convert fabric model to convector model (remove _props)
     const convectorModel: CauseConvectorModel[] = fabricModel.map((e: CauseConvectorModel) => new CauseConvectorModel(e));
     // call common find method

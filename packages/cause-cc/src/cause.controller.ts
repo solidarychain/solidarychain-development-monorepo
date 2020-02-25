@@ -99,7 +99,7 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
   }
 
   /**
-   * get causes, with complex query filter
+   * get causes with complex query filter
    */
   @Invokable()
   public async getComplexQuery(
@@ -107,7 +107,7 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
     complexQueryInput: any,
   ): Promise<Cause | Cause[]> {
     if (!complexQueryInput || !complexQueryInput.filter) {
-      throw new Error(`There is no valid complex query input filter`);
+      throw new Error(c.EXCEPTION_ERROR_NO_COMPLEX_QUERY);
     }
     const complexQuery: any = {
       selector: {

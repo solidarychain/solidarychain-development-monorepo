@@ -78,24 +78,49 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
   }
 
   /**
-   * get cause inside dateRange startDate < date && endDate > date
+   * get ongoing causes, date between startDate < date && endDate > date
    */
   @Invokable()
-  public async getByDateRange(
+  public async getOngoing(
     @Param(yup.number())
     date: number,
   ): Promise<Cause | Cause[]> {
     return await Cause.query(Cause, {
-      // require to parseInt string parameter
       selector: {
         type: c.CONVECTOR_MODEL_PATH_CAUSE,
-        startDate:{
+        startDate: {
           $lte: date
         },
-        endDate:{
+        endDate: {
           $gte: date
         }
       }
     });
   }
+
+  /**
+   * get causes with complex query filter
+   */
+  @Invokable()
+  public async getComplexQuery(
+    @Param(yup.object())
+    complexQueryInput: any,
+  ): Promise<Cause | Cause[]> {
+    if (!complexQueryInput || !complexQueryInput.filter) {
+      throw new Error(c.EXCEPTION_ERROR_NO_COMPLEX_QUERY);
+    }
+    const complexQuery: any = {
+      selector: {
+        type: c.CONVECTOR_MODEL_PATH_CAUSE,
+        // spread arbitrary query filter
+        ...complexQueryInput.filter
+      },
+      // not useful
+      // fields: (complexQueryInput.fields) ? complexQueryInput.fields : undefined,
+      sort: (complexQueryInput.sort) ? complexQueryInput.sort : undefined,
+    };
+    const resultSet: Cause | Cause[] = await Cause.query(Cause, complexQuery);
+    return resultSet;
+  }
+
 }

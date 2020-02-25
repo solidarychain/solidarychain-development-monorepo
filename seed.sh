@@ -112,9 +112,18 @@ PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"startDate\":\"${START_DATE}\",
 npx hurl invoke ${CHAINCODE_NAME} cause_create "${PAYLOAD}" -u admin
 npx hurl invoke ${CHAINCODE_NAME} cause_get ${ID}
 
+# create cause with all data (filter with date=1582414657)
+ID=acef70e5-cd25-4533-8392-9fa57e43cf12
+NAME=Cause002
+TAGS="[\"black\", \"white\"]"
+PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"startDate\":\"${START_DATE}\",\"endDate\":\"${END_DATE}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"metaData\":{\"key\":\"value\"},\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"}}"
+# echo $PAYLOAD  | jq
+npx hurl invoke ${CHAINCODE_NAME} cause_create "${PAYLOAD}" -u admin
+npx hurl invoke ${CHAINCODE_NAME} cause_get ${ID}
+
 # create cause with minimal required data
 ID=acef70e5-cd25-4533-8392-9fa57e43cf69
-NAME=Cause002
+NAME=Cause003
 INPUT_TYPE=network.solidary.convector.participant
 INPUT_ID=gov
 PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"}}"
@@ -173,3 +182,15 @@ PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourc
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u admin
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID}
+
+# complex filters
+
+# note for escaped $lte, work with sort:[{name:"asc"}] and sort:["name"]
+# persisted "createdDate": "1582410746061", "name":"Big Government"
+npx hurl invoke ${CHAINCODE_NAME} participant_getComplexQuery "{\"filter\":{\"name\":\"Big Government\",\"createdDate\":{\"\$lte\":1582410746061,\"\$gte\":1582410746061}},\"sort\":[{\"name\":\"asc\"}]}"
+# persisted "createdDate": "1582410790588", "username": "janedoe"
+npx hurl invoke ${CHAINCODE_NAME} person_getComplexQuery "{\"filter\":{\"username\":\"janedoe\",\"createdDate\":{\"\$lte\":1582410790588,\"\$gte\":1582410790588}},\"sort\":[{\"username\":\"asc\"}]}"
+# persisted "startDate": "1582414657", "endDate": "1582414657", "name":"Cause002b"
+npx hurl invoke ${CHAINCODE_NAME} cause_getComplexQuery "{\"filter\":{\"name\":\"Cause002b\",\"startDate\":{\"\$lte\":1582414657},\"endDate\":{\"\$gte\":1582414657}},\"sort\":[{\"name\":\"asc\"}]}"
+# persisted "createdDate": "1582410817579", "currency": "EUR"
+npx hurl invoke ${CHAINCODE_NAME} transaction_getComplexQuery "{\"filter\":{\"currency\":\"EUR\",\"createdDate\":{\"\$lte\":1582410817579,\"\$gte\":1582410817579}},\"sort\":[{\"quantity\":\"asc\"}]}"

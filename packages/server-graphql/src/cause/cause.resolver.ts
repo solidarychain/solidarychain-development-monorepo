@@ -6,6 +6,7 @@ import Cause from './models/cause.model';
 import { CauseService } from './cause.service';
 import { GqlAuthGuard } from '../auth/guards';
 import { PaginationArgs } from '@solidary-network/common-cc';
+import GetByComplexQueryInput from '../common/dto/get-by-complex-query.input';
 
 const pubSub = new PubSub();
 
@@ -22,11 +23,19 @@ export class CauseResolver {
   }
 
   @Query(returns => [Cause])
-  causeByDateRange(
+  causeOngoing(
     @Args('date') date: number,
     @Args() causesArgs: PaginationArgs,
   ): Promise<Cause | Cause[]> {
-    return this.causeService.findByDateRange(date, causesArgs);
+    return this.causeService.findOngoing(date, causesArgs);
+  }
+
+  @Query(returns => [Cause])
+  causeComplexQuery(
+    @Args('getByComplexQueryInput') getByComplexQueryInput: GetByComplexQueryInput,
+    @Args() causesArgs: PaginationArgs,
+  ): Promise<Cause | Cause[]> {
+    return this.causeService.findComplexQuery(getByComplexQueryInput, causesArgs);
   }
 
   @Query(returns => Cause)

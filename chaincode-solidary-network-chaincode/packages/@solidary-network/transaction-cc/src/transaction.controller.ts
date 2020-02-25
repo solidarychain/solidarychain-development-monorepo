@@ -50,4 +50,29 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     return (await Transaction.getAll(c.CONVECTOR_MODEL_PATH_TRANSACTION)).map(transaction => transaction.toJSON() as any);
   }
 
+  /**
+   * get participants with complex query filter
+   */
+  @Invokable()
+  public async getComplexQuery(
+    @Param(yup.object())
+    complexQueryInput: any,
+  ): Promise<Transaction | Transaction[]> {
+    if (!complexQueryInput || !complexQueryInput.filter) {
+      throw new Error(c.EXCEPTION_ERROR_NO_COMPLEX_QUERY);
+    }
+    const complexQuery: any = {
+      selector: {
+        type: c.CONVECTOR_MODEL_PATH_TRANSACTION,
+        // spread arbitrary query filter
+        ...complexQueryInput.filter
+      },
+      // not useful
+      // fields: (complexQueryInput.fields) ? complexQueryInput.fields : undefined,
+      sort: (complexQueryInput.sort) ? complexQueryInput.sort : undefined,
+    };
+    const resultSet: Transaction | Transaction[] = await Transaction.query(Transaction, complexQuery);
+    return resultSet;
+  }
+
 }
