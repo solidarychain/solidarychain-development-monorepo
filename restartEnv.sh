@@ -1,5 +1,10 @@
 #!/bin/bash
 
+CHAINCODE_NAME=solidary-network-chaincode
+
+# in case of problems invoke something mv hyperledger-fabric-network to /tmp
+# mv ~/hyperledger-fabric-network /tmp
+
 # helper script to restart hyperledger network
 
 clear
@@ -8,7 +13,8 @@ clear
 npm run env:restart
 
 # deploy smart contract/chaincode
-npm run cc:start -- solidary-network-chaincode
+npm run cc:start -- ${CHAINCODE_NAME}
+# npm run cc:start:debug -- ${CHAINCODE_NAME}
 
 # sleep 20 seconds
 sleep 20
@@ -27,7 +33,7 @@ npm run seed
 # npx lerna run build --scope @solidary-network/transaction-cc
 
 # invoke some stuff
-npx hurl invoke solidary-network-chaincode person_get 4ea88521-031b-4279-9165-9c10e1839001
+npx hurl invoke ${CHAINCODE_NAME} person_get 4ea88521-031b-4279-9165-9c10e1839001
 
 # start server/frontend
 # echo "start server-rest with: 'npx lerna run start:dev --scope @solidary-network/server-rest --stream'"

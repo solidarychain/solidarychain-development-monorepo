@@ -1,5 +1,14 @@
 CHAINCODE_NAME=solidary-network-chaincode
 
+# commands
+# npx hurl invoke ${CHAINCODE_NAME} participant_getAll
+# npx hurl invoke ${CHAINCODE_NAME} person_getAll
+# npx hurl invoke ${CHAINCODE_NAME} person_get 4ea88521-031b-4279-9165-9c10e1839001
+# npx hurl invoke ${CHAINCODE_NAME} person_getByUsername johndoe
+# npx hurl invoke ${CHAINCODE_NAME} cause_getAll
+# npx hurl invoke ${CHAINCODE_NAME} asset_getAll
+# npx hurl invoke ${CHAINCODE_NAME} transaction_getAll
+
 echo "Creating participant: Big Government"
 
 # gov

@@ -73,6 +73,11 @@
   - [Add new transaction-cc module to chaincode](#add-new-transaction-cc-module-to-chaincode)
     - [Add new package to other files](#add-new-package-to-other-files)
   - [GraphQL ComplexQuery problem: How to send arbitrayGraphQL and ComplexQuery and the big sort problem](#graphql-complexquery-problem-how-to-send-arbitraygraphql-and-complexquery-and-the-big-sort-problem)
+  - [Participant changeIdentity / require "chaincodeAdmin" with `attrs."admin": "true"`](#participant-changeidentity--require-%22chaincodeadmin%22-with-attrs%22admin%22-%22true%22)
+  - [Debug restartEnv.sh : chaincode works in debug bug not with restartEnv.sh](#debug-restartenvsh--chaincode-works-in-debug-bug-not-with-restartenvsh)
+    - [Hurley](#hurley)
+- [upgrade smart contract](#upgrade-smart-contract)
+- [require to build modified modules common, person, participant etc](#require-to-build-modified-modules-common-person-participant-etc)
 
 This is a simple NestJs starter, based on above links, I only extended it with a few things like **swagger api**, **https**, **jwt**, and other stuff, thanks m8s
 
@@ -113,9 +118,9 @@ $ npm run cc:start -- ${CHAINCODE_NAME}
 
 # every change on @solidary-network/common-cc, must be builded to be used in dependent packages
 $ npx lerna run build --scope @solidary-network/common-cc --stream
-# build person-cc or participant-cc (before upgrade person chaincode, seems strange we have to that, because we see lerna building all packages in mono repo, but it is a fact that if we not do that it deploys the cc with same code...., causing some problems to get it)
-$ npx lerna run build --scope @solidary-network/person-cc --stream
+# build person-cc or participant-cc (before upgrade person chaincode, seems strange we have to do that, because we see lerna building all packages in mono repo, but it is a fact that if we not do that it deploys the cc with same code...., causing some problems to get it)
 $ npx lerna run build --scope @solidary-network/participant-cc --stream
+$ npx lerna run build --scope @solidary-network/person-cc --stream
 $ npx lerna run build --scope @solidary-network/cause-cc --stream
 $ npx lerna run build --scope @solidary-network/transaction-cc --stream
 
@@ -135,7 +140,8 @@ dev-peer0.org1.hurley.lab-${CHAINCODE_NAME}-${VERSION}
 dev-peer0.org2.hurley.lab-${CHAINCODE_NAME}-${VERSION}
 
 # debug chaincode container
-$ docker container logs -f dev-peer0.org2.hurley.lab-solidary-network-chaincode-${VERSION}
+$ docker container logs -f dev-peer0.org1.hurley.lab-${CHAINCODE_NAME}-${VERSION}
+$ docker container logs -f dev-peer0.org2.hurley.lab-${CHAINCODE_NAME}-${VERSION}
 
 # invoke some stuff (after deploy or upgrade chaincode)
 $ npx hurl invoke ${CHAINCODE_NAME} participant_get gov
@@ -143,7 +149,7 @@ $ npx hurl invoke ${CHAINCODE_NAME} person_get 1-100-100
 $ npx hurl invoke ${CHAINCODE_NAME} person_getAll
 
 # package chain code: force build chaincode-${CHAINCODE_NAME} folders, after some strange errors like
-# { Error: transaction returned with failure: {"name":"Error","status":500}, below line seems fixed that problem
+# { Error: transaction returned with failure: {"name":"Error","status":500}, below line seems fixed that problem, more notes below, just search for `{"name":"Error","status":500}`
 $ npm run cc:package -- ${CHAINCODE_NAME} org1
 
 # after restart hyperledger always seed ledger
@@ -2481,44 +2487,6 @@ export class AuthService {
 
 > now we can start testing the new network authentication
 
-WIP
-
-```shell
-$ npx hurl invoke ${CHAINCODE_NAME} participant_changeIdentity great newIdentity -u admin
-{ Error: transaction returned with failure: {"name":"Error","status":500,"message":"Unauthorized. Requester identity is not an admin"}
-
-@koakh  My best guess is admin doesn't have an attribute "admin" as such (I think you are following pattern identity demo). So, run registeridentity.js node file to register a new user "chaincodeAdmin" which has attribute "admin"
-
-https://github.com/worldsibu/convector-identity-patterns
-https://github.com/worldsibu/convector-identity-patterns/blob/master/packages/administrative/registerIdentitiesManager.js
-
-
-
-
-
-
-
-
-
-npx hurl invoke ${CHAINCODE_NAME} person_create "{ \"id\": \"1-100-103\", \"firstname\": \"Pete\", \"lastname\": \"Doe\", \"username\": \"pete\", \"password\": \"12345678\", \"email\": \"pete.doe@example.com\"}" -u admin
-
-npx hurl invoke ${CHAINCODE_NAME} person_create "{\"id\": \"1-100-103\",\"firstname\":\"Pete\",\"lastname\":\"Doe\",\"username\": \"pete\",\"password\": \"12345678\",\"email\": \"pete.doe@example.com\",\"roles\": [\"USER\",\"ADMIN\"]}" -u admin
-```
-
-```json
-{
-  "id": "1-100-103",
-  "firstname": "Pete",
-  "lastname": "Doe",
-  "username": "pete",
-  "password": "12345678",
-  "email": "pete.doe@example.com",
-  "roles": [
-    "USER","ADMIN"
-  ]
-}
-```
-
 ## Clean up and solve problem of `@babel/.highlight.DELETE@latest` when use lerna bootstrap
 
 ```
@@ -2590,8 +2558,9 @@ undefined
 enter container to check if chaincode is deployed
 
 ```shell
+$ CHAINCODE_NAME=solidary-network-chaincode
 $ VERSION=1.1
-$ CONTAINER=dev-peer0.org1.hurley.lab-solidary-network-chaincode-${VERSION}
+$ CONTAINER=dev-peer0.org1.hurley.lab-${CHAINCODE_NAME}-${VERSION}
 # enter in container
 $ docker exec -it ${CONTAINER} sh
 # location of chaincode inside container ${CONTAINER}
@@ -2822,3 +2791,335 @@ $ curl -X POST "${COUCH_URL_ORG1}/${DB_PATH}/_index" \
   "type": "json"
 }'
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Participant changeIdentity / require "chaincodeAdmin" with `attrs."admin": "true"`
+
+how to prevent the below error
+
+```shell
+$ npx hurl invoke ${CHAINCODE_NAME} participant_changeIdentity great newIdentity -u admin
+{ Error: transaction returned with failure: {"name":"Error","status":500,"message":"Unauthorized. Requester identity is not an admin"}
+```
+
+to invoke this **specific chaincode endpoint** we require a special user to interact with chain,
+thas as the attribute property `admin`, for this we use the node script from [Examples on how to handle chain identities on business applications](https://raw.githubusercontent.com/worldsibu/convector-identity-patterns/master/packages/administrative/registerIdentitiesManager.js)
+
+this script is **very very useful** to create the `chaincodeAdmin` that has the  `attrs."admin": "true"` property used in `changeIdentity` in `let isAdmin = this.fullIdentity.getAttributeValue('admin');`
+
+```shell
+# first the env variables
+$ CHAINCODE_NAME=solidary-network-chaincode
+
+# register a special user with an attribute Admin
+$ node ./packages/administrative/registerIdentitiesManager.js
+Store path:/home/mario/hyperledger-fabric-network/.hfc-org1
+Successfully loaded admin from persistence
+Successfully registered chaincodeAdmin - secret:huczSRRXwfPS
+Successfully enrolled member user "chaincodeAdmin"
+chaincodeAdmin was successfully registered and enrolled and is ready to interact with the fabric network
+
+# generate x509 identity (above block from readme)
+# Let's go back to the participant chaincode and set the x509 identity through `changeIdentity` to the valid x509 identity
+# In your real application this can be automated
+$ node -e "console.log(JSON.parse(require('fs').readFileSync(require('path').resolve(require('os').homedir(), 'hyperledger-fabric-network/.hfc-org1/user1'), 'utf8')).enrollment.identity.certificate)" | openssl x509 -fingerprint -noout | cut -d '=' -f2 ;
+
+$ ACTUAL_IDENTITY="8F:9E:4F:33:01:8A:8C:9B:51:DA:98:2A:E2:17:A2:BD:F7:CF:31:72"
+
+# The result will look like: 6C:B0:F8:D8:1B:08:3F:BA:18:F7:8B:6E:AB:77:53:97:C1:2F:71:14
+# Copy the value and paste it where it says "actualIdentity"
+$ npx hurl invoke ${CHAINCODE_NAME} participant_changeIdentity johndoe ${ACTUAL_IDENTITY} -u chaincodeAdmin
+
+[hurley] - johndoe
+[hurley] - 8F:9E:4F:33:01:8A:8C:9B:51:DA:98:2A:E2:17:A2:BD:F7:CF:31:72
+[hurley] - Sending transaction as chaincodeAdmin in org org1...
+[hurley] - No peer ran tx successfully!
+undefined
+{ Error: make sure the chaincode identities has been successfully instantiated and try again: chaincode identities not found
+```
+
+https://www.samltool.com/fingerprint.php
+
+
+@Required()
+@Validate(yup.array(x509Identities.schema()))
+public identities: Array<FlatConvectorModel<x509Identities>>;
+
+JSON.stringify(this.fullIdentity.attrs, null, 2)
+"{
+  "admin": "true",
+  "hf.Affiliation": "",
+  "hf.EnrollmentID": "chaincodeAdmin",
+  "hf.Type": "client"
+}"
+
+## Debug restartEnv.sh : chaincode works in debug bug not with restartEnv.sh
+
+somehow restartEnv.sh stop working when try invoke something with error
+
+```shell
+$ npx hurl invoke ${CHAINCODE_NAME} participant_register gov "Big Government" -u admin
+[hurley] - gov
+[hurley] - Big Government
+[hurley] - Sending transaction as admin in org org1...
+[hurley] - No peer ran tx successfully!
+undefined
+{ Error: transaction returned with failure: {"name":"Error","status":500}
+    at self._endorserClient.processProposal (/media/mario/Storage/Development/@Solidary.Network/network/node_modules/fabric-client/lib/Peer.js:140:36)
+    at Object.onReceiveStatus (/media/mario/Storage/Development/@Solidary.Network/network/node_modules/fabric-client/node_modules/grpc/src/client_interceptors.js:1207:9)
+    at InterceptingListener._callNext (/media/mario/Storage/Development/@Solidary.Network/network/node_modules/fabric-client/node_modules/grpc/src/client_interceptors.js:568:42)
+    at InterceptingListener.onReceiveStatus (/media/mario/Storage/Development/@Solidary.Network/network/node_modules/fabric-client/node_modules/grpc/src/client_interceptors.js:618:8)
+    at callback (/media/mario/Storage/Development/@Solidary.Network/network/node_modules/fabric-client/node_modules/grpc/src/client_interceptors.js:845:24)
+  status: 500,
+  payload: <Buffer >,
+  peer: 
+   { url: 'grpc://localhost:7051',
+     name: 'peer0.org1.hurley.lab',
+     options: 
+      { 'grpc.max_receive_message_length': -1,
+        'grpc.max_send_message_length': -1,
+        'grpc.keepalive_time_ms': 600000,
+        'grpc.http2.min_time_between_pings_ms': 120000,
+        'grpc.keepalive_timeout_ms': 20000,
+        'grpc.http2.max_pings_without_data': 0,
+        'grpc.keepalive_permit_without_calls': 1,
+        name: 'peer0.org1.hurley.lab',
+        'grpc.ssl_target_name_override': 'peer0.org1.hurley.lab',
+        'grpc.default_authority': 'peer0.org1.hurley.lab' } },
+  isProposalResponse: true }
+```
+
+the solution is
+
+```shell
+$ rm ~/hyperledger-fabric-network -r
+# create a new network in ~/hyperledger-fabric-network
+$ npx hurl new
+# restart and it work, and for surprise much faster than ever
+# ./restartEnv.sh
+```
+
+add to `restartEnv.sh`
+
+```shell
+#!/bin/bash
+
+# in case of problems invoke something remove hyperledger-fabric-network or mv to /tpm
+# rm ~/hyperledger-fabric-network -r
+```
+
+@solidary-network/server-graphql: 2020-02-27T22:01:27.151Z error [shim:_]                                           Unhandled Rejection reason Error: Failed to read or parse the network profile at '/home/mario/hyperledger-fabric-network/network-profiles/org1.network-profile.yaml', Error: ENOENT: no such file or directory, open '/home/mario/hyperledger-fabric-network/network-profiles/org1.network-profile.yaml' promise Promise {
+  $ npx hurl invoke ${CHAINCODE_NAME} participant_register gov "Big Government" -u admin
+[hurley] - gov
+[hurley] - Big Government
+[hurley] - Network configuration does not exist. Be sure to first create a new network with `hurley new`
+
+
+### Hurley
+
+```shell
+# install
+$ npm i -g @worldsibu/hurley
+# upgrade
+$ npm upgrade -g @worldsibu/hurley
+# get the version of your Hurley installation.
+$ hurl --version
+
+# Basic network management
+
+# Start a new blockchain network with 2 organizations, 2 users per organization, and 1 channel, localted at ~/hyperledger-fabric-network
+$ npx hurl new
+...
+[hurley] - You can find the network topology (ports, names) here: /home/mario/hyperledger-fabric-network/docker-compose.yaml
+# deploy chaincode
+$ npm run cc:start -- solidary-network-chaincode
+...
+Instantiated Chaincode at org1
+
+# re-install all packages dependecies in case of "cannot find module 'typescript/bin/tsc'"
+$ npx lerna bootstrap
+
+$ npm run pkg:graphql:debug
+nest.js : TypeError: httpAdapter.getType is not a function
+npx lerna bootstrap --scope @solidary-network/server-graphql
+```
+
+>  [Update your @nestjs/platform-express to the latest version](https://github.com/nestjs/swagger/issues/434)
+
+```json
+// change
+"@nest-middlewares/cookie-parser": "^6.0.0",
+"@nestjs/common": "^6.5.3",
+"@nestjs/core": "6.5.3",
+"@nestjs/graphql": "^6.5.1",
+"@nestjs/jwt": "^6.1.1",
+"@nestjs/passport": "^6.1.0",
+"@nestjs/platform-express": "6.5.3",
+// to
+"@nest-middlewares/cookie-parser": "^6.0.0",
+"@nestjs/common": "6.11.8",
+"@nestjs/core": "6.11.8",
+"@nestjs/graphql": "6.6.1",
+"@nestjs/jwt": "6.1.2",
+"@nestjs/passport": "6.2.0",
+"@nestjs/platform-express": "6.11.8",
+```
+
+WIP
+
+```shell
+# now run graphql that uses missing file /home/mario/hyperledger-fabric-network/docker-compose.yaml
+$ npm run pkg:graphql:debug
+
+# Clean every blockchain network deployment component
+hurl clean
+```
+
+
+
+to work we must have all pears working?????????????
+
+dev-peer0.org2.hurley.lab-solidary-network-chaincode-1.0
+dev-peer0.org1.hurley.lab-solidary-network-chaincode-1.0
+
+
+lerna info Executing command in 7 packages: "npm run build"
+lerna info run Ran npm script 'build' in '@solidary-network/common-cc' in 4.1s:
+
+> @solidary-network/common-cc@0.1.0 build /media/mario/Storage/Development/@Solidary.Network/network/packages/common-cc
+> npm run clean && tsc
+
+
+> @solidary-network/common-cc@0.1.0 clean /media/mario/Storage/Development/@Solidary.Network/network/packages/common-cc
+> rm -rf ./dist
+
+lerna ERR! npm run build exited 2 in '@solidary-network/participant-cc'
+lerna ERR! npm run build stdout:
+
+> @solidary-network/participant-cc@0.1.0 build /media/mario/Storage/Development/@Solidary.Network/network/packages/participant-cc
+> npm run clean && tsc
+
+
+> @solidary-network/participant-cc@0.1.0 clean /media/mario/Storage/Development/@Solidary.Network/network/packages/participant-cc
+> rimraf dist client
+
+
+
+
+
+react router
+Property 'message' does not exist on type '{}'.  TS2339
+
+
+
+fuck changed to `location.state.message` to `(location.state as any).message`
+{(location.state && (location.state as any).message) && <ShowMessage type={MessageType.SUCCESS} message={(location.state as any).message} />}
+
+
+
+
+
+
+
+2020-02-29 19:10:47.956 WET [chaincodeCmd] install -> INFO 003 Installed remotely response:<status:200 payload:"OK" > 
+Installed Chaincode solidary-network-chaincode version 1.0 at org1
+Installing Chaincode solidary-network-chaincode version 1.0 at org2
+2020-02-29 19:10:48.008 WET [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+2020-02-29 19:10:48.008 WET [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+2020-02-29 19:10:48.132 WET [chaincodeCmd] install -> INFO 003 Installed remotely response:<status:200 payload:"OK" > 
+Installed Chaincode solidary-network-chaincode version 1.0 at org2
+Instantiating Chaincode at org1 for channel ch1
+It may take a few minutes depending on the chaincode dependencies
+2020-02-29 19:10:58.193 WET [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+2020-02-29 19:10:58.193 WET [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+Instantiated Chaincode at org1
+
+> @solidary-network/lerna-monorepo@0.1.0 seed /media/mario/Storage/Development/@Solidary.Network/network
+> ./seed.sh
+
+Creating participant: Big Government
+[hurley] - gov
+[hurley] - Big Government
+[hurley] - Sending transaction as admin in org org1...
+[hurley] - No peer ran tx successfully!
+undefined
+{ Error: transaction returned with failure: {"name":"Error","status":500}
+    at self._endorserClient.processProposal (/media/mario/Storage/Development/@Solidary.Network/network/node_modules/fabric-client/lib/Peer.js:140:36)
+    at Object.onReceiveStatus (/media/mario/Storage/Development/@Solidary.Network/network/node_modules/fabric-client/node_modules/grpc/src/client_interceptors.js:1207:9)
+    at InterceptingListener._callNext (/media/mario/Storage/Development/@Solidary.Network/network/node_modules/fabric-client/node_modules/grpc/src/client_interceptors.js:568:42)
+    at InterceptingListener.onReceiveStatus (/media/mario/Storage/Development/@Solidary.Network/network/node_modules/fabric-client/node_modules/grpc/src/client_interceptors.js:618:8)
+    at callback (/media/mario/Storage/Development/@Solidary.Network/network/node_modules/fabric-client/node_modules/grpc/src/client_interceptors.js:845:24)
+  status: 500,
+  payload: <Buffer >,
+  peer: 
+   { url: 'grpc://localhost:7051',
+     name: 'peer0.org1.hurley.lab',
+     options: 
+      { 'grpc.max_receive_message_length': -1,
+        'grpc.max_send_message_length': -1,
+        'grpc.keepalive_time_ms': 600000,
+        'grpc.http2.min_time_between_pings_ms': 120000,
+        'grpc.keepalive_timeout_ms': 20000,
+        'grpc.http2.max_pings_without_data': 0,
+        'grpc.keepalive_permit_without_calls': 1,
+        name: 'peer0.org1.hurley.lab',
+        'grpc.ssl_target_name_override': 'peer0.org1.hurley.lab',
+        'grpc.default_authority': 'peer0.org1.hurley.lab' } },
+  isProposalResponse: true }
+
+
+this time what I do to solve the fucking problem is
+restart network
+and use
+npm run cc:start:debug -- ${CHAINCODE_NAME} 1.1
+and it starts to work
+
+but upgrade will not :(
+
+# upgrade smart contract
+$ VERSION=1.1
+# require to build modified modules common, person, participant etc
+$ npm run cc:upgrade -- ${CHAINCODE_NAME} ${VERSION}
+
+
+
+{ Error: transaction returned with failure: {"name":"Error","status":500}
+    at self._endorserClient.processProposal (/media/mario/Storage/Development/@Solidary.Network/network/node_modules/fabric-client/lib/Peer.js:140:36)
+    at Object.onReceiveStatus (/media/mario/Storage/Development/@Solidary.Network/network/node_modules/fabric-client/node_modules/grpc/src/client_interceptors.js:1207:9)
+    at InterceptingListener._callNext (/media/mario/Storage/Development/@Solidary.Network/network/node_modules/fabric-client/node_modules/grpc/src/client_interceptors.js:568:42)
+    at InterceptingListener.onReceiveStatus (/media/mario/Storage/Development/@Solidary.Network/network/node_modules/fabric-client/node_modules/grpc/src/client_interceptors.js:618:8)
+    at callback (/media/mario/Storage/Development/@Solidary.Network/network/node_modules/fabric-client/node_modules/grpc/src/client_interceptors.js:845:24)
+
+$ sudo mv node_modules/fabric-* /tmp/
+$ npx hurl invoke ${CHAINCODE_NAME} participant_get gov
+Cannot find module 'fabric-client'
+$ npx lerna bootstrap
+
+
+
+
+
+
+
+
+mario@KoakhLaptop:~/Development/@Solidary.Network/network$ CHAINCODE_NAME=solidary-network-chaincode
+mario@KoakhLaptop:~/Development/@Solidary.Network/network$ npx hurl invoke ${CHAINCODE_NAME} participant_register gov "Big Government" -u admin
+
+Failed to load gRPC binary module because it was not installed for the current system
+Expected directory: node-v67-linux-x64-glibc
+Found: [node-v57-linux-x64-glibc]
+This problem can often be fixed by running "npm rebuild" on the current system
+Original error: Cannot find module '/media/mario/Storage/Development/@Solidary.Network/network/node_modules/fabric-client/node_modules/grpc/src/node/extension_binary/node-v67-linux-x64-glibc/grpc_node.node'
+

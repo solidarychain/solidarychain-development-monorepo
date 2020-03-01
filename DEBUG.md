@@ -22,7 +22,7 @@ $ npm run env:restart
 ```shell
 # start define CHAINCODE_NAME
 $ CHAINCODE_NAME=solidary-network-chaincode
-# launch chaincode debug, NOTE this command must be run inside Vscode
+# launch chaincode debug, NOTE this command must be run inside Vscode to attach debugger (side note it will build all packages)
 $ npm run cc:start:debug -- ${CHAINCODE_NAME}
 ```
 
