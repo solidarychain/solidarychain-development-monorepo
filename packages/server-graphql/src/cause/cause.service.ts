@@ -19,6 +19,7 @@ export class CauseService {
         // convert Date to epoch unix time to be stored in convector cause model
         startDate: ((data.startDate as unknown) as number),
         endDate: ((data.endDate as unknown) as number),
+        // TODO: leave it for chaincode
         createdDate: ((new Date().getTime()) as number),
       });
 

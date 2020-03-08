@@ -19,6 +19,7 @@
     "@nestjs/jwt": "6.1.2",
     "@nestjs/passport": "6.2.0",
     "@nestjs/platform-express": "6.11.8",
+    "@solidary-network/asset-cc": "^0.1.0",
     "@solidary-network/cause-cc": "^0.1.0",
     "@solidary-network/common-cc": "^0.1.0",
     "@solidary-network/participant-cc": "^0.1.0",

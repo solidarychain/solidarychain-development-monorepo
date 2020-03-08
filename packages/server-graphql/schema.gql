@@ -16,6 +16,18 @@ input AddPersonAttributeInput {
   certifierID: String
 }
 
+type Asset {
+  id: ID!
+  name: String!
+  location: String
+  tags: [String!]
+  metaData: JSONObject
+  owner: EntityResult!
+  participant: Participant!
+  identities: [x509Identities!]!
+  createdDate: Float!
+}
+
 type Attribute {
   id: ID!
   content: JSONObject
@@ -83,6 +95,16 @@ type Mutation {
   personNew(newPersonData: NewPersonInput!): Person!
   personAddAttribute(addPersonAttributeData: AddPersonAttributeInput!, personId: String!): Person!
   transactionNew(newTransactionData: NewTransactionInput!): Transaction!
+  assetNew(newAssetData: NewAssetInput!): Asset!
+}
+
+input NewAssetInput {
+  id: String
+  name: String!
+  location: String
+  tags: [String!]
+  metaData: JSONObject
+  owner: JSONObject!
 }
 
 input NewCauseInput {
@@ -232,6 +254,9 @@ type Query {
   transactions(skip: Int = 0, take: Int = 25): [Transaction!]!
   transactionComplexQuery(skip: Int = 0, take: Int = 25, getByComplexQueryInput: GetByComplexQueryInput!): [Transaction!]!
   transactionById(id: String!): Transaction!
+  assets(skip: Int = 0, take: Int = 25): [Asset!]!
+  assetComplexQuery(skip: Int = 0, take: Int = 25, getByComplexQueryInput: GetByComplexQueryInput!): [Asset!]!
+  assetById(id: String!): Asset!
 }
 
 type Subscription {
@@ -240,6 +265,7 @@ type Subscription {
   participantAdded: Participant!
   personAdded: Person!
   transactionAdded: Transaction!
+  assetAdded: Asset!
 }
 
 type Transaction {

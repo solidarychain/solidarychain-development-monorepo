@@ -1,0 +1,9 @@
+{
+  "index": {
+    "fields": [
+      "name"
+    ]
+  },
+  "name": "name-json-index",
+  "type": "json"
+}

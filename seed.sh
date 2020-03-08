@@ -192,6 +192,18 @@ PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourc
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u admin
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID}
 
+# create asset with all data (filter with date=1582414657)
+ID=acef70e5-cd25-4533-8392-9fa57e430003
+NAME=Asset003
+OWNER_TYPE=network.solidary.convector.person
+OWNER_ID=4ea88521-031b-4279-9165-9c10e1839001
+LOCATION=40.1890144,-8.5171909
+TAGS="[\"red\", \"blue\"]"
+PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"metaData\":{\"key\":\"value\"},\"owner\":{\"id\":\"${OWNER_ID}\",\"type\":\"${OWNER_TYPE}\"}}"
+# echo $PAYLOAD  | jq
+npx hurl invoke ${CHAINCODE_NAME} asset_create "${PAYLOAD}" -u admin
+npx hurl invoke ${CHAINCODE_NAME} asset_get ${ID}
+
 # complex filters
 
 # note for escaped $lte, work with sort:[{name:"asc"}] and sort:["name"]
@@ -201,5 +213,7 @@ npx hurl invoke ${CHAINCODE_NAME} participant_getComplexQuery "{\"filter\":{\"na
 npx hurl invoke ${CHAINCODE_NAME} person_getComplexQuery "{\"filter\":{\"username\":\"janedoe\",\"createdDate\":{\"\$lte\":1582410790588,\"\$gte\":1582410790588}},\"sort\":[{\"username\":\"asc\"}]}"
 # persisted "startDate": "1582414657", "endDate": "1582414657", "name":"Cause002b"
 npx hurl invoke ${CHAINCODE_NAME} cause_getComplexQuery "{\"filter\":{\"name\":\"Cause002b\",\"startDate\":{\"\$lte\":1582414657},\"endDate\":{\"\$gte\":1582414657}},\"sort\":[{\"name\":\"asc\"}]}"
+# persisted "name":"Asset003"
+npx hurl invoke ${CHAINCODE_NAME} asset_getComplexQuery "{\"filter\":{\"name\":\"Asset003\"},\"sort\":[{\"name\":\"asc\"}]}"
 # persisted "createdDate": "1582410817579", "currency": "EUR"
 npx hurl invoke ${CHAINCODE_NAME} transaction_getComplexQuery "{\"filter\":{\"currency\":\"EUR\",\"createdDate\":{\"\$lte\":1582410817579,\"\$gte\":1582410817579}},\"sort\":[{\"quantity\":\"asc\"}]}"

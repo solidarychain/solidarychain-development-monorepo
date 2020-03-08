@@ -32,6 +32,11 @@
       "name": "@solidary-network/cause-cc",
       "version": "file:./packages/cause-cc",
       "controller": "CauseController"
+    },
+    {
+      "name": "@solidary-network/asset-cc",
+      "version": "file:./packages/asset-cc",
+      "controller": "AssetController"
     }
   ],
   "policy": {

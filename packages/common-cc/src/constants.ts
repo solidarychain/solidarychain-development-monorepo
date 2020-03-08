@@ -7,9 +7,11 @@ const CONVECTOR_MODEL_PATH_ENTITY: string = `${CONVECTOR_MODEL_PATH_PREFIX}.enti
 const CONVECTOR_MODEL_PATH_PARTICIPANT: string = `${CONVECTOR_MODEL_PATH_PREFIX}.participant`;
 const CONVECTOR_MODEL_PATH_PERSON: string = `${CONVECTOR_MODEL_PATH_PREFIX}.person`;
 const CONVECTOR_MODEL_PATH_CAUSE: string = `${CONVECTOR_MODEL_PATH_PREFIX}.cause`;
+const CONVECTOR_MODEL_PATH_ASSET: string = `${CONVECTOR_MODEL_PATH_PREFIX}.asset`;
 const CONVECTOR_MODEL_PATH_TRANSACTION: string = `${CONVECTOR_MODEL_PATH_PREFIX}.transaction`;
 const CONVECTOR_MODEL_PATH_ATTRIBUTE: string = `${CONVECTOR_MODEL_PATH_PREFIX}.attribute`;
 const CONVECTOR_MODEL_PATH_X509IDENTITY: string = `${CONVECTOR_MODEL_PATH_PREFIX}.x509identity`;
+// note if change Participant, Person or Cause don't forget to change hard coded string in EntityType ./types.ts to
 
 // yup messages
 const YUP_MESSAGE_INTEGER: string = 'Should be a integer number.';
@@ -37,6 +39,7 @@ export const appConstants = {
 	CONVECTOR_MODEL_PATH_TRANSACTION,
 	CONVECTOR_MODEL_PATH_ENTITY,
 	CONVECTOR_MODEL_PATH_CAUSE,
+	CONVECTOR_MODEL_PATH_ASSET,
 	// yup messages
 	YUP_MESSAGE_INTEGER,
 	YUP_MESSAGE_USERNAME_TO_SHORT,

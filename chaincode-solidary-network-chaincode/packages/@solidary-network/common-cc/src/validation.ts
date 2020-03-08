@@ -10,7 +10,9 @@ export const entitySchema = yup.object().shape({
   //   .string().min(3)
   //   .required(),
   type: yup
-    .mixed<EntityType.Participant | EntityType.Person | EntityType.Cause>()
+    // seems that .mixed<type | type...>() syntax changed from...to .mixed()
+    // .mixed<EntityType.Participant | EntityType.Person | EntityType.Cause>()
+    .mixed()
     .oneOf([EntityType.Participant, EntityType.Person, EntityType.Cause]),
   // TODO: Don't enable above validation, else we have error on save model, because now we don't use type anymore
   // ValidationError: Error for field 'input' with val '{\"id\":\"gov\",\"type\":\"PARTICIPANT\"}'

@@ -3,7 +3,6 @@ import { BaseStorage, Controller, ConvectorController, FlatConvectorModel, Invok
 import { ClientIdentity } from 'fabric-shim';
 import * as yup from 'yup';
 import { Participant } from './participant.model';
-import { getParticipantByIdentity } from './utils';
 
 @Controller('participant')
 export class ParticipantController extends ConvectorController {

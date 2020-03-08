@@ -1,12 +1,13 @@
 import { Logger } from '@nestjs/common';
+import { AssetController } from '@solidary-network/asset-cc';
+import { CauseController } from '@solidary-network/cause-cc';
+import { Participant, ParticipantController } from '@solidary-network/participant-cc';
+import { PersonController } from '@solidary-network/person-cc';
+import { TransactionController } from '@solidary-network/transaction-cc';
 import { FabricControllerAdapter } from '@worldsibu/convector-adapter-fabric';
 import { ClientFactory } from '@worldsibu/convector-core';
 import * as fs from 'fs';
-import { Participant, ParticipantController } from '@solidary-network/participant-cc';
 import { join, resolve } from 'path';
-import { PersonController } from '@solidary-network/person-cc';
-import { CauseController } from '@solidary-network/cause-cc';
-import { TransactionController } from '@solidary-network/transaction-cc';
 import { envVariables as e } from './env';
 
 /**
@@ -31,6 +32,7 @@ export const initAdapter = adapter.init();
 export const ParticipantControllerBackEnd = ClientFactory(ParticipantController, adapter);
 export const PersonControllerBackEnd = ClientFactory(PersonController, adapter);
 export const CauseControllerBackEnd = ClientFactory(CauseController, adapter);
+export const AssetControllerBackEnd = ClientFactory(AssetController, adapter);
 export const TransactionControllerBackEnd = ClientFactory(TransactionController, adapter);
 
 /**

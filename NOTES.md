@@ -71,6 +71,7 @@
   - [Solve problem Cannot find module 'typescript/bin/tsc'](#solve-problem-cannot-find-module-typescriptbintsc)
   - [Problem tests/participant.spec.ts(30,11): error TS1005: ':' expected](#problem-testsparticipantspects3011-error-ts1005--expected)
   - [Add new transaction-cc module to chaincode](#add-new-transaction-cc-module-to-chaincode)
+    - [add to graphql server](#add-to-graphql-server)
     - [Add new package to other files](#add-new-package-to-other-files)
   - [GraphQL ComplexQuery problem: How to send arbitrayGraphQL and ComplexQuery and the big sort problem](#graphql-complexquery-problem-how-to-send-arbitraygraphql-and-complexquery-and-the-big-sort-problem)
   - [Participant changeIdentity / require "chaincodeAdmin" with `attrs."admin": "true"`](#participant-changeidentity--require-%22chaincodeadmin%22-with-attrs%22admin%22-%22true%22)
@@ -121,6 +122,7 @@ $ npx lerna run build --scope @solidary-network/common-cc --stream
 $ npx lerna run build --scope @solidary-network/participant-cc --stream
 $ npx lerna run build --scope @solidary-network/person-cc --stream
 $ npx lerna run build --scope @solidary-network/cause-cc --stream
+$ npx lerna run build --scope @solidary-network/asset-cc --stream
 $ npx lerna run build --scope @solidary-network/transaction-cc --stream
 
 # upgrade smart contract
@@ -167,7 +169,7 @@ $ ./views/install.sh
 # TRICK: don't forget that breakpoint to work must be inside the chaincode-${CHAINCODE_NAME}/packages/@solidary-network/person-cc/src/person.controller.ts folder that is generated on chaincode builds, and not the default packages/person-cc/src/person.controller.ts
 $ npm run cc:start:debug -- ${CHAINCODE_NAME}
 # if error occur use target debug version, recommend to always use current version, or if we are in version 1.3, use pass 1.4 to deploy and debug a new chaincode, and watch
-$ npm run cc:start:debug -- ${CHAINCODE_NAME} 1.4
+$ npm run cc:start:debug -- ${CHAINCODE_NAME} 1.1
 # TRICK: Error: could not assemble transaction, err proposal response was not successful, error code 500, msg chaincode with name 'solidary-network-chaincode' already exists
 
 # run dev server
@@ -2644,7 +2646,7 @@ $ npx lerna run build --scope @solidary-network/participant-cc --stream
 ## Add new transaction-cc module to chaincode
 
 ```shell
-# in network folder
+# in network folder (don't add -cc is automatically added by convector)
 $ conv generate chaincode transaction
 CREATE packages/transaction-cc/tests/transaction.spec.ts (1241 bytes)
 CREATE packages/transaction-cc/src/index.ts (78 bytes)
@@ -2656,9 +2658,17 @@ CREATE org1.transaction.config.json (823 bytes)
 CREATE org2.transaction.config.json (823 bytes)
 ```
 
-edit `packages/transaction-cc/package.json` and change `"name": "@solidary-network/transaction-cc"` to `"name": "@solidary-network/participant-cc"`
+edit `packages/transaction-cc/package.json` and change `"name": "transaction-cc"` to `"name": "@solidary-network/transaction-cc"`
+
+```shell
+$ code packages/asset-cc/package.json
+```
 
 add to `chaincode.config.json`
+
+```shell
+$ code chaincode.config.json
+```
 
 ```json
 {
@@ -2668,31 +2678,61 @@ add to `chaincode.config.json`
 },
 ```
 
-try to build it with
-
 ```shell
-$ npx lerna run build --scope @solidary-network/participant-cc @solidary-network/transaction-cc
+MODULE=transaction
+# try to build it with
+$ npx lerna run build --scope @solidary-network/${MODULE}-cc
+# add dependencies
+$ npx lerna add @solidary-network/common-cc --scope @solidary-network/${MODULE}-cc
+$ npx lerna add @solidary-network/person-cc --scope @solidary-network/${MODULE}-cc
+$ npx lerna add @solidary-network/participant-cc --scope @solidary-network/${MODULE}-cc
+# third party
+$ npx lerna add yup@^0.28.1 --scope @solidary-network/${MODULE}-cc
 ```
 
-add dependencies
+add model to `packages/common-cc/src/constants.ts`
 
-```shell
-$ npx lerna add @solidary-network/common-cc --scope @solidary-network/transaction-cc
-$ npx lerna add @solidary-network/person-cc --scope @solidary-network/transaction-cc
-$ npx lerna add @solidary-network/participant-cc --scope @solidary-network/transaction-cc
+```typescript
+const CONVECTOR_MODEL_PATH_TRANSACTION: string = `${CONVECTOR_MODEL_PATH_PREFIX}.transaction`;
+...
+export const appConstants = {
+  CONVECTOR_MODEL_PATH_TRANSACTION,
+  ...
 ```
 
-require to `./restartEnv.sh` else we get below error
+```shell
+# rebuild common package
+$ npx lerna run build --scope @solidary-network/common-cc
+```
 
-`{ Error: transaction returned with failure: {"name":"Error","status":400,"message":"no function of name: cause_create found","stack":"Error: no function of name: cause_create found"}`
+change `packages/transaction-cc/src/transaction.model.ts`
 
-add the chaincode package to graphql package
+```typescript
+export class Transaction extends ConvectorModel<Transaction> {
+  @ReadOnly()
+  public readonly type = c.CONVECTOR_MODEL_PATH_TRANSACTION;
+...
+```
+
+copy, from other peoject and update it to `Transaction` model
+
+- packages/MODEL-cc/src/transaction.controller.ts
+- packages/MODEL-cc/src/transaction.model.ts
+- packages/MODEL-cc/src/types.ts
+- packages/MODEL-cc/src/utils.ts
+
+### add to graphql server
 
 ```shell
-$ npx lerna add @solidary-network/transaction-cc --scope @solidary-network/server-graphql
+# add the chaincode package to graphql package
+$ npx lerna add @solidary-network/${MODULE}-cc --scope @solidary-network/server-graphql
 ```
 
 add Controlers `packages/server-graphql/src/convector.ts`
+
+```shell
+$ code packages/server-graphql/src/convector.ts
+```
 
 ```typescript
 import { TransactionController } from '@solidary-network/transaction-cc';
@@ -2702,7 +2742,12 @@ export const TransactionControllerBackEnd = ClientFactory(TransactionController,
 
 now add modules to `app.module.ts`
 
-`packages/server-graphql/src/app.module.ts`
+first clone one nestjs module to `transaction` and change all references to old module name, and change all filenames to
+
+```shell
+# now change app.module.ts, and add new nestjs module
+$ code packages/server-graphql/src/app.module.ts
+```
 
 ```typescript
 @Module({
@@ -2714,11 +2759,24 @@ now add modules to `app.module.ts`
 `packages/server-graphql/src/transaction/transaction.service.ts`
 Property 'register' does not exist on type 'ConvectorControllerClient<TransactionController>'
 
+> NOTE: require to `./restartEnv.sh` else we get below error, OR OTHER problematic 500 ERRORS, and its a opurtunity to always test and restartEnv.sh
+
+`{ Error: transaction returned with failure: {"name":"Error","status":400,"message":"no function of name: cause_create found","stack":"Error: no function of name: cause_create found"}`
+
+```shell
+# rebuild again before upgrade chaincode
+$ npx lerna run build --scope @solidary-network/transaction-cc
+```
+
 ### Add new package to other files
+
+`upgrade-chaincode.sh`
 
 `backup.sh`
 
 `touch packages/transaction-cc/node_modules/${FILE_EXCLUDE}`
+
+> To finish add Some Seed and Invoke some things
 
 ## GraphQL ComplexQuery problem: How to send arbitrayGraphQL and ComplexQuery and the big sort problem
 

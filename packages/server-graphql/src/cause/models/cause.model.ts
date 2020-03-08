@@ -19,11 +19,13 @@ export class Cause {
   public name: string;
 
   @Field({ nullable: true })
-  @Validate(yup.number())
+  // @Validate(yup.number())
+  @Validate(yup.number)
   public startDate: number;
 
   @Field({ nullable: true })
-  @Validate(yup.number())
+  // @Validate(yup.number())
+  @Validate(yup.number)
   public endDate: number;
 
   @Field({ nullable: true })
@@ -52,7 +54,8 @@ export class Cause {
 
   @Field()
   @IsDefined()
-  @Validate(yup.number())
+  // @Validate(yup.number())
+  @Validate(yup.number)
   public createdDate: number;
 
 }

@@ -9,6 +9,7 @@ import { envVariables as e } from './env';
 import { ParticipantModule } from './participant/participant.module';
 import { PersonModule } from './person/person.module';
 import { TransactionModule } from './transaction/transaction.module';
+import { AssetModule } from './asset/asset.module';
 import { GqlContext, GqlContextPayload } from './types';
 import { UsersModule } from './users/users.module';
 import { mapKeysToLowerCase } from './utils';
@@ -21,6 +22,7 @@ import { mapKeysToLowerCase } from './utils';
     ParticipantModule,
     PersonModule,
     CauseModule,
+    AssetModule,
     TransactionModule,
     // apolloServer config: use forRootAsync to import AuthModule and inject AuthService
     GraphQLModule.forRootAsync({

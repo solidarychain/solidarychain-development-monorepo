@@ -17,6 +17,7 @@ export class TransactionService {
         // require to inject values
         id: data.id ? data.id : uuid(),
         // convert Date to epoch unix time to be stored in convector transaction model
+        // TODO: leave it for chaincode
         createdDate: ((new Date().getTime()) as number),
       });
 
