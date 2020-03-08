@@ -30,6 +30,9 @@
   - [Add new module to nestjs graphql](#add-new-module-to-nestjs-graphql)
   - [Manage Chaincode to GraphQL Error messages](#manage-chaincode-to-graphql-error-messages)
   - [TS5055: Cannot write file](#ts5055-cannot-write-file)
+  - [A circular dependency has been detected](#a-circular-dependency-has-been-detected)
+  - [re-install all packages dependencies in case of "cannot find module 'typescript/bin/tsc'"](#re-install-all-packages-dependencies-in-case-of-%22cannot-find-module-typescriptbintsc%22)
+  - [TypeError: httpAdapter.getType is not a function](#typeerror-httpadaptergettype-is-not-a-function)
 
 ## Start
 
@@ -589,4 +592,64 @@ find by `'dist/` some file is import a `dist` file ex `packages/server-graphql/s
 
 ```typescript
 import GetByComplexQueryInput from 'dist_/common/dto/get-by-complex-query.input';
+```
+
+## A circular dependency has been detected
+
+A circular dependency has been detected. Please, make sure that each side of a bidirectional relationships are decorated with "forwardRef()
+
+- [Application crash when using barrel files (multi index.ts)](https://github.com/nestjs/nest/issues/1181#issuecomment-430197191)
+
+- [Application crash when using barrel files (multi index.ts) #1181](https://github.com/nestjs/nest/issues/1181)
+
+- [Circular dependency](https://docs.nestjs.com/fundamentals/circular-dependency)
+
+remove all recent created barrel files that is the cause of the issue
+
+- packages/server-graphql/src/cause/index.ts
+- packages/server-graphql/src/auth/index.ts
+- packages/server-graphql/src/participant/index.ts
+- packages/server-graphql/src/cause/index.ts
+- packages/server-graphql/src/auth/index.ts
+- packages/server-graphql/src/participant/index.ts
+- packages/server-graphql/src/users/index.ts
+
+now fix dependencies is `packages/server-graphql/src/app.module.ts`
+
+done it works has expected, thumb rule NEVER use barrel files in modules root, NEVER means NEVER!
+
+## re-install all packages dependencies in case of "cannot find module 'typescript/bin/tsc'"
+
+```shell
+# $ npx lerna bootstrap
+$ npm i
+```
+
+## TypeError: httpAdapter.getType is not a function
+
+```shell
+$ npm run pkg:graphql:debug
+nest.js : TypeError: httpAdapter.getType is not a function
+npx lerna bootstrap --scope @solidary-network/server-graphql
+```
+
+- [Update your @nestjs/platform-express to the latest version](https://github.com/nestjs/swagger/issues/434)
+
+```json
+// change
+"@nest-middlewares/cookie-parser": "^6.0.0",
+"@nestjs/common": "^6.5.3",
+"@nestjs/core": "6.5.3",
+"@nestjs/graphql": "^6.5.1",
+"@nestjs/jwt": "^6.1.1",
+"@nestjs/passport": "^6.1.0",
+"@nestjs/platform-express": "6.5.3",
+// to
+"@nest-middlewares/cookie-parser": "^6.0.0",
+"@nestjs/common": "6.11.8",
+"@nestjs/core": "6.11.8",
+"@nestjs/graphql": "6.6.1",
+"@nestjs/jwt": "6.1.2",
+"@nestjs/passport": "6.2.0",
+"@nestjs/platform-express": "6.11.8",
 ```

@@ -4,9 +4,9 @@ import { GqlContextPayload } from '../types';
 import { envVariables as e } from '../env';
 import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
-import { AccessToken } from './models/access-token.model';
-import LoginPersonInput from '../person/dto/login-person.input';
-import Person from '../person/models/person.model';
+import { AccessToken } from './models';
+import { LoginPersonInput } from '../person/dto';
+import { Person } from '../person/models';
 
 @Controller()
 export class AuthController {

@@ -1,8 +1,8 @@
 import { createUnionType } from 'type-graphql';
-import Participant from './../../participant/models/participant.model';
-import Person from './../../person/models/person.model';
+import { Participant } from './../../participant/models/participant.model';
+import { Person } from './../../person/models/person.model';
 
-// NOT USED
+// TODO: NOT USED YET
 
 // https://typegraphql.ml/docs/unions.html
 // https://graphql.org/learn/schema/#union-types

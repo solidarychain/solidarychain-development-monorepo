@@ -3,7 +3,7 @@ import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, ID, InputType } from 'type-graphql';
 
 @InputType()
-export default class AddPersonAttributeInput {
+export class AddPersonAttributeInput {
   @Field(type => ID)
   @IsDefined()
   id: string;

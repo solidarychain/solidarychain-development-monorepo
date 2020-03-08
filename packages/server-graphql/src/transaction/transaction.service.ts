@@ -1,12 +1,11 @@
-import { v4 as uuid } from 'uuid';
-import { Transaction as TransactionConvectorModel } from '@solidary-network/transaction-cc';
 import { Injectable, Logger } from '@nestjs/common';
+import { Transaction as TransactionConvectorModel } from '@solidary-network/transaction-cc';
 import { FlatConvectorModel } from '@worldsibu/convector-core-model';
+import { v4 as uuid } from 'uuid';
+import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
 import { TransactionControllerBackEnd } from '../convector';
-import NewTransactionInput from './dto/new-transaction.input';
-import { PaginationArgs } from '@solidary-network/common-cc';
-import Transaction from './models/transaction.model';
-import GetByComplexQueryInput from 'src/common/dto/get-by-complex-query.input';
+import { NewTransactionInput } from './dto';
+import { Transaction } from './models';
 
 @Injectable()
 export class TransactionService {

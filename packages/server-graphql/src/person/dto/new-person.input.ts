@@ -1,11 +1,11 @@
-import { MaxLength, IsDefined, IsDate, IsNumber, MinLength, IsOptional } from 'class-validator';
-import { Field, InputType } from 'type-graphql';
+import { IsDefined, IsNumber, IsOptional, MaxLength } from 'class-validator';
 import { GraphQLJSONObject } from 'graphql-type-json';
+import { Field, InputType } from 'type-graphql';
 
 // this serves has the master for person.model and convector person.model in citizen card properties
 
 @InputType()
-export default class NewPersonInput {
+export class NewPersonInput {
   // optional: generated automatically, but can optionally be used
   @Field({ nullable: true })
   // @IsDefined()

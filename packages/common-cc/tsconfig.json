@@ -5,6 +5,6 @@
     "rootDir": "."
   },
   "include": [
-    "./src/**/*"
+    "./src/**/*", "../server-graphql/src/cause/dto/pagination.args.ts"
   ]
 }

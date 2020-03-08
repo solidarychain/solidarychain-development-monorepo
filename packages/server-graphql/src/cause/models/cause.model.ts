@@ -1,14 +1,13 @@
-import { x509Identities } from '../../common/models/x509Identities.model';
 import { Entity } from '@solidary-network/transaction-cc';
 import { IsDefined, Validate } from 'class-validator';
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, ID, ObjectType } from 'type-graphql';
 import * as yup from 'yup';
-import EntityResult from '../../common/models/entity-result.model';
-import Participant from '../../participant/models/participant.model';
+import { EntityResult, x509Identities } from '../../common/models';
+import { Participant } from '../../participant/models/participant.model';
 
 @ObjectType()
-export default class Cause {
+export class Cause {
   @Field(type => ID)
   public id: string;
 

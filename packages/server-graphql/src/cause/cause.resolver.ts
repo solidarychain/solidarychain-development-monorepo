@@ -1,12 +1,11 @@
 import { NotFoundException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'apollo-server-express';
-import NewCauseInput from './dto/new-cause.input';
-import Cause from './models/cause.model';
+import { NewCauseInput } from './dto';
+import { Cause } from './models';
 import { CauseService } from './cause.service';
 import { GqlAuthGuard } from '../auth/guards';
-import { PaginationArgs } from '@solidary-network/common-cc';
-import GetByComplexQueryInput from '../common/dto/get-by-complex-query.input';
+import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
 
 const pubSub = new PubSub();
 

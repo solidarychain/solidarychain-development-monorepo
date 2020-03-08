@@ -1,15 +1,12 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
-import { PaginationArgs } from '@solidary-network/common-cc';
 import { Person as PersonConvectorModel, PersonAttribute as AttributeConvectorModel } from '@solidary-network/person-cc';
 import { FlatConvectorModel } from '@worldsibu/convector-core';
 import { generate } from 'generate-password';
 import { v4 as uuid } from 'uuid';
-import GetByComplexQueryInput from '../common/dto/get-by-complex-query.input';
+import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
 import { PersonControllerBackEnd } from '../convector';
-import AddPersonAttributeInput from './dto/add-person-attribute.input';
-import GetByAttributeInput from './dto/get-by-attribute.input';
-import NewPersonInput from './dto/new-person.input';
-import Person from './models/person.model';
+import { AddPersonAttributeInput, GetByAttributeInput, NewPersonInput } from './dto';
+import { Person } from './models';
 
 @Injectable()
 export class PersonService {

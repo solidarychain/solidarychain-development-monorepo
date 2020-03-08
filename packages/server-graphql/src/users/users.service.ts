@@ -1,8 +1,8 @@
-import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import { UsersStore } from './users.store';
 import { appConstants as c } from '../constants';
+import { Person } from '../person/models/person.model';
 import { PersonService } from '../person/person.service';
-import Person from '../person/models/person.model';
-import UsersStore from './users.store';
 
 export type User = any;
 

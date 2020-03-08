@@ -1,12 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cause as CauseConvectorModel } from '@solidary-network/cause-cc';
-import { PaginationArgs } from '@solidary-network/common-cc';
 import { FlatConvectorModel } from '@worldsibu/convector-core-model';
 import { v4 as uuid } from 'uuid';
 import { CauseControllerBackEnd } from '../convector';
-import NewCauseInput from './dto/new-cause.input';
-import Cause from './models/cause.model';
-import GetByComplexQueryInput from 'src/common/dto/get-by-complex-query.input';
+import { NewCauseInput } from './dto';
+import { Cause } from './models';
+import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
 
 @Injectable()
 export class CauseService {

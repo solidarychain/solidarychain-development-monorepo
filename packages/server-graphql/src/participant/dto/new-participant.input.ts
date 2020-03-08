@@ -2,7 +2,7 @@ import { IsDefined, Length, MaxLength } from 'class-validator';
 import { Field, InputType } from 'type-graphql';
 
 @InputType()
-export default class NewParticipantInput {
+export class NewParticipantInput {
   @Field()
   @IsDefined()
   @MaxLength(12)

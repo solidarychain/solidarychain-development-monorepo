@@ -1,11 +1,10 @@
-import { Participant as ParticipantConvectorModel } from '@solidary-network/participant-cc';
 import { Injectable, Logger } from '@nestjs/common';
+import { Participant as ParticipantConvectorModel } from '@solidary-network/participant-cc';
 import { FlatConvectorModel } from '@worldsibu/convector-core-model';
+import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
 import { ParticipantControllerBackEnd } from '../convector';
-import NewParticipantInput from './dto/new-participant.input';
-import { PaginationArgs } from '@solidary-network/common-cc';
-import Participant from './models/participant.model';
-import GetByComplexQueryInput from 'src/common/dto/get-by-complex-query.input';
+import { NewParticipantInput } from './dto';
+import { Participant } from './models/participant.model';
 
 @Injectable()
 export class ParticipantService {

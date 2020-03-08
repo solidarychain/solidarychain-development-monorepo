@@ -113,7 +113,7 @@ export const Login: React.FC<RouteComponentProps> = ({ history, location }) => {
 				{/* submit */}
 				<button type='submit'>login</button>
 			</form>
-			{(location.state && location.state.message) && <ShowMessage type={MessageType.SUCCESS} message={location.state.message} />}
+			{(location.state && (location.state as any).message) && <ShowMessage type={MessageType.SUCCESS} message={(location.state as any).message} />}
 			{error && <ShowMessage type={MessageType.ERROR} message={c.MESSAGES.ERROR.LOGIN_FAILED} />}
 			{loading && <Loading />}
 		</Fragment>

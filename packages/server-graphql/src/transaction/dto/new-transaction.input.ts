@@ -4,7 +4,7 @@ import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, InputType } from 'type-graphql';
 
 @InputType()
-export default class NewTransactionInput {
+export class NewTransactionInput {
   // optional: generated automatically, but can optionally be used
   @Field({ nullable: true })
   public id: string;

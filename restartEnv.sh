@@ -19,11 +19,11 @@ npm run cc:start -- ${CHAINCODE_NAME}
 # sleep 20 seconds
 sleep 20
 
+# create views and indexs before seed
+./couchdb/install.sh
+
 # seed ledger
 npm run seed
-
-# create views
-./views/install.sh
 
 # prevent lost props, rebuild chaincode packages: comment this already is executed in cc:start above
 # npx lerna run build --scope @solidary-network/common-cc --stream

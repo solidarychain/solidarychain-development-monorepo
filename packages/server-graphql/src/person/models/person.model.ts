@@ -1,15 +1,15 @@
 // tslint:disable: max-classes-per-file
-import { IsDefined, IsDate, MaxLength, IsNumber, Validate } from 'class-validator';
-import { Field, ID, ObjectType } from 'type-graphql';
-import Participant from '../../participant/models/participant.model';
-import Attribute from './attribute.model';
 import { UserRoles } from '@solidary-network/common-cc';
+import { IsDate, IsDefined, IsNumber, MaxLength, Validate } from 'class-validator';
 import { GraphQLJSONObject } from 'graphql-type-json';
-import { x509Identities } from '../../common/models/x509Identities.model';
+import { Field, ID, ObjectType } from 'type-graphql';
 import * as yup from 'yup';
+import { x509Identities } from '../../common/models';
+import { Participant } from '../../participant/models/participant.model';
+import { Attribute } from './attribute.model';
 
 @ObjectType()
-export default class Person {
+export class Person {
   // non citizenCard data
   @Field(type => ID)
   @IsDefined()

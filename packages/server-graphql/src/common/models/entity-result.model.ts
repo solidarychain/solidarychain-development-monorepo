@@ -28,7 +28,7 @@ class Entity {
 
 // tslint:disable-next-line: max-classes-per-file
 @ObjectType()
-export default class EntityResult {
+export class EntityResult {
   @Field()
   public entity: Entity;
 }

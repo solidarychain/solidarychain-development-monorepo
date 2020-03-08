@@ -25,6 +25,7 @@
   - [Use JS-Cookie](#use-js-cookie)
   - [When we change cc models like adding new props to model...missing the following properties from type  'Person': identities, createdDate](#when-we-change-cc-models-like-adding-new-props-to-modelmissing-the-following-properties-from-type-person-identities-createddate)
   - [Error: GraphQL error: [object Object]](#error-graphql-error-object-object)
+  - [React router Property 'message' does not exist on type '{}'.  TS2339](#react-router-property-message-does-not-exist-on-type--ts2339)
 
 ## Links
 
@@ -711,3 +712,11 @@ error: [Chaincode]
 ```
 
 it seems that the problem stack is assign gov to participant in goc, maybe a cliclic reference or a sort of
+
+## React router Property 'message' does not exist on type '{}'.  TS2339
+
+changed `location.state.message` to `(location.state as any).message`
+
+```typescript
+{(location.state && (location.state as any).message) && <ShowMessage type={MessageType.SUCCESS} message={(location.state as any).message} />}
+```

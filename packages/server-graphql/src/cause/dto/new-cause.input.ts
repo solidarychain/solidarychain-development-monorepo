@@ -1,11 +1,10 @@
-import * as yup from 'yup';
-import { IsDefined, Validate, IsDate, IsOptional } from 'class-validator';
+import { Entity } from '@solidary-network/transaction-cc';
+import { IsDefined, IsOptional } from 'class-validator';
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, InputType } from 'type-graphql';
-import { Entity } from '@solidary-network/transaction-cc';
 
 @InputType()
-export default class NewCauseInput {
+export class NewCauseInput {
   // optional: generated automatically, but can optionally be used
   @Field({ nullable: true })
   public id: string;

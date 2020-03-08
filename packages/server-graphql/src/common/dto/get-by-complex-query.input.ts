@@ -3,7 +3,7 @@ import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, InputType } from 'type-graphql';
 
 @InputType()
-export default class GetByComplexQueryInput {
+export class GetByComplexQueryInput {
 
   @Field(type => GraphQLJSONObject)
   @IsDefined()

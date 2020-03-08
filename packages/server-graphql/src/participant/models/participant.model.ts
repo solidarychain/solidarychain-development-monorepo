@@ -1,10 +1,10 @@
 import { Field, ID, ObjectType } from 'type-graphql';
-import { x509Identities } from '../../common/models/x509Identities.model';
+import { x509Identities } from '../../common/models';
 import { Validate, IsDefined } from 'class-validator';
 import * as yup from 'yup';
 
 @ObjectType()
-export default class Participant {
+export class Participant {
   @Field(type => ID)
   @IsDefined()
   public id: string;

@@ -3,7 +3,7 @@ import { GraphQLJSONObject } from 'graphql-type-json';
 import { IsDefined } from 'class-validator';
 
 @ObjectType()
-export default class Attribute {
+export class Attribute {
   @Field(type => ID)
   @IsDefined()
   id: string;

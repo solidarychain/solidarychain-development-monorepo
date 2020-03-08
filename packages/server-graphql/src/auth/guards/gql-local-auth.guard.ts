@@ -1,7 +1,7 @@
-import { Injectable, UnauthorizedException, CanActivate, ExecutionContext } from '@nestjs/common';
-import { AuthService } from '../auth.service';
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
-import LoginPersonInput from '../../person/dto/login-person.input';
+import { LoginPersonInput } from '../../person/dto';
+import { AuthService } from '../auth.service';
 
 @Injectable()
 export class GqlLocalAuthGuard implements CanActivate {

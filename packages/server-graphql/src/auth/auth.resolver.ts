@@ -2,13 +2,13 @@ import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Resolver, Subscription, Context } from '@nestjs/graphql';
 import { PubSub } from 'apollo-server-express';
 import { AuthService } from './auth.service';
-import LoginPersonInput from '../person/dto/login-person.input';
+import { LoginPersonInput } from '../person/dto';
 import { AccessToken } from './models';
-import { GqlLocalAuthGuard } from './guards/gql-local-auth.guard';
+import { GqlLocalAuthGuard } from './guards';
 import { GqlContext } from '../types';
 import { UsersService } from '../users/users.service';
-import Person from '../person/models/person.model';
-import PersonLoginResponse from './models/person-login-response.model';
+import { Person } from '../person/models/person.model';
+import { PersonLoginResponse } from './models';
 
 const pubSub = new PubSub();
 

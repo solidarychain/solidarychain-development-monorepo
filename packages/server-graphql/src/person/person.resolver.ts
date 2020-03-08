@@ -3,13 +3,10 @@ import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'apollo-server-express';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
 import { CurrentUser } from '../common/decorators';
-import AddPersonAttributeInput from './dto/add-person-attribute.input';
-import GetByAttributeInput from './dto/get-by-attribute.input';
-import NewPersonInput from './dto/new-person.input';
-import Person from './models/person.model';
+import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
+import { AddPersonAttributeInput, GetByAttributeInput, NewPersonInput } from './dto';
+import { Person } from './models';
 import { PersonService } from './person.service';
-import { PaginationArgs } from '@solidary-network/common-cc';
-import GetByComplexQueryInput from '../common/dto/get-by-complex-query.input';
 
 const pubSub = new PubSub();
 
