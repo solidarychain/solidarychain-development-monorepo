@@ -2,7 +2,9 @@ import { appConstants as c, entitySchema, x509Identities } from '@solidary-netwo
 import { Participant } from '@solidary-network/participant-cc';
 import { ConvectorModel, FlatConvectorModel, ReadOnly, Required, Validate } from '@worldsibu/convector-core';
 import * as yup from 'yup';
-import { Entity } from './types';
+import { AssetType } from './enums';
+import { assetTypeSchema } from './validation';
+import { Entity } from '.';
 
 export class Asset extends ConvectorModel<Asset> {
   @ReadOnly()
@@ -12,6 +14,10 @@ export class Asset extends ConvectorModel<Asset> {
   @Required()
   @Validate(yup.string())
   public name: string;
+
+  @Required()
+  @Validate(assetTypeSchema)
+  public assetType: AssetType;
 
   @Validate(yup.string().matches(c.REGEX_LOCATION))
   public location: string;

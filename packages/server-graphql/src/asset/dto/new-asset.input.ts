@@ -1,5 +1,6 @@
+import { AssetType } from '@solidary-network/asset-cc';
 import { Entity } from '@solidary-network/transaction-cc';
-import { IsDefined, IsOptional } from 'class-validator';
+import { IsDefined } from 'class-validator';
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, InputType } from 'type-graphql';
 
@@ -15,6 +16,10 @@ export class NewAssetInput {
   @Field()
   @IsDefined()
   public name: string;
+
+  @Field()
+  @IsDefined()
+  assetType: AssetType;
 
   @Field({ nullable: true })
   @IsDefined()

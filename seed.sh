@@ -193,13 +193,14 @@ npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u admin
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID}
 
 # create asset with all data (filter with date=1582414657)
-ID=acef70e5-cd25-4533-8392-9fa57e430003
-NAME=Asset003
+ID=acef70e5-cd25-4533-8392-1fa57e430001
+NAME=Asset001
+ASSET_TYPE=PHYSICAL_ASSET_OK
 OWNER_TYPE=network.solidary.convector.person
 OWNER_ID=4ea88521-031b-4279-9165-9c10e1839001
 LOCATION=40.1890144,-8.5171909
 TAGS="[\"red\", \"blue\"]"
-PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"metaData\":{\"key\":\"value\"},\"owner\":{\"id\":\"${OWNER_ID}\",\"type\":\"${OWNER_TYPE}\"}}"
+PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"assetType\":\"${ASSET_TYPE}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"metaData\":{\"key\":\"value\"},\"owner\":{\"id\":\"${OWNER_ID}\",\"type\":\"${OWNER_TYPE}\"}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} asset_create "${PAYLOAD}" -u admin
 npx hurl invoke ${CHAINCODE_NAME} asset_get ${ID}

@@ -1,8 +1,7 @@
 export enum UnitType {
-  PHYSICAL_ASSET = 'PHYSICAL_ASSET',
-  DIGITAL_ASSET = 'DIGITAL_ASSET',
-  FUNDS = 'FUNDS',
-  TIME = 'TIME',
+  Funds = 'FUNDS',
+  Time = 'TIME',
+  Asset = 'ASSET',
 }
 
 export enum TransactionType {
@@ -15,6 +14,7 @@ export enum TransactionType {
 export enum ResourceType {
   Funds = 'FUNDS',
   Time = 'TIME',
+  // common with packages/asset-cc/src/enums.ts
   PhysicalAsset = 'PHYSICAL_ASSET',
   DigitalAsset = 'DIGITAL_ASSET',
 }

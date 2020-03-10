@@ -1,3 +1,4 @@
+import { AssetType } from '@solidary-network/asset-cc';
 import { Entity } from '@solidary-network/transaction-cc';
 import { IsDefined, Validate } from 'class-validator';
 import { GraphQLJSONObject } from 'graphql-type-json';
@@ -17,6 +18,10 @@ export class Asset {
   @Field()
   @IsDefined()
   public name: string;
+
+  @Field()
+  @IsDefined()
+  public assetType: AssetType;
 
   @Field({ nullable: true })
   @IsDefined()

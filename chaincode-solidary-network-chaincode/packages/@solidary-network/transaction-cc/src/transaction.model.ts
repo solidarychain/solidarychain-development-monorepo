@@ -2,8 +2,8 @@ import { appConstants as c, entitySchema, x509Identities } from '@solidary-netwo
 import { ConvectorModel, ReadOnly, Required, Validate, FlatConvectorModel } from '@worldsibu/convector-core-model';
 import * as yup from 'yup';
 import { transactionTypeSchema, resourceTypeSchema, currencySchema } from './validation';
-import { Entity } from './types';
-import { TransactionType, ResourceType } from '.';
+import { Entity } from '.';
+import { TransactionType, ResourceType } from './enums';
 import { Participant } from '@solidary-network/participant-cc';
 
 export class Transaction extends ConvectorModel<Transaction> {

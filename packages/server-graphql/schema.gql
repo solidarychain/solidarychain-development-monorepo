@@ -19,6 +19,7 @@ input AddPersonAttributeInput {
 type Asset {
   id: ID!
   name: String!
+  assetType: String!
   location: String
   tags: [String!]
   metaData: JSONObject
@@ -101,6 +102,7 @@ type Mutation {
 input NewAssetInput {
   id: String
   name: String!
+  assetType: String!
   location: String
   tags: [String!]
   metaData: JSONObject

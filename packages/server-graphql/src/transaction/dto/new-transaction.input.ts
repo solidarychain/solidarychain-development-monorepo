@@ -14,34 +14,34 @@ export class NewTransactionInput {
 
   @Field()
   @IsDefined()
-  transactionType: TransactionType;
+  public transactionType: TransactionType;
 
   @Field()
   @IsDefined()
-  resourceType: ResourceType;
+  public resourceType: ResourceType;
 
   // different from x.model.ts
   @Field(type => GraphQLJSONObject)
   @IsDefined()
-  input?: Entity;
+  public input?: Entity;
 
   // different from x.model.ts
   @Field(type => GraphQLJSONObject)
   @IsDefined()
-  output?: Entity;
+  public output?: Entity;
 
   @Field()
   @IsDefined()
   @IsNumber()
-  quantity: number;
+  public quantity: number;
 
   @Field()
   @IsDefined()
-  currency: string;
+  public currency: string;
 
   @Field()
   @IsDefined()
-  location: string;
+  public location: string;
 
   // TODO: tags
   @Field(type => [String], { nullable: true })
@@ -49,9 +49,9 @@ export class NewTransactionInput {
 
   @Field(type => GraphQLJSONObject, { nullable: true })
   @IsDefined()
-  metaData: any;
+  public metaData: any;
 
   @Field(type => GraphQLJSONObject, { nullable: true })
   @IsDefined()
-  metaDataInternal: any;
+  public metaDataInternal: any;
 }
