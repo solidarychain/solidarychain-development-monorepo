@@ -35,6 +35,10 @@ export class Transaction {
 
   @Field()
   @IsDefined()
+  public assetId: string;
+
+  @Field()
+  @IsDefined()
   @IsNumber()
   quantity: number;
 

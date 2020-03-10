@@ -171,6 +171,7 @@ input NewTransactionInput {
   resourceType: String!
   input: JSONObject!
   output: JSONObject!
+  assetId: String!
   quantity: Float!
   currency: String!
   location: String!
@@ -276,6 +277,7 @@ type Transaction {
   resourceType: String!
   input: EntityResult!
   output: EntityResult!
+  assetId: String!
   quantity: Float!
   currency: String!
   location: String!

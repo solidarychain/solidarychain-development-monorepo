@@ -9,7 +9,7 @@ import { Transaction } from './models';
 
 @Injectable()
 export class TransactionService {
-  async create(data: NewTransactionInput): Promise<Transaction> {
+  async create(data: NewTransactionInput, username?: string): Promise<Transaction> {
     try {
       // compose ConvectorModel from NewInput
       const transactionToCreate: TransactionConvectorModel = new TransactionConvectorModel({
@@ -21,7 +21,7 @@ export class TransactionService {
         createdDate: ((new Date().getTime()) as number),
       });
 
-      await TransactionControllerBackEnd.create(transactionToCreate);
+      await TransactionControllerBackEnd.create(transactionToCreate, username);
       return this.findOneById(data.id);
     } catch (error) {
       throw error;

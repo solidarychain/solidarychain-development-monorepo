@@ -30,6 +30,10 @@ export class Transaction extends ConvectorModel<Transaction> {
   public output: Entity;
 
   @Required()
+  @Validate(yup.string())
+  public assetId: string;
+
+  @Required()
   @Validate(yup.number())
   public quantity: number;
 

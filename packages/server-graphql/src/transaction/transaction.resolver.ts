@@ -1,4 +1,4 @@
-import { NotFoundException, UseGuards } from '@nestjs/common';
+import { NotFoundException, UseGuards, Logger } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'apollo-server-express';
 import { GqlAuthGuard } from '../auth/guards';
@@ -6,6 +6,8 @@ import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
 import { NewTransactionInput } from './dto';
 import { Transaction } from './models';
 import { TransactionService } from './transaction.service';
+import { CurrentUser } from '../common/decorators';
+import { Person } from '../person/models';
 
 const pubSub = new PubSub();
 
@@ -42,9 +44,10 @@ export class TransactionResolver {
 
   @Mutation(returns => Transaction)
   async transactionNew(
+    @CurrentUser() user: Person,
     @Args('newTransactionData') newTransactionData: NewTransactionInput,
   ): Promise<Transaction> {
-    const transaction = await this.transactionService.create(newTransactionData);
+    const transaction = await this.transactionService.create(newTransactionData, user.username);
     // fire subscription
     pubSub.publish('transactionAdded', { transactionAdded: transaction });
     return transaction;
