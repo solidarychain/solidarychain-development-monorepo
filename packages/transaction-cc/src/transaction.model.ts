@@ -29,18 +29,15 @@ export class Transaction extends ConvectorModel<Transaction> {
   @Validate(entitySchema)
   public output: Entity;
 
-  @Required()
-  @Validate(yup.number())
+  @Validate(yup.number().nullable())
   public quantity: number;
 
-  @Required()
   @Validate(currencySchema)
   public currency: string;
 
   @Validate(yup.string().matches(c.REGEX_LOCATION))
   public location: string;
 
-  // TODO: tags
   @Validate(yup.array().of(yup.string()))
   public tags: string[];
   
@@ -66,7 +63,7 @@ export class Transaction extends ConvectorModel<Transaction> {
 
   // owner
   @Validate(yup.string())
-  public username: string;
+  public ownerUsername: string;
 
   @Validate(yup.string())
   public assetId: string;

@@ -10,10 +10,11 @@ import { Attribute } from './attribute.model';
 
 @ObjectType()
 export class Person {
-  // non citizenCard data
   @Field(type => ID)
   @IsDefined()
   id: string;
+  
+  // non citizenCard data
 
   @Field({ nullable: true })
   @IsDefined()
@@ -43,7 +44,6 @@ export class Person {
 
   @Field()
   @IsDefined()
-  // @Validate(yup.number())
   @Validate(yup.number)
   public createdDate: number;
 

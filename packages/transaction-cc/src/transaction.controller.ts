@@ -14,9 +14,6 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
   public async create(
     @Param(Transaction)
     transaction: Transaction,
-    // optional: owner username, to transfer assets
-    // @Param(yup.string().nullable())
-    // username?: string
   ) {
     // get host participant from fingerprint
     const participant: Participant = await getParticipantByIdentity(this.sender);
@@ -40,7 +37,6 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     delete transaction.output.id;
     delete transaction.input.type;
     delete transaction.output.type;
-
     // add date in epoch unix time
     transaction.createdDate = new Date().getTime();
 
@@ -66,12 +62,11 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
         }
         // assign to asset;
         asset = exists;
-        asset.name = `${asset.name}-owner:${transaction.username}`;
+        asset.name = `${asset.name}-owner:${transaction.ownerUsername}`;
         // save asset
         asset.save();
       }
     }
-
     await transaction.save();
   }
 
@@ -99,7 +94,7 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
   ): Promise<Transaction> {
     // get host participant from fingerprint
     const participant: Participant = await getParticipantByIdentity(this.sender);
-    const existing = await Transaction.query(Asset, {
+    const existing = await Transaction.query(Transaction, {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_TRANSACTION,
         id,

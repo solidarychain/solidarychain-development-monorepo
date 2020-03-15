@@ -5,13 +5,16 @@ import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
 import { ParticipantControllerBackEnd } from '../convector';
 import { NewParticipantInput } from './dto';
 import { Participant } from './models/participant.model';
+import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class ParticipantService {
-  async create({id, code, name}: NewParticipantInput): Promise<Participant> {
+  async create(data: NewParticipantInput): Promise<Participant> {
     try {
-      await ParticipantControllerBackEnd.create(id, code, name);
-      return this.findOneById(id);
+      // require to use or generate new id
+      const newId: string =  (data.id) ? data.id : uuid();
+      await ParticipantControllerBackEnd.create(newId, data.code, data.name);
+      return this.findOneById(newId);
     } catch (error) {
       throw error;
     }
@@ -46,6 +49,16 @@ export class ParticipantService {
     const fabricModel: ParticipantConvectorModel = await ParticipantControllerBackEnd.get(id);
     // convert fabric model to convector model (remove _props)
     const convectorModel: ParticipantConvectorModel = new ParticipantConvectorModel(fabricModel);
+    // trick: must return convector model as a graphql model, to prevent property conversion problems
+    const model: Participant = await this.findBy(convectorModel, null) as Participant;
+    return model;
+  }
+
+  async findOneByCode(code: string): Promise<Participant> {
+    // get fabric model with _props
+    const fabricModel: ParticipantConvectorModel | ParticipantConvectorModel[] = await ParticipantControllerBackEnd.getByCode(code) as ParticipantConvectorModel;
+    // convert fabric model to convector model (remove _props)
+    const convectorModel: ParticipantConvectorModel = new ParticipantConvectorModel(fabricModel[0]);
     // trick: must return convector model as a graphql model, to prevent property conversion problems
     const model: Participant = await this.findBy(convectorModel, null) as Participant;
     return model;

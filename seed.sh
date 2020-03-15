@@ -21,36 +21,46 @@ CHAINCODE_NAME=solidary-network-chaincode
 # gov
 echo "Creating participant: Big Government"
 GOV_ID=c8ca045c-9d1b-407f-b9ae-31711758f2d0
-npx hurl invoke ${CHAINCODE_NAME} participant_create ${GOV_ID} "gov" "Big Government" -u admin
+GOV_CODE=gov
+npx hurl invoke ${CHAINCODE_NAME} participant_create ${GOV_ID} ${GOV_CODE} "Big Government" -u admin
 # npx hurl invoke ${CHAINCODE_NAME} participant_get ${GOV_ID} -u admin
+# npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${GOV_CODE} -u admin
 
 # org1
 echo "Creating participant: MIT"
 MIT_ID=61868772-4afd-4f94-af6a-8c87cf450f8e
-npx hurl invoke ${CHAINCODE_NAME} participant_create ${MIT_ID} "mit" "MIT" -u user1 -o org1
+MIT_CODE=mit
+npx hurl invoke ${CHAINCODE_NAME} participant_create ${MIT_ID} ${MIT_CODE} "MIT" -u user1 -o org1
 # there is no need for -u user1, it is the default
 # npx hurl invoke ${CHAINCODE_NAME} participant_get ${MIT_ID}
+# npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${MIT_CODE}
 
 # org2
 echo "Creating participant: National Bank"
 NABA_ID=b130558c-b910-4e82-b92b-caa199a047c1
-npx hurl invoke ${CHAINCODE_NAME} participant_create ${NABA_ID} "nab" "National Bank" -u user1 -o org2
+NABA_CODE=nab
+npx hurl invoke ${CHAINCODE_NAME} participant_create ${NABA_ID} ${NABA_CODE} "National Bank" -u user1 -o org2
 # there is no need for -u user1, it is the default
 # npx hurl invoke ${CHAINCODE_NAME} participant_get ${NABA_ID}
+# npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${NABA_CODE}
 
 # org3
 echo "Creating participant: Bad Bank"
 BADB_ID=f8596b03-492d-4d46-b54e-c4a70a037aa5
-npx hurl invoke ${CHAINCODE_NAME} participant_create ${BADB_ID} "bad" "Bad Bank" -u user1 -o org2
+BADB_CODE=nab
+npx hurl invoke ${CHAINCODE_NAME} participant_create ${BADB_ID} ${BADB_ID} "Bad Bank" -u user1 -o org2
 # there is no need for -u user1, it is the default
 # npx hurl invoke ${CHAINCODE_NAME} participant_get ${BADB_ID} -u admin
+# npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${BADB_CODE}
 
 # org4
 echo "Creating participant: God Bank"
 GODB_ID=0fcc878a-6900-49d9-9a29-dffd9b8dae3b
+GODB_CODE=nab
 npx hurl invoke ${CHAINCODE_NAME} participant_create ${GODB_ID} "god" "God Bank" -u user1 -o org2
 # there is no need for -u user1, it is the default
 # npx hurl invoke ${CHAINCODE_NAME} participant_get ${GODB_ID} -u user1 -o org2
+# npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${GODB_CODE}
 
 # create person with all data
 ID=4ea88521-031b-4279-9165-9c10e1839001
@@ -168,7 +178,7 @@ npx hurl invoke ${CHAINCODE_NAME} asset_create "${PAYLOAD}"
 
 # create asset with minimal data (filter with date=1582414657)
 ID=acef70e5-cd25-4533-8392-1fa57e430002
-NAME=Asset001
+NAME=Asset002
 ASSET_TYPE=DIGITAL_ASSET
 OWNER_TYPE=network.solidary.convector.person
 OWNER_ID=4ea88521-031b-4279-9165-9c10e1839001

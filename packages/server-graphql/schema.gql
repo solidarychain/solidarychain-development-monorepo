@@ -121,7 +121,7 @@ input NewCauseInput {
 }
 
 input NewParticipantInput {
-  id: String!
+  id: String
   code: String!
   name: String!
 }
@@ -172,17 +172,19 @@ input NewTransactionInput {
   resourceType: String!
   input: JSONObject!
   output: JSONObject!
-  assetId: String!
-  quantity: Float!
-  currency: String!
-  location: String!
+  quantity: Float
+  currency: String
+  location: String
   tags: [String!]
   metaData: JSONObject
   metaDataInternal: JSONObject
+  assetId: String
+  ownerUsername: String
 }
 
 type Participant {
   id: ID!
+  code: String!
   name: String!
   msp: String!
   participant: Participant
@@ -248,6 +250,7 @@ type Query {
   participants(skip: Int = 0, take: Int = 25): [Participant!]!
   participantComplexQuery(skip: Int = 0, take: Int = 25, getByComplexQueryInput: GetByComplexQueryInput!): [Participant!]!
   participantById(id: String!): Participant!
+  participantByCode(code: String!): Participant!
   persons(skip: Int = 0, take: Int = 25): [Person!]!
   personByAttribute(skip: Int = 0, take: Int = 25, getByAttributeInput: GetByAttributeInput!): [Person!]!
   personComplexQuery(skip: Int = 0, take: Int = 25, getByComplexQueryInput: GetByComplexQueryInput!): [Person!]!
@@ -278,16 +281,17 @@ type Transaction {
   resourceType: String!
   input: EntityResult!
   output: EntityResult!
-  assetId: String!
-  quantity: Float!
-  currency: String!
-  location: String!
+  quantity: Float
+  currency: String
+  location: String
   tags: [String!]
   metaData: JSONObject
   metaDataInternal: JSONObject
   participant: Participant
   identities: [x509Identities!]
   createdDate: Float!
+  assetId: String
+  ownerUsername: String
 }
 
 type x509Identities {

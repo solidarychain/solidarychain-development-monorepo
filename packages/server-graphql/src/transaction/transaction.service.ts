@@ -11,18 +11,16 @@ import { Transaction } from './models';
 export class TransactionService {
   async create(data: NewTransactionInput): Promise<Transaction> {
     try {
+      // require to use or generate new id
+      const newId: string = (data.id) ? data.id : uuid();
       // compose ConvectorModel from NewInput
       const transactionToCreate: TransactionConvectorModel = new TransactionConvectorModel({
         ...data,
         // require to inject values
-        id: data.id ? data.id : uuid(),
-        // convert Date to epoch unix time to be stored in convector transaction model
-        // TODO: leave it for chaincode
-        createdDate: ((new Date().getTime()) as number),
+        id: newId,
       });
-
       await TransactionControllerBackEnd.create(transactionToCreate);
-      return this.findOneById(data.id);
+      return this.findOneById(newId);
     } catch (error) {
       throw error;
     }

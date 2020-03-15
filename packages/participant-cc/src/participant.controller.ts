@@ -52,6 +52,7 @@ export class ParticipantController extends ConvectorController {
     }];
     // add date in epoch unix time
     participant.createdDate = new Date().getTime();
+
     // always add gov participant, if its is not the gov itself
     if (gov) {
       participant.participant = gov;
@@ -121,8 +122,6 @@ export class ParticipantController extends ConvectorController {
     @Param(yup.string())
     id: string,
   ): Promise<Participant> {
-    // get host participant from fingerprint
-    // const participant: Participant = await getParticipantByIdentity(this.sender);
     const existing = await Participant.query(Participant, {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_PARTICIPANT,
@@ -143,6 +142,31 @@ export class ParticipantController extends ConvectorController {
   @Invokable()
   public async getAll(): Promise<FlatConvectorModel<Participant>[]> {
     return (await Participant.getAll(c.CONVECTOR_MODEL_PATH_PARTICIPANT)).map(participant => participant.toJSON() as any);
+  }
+
+  /**
+   * get participant from code
+   */
+  @Invokable()
+  public async getByCode(
+    @Param(yup.string())
+    code: string,
+  ): Promise<Participant | Participant[]> {
+    const existing = await Participant.query(Participant, {
+      selector: {
+        type: c.CONVECTOR_MODEL_PATH_PARTICIPANT,
+        code,
+        // all participants belong to gov participant, without filter participant we get all, inclusive the gov
+        // participant: {
+        //   id: participant.id
+        // }
+      }
+    });
+    // require to check if existing before try to access existing[0].id prop
+    if (!existing || !existing[0] || !existing[0].id) {
+      throw new Error(`No participant exists with that code ${code}`);
+    }
+    return existing;
   }
 
   /**

@@ -1,4 +1,4 @@
-import { IsDefined, IsNumber, IsOptional, MaxLength } from 'class-validator';
+import { IsDefined, IsNumber, IsOptional, MaxLength, IsUUID } from 'class-validator';
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, InputType } from 'type-graphql';
 
@@ -7,8 +7,9 @@ import { Field, InputType } from 'type-graphql';
 @InputType()
 export class NewPersonInput {
   // optional: generated automatically, but can optionally be used
+  @IsOptional()
+  @IsUUID()
   @Field({ nullable: true })
-  // @IsDefined()
   public id: string;
 
   // generated automatically, but can optionally be used

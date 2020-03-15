@@ -11,20 +11,16 @@ import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
 export class AssetService {
   async create(data: NewAssetInput): Promise<Asset> {
     try {
+      // require to use or generate new id
+      const newId: string = (data.id) ? data.id : uuid();
       // compose ConvectorModel from NewInput
       const assetToCreate: AssetConvectorModel = new AssetConvectorModel({
         ...data,
         // require to inject values
-        id: data.id ? data.id : uuid(),
-        // convert Date to epoch unix time to be stored in convector asset model
-        // startDate: ((data.startDate as unknown) as number),
-        // endDate: ((data.endDate as unknown) as number),
-        // TODO: leave it for chaincode
-        createdDate: ((new Date().getTime()) as number),
+        id: newId,
       });
-
       await AssetControllerBackEnd.create(assetToCreate);
-      return this.findOneById(data.id);
+      return this.findOneById(newId);
     } catch (error) {
       throw error;
     }

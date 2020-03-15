@@ -12,11 +12,13 @@ import { Person } from './models';
 export class PersonService {
   async create(data: NewPersonInput): Promise<Person> {
     try {
+      // require to use or generate new id
+      const newId: string =  (data.id) ? data.id : uuid();
       // compose ConvectorModel from NewInput
       const personToCreate: PersonConvectorModel = new PersonConvectorModel({
         ...data,
         // require to inject values
-        id: data.id ? data.id : uuid(),
+        id: newId,
         // in case of omitted default username is fiscalNumber
         username: (data.username) ? data.username : data.fiscalNumber,
         // if not password defined generate a new one
@@ -27,7 +29,7 @@ export class PersonService {
         expirationDate: ((data.expirationDate as unknown) as number),
       });
       await PersonControllerBackEnd.create(personToCreate);
-      return await this.findOneById(personToCreate.id);
+      return await this.findOneById(newId);
     } catch (error) {
       // extract error message
       const errorMessage: string = (error.responses && error.responses[1].error.message) ? error.responses[1].error.message : error;

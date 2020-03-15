@@ -79,6 +79,7 @@
   - [Hurley and fix Globall install](#hurley-and-fix-globall-install)
   - [Lerna Fix problem of install dependencies](#lerna-fix-problem-of-install-dependencies)
   - [After Update to new Packages we have Conversion of type 'FlatConvectorModel<Asset>[]' to type 'Asset[]' may be a mistake because neither type sufficiently overlaps with the other](#after-update-to-new-packages-we-have-conversion-of-type-flatconvectormodelasset-to-type-asset-may-be-a-mistake-because-neither-type-sufficiently-overlaps-with-the-other)
+  - [Class-validator](#class-validator)
 
 This is a simple NestJs starter, based on above links, I only extended it with a few things like **swagger api**, **https**, **jwt**, and other stuff, thanks m8s
 
@@ -3034,4 +3035,18 @@ asset.model.ts(13, 10): 'id' is declared here.
 ```typescript
 // just add [] to Array<FlatConvectorModel<AssetConvectorModel>>
 const convectorModel: Array<FlatConvectorModel<AssetConvectorModel[]>> = await AssetControllerBackEnd.getAll();
+```
+
+## Class-validator
+
+- [IsOptional support for null](https://github.com/epiphone/class-validator-jsonschema/issues/9)
+
+Checks if given value is empty (=== null, === undefined) and if so, ignores all the validators on the property.
+
+and this library should naturally match class-validator's definition as closely as possible
+
+```typescript
+@Field({ nullable: true })
+@IsOptional()
+public location: string;
 ```

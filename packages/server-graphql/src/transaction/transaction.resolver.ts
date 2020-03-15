@@ -48,7 +48,7 @@ export class TransactionResolver {
     @Args('newTransactionData') newTransactionData: NewTransactionInput,
   ): Promise<Transaction> {
     // inject username into newTransactionData
-    newTransactionData.username = user.username;
+    newTransactionData.ownerUsername = user.username;
     const transaction = await this.transactionService.create(newTransactionData);
     // fire subscription
     pubSub.publish('transactionAdded', { transactionAdded: transaction });

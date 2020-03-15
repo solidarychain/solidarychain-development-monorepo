@@ -16,11 +16,11 @@ export class Transaction {
 
   @Field()
   @IsDefined()
-  transactionType: TransactionType;
+  public transactionType: TransactionType;
 
   @Field()
   @IsDefined()
-  resourceType: ResourceType;
+  public resourceType: ResourceType;
 
   // @Field(type => GraphQLJSONObject)
   // @IsDefined()
@@ -33,34 +33,24 @@ export class Transaction {
   @IsDefined()
   output?: Entity;
 
-  @Field()
-  @IsDefined()
-  public assetId: string;
-
-  @Field()
-  @IsDefined()
+  @Field({ nullable: true })
   @IsNumber()
-  quantity: number;
+  public quantity: number;
 
-  @Field()
-  @IsDefined()
-  currency: string;
+  @Field({ nullable: true })
+  public currency: string;
 
-  @Field()
-  @IsDefined()
-  location: string;
+  @Field({ nullable: true })
+  public location: string;
 
-  // TODO: tags
-  @Field(type => String, { nullable: true })
-  public tags: string[];
+  @Field(type => [String], { nullable: true })
+  public tags?: string[];
 
   @Field(type => GraphQLJSONObject, { nullable: true })
-  @IsDefined()
-  metaData: any;
+  public metaData: any;
 
   @Field(type => GraphQLJSONObject, { nullable: true })
-  @IsDefined()
-  metaDataInternal: any;
+  public metaDataInternal: any;
 
   @Field({ nullable: true })
   @IsDefined()
@@ -72,8 +62,14 @@ export class Transaction {
 
   @Field()
   @IsDefined()
-  // @Validate(yup.number())
   @Validate(yup.number)
   public createdDate: number;
 
+  // optional: transfer assets
+
+  @Field({ nullable: true })
+  public assetId: string;
+
+  @Field({ nullable: true })
+  public ownerUsername: string;
 }

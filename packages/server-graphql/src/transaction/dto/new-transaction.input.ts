@@ -1,11 +1,13 @@
 import { Entity, ResourceType, TransactionType } from '@solidary-network/transaction-cc';
-import { IsDefined, IsNumber } from 'class-validator';
+import { IsDefined, IsNumber, IsEmpty, IsUUID, IsOptional } from 'class-validator';
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, InputType } from 'type-graphql';
 
 @InputType()
 export class NewTransactionInput {
   // optional: generated automatically, but can optionally be used
+  @IsOptional()
+  @IsUUID()
   @Field({ nullable: true })
   public id: string;
 
@@ -30,36 +32,38 @@ export class NewTransactionInput {
   @IsDefined()
   public output?: Entity;
 
-  @Field()
-  @IsDefined()
+  @Field({ nullable: true })
   @IsNumber()
-  public quantity: number;
+  @IsOptional()
+  public quantity?: number;
 
-  @Field()
-  @IsDefined()
+  @Field({ nullable: true })
+  @IsOptional()
   public currency: string;
 
-  @Field()
-  @IsDefined()
+  @Field({ nullable: true })
+  @IsOptional()
   public location: string;
 
-  // TODO: tags
   @Field(type => [String], { nullable: true })
-  public tags: string[];
+  @IsOptional()
+  public tags?: string[];
 
   @Field(type => GraphQLJSONObject, { nullable: true })
-  @IsDefined()
+  @IsOptional()
   public metaData: any;
 
   @Field(type => GraphQLJSONObject, { nullable: true })
-  @IsDefined()
+  @IsOptional()
   public metaDataInternal: any;
 
   // optional: transfer assets
 
-  @Field()
+  @Field({ nullable: true })
+  @IsOptional()
   public assetId: string;
 
-  @Field()
-  public username: string;
+  @Field({ nullable: true })
+  @IsOptional()
+  public ownerUsername: string;
 }

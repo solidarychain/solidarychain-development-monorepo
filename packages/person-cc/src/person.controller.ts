@@ -210,7 +210,7 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
   }
 
   /**
-   * get username from participant
+   * get person from username
    */
   @Invokable()
   public async getByUsername(
@@ -236,7 +236,7 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
   }
 
   /**
-   * get fiscalNumber from participant
+   * get person from fiscalNumber
    */
   @Invokable()
   public async getByFiscalnumber(

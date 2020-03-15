@@ -40,6 +40,18 @@ export class ParticipantResolver {
     return participant;
   }
 
+  @UseGuards(GqlAuthGuard)
+  @Query(returns => Participant)
+  async participantByCode(
+    @Args('code') code: string,
+  ): Promise<Participant> {
+    const participant = await this.participantService.findOneByCode(code);
+    if (!participant) {
+      throw new NotFoundException(code);
+    }
+    return participant;
+  }
+
   @Mutation(returns => Participant)
   async participantNew(
     @Args('newParticipantData') newParticipantData: NewParticipantInput,

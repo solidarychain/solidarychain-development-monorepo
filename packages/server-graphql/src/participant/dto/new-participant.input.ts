@@ -1,12 +1,13 @@
-import { IsDefined, Length, MaxLength } from 'class-validator';
+import { IsDefined, Length, MaxLength, IsOptional, IsUUID } from 'class-validator';
 import { Field, InputType } from 'type-graphql';
 
 @InputType()
 export class NewParticipantInput {
-  @Field()
-  @IsDefined()
-  @MaxLength(12)
-  id: string;
+  // optional: generated automatically, but can optionally be used
+  @IsOptional()
+  @IsUUID()
+  @Field({ nullable: true })
+  public id: string;
 
   @Field()
   @IsDefined()

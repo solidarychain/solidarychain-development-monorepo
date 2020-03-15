@@ -7,3 +7,4 @@ dist/
 chaincode-person/
 log/packages/server/.env
 .vscode/chrome
+chaincode-solidary-network-chaincode/**

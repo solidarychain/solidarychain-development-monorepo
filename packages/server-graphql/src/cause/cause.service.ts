@@ -11,20 +11,19 @@ import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
 export class CauseService {
   async create(data: NewCauseInput): Promise<Cause> {
     try {
+      // require to use or generate new id
+      const newId: string =  (data.id) ? data.id : uuid();
       // compose ConvectorModel from NewInput
       const causeToCreate: CauseConvectorModel = new CauseConvectorModel({
         ...data,
         // require to inject values
-        id: data.id ? data.id : uuid(),
+        id: newId,
         // convert Date to epoch unix time to be stored in convector cause model
         startDate: ((data.startDate as unknown) as number),
         endDate: ((data.endDate as unknown) as number),
-        // TODO: leave it for chaincode
-        createdDate: ((new Date().getTime()) as number),
       });
-
       await CauseControllerBackEnd.create(causeToCreate);
-      return this.findOneById(data.id);
+      return this.findOneById(newId);
     } catch (error) {
       throw error;
     }
