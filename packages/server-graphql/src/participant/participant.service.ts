@@ -8,10 +8,10 @@ import { Participant } from './models/participant.model';
 
 @Injectable()
 export class ParticipantService {
-  async create(data: NewParticipantInput): Promise<Participant> {
+  async create({id, code, name}: NewParticipantInput): Promise<Participant> {
     try {
-      await ParticipantControllerBackEnd.register(data.id, data.name);
-      return this.findOneById(data.id);
+      await ParticipantControllerBackEnd.create(id, code, name);
+      return this.findOneById(id);
     } catch (error) {
       throw error;
     }
@@ -19,7 +19,7 @@ export class ParticipantService {
 
   async findAll(paginationArgs: PaginationArgs): Promise<Participant[]> {
     try {
-      const convectorModel: Array<FlatConvectorModel<ParticipantConvectorModel>> = await ParticipantControllerBackEnd.getAll();
+      const convectorModel: Array<FlatConvectorModel<ParticipantConvectorModel[]>> = await ParticipantControllerBackEnd.getAll();
       // require to map fabric model to graphql Participant[]
       return (paginationArgs)
         ? convectorModel.splice(paginationArgs.skip, paginationArgs.take) as Participant[]
@@ -42,16 +42,13 @@ export class ParticipantService {
   }
 
   async findOneById(id: string): Promise<Participant> {
-    try {
-      // get fabric model with _props
-      const fabricModel: ParticipantConvectorModel = await ParticipantControllerBackEnd.get(id) as ParticipantConvectorModel;
-      // convert fabric model to convector model (remove _props)
-      const convectorModel = new ParticipantConvectorModel(fabricModel).toJSON();
-      // trick: must return convector model as a graphql model, to prevent property conversion problems
-      return (convectorModel as Participant);
-    } catch (error) {
-      throw error;
-    }
+    // get fabric model with _props
+    const fabricModel: ParticipantConvectorModel = await ParticipantControllerBackEnd.get(id);
+    // convert fabric model to convector model (remove _props)
+    const convectorModel: ParticipantConvectorModel = new ParticipantConvectorModel(fabricModel);
+    // trick: must return convector model as a graphql model, to prevent property conversion problems
+    const model: Participant = await this.findBy(convectorModel, null) as Participant;
+    return model;
   }
 
   /**

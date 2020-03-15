@@ -13,6 +13,9 @@ const CONVECTOR_MODEL_PATH_ATTRIBUTE: string = `${CONVECTOR_MODEL_PATH_PREFIX}.a
 const CONVECTOR_MODEL_PATH_X509IDENTITY: string = `${CONVECTOR_MODEL_PATH_PREFIX}.x509identity`;
 // note if change Participant, Person or Cause don't forget to change hard coded string in EntityType ./types.ts to
 
+// uuid
+const UUID_GOV_ID: string = 'c8ca045c-9d1b-407f-b9ae-31711758f2d0';
+
 // yup messages
 const YUP_MESSAGE_INTEGER: string = 'Should be a integer number.';
 const YUP_MESSAGE_USERNAME_TO_SHORT: string = 'Username is too short - should be 6 chars minimum.';
@@ -32,14 +35,16 @@ const EXCEPTION_ERROR_NO_COMPLEX_QUERY: string = 'You must supply a valid filter
 
 export const appConstants = {
 	// convector models
+	CONVECTOR_MODEL_PATH_ENTITY,
 	CONVECTOR_MODEL_PATH_PARTICIPANT,
 	CONVECTOR_MODEL_PATH_PERSON,
-	CONVECTOR_MODEL_PATH_ATTRIBUTE,
-	CONVECTOR_MODEL_PATH_X509IDENTITY,
-	CONVECTOR_MODEL_PATH_TRANSACTION,
-	CONVECTOR_MODEL_PATH_ENTITY,
 	CONVECTOR_MODEL_PATH_CAUSE,
 	CONVECTOR_MODEL_PATH_ASSET,
+	CONVECTOR_MODEL_PATH_TRANSACTION,
+	CONVECTOR_MODEL_PATH_ATTRIBUTE,
+	CONVECTOR_MODEL_PATH_X509IDENTITY,
+	// uuid
+	UUID_GOV_ID,
 	// yup messages
 	YUP_MESSAGE_INTEGER,
 	YUP_MESSAGE_USERNAME_TO_SHORT,

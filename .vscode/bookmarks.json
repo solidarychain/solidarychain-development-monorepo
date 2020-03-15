@@ -3,27 +3,27 @@
 		"path": "$ROOTPATH$/NOTES.md",
 		"bookmarks": [
 			{
-				"line": 119,
+				"line": 120,
 				"column": 51,
 				"label": ""
 			},
 			{
-				"line": 133,
+				"line": 134,
 				"column": 24,
 				"label": ""
 			},
 			{
-				"line": 167,
+				"line": 168,
 				"column": 0,
 				"label": ""
 			},
 			{
-				"line": 2762,
+				"line": 2763,
 				"column": 93,
 				"label": ""
 			},
 			{
-				"line": 2950,
+				"line": 2951,
 				"column": 28,
 				"label": ""
 			}
@@ -55,6 +55,26 @@
 			{
 				"line": 202,
 				"column": 22,
+				"label": ""
+			}
+		]
+	},
+	{
+		"path": "$ROOTPATH$/chaincode-solidary-network-chaincode/node_modules/@worldsibu/convector-core-model/dist/src/convector-model.js",
+		"bookmarks": [
+			{
+				"line": 36,
+				"column": 56,
+				"label": ""
+			}
+		]
+	},
+	{
+		"path": "$ROOTPATH$/packages/transaction-cc/src/transaction.controller.ts",
+		"bookmarks": [
+			{
+				"line": 42,
+				"column": 32,
 				"label": ""
 			}
 		]

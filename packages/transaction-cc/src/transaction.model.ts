@@ -30,10 +30,6 @@ export class Transaction extends ConvectorModel<Transaction> {
   public output: Entity;
 
   @Required()
-  @Validate(yup.string())
-  public assetId: string;
-
-  @Required()
   @Validate(yup.number())
   public quantity: number;
 
@@ -46,7 +42,7 @@ export class Transaction extends ConvectorModel<Transaction> {
 
   // TODO: tags
   @Validate(yup.array().of(yup.string()))
-  public tags: Array<String>;
+  public tags: string[];
   
   @Validate(yup.object().nullable())
   public metaData: any;
@@ -65,5 +61,14 @@ export class Transaction extends ConvectorModel<Transaction> {
   // DON'T add @Required
   @Validate(yup.array(x509Identities.schema()))
   public identities: Array<FlatConvectorModel<x509Identities>>;
+
+  // optional, only when we transfer assets we require it
+
+  // owner
+  @Validate(yup.string())
+  public username: string;
+
+  @Validate(yup.string())
+  public assetId: string;
 
 }

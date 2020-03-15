@@ -24,7 +24,7 @@ export class Asset extends ConvectorModel<Asset> {
 
   // TODO: tags
   @Validate(yup.array().of(yup.string()))
-  public tags: Array<String>;
+  public tags: string[];
     
   @Validate(yup.object().nullable())
   public metaData: any;

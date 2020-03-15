@@ -69,7 +69,7 @@ describe('Person', () => {
   });
 
   it('should create the government identity', async () => {
-    await participantCtrl.register('gov', 'Big Gov');
+    await participantCtrl.create('gov', 'Big Gov');
 
     const justSavedModel = await adapter.getById<Participant>('gov');
 
@@ -113,7 +113,7 @@ describe('Person', () => {
     // Fake another certificate for tests
     (adapter.stub as any).usercert = fakeSecondParticipantCert;
 
-    await participantCtrl.register('mit', 'MIT - Massachusetts Institute of Technology');
+    await participantCtrl.create('mit', 'MIT - Massachusetts Institute of Technology');
 
     const justSavedModel = await adapter.getById<Participant>('mit');
 

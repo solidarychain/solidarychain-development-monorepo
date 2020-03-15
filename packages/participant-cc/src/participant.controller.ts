@@ -3,6 +3,7 @@ import { BaseStorage, Controller, ConvectorController, FlatConvectorModel, Invok
 import { ClientIdentity } from 'fabric-shim';
 import * as yup from 'yup';
 import { Participant } from './participant.model';
+import { getParticipantByIdentity } from './utils';
 
 @Controller('participant')
 export class ParticipantController extends ConvectorController {
@@ -12,21 +13,23 @@ export class ParticipantController extends ConvectorController {
   };
 
   @Invokable()
-  public async register(
+  public async create(
     @Param(yup.string())
     id: string,
+    @Param(yup.string())
+    code: string,
     @Param(yup.string())
     name: string,
   ) {
     // get participant if not gov, in case of gov it won't exists yet and will be without participant
     let gov: Participant;
-    if (id !== 'gov') {
+    if (id !== c.UUID_GOV_ID) {
       // deprecated now always use gov to create participants
       // participant = await getParticipantByIdentity(this.sender);
-      gov = await Participant.getOne('gov');
+      gov = await Participant.getOne(c.UUID_GOV_ID);
       if (!!gov && !gov.id) {
         // throw new Error('There is no participant with that identity');
-        throw new Error('There is no participant with that id');
+        throw new Error('There is no go participant');
       }
     }
 
@@ -39,6 +42,7 @@ export class ParticipantController extends ConvectorController {
     // add participant
     let participant = new Participant();
     participant.id = id;
+    participant.code = code || id;
     participant.name = name || id;
     participant.msp = this.fullIdentity.getMSPID();
     // create a new identity
@@ -48,8 +52,10 @@ export class ParticipantController extends ConvectorController {
     }];
     // add date in epoch unix time
     participant.createdDate = new Date().getTime();
-    // always add gov participant if its is not the gov itself
-    //      if (gov) participant.participant = gov;
+    // always add gov participant, if its is not the gov itself
+    if (gov) {
+      participant.participant = gov;
+    }
     await participant.save();
   }
 
@@ -93,16 +99,45 @@ export class ParticipantController extends ConvectorController {
     await existing.save();
   }
 
+  // @Invokable()
+  // public async get(
+  //   @Param(yup.string())
+  //   id: string
+  // ) {
+  //   const existing = await Participant.getOne(id);
+  //   if (!existing || !existing.id) {
+  //     throw new Error(`No identity exists with that ID ${id}`);
+  //   }
+  //   return existing;
+  // }
+
+  /**
+   * get id: custom function to use `type` and `participant` in rich query
+   * default convector get don't use of this properties and give problems, 
+   * like we use ids of other models and it works 
+   */
   @Invokable()
   public async get(
     @Param(yup.string())
-    id: string
-  ) {
-    const existing = await Participant.getOne(id);
-    if (!existing || !existing.id) {
-      throw new Error(`No identity exists with that ID ${id}`);
+    id: string,
+  ): Promise<Participant> {
+    // get host participant from fingerprint
+    // const participant: Participant = await getParticipantByIdentity(this.sender);
+    const existing = await Participant.query(Participant, {
+      selector: {
+        type: c.CONVECTOR_MODEL_PATH_PARTICIPANT,
+        id,
+        // all participants belong to gov participant, without filter participant we get all, inclusive the gov
+        // participant: {
+        //   id: participant.id
+        // }
+      }
+    });
+    // require to check if existing before try to access existing[0].id prop
+    if (!existing || !existing[0] || !existing[0].id) {
+      throw new Error(`No participant exists with that id ${id}`);
     }
-    return existing;
+    return existing[0];
   }
 
   @Invokable()

@@ -8,6 +8,10 @@ export class Participant extends ConvectorModel<Participant> {
 
   @Required()
   @Validate(yup.string())
+  public code: string;
+
+  @Required()
+  @Validate(yup.string())
   public name: string;
 
   @Required()

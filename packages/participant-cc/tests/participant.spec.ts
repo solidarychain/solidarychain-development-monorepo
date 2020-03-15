@@ -28,7 +28,7 @@ describe('Participant', () => {
 
   it('should create a default model', async () => {
     const id = uuid();
-    await participantCtrl.register(id, 'Test Participant');
+    await participantCtrl.create(id, 'Test Participant');
 
     const justSavedModel = await adapter.getById<Participant>(id);
 

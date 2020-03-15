@@ -32,7 +32,7 @@ export class CauseService {
 
   async findAll(paginationArgs: PaginationArgs): Promise<Cause[]> {
     try {
-      const convectorModel: Array<FlatConvectorModel<CauseConvectorModel>> = await CauseControllerBackEnd.getAll();
+      const convectorModel: Array<FlatConvectorModel<CauseConvectorModel[]>> = await CauseControllerBackEnd.getAll();
       // require to map fabric model to graphql Cause[]
       return (paginationArgs)
         ? convectorModel.splice(paginationArgs.skip, paginationArgs.take) as Cause[]
@@ -66,16 +66,13 @@ export class CauseService {
   }
 
   async findOneById(id: string): Promise<Cause> {
-    try {
-      // get fabric model with _props
-      const fabricModel: CauseConvectorModel = await CauseControllerBackEnd.get(id) as CauseConvectorModel;
-      // convert fabric model to convector model (remove _props)
-      const convectorModel = new CauseConvectorModel(fabricModel).toJSON();
-      // trick: must return convector model as a graphql model, to prevent property conversion problems
-      return (convectorModel as Cause);
-    } catch (error) {
-      throw error;
-    }
+    // get fabric model with _props
+    const fabricModel: CauseConvectorModel = await CauseControllerBackEnd.get(id);
+    // convert fabric model to convector model (remove _props)
+    const convectorModel: CauseConvectorModel = new CauseConvectorModel(fabricModel);
+    // trick: must return convector model as a graphql model, to prevent property conversion problems
+    const model: Cause = await this.findBy(convectorModel, null) as Cause;
+    return model;
   }
 
   /**

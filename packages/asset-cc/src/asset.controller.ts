@@ -1,6 +1,5 @@
 import { appConstants as c } from '@solidary-network/common-cc';
-import { Participant } from '@solidary-network/participant-cc';
-import { getParticipantByIdentity } from '@solidary-network/person-cc';
+import { Participant, getParticipantByIdentity } from '@solidary-network/participant-cc';
 import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
 import * as yup from 'yup';
@@ -65,18 +64,46 @@ export class AssetController extends ConvectorController<ChaincodeTx> {
     await asset.save();
   }
 
+  // @Invokable()
+  // public async get(
+  //   @Param(yup.string())
+  //   id: string
+  // ) {
+  //   const existing = await Asset.getOne(id);
+  //   if (!existing || !existing.id) {
+  //     throw new Error(`No asset exists with that ID ${id}`);
+  //   }
+  //   return existing;
+  // }
+
+  /**
+   * get id: custom function to use `type` and `participant` in rich query
+   * default convector get don't use of this properties and give problems, 
+   * like we use ids of other models and it works 
+   */
   @Invokable()
   public async get(
     @Param(yup.string())
-    id: string
-  ) {
-    const existing = await Asset.getOne(id);
-    if (!existing || !existing.id) {
-      throw new Error(`No asset exists with that ID ${id}`);
+    id: string,
+  ): Promise<Asset> {
+    // get host participant from fingerprint
+    const participant: Participant = await getParticipantByIdentity(this.sender);
+    const existing = await Asset.query(Asset, {
+      selector: {
+        type: c.CONVECTOR_MODEL_PATH_ASSET,
+        id,
+        participant: {
+          id: participant.id
+        }
+      }
+    });
+    // require to check if existing before try to access existing[0].id prop
+    if (!existing || !existing[0] || !existing[0].id) {
+      throw new Error(`No asset exists with that id ${id}`);
     }
-    return existing;
+    return existing[0];
   }
-
+  
   @Invokable()
   public async getAll(): Promise<FlatConvectorModel<Asset>[]> {
     return (await Asset.getAll(c.CONVECTOR_MODEL_PATH_ASSET)).map(asset => asset.toJSON() as any);

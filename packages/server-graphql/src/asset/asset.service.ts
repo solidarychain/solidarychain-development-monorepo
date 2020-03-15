@@ -32,7 +32,7 @@ export class AssetService {
 
   async findAll(paginationArgs: PaginationArgs): Promise<Asset[]> {
     try {
-      const convectorModel: Array<FlatConvectorModel<AssetConvectorModel>> = await AssetControllerBackEnd.getAll();
+      const convectorModel: Array<FlatConvectorModel<AssetConvectorModel[]>> = await AssetControllerBackEnd.getAll();
       // require to map fabric model to graphql Asset[]
       return (paginationArgs)
         ? convectorModel.splice(paginationArgs.skip, paginationArgs.take) as Asset[]
@@ -55,16 +55,13 @@ export class AssetService {
   }
 
   async findOneById(id: string): Promise<Asset> {
-    try {
-      // get fabric model with _props
-      const fabricModel: AssetConvectorModel = await AssetControllerBackEnd.get(id) as AssetConvectorModel;
-      // convert fabric model to convector model (remove _props)
-      const convectorModel = new AssetConvectorModel(fabricModel).toJSON();
-      // trick: must return convector model as a graphql model, to prevent property conversion problems
-      return (convectorModel as Asset);
-    } catch (error) {
-      throw error;
-    }
+    // get fabric model with _props
+    const fabricModel: AssetConvectorModel = await AssetControllerBackEnd.get(id);
+    // convert fabric model to convector model (remove _props)
+    const convectorModel: AssetConvectorModel = new AssetConvectorModel(fabricModel);
+    // trick: must return convector model as a graphql model, to prevent property conversion problems
+    const model: Asset = await this.findBy(convectorModel, null) as Asset;
+    return model;
   }
 
   /**

@@ -122,6 +122,7 @@ input NewCauseInput {
 
 input NewParticipantInput {
   id: String!
+  code: String!
   name: String!
 }
 

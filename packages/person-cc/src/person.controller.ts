@@ -1,11 +1,11 @@
 import { appConstants as c } from '@solidary-network/common-cc';
-import { Participant } from '@solidary-network/participant-cc';
+import { Participant, getParticipantByIdentity } from '@solidary-network/participant-cc';
 import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
 import * as yup from 'yup';
 import { PersonAttribute } from './person-attribute.model';
 import { Person } from './person.model';
-import { getParticipantByIdentity, hashPassword } from './utils';
+import { hashPassword } from './utils';
 
 @Controller('person')
 export class PersonController extends ConvectorController<ChaincodeTx> {
@@ -54,7 +54,7 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
       throw new Error(`There is a person registered with that fiscalNumber already (${person.fiscalNumber})`);
     }
 
-    let gov = await Participant.getOne('gov');
+    let gov = await Participant.getOne(c.UUID_GOV_ID);
     if (!gov || !gov.identities) {
       throw new Error('No government identity has been registered yet');
     }
@@ -139,16 +139,44 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     await person.save();
   }
 
+  // @Invokable()
+  // public async get(
+  //   @Param(yup.string())
+  //   id: string
+  // ) {
+  //   const existing = await Person.getOne(id);
+  //   if (!existing || !existing.id) {
+  //     throw new Error(`No person exists with that ID ${id}`);
+  //   }
+  //   return existing;
+  // }
+
+  /**
+   * get id: custom function to use `type` and `participant` in rich query
+   * default convector get don't use of this properties and give problems, 
+   * like we use ids of other models and it works 
+   */
   @Invokable()
   public async get(
     @Param(yup.string())
-    id: string
-  ) {
-    const existing = await Person.getOne(id);
-    if (!existing || !existing.id) {
-      throw new Error(`No person exists with that ID ${id}`);
+    id: string,
+  ): Promise<Person> {
+    // get host participant from fingerprint
+    const participant: Participant = await getParticipantByIdentity(this.sender);
+    const existing = await Person.query(Person, {
+      selector: {
+        type: c.CONVECTOR_MODEL_PATH_PERSON,
+        id,
+        participant: {
+          id: participant.id
+        }
+      }
+    });
+    // require to check if existing before try to access existing[0].id prop
+    if (!existing || !existing[0] || !existing[0].id) {
+      throw new Error(`No person exists with that id ${id}`);
     }
-    return existing;
+    return existing[0];
   }
 
   @Invokable()

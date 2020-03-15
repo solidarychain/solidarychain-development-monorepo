@@ -78,6 +78,7 @@
   - [Debug restartEnv.sh : chaincode works in debug bug not with restartEnv.sh](#debug-restartenvsh--chaincode-works-in-debug-bug-not-with-restartenvsh)
   - [Hurley and fix Globall install](#hurley-and-fix-globall-install)
   - [Lerna Fix problem of install dependencies](#lerna-fix-problem-of-install-dependencies)
+  - [After Update to new Packages we have Conversion of type 'FlatConvectorModel<Asset>[]' to type 'Asset[]' may be a mistake because neither type sufficiently overlaps with the other](#after-update-to-new-packages-we-have-conversion-of-type-flatconvectormodelasset-to-type-asset-may-be-a-mistake-because-neither-type-sufficiently-overlaps-with-the-other)
 
 This is a simple NestJs starter, based on above links, I only extended it with a few things like **swagger api**, **https**, **jwt**, and other stuff, thanks m8s
 
@@ -3020,4 +3021,17 @@ Instantiated Chaincode at org1
 ```shell
 # better way is: resolves problem of person to participant dependecies etc
 $ rm node_modules -r && npm i
+```
+
+## After Update to new Packages we have Conversion of type 'FlatConvectorModel<Asset>[]' to type 'Asset[]' may be a mistake because neither type sufficiently overlaps with the other
+
+```
+Conversion of type 'FlatConvectorModel<Asset>[]' to type 'Asset[]' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Property 'id' is missing in type 'FlatConvectorModel<Asset>' but required in type 'Asset'.ts(2352)
+asset.model.ts(13, 10): 'id' is declared here.
+```
+
+```typescript
+// just add [] to Array<FlatConvectorModel<AssetConvectorModel>>
+const convectorModel: Array<FlatConvectorModel<AssetConvectorModel[]>> = await AssetControllerBackEnd.getAll();
 ```

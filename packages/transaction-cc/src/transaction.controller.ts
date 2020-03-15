@@ -1,4 +1,4 @@
-import { Asset } from '@solidary-network/asset-cc';
+import { Asset, AssetType } from '@solidary-network/asset-cc';
 import { appConstants as c } from '@solidary-network/common-cc';
 import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
@@ -6,6 +6,7 @@ import * as yup from 'yup';
 import { ResourceType, TransactionType } from './enums';
 import { Transaction } from './transaction.model';
 import { getEntity } from './utils';
+import { getParticipantByIdentity, Participant } from '@solidary-network/participant-cc';
 
 @Controller('transaction')
 export class TransactionController extends ConvectorController<ChaincodeTx> {
@@ -14,15 +15,23 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     @Param(Transaction)
     transaction: Transaction,
     // optional: owner username, to transfer assets
-    @Param(yup.string().nullable())
-    username?: string
+    // @Param(yup.string().nullable())
+    // username?: string
   ) {
+    // get host participant from fingerprint
+    const participant: Participant = await getParticipantByIdentity(this.sender);
+    if (!!participant && !participant.id) {
+      throw new Error('There is no participant with that identity');
+    }
+
     // check duplicated id
     const exists = await Transaction.getOne(transaction.id);
     if (!!exists && exists.id) {
       throw new Error(`There is a transaction with that Id already (${transaction.id})`);
     }
 
+    // participant
+    transaction.participant = participant;
     // assign input/output
     transaction.input.entity = await getEntity(transaction.input.type, transaction.input.id);
     transaction.output.entity = await getEntity(transaction.output.type, transaction.output.id);
@@ -35,10 +44,15 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     // add date in epoch unix time
     transaction.createdDate = new Date().getTime();
 
+    // TODO: WIP
     // detect if is a transfer type, and asset resourceType
     let asset: Asset;
-    if (transaction.transactionType === TransactionType.Transfer && (transaction.resourceType === ResourceType.PhysicalAsset || transaction.resourceType === ResourceType.DigitalAsset)) {
-      if (! transaction.assetId) {
+    if (transaction.transactionType === TransactionType.Transfer && (
+      transaction.resourceType === ResourceType.PhysicalAsset || transaction.resourceType === ResourceType.DigitalAsset
+    )) {
+      if (!transaction.assetId) {
+        throw new Error(`You must supply owner username when transfer assets of type ${transaction.resourceType}`);
+      } else if (!transaction.assetId) {
         throw new Error(`You must supply a assetId when transfer assets of type ${transaction.resourceType}`);
       } else {
         // check duplicated id
@@ -46,9 +60,13 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
         if (!exists) {
           throw new Error(`There is no asset with Id (${transaction.assetId})`);
         }
+        // check if asset resourceType is equal to payload.resourceType
+        if (transaction.resourceType !== (asset.assetType as unknown as ResourceType)) {
+          throw new Error(`Transaction resourceType (${transaction.resourceType}) is different from asset resourceType (${asset.assetType}), you can't change resourceType in transfers`);
+        }
         // assign to asset;
         asset = exists;
-        asset.name = `${asset.name}-owner:${username}`;
+        asset.name = `${asset.name}-owner:${transaction.username}`;
         // save asset
         asset.save();
       }
@@ -57,16 +75,44 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     await transaction.save();
   }
 
+  // @Invokable()
+  // public async get(
+  //   @Param(yup.string())
+  //   id: string
+  // ) {
+  //   const existing = await Transaction.getOne(id);
+  //   if (!existing || !existing.id) {
+  //     throw new Error(`No transaction exists with that ID ${id}`);
+  //   }
+  //   return existing;
+  // }
+
+  /**
+   * get id: custom function to use `type` and `participant` in rich query
+   * default convector get don't use of this properties and give problems, 
+   * like we use ids of other models and it works 
+   */
   @Invokable()
   public async get(
     @Param(yup.string())
-    id: string
-  ) {
-    const existing = await Transaction.getOne(id);
-    if (!existing || !existing.id) {
-      throw new Error(`No transaction exists with that ID ${id}`);
+    id: string,
+  ): Promise<Transaction> {
+    // get host participant from fingerprint
+    const participant: Participant = await getParticipantByIdentity(this.sender);
+    const existing = await Transaction.query(Asset, {
+      selector: {
+        type: c.CONVECTOR_MODEL_PATH_TRANSACTION,
+        id,
+        participant: {
+          id: participant.id
+        }
+      }
+    });
+    // require to check if existing before try to access existing[0].id prop
+    if (!existing || !existing[0] || !existing[0].id) {
+      throw new Error(`No transaction exists with that id ${id}`);
     }
-    return existing;
+    return existing[0];
   }
 
   @Invokable()

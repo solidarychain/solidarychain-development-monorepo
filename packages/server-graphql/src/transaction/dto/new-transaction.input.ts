@@ -32,10 +32,6 @@ export class NewTransactionInput {
 
   @Field()
   @IsDefined()
-  public assetId: string;
-
-  @Field()
-  @IsDefined()
   @IsNumber()
   public quantity: number;
 
@@ -58,4 +54,12 @@ export class NewTransactionInput {
   @Field(type => GraphQLJSONObject, { nullable: true })
   @IsDefined()
   public metaDataInternal: any;
+
+  // optional: transfer assets
+
+  @Field()
+  public assetId: string;
+
+  @Field()
+  public username: string;
 }

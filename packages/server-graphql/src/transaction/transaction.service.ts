@@ -9,7 +9,7 @@ import { Transaction } from './models';
 
 @Injectable()
 export class TransactionService {
-  async create(data: NewTransactionInput, username?: string): Promise<Transaction> {
+  async create(data: NewTransactionInput): Promise<Transaction> {
     try {
       // compose ConvectorModel from NewInput
       const transactionToCreate: TransactionConvectorModel = new TransactionConvectorModel({
@@ -21,7 +21,7 @@ export class TransactionService {
         createdDate: ((new Date().getTime()) as number),
       });
 
-      await TransactionControllerBackEnd.create(transactionToCreate, username);
+      await TransactionControllerBackEnd.create(transactionToCreate);
       return this.findOneById(data.id);
     } catch (error) {
       throw error;
@@ -30,7 +30,7 @@ export class TransactionService {
 
   async findAll(paginationArgs: PaginationArgs): Promise<Transaction[]> {
     try {
-      const convectorModel: Array<FlatConvectorModel<TransactionConvectorModel>> = await TransactionControllerBackEnd.getAll();
+      const convectorModel: Array<FlatConvectorModel<TransactionConvectorModel[]>> = await TransactionControllerBackEnd.getAll();
       // require to map fabric model to graphql Transaction[]
       return (paginationArgs)
         ? convectorModel.splice(paginationArgs.skip, paginationArgs.take) as Transaction[]
@@ -53,16 +53,13 @@ export class TransactionService {
   }
 
   async findOneById(id: string): Promise<Transaction> {
-    try {
-      // get fabric model with _props
-      const fabricModel: TransactionConvectorModel = await TransactionControllerBackEnd.get(id) as TransactionConvectorModel;
-      // convert fabric model to convector model (remove _props)
-      const convectorModel = new TransactionConvectorModel(fabricModel).toJSON();
-      // trick: must return convector model as a graphql model, to prevent property conversion problems
-      return (convectorModel as Transaction);
-    } catch (error) {
-      throw error;
-    }
+    // get fabric model with _props
+    const fabricModel: TransactionConvectorModel = await TransactionControllerBackEnd.get(id);
+    // convert fabric model to convector model (remove _props)
+    const convectorModel: TransactionConvectorModel = new TransactionConvectorModel(fabricModel);
+    // trick: must return convector model as a graphql model, to prevent property conversion problems
+    const model: Transaction = await this.findBy(convectorModel, null) as Transaction;
+    return model;
   }
 
   /**

@@ -4,8 +4,7 @@ import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
 import * as yup from 'yup';
 import { Cause } from './cause.model';
 import { getEntity } from './utils';
-import { Participant } from '@solidary-network/participant-cc';
-import { getParticipantByIdentity } from '@solidary-network/person-cc';
+import { Participant, getParticipantByIdentity } from '@solidary-network/participant-cc';
 
 @Controller('cause')
 export class CauseController extends ConvectorController<ChaincodeTx> {
@@ -60,16 +59,44 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
     await cause.save();
   }
 
+  // @Invokable()
+  // public async get(
+  //   @Param(yup.string())
+  //   id: string
+  // ) {
+  //   const existing = await Cause.getOne(id);
+  //   if (!existing || !existing.id) {
+  //     throw new Error(`No cause exists with that ID ${id}`);
+  //   }
+  //   return existing;
+  // }
+
+  /**
+   * get id: custom function to use `type` and `participant` in rich query
+   * default convector get don't use of this properties and give problems, 
+   * like we use ids of other models and it works 
+   */
   @Invokable()
   public async get(
     @Param(yup.string())
-    id: string
-  ) {
-    const existing = await Cause.getOne(id);
-    if (!existing || !existing.id) {
-      throw new Error(`No cause exists with that ID ${id}`);
+    id: string,
+  ): Promise<Cause> {
+    // get host participant from fingerprint
+    const participant: Participant = await getParticipantByIdentity(this.sender);
+    const existing = await Cause.query(Cause, {
+      selector: {
+        type: c.CONVECTOR_MODEL_PATH_CAUSE,
+        id,
+        participant: {
+          id: participant.id
+        }
+      }
+    });
+    // require to check if existing before try to access existing[0].id prop
+    if (!existing || !existing[0] || !existing[0].id) {
+      throw new Error(`No cause exists with that id ${id}`);
     }
-    return existing;
+    return existing[0];
   }
 
   @Invokable()

@@ -10,6 +10,11 @@ export class NewParticipantInput {
 
   @Field()
   @IsDefined()
+  @Length(3, 30)
+  code: string;
+
+  @Field()
+  @IsDefined()
   @Length(3, 100)
   name: string;
 }
