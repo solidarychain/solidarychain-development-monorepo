@@ -22,12 +22,12 @@ export class NewTransactionInput {
   @IsDefined()
   public resourceType: ResourceType;
 
-  // different from x.model.ts
+  // WARN different from model, must be a GraphQLJSONObject in input and EntityResult in model
   @Field(type => GraphQLJSONObject)
   @IsDefined()
   public input?: Entity;
 
-  // different from x.model.ts
+  // WARN different from model, must be a GraphQLJSONObject in input and EntityResult in model
   @Field(type => GraphQLJSONObject)
   @IsDefined()
   public output?: Entity;

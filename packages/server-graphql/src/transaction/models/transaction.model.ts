@@ -22,13 +22,12 @@ export class Transaction {
   @IsDefined()
   public resourceType: ResourceType;
 
-  // @Field(type => GraphQLJSONObject)
-  // @IsDefined()
-  // input?: Entity;
+  // WARN different from model, must be a GraphQLJSONObject in input and EntityResult in model
   @Field(type => EntityResult)
   @IsDefined()
   input?: Entity;
 
+  // WARN different from model, must be a GraphQLJSONObject in input and EntityResult in model
   @Field(type => EntityResult)
   @IsDefined()
   output?: Entity;

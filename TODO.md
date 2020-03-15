@@ -145,3 +145,142 @@ in all
 return good message when user not exists etc
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+
+add to all models NEW-INPUTS
+  // optional: generated automatically, but can optionally be used
+  @IsOptional()
+  @IsUUID()
+  @Field({ nullable: true })
+  public id: string;
+
+"isUuid": "id must be an UUID"
+
+participant validate chaincode and throw if with same name and code exists, currently it pass
+   check if participant with same code exists and throw ex
+
+
+
+somethig bad is appen with transfer       "message": "Cannot return null for non-nullable field Transaction.input.",
+
+check all gql inputs
+
+transfer PROPTECTION cant transfer when input and output is the same
+
+fix public async ALL getAll(), getAll suffer from the same problem is get, dont use participants :( get all records without separate by participants
+
+
+change username to ownerUsername
+validations of transfers like mus be the owner, and owner cannot tranfer to is self
+particpiantByCode
+
+
+BUG, or leave it this way: Asset.name is not unique, we can create Assets with same name
+
+
+TODO Check Complexfilter that returns empty, must be because of user and org -u -o 
+
+
+
+  "_id": "c8ca045c-9d1b-407f-b9ae-31711758f2d0",
+  "code": "gov",
+
+  "_id": "61868772-4afd-4f94-af6a-8c87cf450f8e",
+  "code": "mit",
+
+$or
+{
+   "selector": {
+      "type": "network.solidary.convector.participant",
+      "_id": "c8ca045c-9d1b-407f-b9ae-31711758f2d0",
+      "participant": {
+         "_id": "61868772-4afd-4f94-af6a-8c87cf450f8e"
+$or "code":"gov"
+      }
+   }
+}
+
+
+HOW TO USE ROLES, pass ROLES LIKE USER TO TRANSFEREN ASSETS
+
+
+
+gov: "2E:7F:BF:1D:0F:2E:8E:5B:BB:49:E0:B6:C2:D5:FA:B7:21:B6:2C:F2"
+
+add participant assign to participants other than gov, 
+
+
+
+
+add field code to gql participant and test in gqlqueries
+
+all gql and seed using new participant 
+id and code
+
+
+
+
+
+Cannot connect to runtime; make sure that runtime is in 'legacy' debug mode.
+
+
+
+
+
+
+
+
+
+    ConvectorModel.getOne = function (id, type, storageOptions) {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var content, model;
+            return tslib_1.__generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        type = type || this;
+                        return [4, convector_core_storage_1.BaseStorage.current.get(id, storageOptions)];
+                    case 1:
+                        content = _a.sent();
+                        model = new type(content);
+                        if ((content && model) && content.type !== model.type) {
+                            throw new Error("Possible ID collision, element " + id + " of type " + content.type + " is not " + model.type);
+                        }
+                        return [2, model];
+                }
+            });
+        });
+    };
+
+
+CLEAN UP CODE AFTER FINISH PROJECT
+CREATE SOME INVOKES TO FILL DATA
+
+
+think about if we can register assets with same name like same BOOK NAME for ex, can be more than one in trade, but belong to diferent owners
+"There is a asset registered with that name already (Asset009)"
+
+
+
+ERROR cant create models with and exitingig used id in other model says
+"message": "\n    CLIENT_RES_ERR\n    There was a problem while invoking the chaincode\n    Chaincode error, this is a wrapper around the responses\n\n    Original stack:\n    {\"name\":\"Error\",\"status\":500,\"message\":\"There is a cause with that Id already (acef70e5-cd25-4533-8392-9fa57e43cf16)\"}\n
+
+
+refactor all calls to .getOne with our custom getOne, to work with types etc
+const exists = await Person.getOne(person.id);

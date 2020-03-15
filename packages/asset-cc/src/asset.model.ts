@@ -29,6 +29,9 @@ export class Asset extends ConvectorModel<Asset> {
   @Validate(yup.object().nullable())
   public metaData: any;
 
+  @Validate(yup.object().nullable())
+  public metaDataInternal: any;
+
   // TODO: change to owner
   @Required()
   @Validate(entitySchema)

@@ -1,17 +1,20 @@
 import { AssetType } from '@solidary-network/asset-cc';
 import { Entity } from '@solidary-network/transaction-cc';
-import { IsDefined } from 'class-validator';
+import { IsDefined, IsOptional, IsUUID } from 'class-validator';
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, InputType } from 'type-graphql';
+import { EntityResult } from '../../common/models';
 
 @InputType()
 export class NewAssetInput {
   // optional: generated automatically, but can optionally be used
   @Field({ nullable: true })
+  @IsOptional()
+  @IsUUID()
   public id: string;
 
   // above is equal dto/new-x.input.ts and models/x.model.ts
-  // minus input and output type, and new-x-input don't have participant, identities and createdDate
+  // minus participant, identities and createdDate
 
   @Field()
   @IsDefined()
@@ -19,23 +22,28 @@ export class NewAssetInput {
 
   @Field()
   @IsDefined()
-  assetType: AssetType;
+  public assetType: AssetType;
 
-  @Field({ nullable: true })
-  @IsDefined()
-  public location: string;
-
-  // TODO: tags
-  @Field(type => [String], { nullable: true })
-  public tags: string[];
-
-  @Field(type => GraphQLJSONObject, { nullable: true })
-  @IsDefined()
-  public metaData: any;
-
-  // different from x.model.ts
+  // WARN different from model, must be a GraphQLJSONObject in input and EntityResult in model
   @Field(type => GraphQLJSONObject)
   @IsDefined()
   public owner?: Entity;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsDefined()
+  public location: string;
+
+  @Field(type => [String], { nullable: true })
+  @IsOptional()
+  public tags: string[];
+
+  @Field(type => GraphQLJSONObject, { nullable: true })
+  @IsOptional()
+  public metaData: any;
+
+  @Field(type => GraphQLJSONObject, { nullable: true })
+  @IsOptional()
+  public metaDataInternal: any;
 
 }

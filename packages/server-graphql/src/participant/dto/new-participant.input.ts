@@ -4,9 +4,9 @@ import { Field, InputType } from 'type-graphql';
 @InputType()
 export class NewParticipantInput {
   // optional: generated automatically, but can optionally be used
+  @Field({ nullable: true })
   @IsOptional()
   @IsUUID()
-  @Field({ nullable: true })
   public id: string;
 
   @Field()

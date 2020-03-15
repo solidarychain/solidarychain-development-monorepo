@@ -1,16 +1,19 @@
 import { Entity } from '@solidary-network/transaction-cc';
-import { IsDefined, IsOptional } from 'class-validator';
+import { IsDefined, IsOptional, IsUUID } from 'class-validator';
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, InputType } from 'type-graphql';
+import { Optional } from '@nestjs/common';
 
 @InputType()
 export class NewCauseInput {
   // optional: generated automatically, but can optionally be used
   @Field({ nullable: true })
+  @IsOptional()
+  @IsUUID()
   public id: string;
 
   // above is equal dto/new-x.input.ts and models/x.model.ts
-  // minus input and output type, and new-x-input don't have participant, identities and createdDate
+  // minus startDate, endDate, participant, identities and createdDate
 
   @Field()
   @IsDefined()
@@ -29,18 +32,23 @@ export class NewCauseInput {
   public endDate?: Date;
 
   @Field({ nullable: true })
+  @IsOptional()
   @IsDefined()
   public location: string;
 
-  // TODO: tags
   @Field(type => [String], { nullable: true })
+  @Optional()
   public tags: string[];
 
   @Field(type => GraphQLJSONObject, { nullable: true })
-  @IsDefined()
+  @Optional()
   public metaData: any;
 
-  // different from x.model.ts
+  @Field(type => GraphQLJSONObject, { nullable: true })
+  @Optional()
+  public metaDataInternal: any;
+
+  // WARN different from model, must be a GraphQLJSONObject in input and EntityResult in model
   @Field(type => GraphQLJSONObject)
   @IsDefined()
   public input?: Entity;

@@ -20,10 +20,11 @@ type Asset {
   id: ID!
   name: String!
   assetType: String!
+  owner: EntityResult!
   location: String
   tags: [String!]
   metaData: JSONObject
-  owner: EntityResult!
+  metaDataInternal: JSONObject
   participant: Participant!
   identities: [x509Identities!]!
   createdDate: Float!
@@ -46,6 +47,7 @@ type Cause {
   location: String
   tags: [String!]
   metaData: JSONObject
+  metaDataInternal: JSONObject
   input: EntityResult!
   participant: Participant!
   identities: [x509Identities!]!
@@ -103,10 +105,11 @@ input NewAssetInput {
   id: String
   name: String!
   assetType: String!
+  owner: JSONObject!
   location: String
   tags: [String!]
   metaData: JSONObject
-  owner: JSONObject!
+  metaDataInternal: JSONObject
 }
 
 input NewCauseInput {
@@ -117,6 +120,7 @@ input NewCauseInput {
   location: String
   tags: [String!]
   metaData: JSONObject
+  metaDataInternal: JSONObject
   input: JSONObject!
 }
 
