@@ -2919,6 +2919,8 @@ JSON.stringify(this.fullIdentity.attrs, null, 2)
 
 ## Debug restartEnv.sh : chaincode works in debug bug not with restartEnv.sh
 
+> warning for barrel files in modules, don't use never  `from '.'` ex `import { getEntity } from '.';` it breaks chainCode even it it work in node sutside of fabric, it simply don't work
+
 somehow `restartEnv.sh` stop working when try invoke something with error
 
 ```shell

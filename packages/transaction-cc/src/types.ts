@@ -4,7 +4,8 @@ import { FlatConvectorModel } from '@worldsibu/convector-core';
 import { EntityType } from '@solidary-network/common-cc';
 import { Cause } from '@solidary-network/cause-cc';
 
-// interface duplicated with cause, to prevent circular leave common package clean of dependencies like person-cc and participant-cc
+// interface Entity and getEntity() function duplicated with asset, cause and transaction, to prevent circular dependencies, 
+// this way we leave common package clean of dependencies like person-cc and participant-cc
 export interface Entity {
   id: string;
   type: EntityType;

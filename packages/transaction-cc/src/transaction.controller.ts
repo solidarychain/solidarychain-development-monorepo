@@ -56,6 +56,7 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
         if (!exists) {
           throw new Error(`There is no asset with Id (${transaction.assetId})`);
         }
+// TODO#001 { Error: transaction returned with failure: {"name":"Error","status":500,"message":"Cannot read property 'assetType' of undefined"}
         // check if asset resourceType is equal to payload.resourceType
         if (transaction.resourceType !== (asset.assetType as unknown as ResourceType)) {
           throw new Error(`Transaction resourceType (${transaction.resourceType}) is different from asset resourceType (${asset.assetType}), you can't change resourceType in transfers`);

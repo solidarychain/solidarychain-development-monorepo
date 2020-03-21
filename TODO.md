@@ -164,23 +164,15 @@ return good message when user not exists etc
 
 ----------------------------------------------------------------------
 
-add to all models NEW-INPUTS
-  // optional: generated automatically, but can optionally be used
-  @IsOptional()
-  @IsUUID()
-  @Field({ nullable: true })
-  public id: string;
+add checkDuplicatedField to all models
+checkDuplicatedField('code', code);
+checkDuplicatedField('name', name);
 
-"isUuid": "id must be an UUID"
+
 
 participant validate chaincode and throw if with same name and code exists, currently it pass
    check if participant with same code exists and throw ex
 
-
-
-somethig bad is appen with transfer       "message": "Cannot return null for non-nullable field Transaction.input.",
-
-check all gql inputs
 
 transfer PROPTECTION cant transfer when input and output is the same
 

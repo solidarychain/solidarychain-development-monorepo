@@ -3,27 +3,27 @@
 		"path": "$ROOTPATH$/NOTES.md",
 		"bookmarks": [
 			{
-				"line": 120,
+				"line": 121,
 				"column": 51,
 				"label": ""
 			},
 			{
-				"line": 134,
+				"line": 135,
 				"column": 24,
 				"label": ""
 			},
 			{
-				"line": 168,
+				"line": 169,
 				"column": 0,
 				"label": ""
 			},
 			{
-				"line": 2763,
+				"line": 2764,
 				"column": 93,
 				"label": ""
 			},
 			{
-				"line": 2951,
+				"line": 2954,
 				"column": 28,
 				"label": ""
 			}
@@ -73,8 +73,18 @@
 		"path": "$ROOTPATH$/packages/transaction-cc/src/transaction.controller.ts",
 		"bookmarks": [
 			{
-				"line": 42,
+				"line": 39,
 				"column": 32,
+				"label": ""
+			}
+		]
+	},
+	{
+		"path": "$ROOTPATH$/packages/server-graphql/src/person/person.service.ts",
+		"bookmarks": [
+			{
+				"line": 18,
+				"column": 39,
 				"label": ""
 			}
 		]

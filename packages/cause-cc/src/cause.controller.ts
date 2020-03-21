@@ -73,7 +73,7 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
 
   /**
    * get id: custom function to use `type` and `participant` in rich query
-   * default convector get don't use of this properties and give problems, 
+   * default convector get don't use `type` property and give problems, 
    * like we use ids of other models and it works 
    */
   @Invokable()

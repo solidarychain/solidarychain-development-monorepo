@@ -3,7 +3,7 @@ import { BaseStorage, Controller, ConvectorController, FlatConvectorModel, Invok
 import { ClientIdentity } from 'fabric-shim';
 import * as yup from 'yup';
 import { Participant } from './participant.model';
-import { getParticipantByIdentity } from './utils';
+import { checkDuplicatedField } from './utils';
 
 @Controller('participant')
 export class ParticipantController extends ConvectorController {
@@ -33,11 +33,29 @@ export class ParticipantController extends ConvectorController {
       }
     }
 
+    // TODO: remove this code
     // check duplicated id
-    const exists = await Participant.getOne(id);
-    if (!!exists && exists.id) {
-      throw new Error(`There is a participant registered with that Id already (${id})`);
-    }
+    // const exists = await Participant.getOne(id);
+    // if (!!exists && exists.id) {
+    //   throw new Error(`There is a participant registered with that Id already (${id})`);
+    // }
+    await checkDuplicatedField('_id', id);
+    await checkDuplicatedField('code', code);
+    await checkDuplicatedField('name', name);
+
+    // TODO same re use function to check if record exist ex assetType
+    // TODO#001 { Error: transaction returned with failure: {"name":"Error","status":500,"message":"Cannot read property 'assetType' of undefined"}
+
+    // // check duplicated code
+    // const existsCode = await Participant.query(Participant, {
+    //   selector: {
+    //     type: c.CONVECTOR_MODEL_PATH_PARTICIPANT,
+    //     code
+    //   }
+    // });
+    // if ((existsCode as Participant[]).length > 0) {
+    //   throw new Error(`There is a participant registered with that code already (${code})`);
+    // }
 
     // add participant
     let participant = new Participant();
@@ -81,6 +99,7 @@ export class ParticipantController extends ConvectorController {
       throw new Error('Unauthorized. MSPs do not match');
     }
 
+    // required chaincodeAdmin, theOne that have admin attribute attrs: [{ name: 'admin', value: 'true' }]
     if (!isAdmin) {
       throw new Error('Unauthorized. Requester identity is not an admin');
     }
@@ -114,7 +133,7 @@ export class ParticipantController extends ConvectorController {
 
   /**
    * get id: custom function to use `type` and `participant` in rich query
-   * default convector get don't use of this properties and give problems, 
+   * default convector get don't use `type` property and give problems, 
    * like we use ids of other models and it works 
    */
   @Invokable()

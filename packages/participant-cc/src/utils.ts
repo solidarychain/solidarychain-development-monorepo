@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcrypt';
 import { appConstants as c } from '@solidary-network/common-cc';
-import { Participant } from '.';
+import { Participant } from './participant.model';
 
 // duplicated with 
 // packages/person-cc/src/utils.ts
@@ -33,4 +33,25 @@ export const getParticipantByIdentity = async (fingerprint: string): Promise<Par
     throw new Error('Cant find a participant with that fingerprint');
   }
   return participant[0];
+}
+
+/**
+ * richQuery helper to check duplicated fields on model Participant
+ */
+export const checkDuplicatedField = async (fieldName: string, fieldValue: string) => {
+  // check duplicated
+  const exists = await Participant.query(Participant, {
+    selector: {
+      type: c.CONVECTOR_MODEL_PATH_PARTICIPANT,
+      [fieldName]: fieldValue,
+      // participant: {
+      //   id: participant.id
+      // }
+    }
+  });
+  if ((exists as Participant[]).length > 0) {
+    // remove first _ ex _id to id before display error
+    const fieldDisplay: string = (fieldName.startsWith('_')) ? fieldName.substr(1, fieldName.length) : fieldName;
+    throw new Error(`There is a asset registered with that ${fieldDisplay} '${fieldValue}'`);
+  }
 }

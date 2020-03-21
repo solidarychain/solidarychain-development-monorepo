@@ -3,6 +3,8 @@ import { Person } from '@solidary-network/person-cc';
 import { Cause } from '@solidary-network/cause-cc';
 import { EntityType } from '@solidary-network/common-cc';
 
+// interface Entity and getEntity() function duplicated with asset, cause and transaction, to prevent circular dependencies, 
+// this way we leave common package clean of dependencies like person-cc and participant-cc
 export const getEntity = (entityType: EntityType, id: string): Promise<Participant | Person | Cause> => {
   return new Promise(async (resolve, reject) => {
     try {

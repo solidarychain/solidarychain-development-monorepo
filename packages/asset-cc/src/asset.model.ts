@@ -4,7 +4,7 @@ import { ConvectorModel, FlatConvectorModel, ReadOnly, Required, Validate } from
 import * as yup from 'yup';
 import { AssetType } from './enums';
 import { assetTypeSchema } from './validation';
-import { Entity } from '.';
+import { Entity } from './types';
 
 export class Asset extends ConvectorModel<Asset> {
   @ReadOnly()

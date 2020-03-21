@@ -73,6 +73,7 @@ PAYLOAD="{\"id\":\"${ID}\",\"firstname\":\"${FIRST_NAME}\",\"lastname\":\"${LAST
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" -u admin
 # npx hurl invoke ${CHAINCODE_NAME} person_get ${ID} -u admin
+# npx hurl invoke ${CHAINCODE_NAME} person_getByUsername ${USER_NAME} -u admin
 
 # create person with all data
 ID=4ea88521-031b-4279-9165-9c10e1838010
