@@ -187,8 +187,8 @@ f544509eec58 : dev-peer0.org2.hurley.lab-solidary-network-chaincode-1.0-351b0bef
 $ docker container ls --format "{{.ID}}\t{{.Image}}"
 # with chaincode version
 $ CHAINCODE_VERSION="1.0"
-$ SEARCH_CONTAINER="${CHAINCODE}-${CHAINCODE_VERSION}"
-$ sudo docker logs $(docker container ls | grep ${SEARCH_CONTAINER} | awk '{print $1}' | head -n 1) -f
+$ SEARCH_CONTAINER="dev-peer0.org1.hurley.lab-${CHAINCODE_NAME}-${CHAINCODE_VERSION}"
+$ docker logs $(docker container ls | grep ${SEARCH_CONTAINER} | awk '{print $1}' | head -n 1) -f
 ```
 
 lerna
@@ -2348,9 +2348,7 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_PERSON,
         username: person.username,
-        participant: {
-          id: participant.id
-        }
+        // participant: { id: participant.id }
       }
     });
     if (!!existsUsername && exists.id) {
@@ -2392,9 +2390,7 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_PERSON,
         username,
-        participant: {
-          id: participant.id
-        }
+        // participant: { id: participant.id }
       }
     });
     if (!existing || !existing[0].id) {

@@ -5,7 +5,7 @@ import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
 import * as yup from 'yup';
 import { PersonAttribute } from './person-attribute.model';
 import { Person } from './person.model';
-import { hashPassword } from './utils';
+import { hashPassword, checkUniqueField } from './utils';
 
 @Controller('person')
 export class PersonController extends ConvectorController<ChaincodeTx> {
@@ -20,39 +20,16 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
       throw new Error('There is no participant with that identity');
     }
 
-    // check duplicated id
-    const exists = await Person.getOne(person.id);
-    if (!!exists && exists.id) {
-      throw new Error(`There is a person registered with that Id already (${person.id})`);
-    }
-
-    // check duplicated username
-    const existsUsername = await Person.query(Person, {
-      selector: {
-        type: c.CONVECTOR_MODEL_PATH_PERSON,
-        username: person.username,
-        participant: {
-          id: participant.id
-        }
-      }
-    });
-    if ((existsUsername as Person[]).length > 0) {
-      throw new Error(`There is a person registered with that username already (${person.username})`);
-    }
-
-    // check duplicated fiscalNumber
-    const existsFiscalnumber = await Person.query(Person, {
-      selector: {
-        type: c.CONVECTOR_MODEL_PATH_PERSON,
-        fiscalNumber: person.fiscalNumber,
-        participant: {
-          id: participant.id
-        }
-      }
-    });
-    if ((existsFiscalnumber as Person[]).length > 0) {
-      throw new Error(`There is a person registered with that fiscalNumber already (${person.fiscalNumber})`);
-    }
+    // check unique fields
+    await checkUniqueField('_id', person.id);
+    await checkUniqueField('username', person.username);
+    await checkUniqueField('email', person.email);
+    await checkUniqueField('fiscalNumber', person.fiscalNumber);
+    // TODO test above
+    await checkUniqueField('identityNumber', person.identityNumber);
+    await checkUniqueField('socialSecurityNumber', person.socialSecurityNumber);
+    await checkUniqueField('beneficiaryNumber', person.beneficiaryNumber);
+    await checkUniqueField('documentNumber', person.documentNumber);
 
     let gov = await Participant.getOne(c.UUID_GOV_ID);
     if (!gov || !gov.identities) {
@@ -162,14 +139,12 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     id: string,
   ): Promise<Person> {
     // get host participant from fingerprint
-    const participant: Participant = await getParticipantByIdentity(this.sender);
+    // const participant: Participant = await getParticipantByIdentity(this.sender);
     const existing = await Person.query(Person, {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_PERSON,
         id,
-        participant: {
-          id: participant.id
-        }
+        // participant: { id: participant.id }
       }
     });
     // require to check if existing before try to access existing[0].id prop
@@ -218,14 +193,12 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     username: string,
   ): Promise<Person | Person[]> {
     // get host participant from fingerprint
-    const participant: Participant = await getParticipantByIdentity(this.sender);
+    // const participant: Participant = await getParticipantByIdentity(this.sender);
     const existing = await Person.query(Person, {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_PERSON,
         username,
-        participant: {
-          id: participant.id
-        }
+        // participant: { id: participant.id }
       }
     });
     // require to check if existing before try to access existing[0].id prop
@@ -244,14 +217,12 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     fiscalNumber: string,
   ): Promise<Person | Person[]> {
     // get host participant from fingerprint
-    const participant: Participant = await getParticipantByIdentity(this.sender);
+    // const participant: Participant = await getParticipantByIdentity(this.sender);
     const existing = await Person.query(Person, {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_PERSON,
         fiscalNumber,
-        participant: {
-          id: participant.id
-        }
+        // participant: { id: participant.id }
       }
     });
     // require to check if existing before try to access existing[0].id prop

@@ -42,10 +42,10 @@ export const getEntity = (entityType: EntityType, id: string): Promise<Participa
 };
 
 /**
- * richQuery helper to check duplicated fields on model Asset
+ * every model has is checkUniqueField implementation with its type
+ * richQuery helper to check unique fields on model Asset
  */
-export const checkDuplicatedField = async (fieldName: string, fieldValue: string) => {
-  // check duplicated
+export const checkUniqueField = async (fieldName: string, fieldValue: string) => {
   const exists = await Asset.query(Asset, {
     selector: {
       type: c.CONVECTOR_MODEL_PATH_ASSET,

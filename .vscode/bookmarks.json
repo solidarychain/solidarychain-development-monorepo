@@ -18,12 +18,12 @@
 				"label": ""
 			},
 			{
-				"line": 2764,
+				"line": 2760,
 				"column": 93,
 				"label": ""
 			},
 			{
-				"line": 2954,
+				"line": 2950,
 				"column": 28,
 				"label": ""
 			}
@@ -73,7 +73,7 @@
 		"path": "$ROOTPATH$/packages/transaction-cc/src/transaction.controller.ts",
 		"bookmarks": [
 			{
-				"line": 39,
+				"line": 32,
 				"column": 32,
 				"label": ""
 			}

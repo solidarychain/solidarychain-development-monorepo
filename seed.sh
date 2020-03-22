@@ -22,7 +22,13 @@ CHAINCODE_NAME=solidary-network-chaincode
 echo "Creating participant: Big Government"
 GOV_ID=c8ca045c-9d1b-407f-b9ae-31711758f2d0
 GOV_CODE=gov
-npx hurl invoke ${CHAINCODE_NAME} participant_create ${GOV_ID} ${GOV_CODE} "Big Government" -u admin
+ID=${GOV_ID}
+CODE=${GOV_CODE}
+NAME="Big Government"
+PAYLOAD="{\"id\":\"${ID}\",\"code\":\"${CODE}\",\"name\":\"${NAME}\"}"
+# echo $PAYLOAD  | jq
+# with default user
+npx hurl invoke ${CHAINCODE_NAME} participant_create "${PAYLOAD}"
 # npx hurl invoke ${CHAINCODE_NAME} participant_get ${GOV_ID} -u admin
 # npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${GOV_CODE} -u admin
 
@@ -30,7 +36,12 @@ npx hurl invoke ${CHAINCODE_NAME} participant_create ${GOV_ID} ${GOV_CODE} "Big 
 echo "Creating participant: MIT"
 MIT_ID=61868772-4afd-4f94-af6a-8c87cf450f8e
 MIT_CODE=mit
-npx hurl invoke ${CHAINCODE_NAME} participant_create ${MIT_ID} ${MIT_CODE} "MIT" -u user1 -o org1
+ID=${MIT_ID}
+CODE=${MIT_CODE}
+NAME="MIT"
+PAYLOAD="{\"id\":\"${ID}\",\"code\":\"${CODE}\",\"name\":\"${NAME}\"}"
+# echo $PAYLOAD  | jq
+npx hurl invoke ${CHAINCODE_NAME} participant_create "${PAYLOAD}" -u user1 -o org1
 # there is no need for -u user1, it is the default
 # npx hurl invoke ${CHAINCODE_NAME} participant_get ${MIT_ID}
 # npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${MIT_CODE}
@@ -39,7 +50,12 @@ npx hurl invoke ${CHAINCODE_NAME} participant_create ${MIT_ID} ${MIT_CODE} "MIT"
 echo "Creating participant: National Bank"
 NABA_ID=b130558c-b910-4e82-b92b-caa199a047c1
 NABA_CODE=nab
-npx hurl invoke ${CHAINCODE_NAME} participant_create ${NABA_ID} ${NABA_CODE} "National Bank" -u user1 -o org2
+ID=${NABA_ID}
+CODE=${NABA_CODE}
+NAME="National Bank"
+PAYLOAD="{\"id\":\"${ID}\",\"code\":\"${CODE}\",\"name\":\"${NAME}\"}"
+# echo $PAYLOAD  | jq
+npx hurl invoke ${CHAINCODE_NAME} participant_create "${PAYLOAD}"  -u user1 -o org2
 # there is no need for -u user1, it is the default
 # npx hurl invoke ${CHAINCODE_NAME} participant_get ${NABA_ID}
 # npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${NABA_CODE}
@@ -48,7 +64,12 @@ npx hurl invoke ${CHAINCODE_NAME} participant_create ${NABA_ID} ${NABA_CODE} "Na
 echo "Creating participant: Bad Bank"
 BADB_ID=f8596b03-492d-4d46-b54e-c4a70a037aa5
 BADB_CODE=nab
-npx hurl invoke ${CHAINCODE_NAME} participant_create ${BADB_ID} ${BADB_ID} "Bad Bank" -u user1 -o org2
+ID=${BADB_ID}
+CODE=${BADB_CODE}
+NAME="Bad Bank"
+PAYLOAD="{\"id\":\"${ID}\",\"code\":\"${CODE}\",\"name\":\"${NAME}\"}"
+# echo $PAYLOAD  | jq
+npx hurl invoke ${CHAINCODE_NAME} participant_create "${PAYLOAD}" -u user1 -o org2
 # there is no need for -u user1, it is the default
 # npx hurl invoke ${CHAINCODE_NAME} participant_get ${BADB_ID} -u admin
 # npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${BADB_CODE}
@@ -57,7 +78,12 @@ npx hurl invoke ${CHAINCODE_NAME} participant_create ${BADB_ID} ${BADB_ID} "Bad 
 echo "Creating participant: God Bank"
 GODB_ID=0fcc878a-6900-49d9-9a29-dffd9b8dae3b
 GODB_CODE=nab
-npx hurl invoke ${CHAINCODE_NAME} participant_create ${GODB_ID} "god" "God Bank" -u user1 -o org2
+ID=${GODB_ID}
+CODE=${GODB_CODE}
+NAME="God Bank"
+PAYLOAD="{\"id\":\"${ID}\",\"code\":\"${CODE}\",\"name\":\"${NAME}\"}"
+# echo $PAYLOAD  | jq
+npx hurl invoke ${CHAINCODE_NAME} participant_create "${PAYLOAD}" -u user1 -o org2
 # there is no need for -u user1, it is the default
 # npx hurl invoke ${CHAINCODE_NAME} participant_get ${GODB_ID} -u user1 -o org2
 # npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${GODB_CODE}
@@ -189,6 +215,9 @@ npx hurl invoke ${CHAINCODE_NAME} asset_create "${PAYLOAD}" -u admin
 # npx hurl invoke ${CHAINCODE_NAME} asset_get ${ID} -u admin
 
 
+# TODO
+
+
 # INPUT MUST BE THE OWNER, CHECK IF USERNAME MODEL IS EQUALT TO INPUT TO TO DOUBLE VALIDATE
 # PARTICIPANTS AND CAUSES DONT HAVE username how we can transfer from causes and participants without a username?
 
@@ -220,11 +249,10 @@ OWNER_USERNAME=johndoe
 # transferer by amount
 QUANTITY=1000
 CURRENCY=EUR
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"},\"assetId\":\"${ASSET_ID}\",\"username\":\"${OWNER_USERNAME}\"}"
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"},\"assetId\":\"${ASSET_ID}\",\"ownerUsername\":\"${OWNER_USERNAME}\"}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u admin
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
-
 
 
 

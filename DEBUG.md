@@ -72,3 +72,16 @@ $ npx lerna run start:debug
 ```
 
 or edit files in `chaincode-solidary-network-chaincode/packages/@solidary-network/${PACKAGE}-cc/src/*.ts`
+
+## View logs/ open terminal in normal update-chaincode.sh mode
+
+```shell
+$ CHAINCODE_NAME=solidary-network-chaincode
+# view chaincode containers
+$ VERSION=1.0
+$ watch "docker container ls --format "{{.Names}}" | grep \"${CHAINCODE_NAME}-${VERSION}\""
+# with chaincode version
+$ VERSION=1.0
+$ SEARCH_CONTAINER="dev-peer0.org1.hurley.lab-${CHAINCODE_NAME}-${VERSION}"
+$ docker logs $(docker container ls | grep ${SEARCH_CONTAINER} | awk '{print $1}' | head -n 1) -f
+```

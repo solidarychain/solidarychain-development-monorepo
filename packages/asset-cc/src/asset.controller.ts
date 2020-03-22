@@ -3,7 +3,7 @@ import { Participant, getParticipantByIdentity } from '@solidary-network/partici
 import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
 import * as yup from 'yup';
-import { getEntity } from './utils';
+import { getEntity, checkUniqueField } from './utils';
 import { Asset } from './asset.model';
 
 // TODO: transfer asset to Entity
@@ -24,25 +24,14 @@ export class AssetController extends ConvectorController<ChaincodeTx> {
 
     // TODO: get owner from id
 
-    // check duplicated id
-    const exists = await Asset.getOne(asset.id);
-    if (!!exists && exists.id) {
-      throw new Error(`There is a asset with that Id already (${asset.id})`);
-    }
-
-    // check duplicated name
-    const existsName = await Asset.query(Asset, {
-      selector: {
-        type: c.CONVECTOR_MODEL_PATH_ASSET,
-        name: asset.name,
-        participant: {
-          id: participant.id
-        }
-      }
-    });
-    if ((existsName as Asset[]).length > 0) {
-      throw new Error(`There is a asset registered with that name already (${asset.name})`);
-    }
+    // get prefixed name this way we can have multiple assets with same name
+    const prefix: string = asset.id.split('-')[0];
+    // TODO: check prefixed name
+    // modify asset.name, used in save to
+    asset.name = `${prefix} :  ${asset.name}`;
+    // check unique fields
+    await checkUniqueField('_id', asset.id);
+    await checkUniqueField('name', asset.name);
 
     // add participant
     asset.participant = participant;
@@ -87,14 +76,12 @@ export class AssetController extends ConvectorController<ChaincodeTx> {
     id: string,
   ): Promise<Asset> {
     // get host participant from fingerprint
-    const participant: Participant = await getParticipantByIdentity(this.sender);
+    // const participant: Participant = await getParticipantByIdentity(this.sender);
     const existing = await Asset.query(Asset, {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_ASSET,
         id,
-        participant: {
-          id: participant.id
-        }
+        // participant: { id: participant.id }
       }
     });
     // require to check if existing before try to access existing[0].id prop

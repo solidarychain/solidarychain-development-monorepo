@@ -41,10 +41,10 @@ export const getEntity = (entityType: EntityType, id: string): Promise<Participa
 };
 
 /**
- * richQuery helper to check duplicated fields on model Cause
+ * every model has is checkUniqueField implementation with its type
+ * richQuery helper to check unique fields on model Cause
  */
-export const checkDuplicatedField = async (fieldName: string, fieldValue: string) => {
-  // check duplicated
+export const checkUniqueField = async (fieldName: string, fieldValue: string) => {
   const exists = await Cause.query(Cause, {
     selector: {
       type: c.CONVECTOR_MODEL_PATH_CAUSE,
@@ -57,6 +57,6 @@ export const checkDuplicatedField = async (fieldName: string, fieldValue: string
   if ((exists as Cause[]).length > 0) {
     // remove first _ ex _id to id before display error
     const fieldDisplay: string = (fieldName.startsWith('_')) ? fieldName.substr(1, fieldName.length) : fieldName;
-    throw new Error(`There is a asset registered with that ${fieldDisplay} '${fieldValue}'`);
+    throw new Error(`There is a cause registered with that ${fieldDisplay} '${fieldValue}'`);
   }
 }

@@ -36,10 +36,10 @@ export const getParticipantByIdentity = async (fingerprint: string): Promise<Par
 }
 
 /**
- * richQuery helper to check duplicated fields on model Participant
+ * every model has is checkUniqueField implementation with its type
+ * richQuery helper to check unique fields on model Participant
  */
-export const checkDuplicatedField = async (fieldName: string, fieldValue: string) => {
-  // check duplicated
+export const checkUniqueField = async (fieldName: string, fieldValue: string) => {
   const exists = await Participant.query(Participant, {
     selector: {
       type: c.CONVECTOR_MODEL_PATH_PARTICIPANT,
@@ -52,6 +52,6 @@ export const checkDuplicatedField = async (fieldName: string, fieldValue: string
   if ((exists as Participant[]).length > 0) {
     // remove first _ ex _id to id before display error
     const fieldDisplay: string = (fieldName.startsWith('_')) ? fieldName.substr(1, fieldName.length) : fieldName;
-    throw new Error(`There is a asset registered with that ${fieldDisplay} '${fieldValue}'`);
+    throw new Error(`There is a participant registered with that ${fieldDisplay} '${fieldValue}'`);
   }
 }

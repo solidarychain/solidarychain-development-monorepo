@@ -3,7 +3,7 @@ import { BaseStorage, Controller, ConvectorController, FlatConvectorModel, Invok
 import { ClientIdentity } from 'fabric-shim';
 import * as yup from 'yup';
 import { Participant } from './participant.model';
-import { checkDuplicatedField } from './utils';
+import { checkUniqueField as checkUniqueField } from './utils';
 
 @Controller('participant')
 export class ParticipantController extends ConvectorController {
@@ -14,16 +14,12 @@ export class ParticipantController extends ConvectorController {
 
   @Invokable()
   public async create(
-    @Param(yup.string())
-    id: string,
-    @Param(yup.string())
-    code: string,
-    @Param(yup.string())
-    name: string,
+    @Param(Participant)
+    participant: Participant
   ) {
     // get participant if not gov, in case of gov it won't exists yet and will be without participant
     let gov: Participant;
-    if (id !== c.UUID_GOV_ID) {
+    if (participant.id !== c.UUID_GOV_ID) {
       // deprecated now always use gov to create participants
       // participant = await getParticipantByIdentity(this.sender);
       gov = await Participant.getOne(c.UUID_GOV_ID);
@@ -33,35 +29,16 @@ export class ParticipantController extends ConvectorController {
       }
     }
 
-    // TODO: remove this code
-    // check duplicated id
-    // const exists = await Participant.getOne(id);
-    // if (!!exists && exists.id) {
-    //   throw new Error(`There is a participant registered with that Id already (${id})`);
-    // }
-    await checkDuplicatedField('_id', id);
-    await checkDuplicatedField('code', code);
-    await checkDuplicatedField('name', name);
-
-    // TODO same re use function to check if record exist ex assetType
-    // TODO#001 { Error: transaction returned with failure: {"name":"Error","status":500,"message":"Cannot read property 'assetType' of undefined"}
-
-    // // check duplicated code
-    // const existsCode = await Participant.query(Participant, {
-    //   selector: {
-    //     type: c.CONVECTOR_MODEL_PATH_PARTICIPANT,
-    //     code
-    //   }
-    // });
-    // if ((existsCode as Participant[]).length > 0) {
-    //   throw new Error(`There is a participant registered with that code already (${code})`);
-    // }
+    // check unique fields
+    await checkUniqueField('_id', participant.id);
+    await checkUniqueField('code', participant.code);
+    await checkUniqueField('name', participant.name);
 
     // add participant
-    let participant = new Participant();
-    participant.id = id;
-    participant.code = code || id;
-    participant.name = name || id;
+    if (!participant.code) {
+      // get prefixed name this way we can have multiple assets with same name
+      participant.code = participant.id.split('-')[0];
+    }
     participant.msp = this.fullIdentity.getMSPID();
     // create a new identity
     participant.identities = [{
@@ -71,7 +48,7 @@ export class ParticipantController extends ConvectorController {
     // add date in epoch unix time
     participant.createdDate = new Date().getTime();
 
-    // always add gov participant, if its is not the gov itself
+    // always add gov participant, if its is not the gov itself, gov don't have participant
     if (gov) {
       participant.participant = gov;
     }

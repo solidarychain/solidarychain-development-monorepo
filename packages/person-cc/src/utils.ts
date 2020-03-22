@@ -14,10 +14,10 @@ export const hashPassword = (password: string): string => {
 
 
 /**
- * richQuery helper to check duplicated fields on model Person
+ * every model has is checkUniqueField implementation with its type
+ * richQuery helper to check unique fields on model Person
  */
-export const checkDuplicatedField = async (fieldName: string, fieldValue: string) => {
-  // check duplicated
+export const checkUniqueField = async (fieldName: string, fieldValue: string) => {
   const exists = await Person.query(Person, {
     selector: {
       type: c.CONVECTOR_MODEL_PATH_PERSON,
@@ -28,6 +28,6 @@ export const checkDuplicatedField = async (fieldName: string, fieldValue: string
   if ((exists as Person[]).length > 0) {
     // remove first _ ex _id to id before display error
     const fieldDisplay: string = (fieldName.startsWith('_')) ? fieldName.substr(1, fieldName.length) : fieldName;
-    throw new Error(`There is a asset registered with that ${fieldDisplay} '${fieldValue}'`);
+    throw new Error(`There is a person registered with that ${fieldDisplay} '${fieldValue}'`);
   }
 }
