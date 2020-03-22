@@ -78,6 +78,8 @@ if (!person && !person[0].id) {
         // change asset properties
 // asset.name = `${asset.name}-owner:${transaction.ownerUsername}`;
 // change asset identity ownership
+// TODO: BUG must be the OUTPUT Entity and not the INPUT
+// TODO: PUT TO WORK with all Entities and not only Persons
 asset.identities = person[0].identities;
         // assign which asset was transferred to transaction
         transaction.assetId = asset.id;
