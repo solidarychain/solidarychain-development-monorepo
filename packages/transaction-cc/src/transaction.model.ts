@@ -61,6 +61,7 @@ export class Transaction extends ConvectorModel<Transaction> {
 
   // optional, only when we transfer assets we require it
 
+  // TODO: remove after we are working with person identities
   // owner
   @Validate(yup.string())
   public ownerUsername: string;

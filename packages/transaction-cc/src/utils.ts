@@ -12,8 +12,11 @@ export const getEntity = (entityType: EntityType, id: string): Promise<Participa
     try {
       switch (entityType) {
         case EntityType.Participant:
+          // old without custom static helper
           const participant = await Participant.getOne(id);
-          if (!participant || !participant.identities) {
+          // TODO
+          // const participant = await Participant.getById(id);
+          if (!!participant && !participant.id) {
             throw new Error(`No participant found with id ${id}`);
           }
           resolve(participant);

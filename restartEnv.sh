@@ -12,6 +12,9 @@ clear
 # lift hyperledger
 npm run env:restart
 
+# first build @solidary-network/common-cc package else fails in deploy smart contract/chaincode
+npx lerna run build --scope @solidary-network/common-cc --stream
+
 # deploy smart contract/chaincode
 npm run cc:start -- ${CHAINCODE_NAME}
 # npm run cc:start:debug -- ${CHAINCODE_NAME}

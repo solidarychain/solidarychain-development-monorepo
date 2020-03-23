@@ -3,7 +3,7 @@ import { BaseStorage, Controller, ConvectorController, FlatConvectorModel, Invok
 import { ClientIdentity } from 'fabric-shim';
 import * as yup from 'yup';
 import { Participant } from './participant.model';
-import { checkUniqueField as checkUniqueField } from './utils';
+import { getParticipantByIdentity } from './utils';
 
 @Controller('participant')
 export class ParticipantController extends ConvectorController {
@@ -14,12 +14,16 @@ export class ParticipantController extends ConvectorController {
 
   @Invokable()
   public async create(
-    @Param(Participant)
-    participant: Participant
+    @Param(yup.string())
+    id: string,
+    @Param(yup.string())
+    code: string,
+    @Param(yup.string())
+    name: string,
   ) {
     // get participant if not gov, in case of gov it won't exists yet and will be without participant
     let gov: Participant;
-    if (participant.id !== c.UUID_GOV_ID) {
+    if (id !== c.UUID_GOV_ID) {
       // deprecated now always use gov to create participants
       // participant = await getParticipantByIdentity(this.sender);
       gov = await Participant.getOne(c.UUID_GOV_ID);
@@ -29,16 +33,17 @@ export class ParticipantController extends ConvectorController {
       }
     }
 
-    // check unique fields
-    await checkUniqueField('_id', participant.id);
-    await checkUniqueField('code', participant.code);
-    await checkUniqueField('name', participant.name);
+    // check duplicated id
+    const exists = await Participant.getOne(id);
+    if (!!exists && exists.id) {
+      throw new Error(`There is a participant registered with that Id already (${id})`);
+    }
 
     // add participant
-    if (!participant.code) {
-      // get prefixed name this way we can have multiple assets with same name
-      participant.code = participant.id.split('-')[0];
-    }
+    let participant = new Participant();
+    participant.id = id;
+    participant.code = code || id;
+    participant.name = name || id;
     participant.msp = this.fullIdentity.getMSPID();
     // create a new identity
     participant.identities = [{
@@ -47,8 +52,7 @@ export class ParticipantController extends ConvectorController {
     }];
     // add date in epoch unix time
     participant.createdDate = new Date().getTime();
-
-    // always add gov participant, if its is not the gov itself, gov don't have participant
+    // always add gov participant, if its is not the gov itself
     if (gov) {
       participant.participant = gov;
     }
@@ -77,6 +81,7 @@ export class ParticipantController extends ConvectorController {
     }
 
     // required chaincodeAdmin, theOne that have admin attribute attrs: [{ name: 'admin', value: 'true' }]
+    // must be registered with registerIdentitiesManager.js
     if (!isAdmin) {
       throw new Error('Unauthorized. Requester identity is not an admin');
     }

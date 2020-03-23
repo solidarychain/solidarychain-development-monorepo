@@ -3,27 +3,27 @@
 		"path": "$ROOTPATH$/NOTES.md",
 		"bookmarks": [
 			{
-				"line": 121,
+				"line": 122,
 				"column": 51,
 				"label": ""
 			},
 			{
-				"line": 135,
+				"line": 136,
 				"column": 24,
 				"label": ""
 			},
 			{
-				"line": 169,
+				"line": 170,
 				"column": 0,
 				"label": ""
 			},
 			{
-				"line": 2760,
+				"line": 2761,
 				"column": 93,
 				"label": ""
 			},
 			{
-				"line": 2950,
+				"line": 2951,
 				"column": 28,
 				"label": ""
 			}
@@ -65,16 +65,6 @@
 			{
 				"line": 36,
 				"column": 56,
-				"label": ""
-			}
-		]
-	},
-	{
-		"path": "$ROOTPATH$/packages/transaction-cc/src/transaction.controller.ts",
-		"bookmarks": [
-			{
-				"line": 32,
-				"column": 32,
 				"label": ""
 			}
 		]

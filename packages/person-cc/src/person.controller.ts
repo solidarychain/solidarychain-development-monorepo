@@ -76,6 +76,7 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
       throw new Error(`No participant found with id ${attribute.certifierID}`);
     }
 
+    // get active identity (status true)
     const participantActiveIdentity = participant.identities.find(
       identity => identity.status === true);
 

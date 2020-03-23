@@ -80,6 +80,7 @@
   - [Lerna Fix problem of install dependencies](#lerna-fix-problem-of-install-dependencies)
   - [After Update to new Packages we have Conversion of type 'FlatConvectorModel<Asset>[]' to type 'Asset[]' may be a mistake because neither type sufficiently overlaps with the other](#after-update-to-new-packages-we-have-conversion-of-type-flatconvectormodelasset-to-type-asset-may-be-a-mistake-because-neither-type-sufficiently-overlaps-with-the-other)
   - [Class-validator](#class-validator)
+  - [Problem on create person can't find participant fingerprint?](#problem-on-create-person-cant-find-participant-fingerprint)
 
 This is a simple NestJs starter, based on above links, I only extended it with a few things like **swagger api**, **https**, **jwt**, and other stuff, thanks m8s
 
@@ -3047,4 +3048,24 @@ and this library should naturally match class-validator's definition as closely 
 @Field({ nullable: true })
 @IsOptional()
 public location: string;
+```
+
+## Problem on create person can't find participant fingerprint? comes from `this.sender`
+
+after restart laptop....another probelm when restart network
+
+```shell
+$ npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" -u admin
+{ Error: transaction returned with failure: {"name":"Error","status":500,"message":"Cant find a participant with that fingerprint"}
+```
+
+`packages/person-cc/src/person.controller.ts`
+
+```typescript
+import { Participant, getParticipantByIdentity } from '@solidary-network/participant-cc';
+
+export class PersonController extends ConvectorController<ChaincodeTx> {
+  ...
+    // get host participant from fingerprint
+    const participant: Participant = await getParticipantByIdentity(this.sender);
 ```

@@ -63,7 +63,7 @@ npx hurl invoke ${CHAINCODE_NAME} participant_create "${PAYLOAD}"  -u user1 -o o
 # org3
 echo "Creating participant: Bad Bank"
 BADB_ID=f8596b03-492d-4d46-b54e-c4a70a037aa5
-BADB_CODE=nab
+BADB_CODE=bad
 ID=${BADB_ID}
 CODE=${BADB_CODE}
 NAME="Bad Bank"
@@ -77,7 +77,7 @@ npx hurl invoke ${CHAINCODE_NAME} participant_create "${PAYLOAD}" -u user1 -o or
 # org4
 echo "Creating participant: God Bank"
 GODB_ID=0fcc878a-6900-49d9-9a29-dffd9b8dae3b
-GODB_CODE=nab
+GODB_CODE=gba
 ID=${GODB_ID}
 CODE=${GODB_CODE}
 NAME="God Bank"

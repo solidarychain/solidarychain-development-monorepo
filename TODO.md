@@ -214,9 +214,6 @@ HOW TO USE ROLES, pass ROLES LIKE USER TO TRANSFEREN ASSETS
 
 
 
-gov: "2E:7F:BF:1D:0F:2E:8E:5B:BB:49:E0:B6:C2:D5:FA:B7:21:B6:2C:F2"
-
-add participant assign to participants other than gov, 
 
 
 
@@ -228,51 +225,29 @@ id and code
 
 
 
+add changeIdentity GraphQL stuff
+participantChangeIdentity[TODO]
 
 
-Cannot connect to runtime; make sure that runtime is in 'legacy' debug mode.
+ther is no need to strore this, leave it commented
+REMOVE all model.participant = 
+person.participant = gov;
 
 
-
-
-
-
-
-
-
-    ConvectorModel.getOne = function (id, type, storageOptions) {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var content, model;
-            return tslib_1.__generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        type = type || this;
-                        return [4, convector_core_storage_1.BaseStorage.current.get(id, storageOptions)];
-                    case 1:
-                        content = _a.sent();
-                        model = new type(content);
-                        if ((content && model) && content.type !== model.type) {
-                            throw new Error("Possible ID collision, element " + id + " of type " + content.type + " is not " + model.type);
-                        }
-                        return [2, model];
-                }
-            });
-        });
-    };
-
-
-CLEAN UP CODE AFTER FINISH PROJECT
-CREATE SOME INVOKES TO FILL DATA
-
-
-think about if we can register assets with same name like same BOOK NAME for ex, can be more than one in trade, but belong to diferent owners
-"There is a asset registered with that name already (Asset009)"
+commented to fix fingerprint problem
+// const participant = await Participant.getById(id);
 
 
 
-ERROR cant create models with and exitingig used id in other model says
-"message": "\n    CLIENT_RES_ERR\n    There was a problem while invoking the chaincode\n    Chaincode error, this is a wrapper around the responses\n\n    Original stack:\n    {\"name\":\"Error\",\"status\":500,\"message\":\"There is a cause with that Id already (acef70e5-cd25-4533-8392-9fa57e43cf16)\"}\n
+second time 
+# create person with minimal required data
+ID=4ea88521-031b-4279-9165-9c10e1839051
+FISCAL_NUMBER=182692151
+# same as fiscalNumber
+USER_NAME=${FISCAL_NUMBER}
+PASS_WORD=12345678
+PAYLOAD="{\"id\":\"${ID}\",\"fiscalNumber\":\"${FISCAL_NUMBER}\",\"username\":\"${USER_NAME}\", \"password\":\"${PASS_WORD}\"}"
+# echo $PAYLOAD  | jq
+npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" -u admin
 
-
-refactor all calls to .getOne with our custom getOne, to work with types etc
-const exists = await Person.getOne(person.id);
+{"name":"Error","status":500,"message":"There is a person registered with that email 'undefined'"}
