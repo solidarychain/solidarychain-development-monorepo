@@ -19,9 +19,15 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
       throw new Error('There is no participant with that identity');
     }
 
+    // TODO: check postfix
+    // get postfix name this way we can have multiple causes with same name
+    const postfixCode: string = cause.id.split('-')[0];
+    // modify cause.name, used in save to
+    cause.name = `${cause.name} [${postfixCode}]`;
+
     // check unique fields
-    await checkUniqueField('_id', cause.id);
-    await checkUniqueField('name', cause.name);
+    await checkUniqueField('_id', cause.id, true);
+    await checkUniqueField('name', cause.name, true);
 
     // add participant
     cause.participant = participant;
@@ -71,7 +77,6 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_CAUSE,
         id,
-        // participant: { id: participant.id }
       }
     });
     // require to check if existing before try to access existing[0].id prop

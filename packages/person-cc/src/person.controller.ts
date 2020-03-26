@@ -21,15 +21,14 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     }
 
     // check unique fields
-    await checkUniqueField('_id', person.id);
-    await checkUniqueField('username', person.username);
-    await checkUniqueField('email', person.email);
-    await checkUniqueField('fiscalNumber', person.fiscalNumber);
-    // TODO test above
-    await checkUniqueField('identityNumber', person.identityNumber);
-    await checkUniqueField('socialSecurityNumber', person.socialSecurityNumber);
-    await checkUniqueField('beneficiaryNumber', person.beneficiaryNumber);
-    await checkUniqueField('documentNumber', person.documentNumber);
+    await checkUniqueField('_id', person.id, true);
+    await checkUniqueField('username', person.username, true);
+    await checkUniqueField('fiscalNumber', person.fiscalNumber, true);
+    await checkUniqueField('email', person.email, false);
+    await checkUniqueField('identityNumber', person.identityNumber, false);
+    await checkUniqueField('socialSecurityNumber', person.socialSecurityNumber, false);
+    await checkUniqueField('beneficiaryNumber', person.beneficiaryNumber, false);
+    await checkUniqueField('documentNumber', person.documentNumber, false);
 
     let gov = await Participant.getOne(c.UUID_GOV_ID);
     if (!gov || !gov.identities) {
@@ -145,7 +144,6 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_PERSON,
         id,
-        // participant: { id: participant.id }
       }
     });
     // require to check if existing before try to access existing[0].id prop
@@ -199,7 +197,6 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_PERSON,
         username,
-        // participant: { id: participant.id }
       }
     });
     // require to check if existing before try to access existing[0].id prop
@@ -223,7 +220,6 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_PERSON,
         fiscalNumber,
-        // participant: { id: participant.id }
       }
     });
     // require to check if existing before try to access existing[0].id prop

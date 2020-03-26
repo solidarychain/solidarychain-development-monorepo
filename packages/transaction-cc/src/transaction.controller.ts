@@ -1,12 +1,12 @@
-import { Asset, AssetType } from '@solidary-network/asset-cc';
+import { Asset, Entity } from '@solidary-network/asset-cc';
 import { appConstants as c } from '@solidary-network/common-cc';
+import { getParticipantByIdentity, Participant } from '@solidary-network/participant-cc';
 import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
 import * as yup from 'yup';
 import { ResourceType, TransactionType } from './enums';
 import { Transaction } from './transaction.model';
-import { getEntity, checkUniqueField } from './utils';
-import { getParticipantByIdentity, Participant } from '@solidary-network/participant-cc';
+import { checkUniqueField, getEntity } from './utils';
 import { Person } from '@solidary-network/person-cc';
 
 @Controller('transaction')
@@ -16,7 +16,7 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     @Param(Transaction)
     transaction: Transaction,
   ) {
-    // TODO: RECEIVE fingerprint from graphql ?
+    let debugMessage: string = '';
 
     // get host participant from fingerprint
     const participant: Participant = await getParticipantByIdentity(this.sender);
@@ -30,7 +30,7 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     }
 
     // check unique fields
-    await checkUniqueField('_id', transaction.id);
+    await checkUniqueField('_id', transaction.id, true);
 
     // participant
     transaction.participant = participant;
@@ -42,58 +42,49 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     if (transaction.transactionType === TransactionType.Transfer && (
       transaction.resourceType === ResourceType.PhysicalAsset || transaction.resourceType === ResourceType.DigitalAsset
     )) {
-      // TODO: improve protection REPLACE WITH identities.fingerprint, when persons have fingerprint
-      // if (!transaction.ownerUsername) {
-      //   throw new Error(`You must supply owner username when transfer assets of type ${transaction.resourceType}`);
-      // } else 
-      if (!transaction.assetId) {
-        throw new Error(`You must supply a assetId when transfer assets of type ${transaction.resourceType}`);
+      // empty username
+      if (!transaction.ownerUsername) {
+        throw new Error(`You must supply owner username when transfer assets of type '${transaction.resourceType}'`);
+      } else if (!transaction.assetId) {
+        throw new Error(`You must supply a assetId when transfer assets of type '${transaction.resourceType}'`);
       } else {
         // get asset
         const asset: Asset = await Asset.getOne(transaction.assetId);
         if (!!asset && !asset.id) {
           throw new Error(`There is no asset with Id (${transaction.assetId})`);
         }
-
-// TODO: seems that is not needed we required fingerprint
-// get person from owner username
-// const person: Person | Person[] = await Person.query(Person, {
-//   selector: {
-//     type: c.CONVECTOR_MODEL_PATH_PERSON,
-//     username: transaction.ownerUsername,
-//     // participant: { id: participant.id }
-//   }
-// });
-// TODO: this must be identities fingerprints
-// owner username protection 
-// if (!person && !person[0].id) {
-//   throw new Error(`There is no person with owner username (${transaction.ownerUsername})`);
-// }
-// // owner username Person id different from protection transaction.input.id
-// if (transaction.input.id != person[0].id) {
-//   throw new Error(`Owner username (${transaction.ownerUsername}) is not the same has source person input`);
-// }
         // protection check if asset resourceType is equal to payload.resourceType
         if (transaction.resourceType !== (asset.assetType as unknown as ResourceType)) {
-          throw new Error(`Transaction resourceType (${transaction.resourceType}) is different from asset resourceType (${asset.assetType}), you can't change resourceType in transfers`);
-        }
-        // check if transaction input owner is the same as asset owner
-        if (transaction.input.id != asset.owner.id && transaction.input.type != asset.owner.type) {
-          // hide uuid's in error messages this way owner uuid is not exposed
-          throw new Error(`Transaction input owner is not the owner of the asset!`);
+          throw new Error(`Transaction resourceType '${transaction.resourceType}' is different from asset resourceType '${asset.assetType}', you can't change resourceType in transfers`);
         }
 
-        // TODO CHANGE fingerprint of the asset (OWNER)
-        // change asset properties
-        // asset.name = `${asset.name}-owner:${transaction.ownerUsername}`;
-        // change asset identity ownership
-        // TODO: BUG must be the OUTPUT Entity and not the INPUT
-        // TODO: PUT TO WORK with all Entities and not only Persons
-        // asset.identities = person[0].identities;
+        // get person from owner username (logged user in api)
+        const ownerPerson: Person | Person[] = await Person.query(Person, {
+          selector: {
+            type: c.CONVECTOR_MODEL_PATH_PERSON,
+            username: transaction.ownerUsername,
+          }
+        });
+        // protection check if ownerPerson exists 
+        if (!ownerPerson && !ownerPerson[0].id) {
+          throw new Error(`There is no person with owner username '${transaction.ownerUsername}'`);
+        }
+        // protection check if owner id is different from transaction.input.id
+        if (transaction.input.id != ownerPerson[0].id) {
+          // debugMessage = `transaction.input.id: ${transaction.input.id} != ownerPerson[0].id: ${ownerPerson[0].id}`;
+          throw new Error(`Username '${transaction.ownerUsername}' is not the owner of the asset${debugMessage}`);
+        }
+        // protection check if transaction input owner is the same as asset owner and same type, if one is different throw exception
+        if (transaction.input.id != (asset.owner.entity as any).id || transaction.input.type != (asset.owner.entity as any).type) {
+          // debugMessage = `transaction.input.id: ${transaction.input.id} != asset.owner.entity: ${(asset.owner.entity as any).id} && transaction.input.type: ${transaction.input.type} != asset.owner.entity: ${(asset.owner.entity as any).type}`;
+          throw new Error(`Transaction input owner is not the owner of the asset${debugMessage}`);
+        }
+
         // assign new owner id and type
-        asset.owner.entity = await getEntity(transaction.output.type, transaction.output.id);
+        asset.owner.entity = transaction.output.entity;
         // assign which asset was transferred to transaction
         transaction.assetId = asset.id;
+        // save asset
         await asset.save();
       }
     }
@@ -105,7 +96,7 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     // must act has a db transaction, only get here if asset.save pass
     // add date in epoch unix time
     transaction.createdDate = new Date().getTime();
-
+    // save transaction
     await transaction.save();
   }
 
@@ -137,7 +128,6 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_TRANSACTION,
         id,
-        // participant: { id: participant.id }
       }
     });
     // require to check if existing before try to access existing[0].id prop

@@ -39,7 +39,10 @@ export const getParticipantByIdentity = async (fingerprint: string): Promise<Par
  * every model has is checkUniqueField implementation with its type
  * richQuery helper to check unique fields on model Participant
  */
-export const checkUniqueField = async (fieldName: string, fieldValue: string) => {
+export const checkUniqueField = async (fieldName: string, fieldValue: string, required: boolean) => {
+  if (!required && !fieldValue) {
+    return;
+  }
   const exists = await Participant.query(Participant, {
     selector: {
       type: c.CONVECTOR_MODEL_PATH_PARTICIPANT,

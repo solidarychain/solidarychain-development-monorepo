@@ -10,21 +10,21 @@ export const getEntity = (entityType: EntityType, id: string): Promise<Participa
     try {
       switch (entityType) {
         case EntityType.Participant:
-          const participant = await Participant.getOne(id);
-          if (!participant || !participant.identities) {
+          const participant = await Participant.getById(id);
+          if (!!participant && !participant.id) {
             throw new Error(`No participant found with id ${id}`);
           }
           resolve(participant);
           break;
         case EntityType.Person:
-          const person = await Person.getOne(id);
+          const person = await Person.getById(id);
           if (!person || !person.id) {
             throw new Error(`No person found with id ${id}`);
           }
           resolve(person);
           break;
         case EntityType.Cause:
-          const cause = await Cause.getOne(id);
+          const cause = await Cause.getById(id);
           if (!cause || !cause.id) {
             throw new Error(`No cause found with id ${id}`);
           }
@@ -44,7 +44,10 @@ export const getEntity = (entityType: EntityType, id: string): Promise<Participa
  * every model has is checkUniqueField implementation with its type
  * richQuery helper to check unique fields on model Cause
  */
-export const checkUniqueField = async (fieldName: string, fieldValue: string) => {
+export const checkUniqueField = async (fieldName: string, fieldValue: string, required: boolean) => {
+  if (!required && !fieldValue) {
+    return;
+  }
   const exists = await Cause.query(Cause, {
     selector: {
       type: c.CONVECTOR_MODEL_PATH_CAUSE,

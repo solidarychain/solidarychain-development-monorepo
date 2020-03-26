@@ -61,12 +61,33 @@ export class Transaction extends ConvectorModel<Transaction> {
 
   // optional, only when we transfer assets we require it
 
-  // TODO: remove after we are working with person identities
-  // owner
+  // owner : send by graphql api
   @Validate(yup.string())
   public ownerUsername: string;
 
   @Validate(yup.string())
   public assetId: string;
 
+  // above implementation is equal in all models, only change the type and CONVECTOR_MODEL_PATH_${MODEL}
+
+  // custom static implementation getById
+  public static async getById(id: string): Promise<Transaction> {
+    const result: Transaction | Transaction[] = await this.getByFilter({ _id: id });
+    return (result) ? result[0] : null;
+  }
+
+  // custom static implementation getByField
+  public static async getByField(fieldName: string, fieldValue: string): Promise<Transaction | Transaction[]> {
+    return await this.getByFilter({ [fieldName]: fieldValue });
+  }
+
+  // custom static implementation getByFilter
+  public static async getByFilter(filter: any): Promise<Transaction | Transaction[]> {
+    return await this.query(Transaction, {
+      selector: {
+        type: c.CONVECTOR_MODEL_PATH_ASSET,
+        ...filter,
+      }
+    });
+  }
 }

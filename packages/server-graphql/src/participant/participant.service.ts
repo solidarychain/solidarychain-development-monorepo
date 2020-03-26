@@ -13,13 +13,15 @@ export class ParticipantService {
     try {
       // require to use or generate new id
       const newId: string =  (data.id) ? data.id : uuid();
+      await ParticipantControllerBackEnd.create(newId, data.code, data.name);
+      // TODO: use object not arguments
       // compose ConvectorModel from NewInput
-      const participantToCreate: ParticipantConvectorModel = new ParticipantConvectorModel({
-        ...data,
-        // require to inject values
-        id: newId,
-      });
-      await ParticipantControllerBackEnd.create(participantToCreate);
+      // const participantToCreate: ParticipantConvectorModel = new ParticipantConvectorModel({
+      //   ...data,
+      //   // require to inject values
+      //   id: newId,
+      // });
+      // await ParticipantControllerBackEnd.create(participantToCreate);
       return this.findOneById(newId);
     } catch (error) {
       throw error;

@@ -80,7 +80,7 @@
   - [Lerna Fix problem of install dependencies](#lerna-fix-problem-of-install-dependencies)
   - [After Update to new Packages we have Conversion of type 'FlatConvectorModel<Asset>[]' to type 'Asset[]' may be a mistake because neither type sufficiently overlaps with the other](#after-update-to-new-packages-we-have-conversion-of-type-flatconvectormodelasset-to-type-asset-may-be-a-mistake-because-neither-type-sufficiently-overlaps-with-the-other)
   - [Class-validator](#class-validator)
-  - [Problem on create person can't find participant fingerprint?](#problem-on-create-person-cant-find-participant-fingerprint)
+  - [Problem on create person can't find participant fingerprint? comes from `this.sender`](#problem-on-create-person-cant-find-participant-fingerprint-comes-from-thissender)
 
 This is a simple NestJs starter, based on above links, I only extended it with a few things like **swagger api**, **https**, **jwt**, and other stuff, thanks m8s
 
@@ -2349,7 +2349,6 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_PERSON,
         username: person.username,
-        // participant: { id: participant.id }
       }
     });
     if (!!existsUsername && exists.id) {
@@ -2391,7 +2390,6 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_PERSON,
         username,
-        // participant: { id: participant.id }
       }
     });
     if (!existing || !existing[0].id) {
@@ -3059,13 +3057,36 @@ $ npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" -u admin
 { Error: transaction returned with failure: {"name":"Error","status":500,"message":"Cant find a participant with that fingerprint"}
 ```
 
-`packages/person-cc/src/person.controller.ts`
+> the fucking problem this time is trying to use `@Param(Participant)` like we use in other models without problem
+
+`packages/participant-cc/src/participant.controller.ts`
 
 ```typescript
-import { Participant, getParticipantByIdentity } from '@solidary-network/participant-cc';
-
-export class PersonController extends ConvectorController<ChaincodeTx> {
-  ...
-    // get host participant from fingerprint
-    const participant: Participant = await getParticipantByIdentity(this.sender);
+@Invokable()
+public async create(
+  // TODO: use both
+  @Param(yup.string())
+  id: string,
+  @Param(yup.string())
+  code: string,
+  @Param(yup.string())
+  name: string,
+  // TODO: when use this, even if it not used we get the infamous : { Error: transaction returned with failure: {"name":"Error","status":500,"message":"Cant find a participant with that fingerprint"}
+  // @Param(Participant)
+  // participant: Participant,
+) {
 ```
+
+if we uncomment above block, PUTF welcome to hell
+
+
+
+
+
+
+https://lists.hyperledger.org/g/fabric/topic/hyperledger_1_4_install/71852629?p=,,,20,0,0,0::recentpostdate%2Fsticky,,,20,2,0,71852629
+
+Error: could not assemble transaction, err proposal response was not successful, error code 500, msg error starting container: error starting container: Failed to generate platform-specific docker build: Error returned from build: 127 "/bin/sh: npm: not found
+
+
+Not sure if it is same as your case. I encountered something similar when I tried to start hlf v1.4 and had both 1.4 and 2.0 version of hyperledger/fabric-ccenv docker images in my laptop. Fixed it by rmi my 2.0 images.

@@ -187,41 +187,15 @@ particpiantByCode
 BUG, or leave it this way: Asset.name is not unique, we can create Assets with same name
 
 
-TODO Check Complexfilter that returns empty, must be because of user and org -u -o 
-
-
-
-  "_id": "c8ca045c-9d1b-407f-b9ae-31711758f2d0",
-  "code": "gov",
-
-  "_id": "61868772-4afd-4f94-af6a-8c87cf450f8e",
-  "code": "mit",
-
-$or
-{
-   "selector": {
-      "type": "network.solidary.convector.participant",
-      "_id": "c8ca045c-9d1b-407f-b9ae-31711758f2d0",
-      "participant": {
-         "_id": "61868772-4afd-4f94-af6a-8c87cf450f8e"
-$or "code":"gov"
-      }
-   }
-}
-
-
-HOW TO USE ROLES, pass ROLES LIKE USER TO TRANSFEREN ASSETS
+HOW TO USE ROLES, pass ROLES LIKE USER TO TRANSFER ASSETS
 
 
 
 
 
 
+todo transfer assets to Entity, Participants, and Causes
 
-add field code to gql participant and test in gqlqueries
-
-all gql and seed using new participant 
-id and code
 
 
 
@@ -229,25 +203,64 @@ add changeIdentity GraphQL stuff
 participantChangeIdentity[TODO]
 
 
-ther is no need to strore this, leave it commented
+FOR NOW LEAVE IT
+there is no need to store this, leave it commented
 REMOVE all model.participant = 
+ex
 person.participant = gov;
 
 
-commented to fix fingerprint problem
-// const participant = await Participant.getById(id);
 
 
 
-second time 
-# create person with minimal required data
-ID=4ea88521-031b-4279-9165-9c10e1839051
-FISCAL_NUMBER=182692151
-# same as fiscalNumber
-USER_NAME=${FISCAL_NUMBER}
-PASS_WORD=12345678
-PAYLOAD="{\"id\":\"${ID}\",\"fiscalNumber\":\"${FISCAL_NUMBER}\",\"username\":\"${USER_NAME}\", \"password\":\"${PASS_WORD}\"}"
-# echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" -u admin
 
-{"name":"Error","status":500,"message":"There is a person registered with that email 'undefined'"}
+
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+EVERY CAUSE and PARTICIPANT has an RESPONSIBLE for the assets, and only this Person can Transfer Assets
+or money etc to others entitys and this resolve authentications problems,
+just add property administrator or array of administrators
+
+
+participants, causes and assets have array of responsaveis q podem transferir assets ou resources como money etc
+asset array of responsaveis q podem transacionar o asset
+
+
+Mas já veria o embaixador de uma causa, por exemplo
+ambassador
+ambassadors
+
+
+
+  @Validate(yup.array().of(yup.string()))
+  public tags: string[];
+
+
+remove all identities return fields from graphql, identities must be protected
+
+
+try to hack ownerUsername and ambassadorUsername, username comes to graphql api from JTW seems to secure to be hacked in api
+
+
+common func to check if username (ownerUsername | ambassadorUsername) exists, throw inside it
+
+validation check that ambassadorUsername exists
+
+default ambassadorUsername is cause is the user that creates it
+default ambassadorUsername is participant is the user that creates it
+default ambassadorUsername is asset is the user that creates it
+
+// owner : send by graphql api
+@Validate(yup.string())
+public ambassadorUsername: string;
+
+add ambassadorUsername to graphql models and test it in queries
+
+DONT FORGET to add argument ambassador to Participant
+we can have objects yet
+maybe we dont need it because participants create causes :) and is in cause that is the ambassadorUsername
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------

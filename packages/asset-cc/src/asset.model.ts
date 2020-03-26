@@ -22,7 +22,6 @@ export class Asset extends ConvectorModel<Asset> {
   @Validate(yup.string().matches(c.REGEX_LOCATION))
   public location: string;
 
-  // TODO: tags
   @Validate(yup.array().of(yup.string()))
   public tags: string[];
     
@@ -32,15 +31,9 @@ export class Asset extends ConvectorModel<Asset> {
   @Validate(yup.object().nullable())
   public metaDataInternal: any;
 
-  // TODO: change to owner
   @Required()
   @Validate(entitySchema)
   public owner: Entity;
-
-  // TODO: use owner identities
-  // @Required()
-  // @Validate(yup.array(x509Identities.schema()))
-  // public ownerIdentities: Array<FlatConvectorModel<x509Identities>>;
 
   @Required()
   @Validate(yup.number())
@@ -53,4 +46,27 @@ export class Asset extends ConvectorModel<Asset> {
   @Required()
   @Validate(yup.array(x509Identities.schema()))
   public identities: Array<FlatConvectorModel<x509Identities>>;
+
+  // above implementation is equal in all models, only change the type and CONVECTOR_MODEL_PATH_${MODEL}
+
+  // custom static implementation getById
+  public static async getById(id: string): Promise<Asset> {
+    const result: Asset | Asset[] = await this.getByFilter({ _id: id });
+    return (result) ? result[0] : null;
+  }
+
+  // custom static implementation getByField
+  public static async getByField(fieldName: string, fieldValue: string): Promise<Asset | Asset[]> {
+    return await this.getByFilter({ [fieldName]: fieldValue });
+  }
+
+  // custom static implementation getByFilter
+  public static async getByFilter(filter: any): Promise<Asset | Asset[]> {
+    return await this.query(Asset, {
+      selector: {
+        type: c.CONVECTOR_MODEL_PATH_ASSET,
+        ...filter,
+      }
+    });
+  }
 }

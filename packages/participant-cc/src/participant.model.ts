@@ -14,6 +14,10 @@ export class Participant extends ConvectorModel<Participant> {
   @Validate(yup.string())
   public name: string;
 
+  // owner : send by graphql api
+  @Validate(yup.string())
+  public ambassadorUsername: string;
+
   @Required()
   @Validate(yup.string())
   public msp: string;
@@ -30,17 +34,11 @@ export class Participant extends ConvectorModel<Participant> {
   @Validate(yup.number())
   public createdDate: number;
 
+  // above implementation is equal in all models, only change the type and CONVECTOR_MODEL_PATH_${MODEL}
+
   // custom static implementation getById
   public static async getById(id: string): Promise<Participant> {
     const result: Participant | Participant[] = await this.getByFilter({ _id: id });
-    return (result) ? result[0] : null;
-  }
-
-  // custom static implementation getByIdAndType, used to check if sent type is the correct
-  public static async getByIdAndType(id: string, type: string): Promise<Participant> {
-    const result: Participant | Participant[] = await this.query(Participant, {
-      selector: { type, id }
-    });
     return (result) ? result[0] : null;
   }
 

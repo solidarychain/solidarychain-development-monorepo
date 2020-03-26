@@ -1,9 +1,9 @@
-import { appConstants as c } from '@solidary-network/common-cc';
+import { appConstants as c, x509Identities } from '@solidary-network/common-cc';
 import { BaseStorage, Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ClientIdentity } from 'fabric-shim';
 import * as yup from 'yup';
 import { Participant } from './participant.model';
-import { getParticipantByIdentity } from './utils';
+import { checkUniqueField } from './utils';
 
 @Controller('participant')
 export class ParticipantController extends ConvectorController {
@@ -14,12 +14,16 @@ export class ParticipantController extends ConvectorController {
 
   @Invokable()
   public async create(
+    // TODO: use both
     @Param(yup.string())
     id: string,
     @Param(yup.string())
     code: string,
     @Param(yup.string())
     name: string,
+    // TODO: when use this, even if it not used we get the infamous : { Error: transaction returned with failure: {"name":"Error","status":500,"message":"Cant find a participant with that fingerprint"}
+    // @Param(Participant)
+    // participant: Participant,
   ) {
     // get participant if not gov, in case of gov it won't exists yet and will be without participant
     let gov: Participant;
@@ -33,30 +37,28 @@ export class ParticipantController extends ConvectorController {
       }
     }
 
-    // check duplicated id
-    const exists = await Participant.getOne(id);
-    if (!!exists && exists.id) {
-      throw new Error(`There is a participant registered with that Id already (${id})`);
-    }
+    // check unique fields
+    await checkUniqueField('_id', id, true);
 
     // add participant
-    let participant = new Participant();
-    participant.id = id;
-    participant.code = code || id;
-    participant.name = name || id;
-    participant.msp = this.fullIdentity.getMSPID();
+    let newParticipant = new Participant();
+    newParticipant.id = id;
+    newParticipant.code = code || id;
+    newParticipant.name = name || id;
+    newParticipant.msp = this.fullIdentity.getMSPID();
     // create a new identity
-    participant.identities = [{
+    newParticipant.identities = [{
       fingerprint: this.sender,
       status: true
     }];
     // add date in epoch unix time
-    participant.createdDate = new Date().getTime();
-    // always add gov participant, if its is not the gov itself
+    newParticipant.createdDate = new Date().getTime();
+
+    // always add gov participant, if its is not the gov itself, gov don't have participant
     if (gov) {
-      participant.participant = gov;
+      newParticipant.participant = gov;
     }
-    await participant.save();
+    await newParticipant.save();
   }
 
   @Invokable()
@@ -87,7 +89,7 @@ export class ParticipantController extends ConvectorController {
     }
 
     // Disable previous identities!
-    existing.identities = existing.identities.map(identity => {
+    existing.identities = existing.identities.map((identity: FlatConvectorModel<x509Identities>) => {
       identity.status = false;
       return identity;
     });

@@ -13,6 +13,10 @@ export class Cause extends ConvectorModel<Cause> {
   @Validate(yup.string())
   public name: string;
 
+  // owner : send by graphql api
+  @Validate(yup.string())
+  public ambassadorUsername: string;
+
   @Validate(yup.number())
   public startDate: number;
 
@@ -22,7 +26,6 @@ export class Cause extends ConvectorModel<Cause> {
   @Validate(yup.string().matches(c.REGEX_LOCATION))
   public location: string;
 
-  // TODO: tags
   @Validate(yup.array().of(yup.string()))
   public tags: string[];
     
@@ -45,4 +48,26 @@ export class Cause extends ConvectorModel<Cause> {
   @Validate(yup.array(x509Identities.schema()))
   public identities: Array<FlatConvectorModel<x509Identities>>;
 
+  // above implementation is equal in all models, only change the type and CONVECTOR_MODEL_PATH_${MODEL}
+
+  // custom static implementation getById
+  public static async getById(id: string): Promise<Cause> {
+    const result: Cause | Cause[] = await this.getByFilter({ _id: id });
+    return (result) ? result[0] : null;
+  }
+
+  // custom static implementation getByField
+  public static async getByField(fieldName: string, fieldValue: string): Promise<Cause | Cause[]> {
+    return await this.getByFilter({ [fieldName]: fieldValue });
+  }
+
+  // custom static implementation getByFilter
+  public static async getByFilter(filter: any): Promise<Cause | Cause[]> {
+    return await this.query(Cause, {
+      selector: {
+        type: c.CONVECTOR_MODEL_PATH_CAUSE,
+        ...filter,
+      }
+    });
+  }
 }

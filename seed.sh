@@ -21,72 +21,106 @@ CHAINCODE_NAME=solidary-network-chaincode
 # gov
 echo "Creating participant: Big Government"
 GOV_ID=c8ca045c-9d1b-407f-b9ae-31711758f2d0
-GOV_CODE=gov
-ID=${GOV_ID}
-CODE=${GOV_CODE}
-NAME="Big Government"
-PAYLOAD="{\"id\":\"${ID}\",\"code\":\"${CODE}\",\"name\":\"${NAME}\"}"
-# echo $PAYLOAD  | jq
-# with default user
-npx hurl invoke ${CHAINCODE_NAME} participant_create "${PAYLOAD}"
+npx hurl invoke ${CHAINCODE_NAME} participant_create ${GOV_ID} "gov" "Big Government" -u admin
 # npx hurl invoke ${CHAINCODE_NAME} participant_get ${GOV_ID} -u admin
-# npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${GOV_CODE} -u admin
 
 # org1
 echo "Creating participant: MIT"
 MIT_ID=61868772-4afd-4f94-af6a-8c87cf450f8e
-MIT_CODE=mit
-ID=${MIT_ID}
-CODE=${MIT_CODE}
-NAME="MIT"
-PAYLOAD="{\"id\":\"${ID}\",\"code\":\"${CODE}\",\"name\":\"${NAME}\"}"
-# echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} participant_create "${PAYLOAD}" -u user1 -o org1
+npx hurl invoke ${CHAINCODE_NAME} participant_create ${MIT_ID} "mit" "MIT" -u user1 -o org1
 # there is no need for -u user1, it is the default
 # npx hurl invoke ${CHAINCODE_NAME} participant_get ${MIT_ID}
-# npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${MIT_CODE}
 
 # org2
 echo "Creating participant: National Bank"
 NABA_ID=b130558c-b910-4e82-b92b-caa199a047c1
-NABA_CODE=nab
-ID=${NABA_ID}
-CODE=${NABA_CODE}
-NAME="National Bank"
-PAYLOAD="{\"id\":\"${ID}\",\"code\":\"${CODE}\",\"name\":\"${NAME}\"}"
-# echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} participant_create "${PAYLOAD}"  -u user1 -o org2
+npx hurl invoke ${CHAINCODE_NAME} participant_create ${NABA_ID} "nab" "National Bank" -u user1 -o org2
 # there is no need for -u user1, it is the default
 # npx hurl invoke ${CHAINCODE_NAME} participant_get ${NABA_ID}
-# npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${NABA_CODE}
 
 # org3
 echo "Creating participant: Bad Bank"
 BADB_ID=f8596b03-492d-4d46-b54e-c4a70a037aa5
-BADB_CODE=bad
-ID=${BADB_ID}
-CODE=${BADB_CODE}
-NAME="Bad Bank"
-PAYLOAD="{\"id\":\"${ID}\",\"code\":\"${CODE}\",\"name\":\"${NAME}\"}"
-# echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} participant_create "${PAYLOAD}" -u user1 -o org2
+npx hurl invoke ${CHAINCODE_NAME} participant_create ${BADB_ID} "bad" "Bad Bank" -u user1 -o org2
 # there is no need for -u user1, it is the default
 # npx hurl invoke ${CHAINCODE_NAME} participant_get ${BADB_ID} -u admin
-# npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${BADB_CODE}
 
 # org4
 echo "Creating participant: God Bank"
 GODB_ID=0fcc878a-6900-49d9-9a29-dffd9b8dae3b
-GODB_CODE=gba
-ID=${GODB_ID}
-CODE=${GODB_CODE}
-NAME="God Bank"
-PAYLOAD="{\"id\":\"${ID}\",\"code\":\"${CODE}\",\"name\":\"${NAME}\"}"
-# echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} participant_create "${PAYLOAD}" -u user1 -o org2
+npx hurl invoke ${CHAINCODE_NAME} participant_create ${GODB_ID} "god" "God Bank" -u user1 -o org2
 # there is no need for -u user1, it is the default
 # npx hurl invoke ${CHAINCODE_NAME} participant_get ${GODB_ID} -u user1 -o org2
-# npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${GODB_CODE}
+
+# # gov
+# echo "Creating participant: Big Government"
+# GOV_ID=c8ca045c-9d1b-407f-b9ae-31711758f2d0
+# GOV_CODE=gov
+# ID=${GOV_ID}
+# CODE=${GOV_CODE}
+# NAME="Big Government"
+# PAYLOAD="{\"id\":\"${ID}\",\"code\":\"${CODE}\",\"name\":\"${NAME}\"}"
+# # echo $PAYLOAD  | jq
+# # with default user
+# npx hurl invoke ${CHAINCODE_NAME} participant_create "${PAYLOAD}"
+# # npx hurl invoke ${CHAINCODE_NAME} participant_get ${GOV_ID} -u admin
+# # npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${GOV_CODE} -u admin
+
+# # org1
+# echo "Creating participant: MIT"
+# MIT_ID=61868772-4afd-4f94-af6a-8c87cf450f8e
+# MIT_CODE=mit
+# ID=${MIT_ID}
+# CODE=${MIT_CODE}
+# NAME="MIT"
+# PAYLOAD="{\"id\":\"${ID}\",\"code\":\"${CODE}\",\"name\":\"${NAME}\"}"
+# # echo $PAYLOAD  | jq
+# npx hurl invoke ${CHAINCODE_NAME} participant_create "${PAYLOAD}" -u user1 -o org1
+# # there is no need for -u user1, it is the default
+# # npx hurl invoke ${CHAINCODE_NAME} participant_get ${MIT_ID}
+# # npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${MIT_CODE}
+
+# # org2
+# echo "Creating participant: National Bank"
+# NABA_ID=b130558c-b910-4e82-b92b-caa199a047c1
+# NABA_CODE=nab
+# ID=${NABA_ID}
+# CODE=${NABA_CODE}
+# NAME="National Bank"
+# PAYLOAD="{\"id\":\"${ID}\",\"code\":\"${CODE}\",\"name\":\"${NAME}\"}"
+# # echo $PAYLOAD  | jq
+# npx hurl invoke ${CHAINCODE_NAME} participant_create "${PAYLOAD}"  -u user1 -o org2
+# # there is no need for -u user1, it is the default
+# # npx hurl invoke ${CHAINCODE_NAME} participant_get ${NABA_ID}
+# # npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${NABA_CODE}
+
+# # org3
+# echo "Creating participant: Bad Bank"
+# BADB_ID=f8596b03-492d-4d46-b54e-c4a70a037aa5
+# BADB_CODE=bad
+# ID=${BADB_ID}
+# CODE=${BADB_CODE}
+# NAME="Bad Bank"
+# PAYLOAD="{\"id\":\"${ID}\",\"code\":\"${CODE}\",\"name\":\"${NAME}\"}"
+# # echo $PAYLOAD  | jq
+# npx hurl invoke ${CHAINCODE_NAME} participant_create "${PAYLOAD}" -u user1 -o org2
+# # there is no need for -u user1, it is the default
+# # npx hurl invoke ${CHAINCODE_NAME} participant_get ${BADB_ID} -u admin
+# # npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${BADB_CODE}
+
+# # org4
+# echo "Creating participant: God Bank"
+# GODB_ID=0fcc878a-6900-49d9-9a29-dffd9b8dae3b
+# GODB_CODE=gba
+# ID=${GODB_ID}
+# CODE=${GODB_CODE}
+# NAME="God Bank"
+# PAYLOAD="{\"id\":\"${ID}\",\"code\":\"${CODE}\",\"name\":\"${NAME}\"}"
+# # echo $PAYLOAD  | jq
+# npx hurl invoke ${CHAINCODE_NAME} participant_create "${PAYLOAD}" -u user1 -o org2
+# # there is no need for -u user1, it is the default
+# # npx hurl invoke ${CHAINCODE_NAME} participant_get ${GODB_ID} -u user1 -o org2
+# # npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${GODB_CODE}
 
 # create person with all data
 ID=4ea88521-031b-4279-9165-9c10e1839001
@@ -95,7 +129,7 @@ LAST_NAME=Doe
 USER_NAME=johndoe
 FISCAL_NUMBER=182692124
 DATE=61985472
-PAYLOAD="{\"id\":\"${ID}\",\"firstname\":\"${FIRST_NAME}\",\"lastname\":\"${LAST_NAME}\",\"beneficiaryNumber\":\"285191659\",\"birthDate\":\"${DATE}\",\"cardVersion\":\"006.007.23\",\"country\":\"PRT\",\"documentNumber\":\"09879462 0 ZZ3\",\"documentType\":\"Cartão De Cidadão\",\"emissionDate\":\"${DATE}\",\"emittingEntity\":\"República Portuguesa\",\"expirationDate\":\"${DATE}\",\"fatherFirstname\":\"Alberto\",\"fatherLastname\":\"De Andrade Monteiro\",\"fiscalNumber\":\"${FISCAL_NUMBER}\",\"gender\":\"M\",\"height\":\"1.81\",\"identityNumber\":\"098794620\",\"motherFirstname\":\"Maria Da Graça De Oliveira Mendes\",\"motherLastname\":\"Monteiro\",\"nationality\":\"PRT\",\"otherInformation\":\"\",\"pan\":\"0000036014662658\",\"requestLocation\":\"CRCiv. Figueira da Foz\",\"socialSecurityNumber\":\"11103478242\",\"username\":\"${USER_NAME}\",\"password\":\"12345678\",\"email\":\"mario.monteiro@mail.com\"}"
+PAYLOAD="{\"id\":\"${ID}\",\"firstname\":\"${FIRST_NAME}\",\"lastname\":\"${LAST_NAME}\",\"beneficiaryNumber\":\"285191659\",\"birthDate\":\"${DATE}\",\"cardVersion\":\"006.007.23\",\"country\":\"PRT\",\"documentNumber\":\"09879462 0 ZZ3\",\"documentType\":\"Cartão De Cidadão\",\"emissionDate\":\"${DATE}\",\"emittingEntity\":\"República Portuguesa\",\"expirationDate\":\"${DATE}\",\"fatherFirstname\":\"Alberto\",\"fatherLastname\":\"De Andrade Monteiro\",\"fiscalNumber\":\"${FISCAL_NUMBER}\",\"gender\":\"M\",\"height\":\"1.81\",\"identityNumber\":\"098794620\",\"motherFirstname\":\"Maria Da Graça De Oliveira Mendes\",\"motherLastname\":\"Monteiro\",\"nationality\":\"PRT\",\"otherInformation\":\"\",\"pan\":\"0000036014662658\",\"requestLocation\":\"CRCiv. Figueira da Foz\",\"socialSecurityNumber\":\"11103478242\",\"username\":\"${USER_NAME}\",\"password\":\"12345678\",\"email\":\"johndoe@mail.com\"}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" -u admin
 # npx hurl invoke ${CHAINCODE_NAME} person_get ${ID} -u admin
@@ -108,7 +142,7 @@ LAST_NAME=Doe
 USER_NAME=janedoe
 FISCAL_NUMBER=582692178
 DATE=61985472
-PAYLOAD="{\"id\":\"${ID}\",\"firstname\":\"${FIRST_NAME}\",\"lastname\":\"${LAST_NAME}\",\"beneficiaryNumber\":\"285191659\",\"birthDate\":\"${DATE}\",\"cardVersion\":\"006.007.23\",\"country\":\"PRT\",\"documentNumber\":\"09879462 0 ZZ3\",\"documentType\":\"Cartão De Cidadão\",\"emissionDate\":\"${DATE}\",\"emittingEntity\":\"República Portuguesa\",\"expirationDate\":\"${DATE}\",\"fatherFirstname\":\"Alberto\",\"fatherLastname\":\"De Andrade Monteiro\",\"fiscalNumber\":\"${FISCAL_NUMBER}\",\"gender\":\"M\",\"height\":\"1.81\",\"identityNumber\":\"098794620\",\"motherFirstname\":\"Maria Da Graça De Oliveira Mendes\",\"motherLastname\":\"Monteiro\",\"nationality\":\"PRT\",\"otherInformation\":\"\",\"pan\":\"0000036014662658\",\"requestLocation\":\"CRCiv. Figueira da Foz\",\"socialSecurityNumber\":\"11103478242\",\"username\":\"${USER_NAME}\",\"password\":\"12345678\",\"email\":\"mario.monteiro@mail.com\",\"mobilePhone\":\"351936202288\",\"postal\":\"3080-032\",\"city\":\"Figueira da Foz\",\"region\":\"Coimbra\",\"geoLocation\":\"40.1508,-8.8618\",\"timezone\":\"Europe/Lisbon\",\"personalInfo\":\"Just an ordinary man\",\"internalInfo\":\"Aspiring Good Hearth\",\"profile\":{\"data\":{\"key\":\"value\"}}}"
+PAYLOAD="{\"id\":\"${ID}\",\"firstname\":\"${FIRST_NAME}\",\"lastname\":\"${LAST_NAME}\",\"beneficiaryNumber\":\"385191659\",\"birthDate\":\"${DATE}\",\"cardVersion\":\"006.007.23\",\"country\":\"PRT\",\"documentNumber\":\"19879462 0 ZZ3\",\"documentType\":\"Cartão De Cidadão\",\"emissionDate\":\"${DATE}\",\"emittingEntity\":\"República Portuguesa\",\"expirationDate\":\"${DATE}\",\"fatherFirstname\":\"Alberto\",\"fatherLastname\":\"De Andrade Monteiro\",\"fiscalNumber\":\"${FISCAL_NUMBER}\",\"gender\":\"M\",\"height\":\"1.81\",\"identityNumber\":\"198794620\",\"motherFirstname\":\"Maria Da Graça De Oliveira Mendes\",\"motherLastname\":\"Monteiro\",\"nationality\":\"PRT\",\"otherInformation\":\"\",\"pan\":\"0000036014662658\",\"requestLocation\":\"CRCiv. Figueira da Foz\",\"socialSecurityNumber\":\"21103478242\",\"username\":\"${USER_NAME}\",\"password\":\"12345678\",\"email\":\"janedoe@mail.com\",\"mobilePhone\":\"351936202288\",\"postal\":\"3080-032\",\"city\":\"Figueira da Foz\",\"region\":\"Coimbra\",\"geoLocation\":\"40.1508,-8.8618\",\"timezone\":\"Europe/Lisbon\",\"personalInfo\":\"Just an ordinary man\",\"internalInfo\":\"Aspiring Good Hearth\",\"profile\":{\"data\":{\"key\":\"value\"}}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" -u admin
 # npx hurl invoke ${CHAINCODE_NAME} person_get ${ID} -u admin
@@ -138,7 +172,8 @@ START_DATE=1577836800
 END_DATE=1640995199
 LOCATION=40.1890144,-8.5171909
 TAGS="[\"red\", \"blue\"]"
-PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"startDate\":\"${START_DATE}\",\"endDate\":\"${END_DATE}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"metaData\":{\"key\":\"value\"},\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"}}"
+AMBASSADOR_USERNAME=johndoe
+PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"startDate\":\"${START_DATE}\",\"endDate\":\"${END_DATE}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"ambassadorUsername\":\"${AMBASSADOR_USERNAME}\",\"metaData\":{\"key\":\"value\"},\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"}}"
 # echo $PAYLOAD  | jq
 # create and get with admin
 npx hurl invoke ${CHAINCODE_NAME} cause_create "${PAYLOAD}" -u admin
@@ -233,8 +268,8 @@ npx hurl invoke ${CHAINCODE_NAME} asset_create "${PAYLOAD}" -u admin
 # ResourceType, ALWAYS GET from Asset ex can be PHYSICAL_ASSET,DIGITAL_ASSET
 # QUANTITY & CURRENCY can be undefined if it is a asset donation
 
-# transaction asset
-ID=acef70e5-cd25-4533-8392-9fa57e43cf48
+# transaction asset from johndoe to janedoe
+ID=acef70e5-cd25-4533-8392-9fa57e43cf56
 TRANSACTION_TYPE=TRANSFER
 RESOURCE_TYPE=DIGITAL_ASSET
 LOCATION=40.1890144,-8.5171909
@@ -254,9 +289,26 @@ PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourc
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u admin
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
 
+# transaction asset janedoe to johnode
+ID=acef70e5-cd25-4533-8392-9fa57e43cf57
+INPUT_ID=${JANE_ID}
+OUTPUT_ID=${JOHN_ID}
+OWNER_USERNAME=janedoe
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"},\"assetId\":\"${ASSET_ID}\",\"ownerUsername\":\"${OWNER_USERNAME}\"}"
+# echo $PAYLOAD  | jq
+npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u admin
+# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
 
-
-
+# transaction asset johndoe to user with minimal required data
+ID=acef70e5-cd25-4533-8392-9fa57e43cf61
+MINI_ID=4ea88521-031b-4279-9165-9c10e1839053
+INPUT_ID=${MINI_ID}
+OUTPUT_ID=${JANE_ID}
+OWNER_USERNAME=182692152
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"},\"assetId\":\"${ASSET_ID}\",\"ownerUsername\":\"${OWNER_USERNAME}\"}"
+# echo $PAYLOAD  | jq
+npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u admin
+# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
 
 # complex filters
 

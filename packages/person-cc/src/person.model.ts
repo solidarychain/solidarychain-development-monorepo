@@ -204,4 +204,27 @@ export class Person extends ConvectorModel<Person> {
   // @Required()
   @Validate(yup.string()/*.nullable()*/)
   public otherInformation: string;
+
+  // above implementation is equal in all models, only change the type and CONVECTOR_MODEL_PATH_${MODEL}
+
+  // custom static implementation getById
+  public static async getById(id: string): Promise<Person> {
+    const result: Person | Person[] = await this.getByFilter({ _id: id });
+    return (result) ? result[0] : null;
+  }
+
+  // custom static implementation getByField
+  public static async getByField(fieldName: string, fieldValue: string): Promise<Person | Person[]> {
+    return await this.getByFilter({ [fieldName]: fieldValue });
+  }
+
+  // custom static implementation getByFilter
+  public static async getByFilter(filter: any): Promise<Person | Person[]> {
+    return await this.query(Person, {
+      selector: {
+        type: c.CONVECTOR_MODEL_PATH_PERSON,
+        ...filter,
+      }
+    });
+  }
 }

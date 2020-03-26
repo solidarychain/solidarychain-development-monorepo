@@ -17,12 +17,14 @@ export const hashPassword = (password: string): string => {
  * every model has is checkUniqueField implementation with its type
  * richQuery helper to check unique fields on model Person
  */
-export const checkUniqueField = async (fieldName: string, fieldValue: string) => {
+export const checkUniqueField = async (fieldName: string, fieldValue: string, required: boolean) => {
+  if (!required && !fieldValue) {
+    return;
+  }
   const exists = await Person.query(Person, {
     selector: {
       type: c.CONVECTOR_MODEL_PATH_PERSON,
       [fieldName]: fieldValue,
-      // participant: { id: participant.id }
     }
   });
   if ((exists as Person[]).length > 0) {

@@ -6,8 +6,6 @@ import * as yup from 'yup';
 import { getEntity, checkUniqueField } from './utils';
 import { Asset } from './asset.model';
 
-// TODO: transfer asset to Entity
-
 @Controller('asset')
 export class AssetController extends ConvectorController<ChaincodeTx> {
   @Invokable()
@@ -16,22 +14,18 @@ export class AssetController extends ConvectorController<ChaincodeTx> {
     asset: Asset
   ) {
     // get host participant from fingerprint
-    // TODO: move to common-cc in all uses
     const participant: Participant = await getParticipantByIdentity(this.sender);
     if (!!participant && !participant.id) {
       throw new Error('There is no participant with that identity');
     }
 
-    // TODO: get owner from id
-
-    // get prefixed name this way we can have multiple assets with same name
-    const prefix: string = asset.id.split('-')[0];
-    // TODO: check prefixed name
+    // get postfix name this way we can have multiple assets with same name
+    const postfixCode: string = asset.id.split('-')[0];
     // modify asset.name, used in save to
-    asset.name = `${prefix} :  ${asset.name}`;
+    asset.name = `${asset.name} [${postfixCode}]`;
     // check unique fields
-    await checkUniqueField('_id', asset.id);
-    await checkUniqueField('name', asset.name);
+    await checkUniqueField('_id', asset.id, true);
+    await checkUniqueField('name', asset.name, true);
 
     // add participant
     asset.participant = participant;
@@ -81,7 +75,6 @@ export class AssetController extends ConvectorController<ChaincodeTx> {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_ASSET,
         id,
-        // participant: { id: participant.id }
       }
     });
     // require to check if existing before try to access existing[0].id prop
@@ -120,5 +113,4 @@ export class AssetController extends ConvectorController<ChaincodeTx> {
     const resultSet: Asset | Asset[] = await Asset.query(Asset, complexQuery);
     return resultSet;
   }
-
 }
