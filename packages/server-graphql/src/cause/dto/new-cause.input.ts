@@ -19,6 +19,10 @@ export class NewCauseInput {
   @IsDefined()
   public name: string;
 
+  @Field(type => [String], { nullable: true })
+  @Optional()
+  public ambassadors: string[];
+
   @Field(type => Date, { nullable: true })
   @IsDefined()
   // @IsDate() don't enable on new-x-input's

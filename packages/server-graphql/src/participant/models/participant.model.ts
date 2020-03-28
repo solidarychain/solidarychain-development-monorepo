@@ -2,6 +2,7 @@ import { Field, ID, ObjectType } from 'type-graphql';
 import { x509Identities } from '../../common/models';
 import { Validate, IsDefined } from 'class-validator';
 import * as yup from 'yup';
+import { Optional } from '@nestjs/common';
 
 @ObjectType()
 export class Participant {
@@ -14,6 +15,10 @@ export class Participant {
 
   @Field()
   public name: string;
+
+  @Field(type => [String], { nullable: true })
+  @Optional()
+  public ambassadors: string[];
 
   @Field()
   public msp: string;

@@ -7,15 +7,15 @@ import { Participant } from '@solidary-network/participant-cc';
 
 export class Cause extends ConvectorModel<Cause> {
   @ReadOnly()
+  @Required()
   public readonly type = c.CONVECTOR_MODEL_PATH_CAUSE;
 
   @Required()
   @Validate(yup.string())
   public name: string;
 
-  // owner : send by graphql api
-  @Validate(yup.string())
-  public ambassadorUsername: string;
+  @Validate(yup.array().of(yup.string()))
+  public ambassadors: string[];
 
   @Validate(yup.number())
   public startDate: number;

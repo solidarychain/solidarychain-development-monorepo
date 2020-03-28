@@ -12,3 +12,16 @@ export const citizenCardDateToIsoDate = (inputDate: string) => {
     return null;
   }
 }
+
+/**
+ * javaScript: async/await with forEach() implementation
+ * used in person-cc/utils/checkValidPersons
+ * @param array 
+ * @param callback 
+ * @external https://codeburst.io/javascript-async-await-with-foreach-b6ba62bbf404
+ */
+export const asyncForEach = async (array, callback) => {
+  for (let index = 0; index < array.length; index++) {
+    await callback(array[index], index, array);
+  }
+}

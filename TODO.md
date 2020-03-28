@@ -214,9 +214,28 @@ person.participant = gov;
 
 
 
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+GRAPHQL VIEW ambassadors in all 3 models
 
 
+all models have owner/admin the person that creates the record
 
+edit all models, add ambassadors to cause and participants, and assetc todo
+
+improve transferes, to use all modes
+
+person > person
+person > cause
+person > participant
+
+cause > person
+participant > person
+
+protections
+asset: only ambassador or OWNER can transfer resources from causes to ENTITIES
+cause: only ambassador can transfer resources from causes to ENTITIES
+participant: only ambassador can transfer resources from participant to ENTITIES
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 

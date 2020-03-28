@@ -19,6 +19,10 @@ export class Cause {
   @IsDefined()
   public name: string;
 
+  @Field(type => String, { nullable: true })
+  @Optional()
+  public ambassadors: string[];
+
   @Field({ nullable: true })
   @Optional()
   @Validate(yup.number)

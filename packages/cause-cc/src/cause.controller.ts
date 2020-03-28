@@ -5,6 +5,7 @@ import * as yup from 'yup';
 import { Cause } from './cause.model';
 import { getEntity, checkUniqueField } from './utils';
 import { Participant, getParticipantByIdentity } from '@solidary-network/participant-cc';
+import { Person, checkValidPersons } from '@solidary-network/person-cc';
 
 @Controller('cause')
 export class CauseController extends ConvectorController<ChaincodeTx> {
@@ -19,7 +20,9 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
       throw new Error('There is no participant with that identity');
     }
 
-    // TODO: check postfix
+    // check if all ambassadors are valid persons
+    await checkValidPersons(cause.ambassadors);
+
     // get postfix name this way we can have multiple causes with same name
     const postfixCode: string = cause.id.split('-')[0];
     // modify cause.name, used in save to

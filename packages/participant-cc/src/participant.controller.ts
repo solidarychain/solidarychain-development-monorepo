@@ -15,16 +15,23 @@ export class ParticipantController extends ConvectorController {
   @Invokable()
   public async create(
     // TODO: use both
-    @Param(yup.string())
-    id: string,
-    @Param(yup.string())
-    code: string,
-    @Param(yup.string())
-    name: string,
-    // TODO: when use this, even if it not used we get the infamous : { Error: transaction returned with failure: {"name":"Error","status":500,"message":"Cant find a participant with that fingerprint"}
-    // @Param(Participant)
-    // participant: Participant,
+    // @Param(yup.string())
+    // id: string,
+    // @Param(yup.string())
+    // code: string,
+    // @Param(yup.string())
+    // name: string,
+    // TODO: when use this, even if it not used we get the infamous { Error: transaction returned with failure: {"name":"Error","status":500,"message":"Cant find a participant with that fingerprint"}
+    // warning the error only occurs if we invoke person_create with `-u admin` ex `npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" -u admin`
+    // if we invoke without it, it works, for now don't use `-u admin` user
+    @Param(Participant)
+    participant: Participant,
   ) {
+    // TODO: remove parameters until we fix in using payload object vs parameter
+    const id = participant.id;
+    const code = participant.code;
+    const name = participant.name;
+
     // get participant if not gov, in case of gov it won't exists yet and will be without participant
     let gov: Participant;
     if (id !== c.UUID_GOV_ID) {
@@ -36,6 +43,10 @@ export class ParticipantController extends ConvectorController {
         throw new Error('There is no go participant');
       }
     }
+
+    // TODO: before add dependency to Person packahe with caution
+    // check if all ambassadors are valid persons
+    // await checkValidPersons(cause.ambassadors);
 
     // check unique fields
     await checkUniqueField('_id', id, true);

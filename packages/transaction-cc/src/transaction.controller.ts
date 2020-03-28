@@ -16,6 +16,7 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     @Param(Transaction)
     transaction: Transaction,
   ) {
+    // use '' to prevent undefined when empty
     let debugMessage: string = '';
 
     // get host participant from fingerprint

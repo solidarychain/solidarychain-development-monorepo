@@ -4,6 +4,7 @@ import * as yup from 'yup';
 
 export class Participant extends ConvectorModel<Participant> {
   @ReadOnly()
+  @Required()
   public readonly type = c.CONVECTOR_MODEL_PATH_PARTICIPANT;
 
   @Required()
@@ -14,9 +15,8 @@ export class Participant extends ConvectorModel<Participant> {
   @Validate(yup.string())
   public name: string;
 
-  // owner : send by graphql api
-  @Validate(yup.string())
-  public ambassadorUsername: string;
+  @Validate(yup.array().of(yup.string()))
+  public ambassadors: string[];
 
   @Required()
   @Validate(yup.string())
