@@ -7,7 +7,7 @@ import { NewTransactionInput } from './dto';
 import { Transaction } from './models';
 import { TransactionService } from './transaction.service';
 import { CurrentUser } from '../common/decorators';
-import { Person } from '../person/models';
+import CurrentUserPayload from '../common/types/current-user-payload';
 
 const pubSub = new PubSub();
 
@@ -44,11 +44,11 @@ export class TransactionResolver {
 
   @Mutation(returns => Transaction)
   async transactionNew(
-    @CurrentUser() user: Person,
+    @CurrentUser() user: CurrentUserPayload,
     @Args('newTransactionData') newTransactionData: NewTransactionInput,
   ): Promise<Transaction> {
     // inject username into newTransactionData
-    newTransactionData.ownerUsername = user.username;
+    newTransactionData.loggedPersonId = user.userId;
     const transaction = await this.transactionService.create(newTransactionData);
     // fire subscription
     pubSub.publish('transactionAdded', { transactionAdded: transaction });

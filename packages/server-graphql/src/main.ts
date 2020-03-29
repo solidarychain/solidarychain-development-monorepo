@@ -7,7 +7,10 @@ import { ApplicationModule } from './app.module';
 async function bootstrap() {
   // Logger.log(`process.env.APOLLO_FETCH_POLICY:${process.env.APOLLO_FETCH_POLICY}`);
   const app = await NestFactory.create(
-    ApplicationModule, { httpsOptions },
+    ApplicationModule, {
+    httpsOptions,
+    logger: ['error', 'warn'],
+  },
   );
   // rest server cors, before any middleware,
   // warn cors for graphql is configured in ApplicationModule

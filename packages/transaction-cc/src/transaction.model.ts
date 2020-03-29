@@ -61,9 +61,13 @@ export class Transaction extends ConvectorModel<Transaction> {
 
   // optional, only when we transfer assets we require it
 
-  // owner : send by graphql api
+  // send by graphql api
   @Validate(yup.string())
-  public ownerUsername: string;
+  public loggedPersonId?: string;
+
+  // persisted with loggedPersonId
+  @Validate(yup.string())
+  public createdByPersonId?: string;
 
   @Validate(yup.string())
   public assetId: string;

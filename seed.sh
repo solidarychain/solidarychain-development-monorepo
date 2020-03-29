@@ -165,7 +165,7 @@ npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" # -u admin / if use
 # org5 : with ambassadors : required to be after persons
 echo "Creating participant: Pop Bank"
 POPB_ID=0fcc878a-6900-49d9-9a29-dffd9b8dae3c
-POPB_CODE=gba
+POPB_CODE=pop
 ID=${POPB_ID}
 CODE=${POPB_CODE}
 NAME="Pop Bank"
@@ -275,11 +275,11 @@ INPUT_ID=${JOHN_ID}
 OUTPUT_TYPE=network.solidary.convector.person
 OUTPUT_ID=${JANE_ID}
 ASSET_ID=acef70e5-cd25-4533-8392-1fa57e430002
-OWNER_USERNAME=johndoe
+LOGGED_PERSON_ID=${JOHN_ID}
 # transferer by amount
 QUANTITY=1000
 CURRENCY=EUR
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"},\"assetId\":\"${ASSET_ID}\",\"ownerUsername\":\"${OWNER_USERNAME}\"}"
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"},\"assetId\":\"${ASSET_ID}\",\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}"
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
@@ -288,8 +288,8 @@ npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}"
 ID=acef70e5-cd25-4533-8392-9fa57e43cf57
 INPUT_ID=${JANE_ID}
 OUTPUT_ID=${JOHN_ID}
-OWNER_USERNAME=janedoe
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"},\"assetId\":\"${ASSET_ID}\",\"ownerUsername\":\"${OWNER_USERNAME}\"}"
+LOGGED_PERSON_ID=${JANE_ID}
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"},\"assetId\":\"${ASSET_ID}\",\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}"
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
@@ -299,8 +299,8 @@ ID=acef70e5-cd25-4533-8392-9fa57e43cf61
 MINI_ID=4ea88521-031b-4279-9165-9c10e1839053
 INPUT_ID=${JOHN_ID}
 OUTPUT_ID=${MINI_ID}
-OWNER_USERNAME=johndoe
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"},\"assetId\":\"${ASSET_ID}\",\"ownerUsername\":\"${OWNER_USERNAME}\"}"
+LOGGED_PERSON_ID=${JOHN_ID}
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"},\"assetId\":\"${ASSET_ID}\",\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}"
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
@@ -310,8 +310,8 @@ ID=acef70e5-cd25-4533-8392-9fa57e43cf62
 MINI_ID=4ea88521-031b-4279-9165-9c10e1839053
 INPUT_ID=${MINI_ID}
 OUTPUT_ID=${JOHN_ID}
-OWNER_USERNAME=182692152
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"assetId\":\"${ASSET_ID}\",\"ownerUsername\":\"${OWNER_USERNAME}\"}"
+LOGGED_PERSON_ID=${MINI_ID}
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"assetId\":\"${ASSET_ID}\",\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}"
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin

@@ -21,9 +21,10 @@ class Entity {
   @IsDefined()
   public createdDate: number;
 
-  @IsDefined()
-  @Field(type => [x509Identities])
-  public identities: x509Identities[];
+  // hide it from graphql stuff, this way we won't expose fingerprints
+  // @IsDefined()
+  // @Field(type => [x509Identities])
+  // public identities: x509Identities[];
 }
 
 // tslint:disable-next-line: max-classes-per-file

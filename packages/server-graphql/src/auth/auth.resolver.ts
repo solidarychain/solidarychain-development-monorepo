@@ -27,19 +27,20 @@ export class AuthResolver {
   ): Promise<PersonLoginResponse> {
     // publish personLogged subscription
     pubSub.publish('personLogged', { personLogged: loginPersonData.username });
-    // accessToken
-    const { accessToken } = await this.authService.signJwtToken(loginPersonData);
-    // assign jwt Payload to context
+    // get person
+    const person: Person = await this.usersService.findOneByUsername(loginPersonData.username);
+    // accessToken: add some person data to it, like id and roles
+    const signJwtTokenDto = { ...loginPersonData, userId: person.id, roles: person.roles };
+    const { accessToken } = await this.authService.signJwtToken(signJwtTokenDto);
     // TODO: payload is assigned to context?
+    // assign jwt Payload to context
     payload = this.authService.getJwtPayLoad(accessToken);
     // get incremented tokenVersion
     const tokenVersion = this.usersService.usersStore.incrementTokenVersion(loginPersonData.username);
     // refreshToken
-    const refreshToken: AccessToken = await this.authService.signRefreshToken(loginPersonData, tokenVersion);
+    const refreshToken: AccessToken = await this.authService.signRefreshToken(signJwtTokenDto, tokenVersion);
     // send refresh token
     this.authService.sendRefreshToken(res, refreshToken);
-    // get person
-    const person: Person = await this.usersService.findOneByUsername(loginPersonData.username);
     // return loginPersonResponse
     return { user: person, accessToken };
   }

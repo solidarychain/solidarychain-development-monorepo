@@ -44,8 +44,8 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
       transaction.resourceType === ResourceType.PhysicalAsset || transaction.resourceType === ResourceType.DigitalAsset
     )) {
       // empty username
-      if (!transaction.ownerUsername) {
-        throw new Error(`You must supply owner username when transfer assets of type '${transaction.resourceType}'`);
+      if (!transaction.loggedPersonId) {
+        throw new Error(`You must supply owner user loggedPersonId when transfer assets of type '${transaction.resourceType}'`);
       } else if (!transaction.assetId) {
         throw new Error(`You must supply a assetId when transfer assets of type '${transaction.resourceType}'`);
       } else {
@@ -54,27 +54,25 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
         if (!!asset && !asset.id) {
           throw new Error(`There is no asset with Id (${transaction.assetId})`);
         }
+
         // protection check if asset resourceType is equal to payload.resourceType
         if (transaction.resourceType !== (asset.assetType as unknown as ResourceType)) {
           throw new Error(`Transaction resourceType '${transaction.resourceType}' is different from asset resourceType '${asset.assetType}', you can't change resourceType in transfers`);
         }
 
-        // get person from owner username (logged user in api)
-        const ownerPerson: Person | Person[] = await Person.query(Person, {
-          selector: {
-            type: c.CONVECTOR_MODEL_PATH_PERSON,
-            username: transaction.ownerUsername,
-          }
-        });
+        // get loggedPerson from loggedPersonId
+        const loggedPerson: Person = await Person.getById(transaction.loggedPersonId);
         // protection check if ownerPerson exists 
-        if (!ownerPerson && !ownerPerson[0].id) {
-          throw new Error(`There is no person with owner username '${transaction.ownerUsername}'`);
+        if (!loggedPerson && !loggedPerson.id) {
+          throw new Error(`There is no person with loggedPersonId '${transaction.loggedPersonId}'`);
         }
-        // protection check if owner id is different from transaction.input.id
-        if (transaction.input.id != ownerPerson[0].id) {
+
+        // protection check if loggedPersonId is different from transaction.input.id
+        if (transaction.input.id != loggedPerson.id) {
           // debugMessage = `transaction.input.id: ${transaction.input.id} != ownerPerson[0].id: ${ownerPerson[0].id}`;
-          throw new Error(`Username '${transaction.ownerUsername}' is not the owner of the asset${debugMessage}`);
+          throw new Error(`loggedPersonId '${transaction.loggedPersonId}' is not the owner of the asset${debugMessage}`);
         }
+
         // protection check if transaction input owner is the same as asset owner and same type, if one is different throw exception
         if (transaction.input.id != (asset.owner.entity as any).id || transaction.input.type != (asset.owner.entity as any).type) {
           // debugMessage = `transaction.input.id: ${transaction.input.id} != asset.owner.entity: ${(asset.owner.entity as any).id} && transaction.input.type: ${transaction.input.type} != asset.owner.entity: ${(asset.owner.entity as any).type}`;
@@ -89,11 +87,16 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
         await asset.save();
       }
     }
+
+    // assign createdByPersonId before delete loggedPersonId
+    transaction.createdByPersonId = transaction.loggedPersonId;
+
     // clean non useful props, are required only to know sent entityType in payload, else they are stored in ledger
     delete transaction.input.id;
     delete transaction.output.id;
     delete transaction.input.type;
     delete transaction.output.type;
+    delete transaction.loggedPersonId;
     // must act has a db transaction, only get here if asset.save pass
     // add date in epoch unix time
     transaction.createdDate = new Date().getTime();

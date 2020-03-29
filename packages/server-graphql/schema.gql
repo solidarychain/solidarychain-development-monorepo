@@ -26,8 +26,8 @@ type Asset {
   metaData: JSONObject
   metaDataInternal: JSONObject
   participant: Participant!
-  identities: [x509Identities!]!
   createdDate: Float!
+  createdByPersonId: String
 }
 
 type Attribute {
@@ -51,8 +51,8 @@ type Cause {
   metaDataInternal: JSONObject
   input: EntityResult!
   participant: Participant!
-  identities: [x509Identities!]!
   createdDate: Float!
+  createdByPersonId: String
 }
 
 """Date custom scalar type"""
@@ -62,7 +62,6 @@ type Entity {
   id: ID!
   type: String!
   createdDate: Float!
-  identities: [x509Identities!]!
 }
 
 type EntityResult {
@@ -185,8 +184,8 @@ input NewTransactionInput {
   tags: [String!]
   metaData: JSONObject
   metaDataInternal: JSONObject
+  loggedPersonId: String
   assetId: String
-  ownerUsername: String
 }
 
 type Participant {
@@ -196,8 +195,8 @@ type Participant {
   ambassadors: [String!]
   msp: String!
   participant: Participant
-  identities: [x509Identities!]!
   createdDate: Float!
+  createdByPersonId: String
 }
 
 type Person {
@@ -207,8 +206,8 @@ type Person {
   attributes: [Attribute!]
   roles: [String!]
   participant: Participant!
-  identities: [x509Identities!]!
   createdDate: Float!
+  createdByPersonId: String
   registrationDate: Date!
   mobilePhone: Float
   postal: String
@@ -296,10 +295,9 @@ type Transaction {
   metaData: JSONObject
   metaDataInternal: JSONObject
   participant: Participant
-  identities: [x509Identities!]
   createdDate: Float!
+  createdByPersonId: String
   assetId: String
-  ownerUsername: String
 }
 
 type x509Identities {

@@ -1,5 +1,6 @@
 import { appConstants as c, x509Identities } from '@solidary-network/common-cc';
-import { checkValidPersons } from '@solidary-network/person-cc';
+// TODO: enable again
+// import { checkValidPersons } from '@solidary-network/person-cc';
 import { BaseStorage, Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ClientIdentity } from 'fabric-shim';
 import * as yup from 'yup';
@@ -33,8 +34,9 @@ export class ParticipantController extends ConvectorController {
       }
     }
 
+    // TODO: enable again: try not using Person model here
     // check if all ambassadors are valid persons
-    await checkValidPersons(participant.ambassadors);
+    // await checkValidPersons(participant.ambassadors);
 
     // check unique fields
     await checkUniqueField('_id', participant.id, true);

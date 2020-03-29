@@ -7,6 +7,7 @@ import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
 import { AddPersonAttributeInput, GetByAttributeInput, NewPersonInput } from './dto';
 import { Person } from './models';
 import { PersonService } from './person.service';
+import CurrentUserPayload from '../common/types/current-user-payload';
 
 const pubSub = new PubSub();
 
@@ -78,7 +79,7 @@ export class PersonResolver {
 
   @UseGuards(GqlAuthGuard)
   @Query(returns => Person)
-  async personProfile(@CurrentUser() user: Person): Promise<Person> {
+  async personProfile(@CurrentUser() user: CurrentUserPayload): Promise<Person> {
     return await this.personService.findOneByUsername(user.username);
   }
 

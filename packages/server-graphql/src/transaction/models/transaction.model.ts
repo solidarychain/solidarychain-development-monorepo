@@ -55,20 +55,21 @@ export class Transaction {
   @IsDefined()
   public participant: Participant;
 
-  @Field(type => [x509Identities], { nullable: true })
-  @IsDefined()
-  public identities: x509Identities[];
+  // hide it from graphql stuff, this way we won't expose fingerprints
+  // @Field(type => [x509Identities], { nullable: true })
+  // @IsDefined()
+  // public identities: x509Identities[];
 
   @Field()
   @IsDefined()
   @Validate(yup.number)
   public createdDate: number;
 
+  @Field({ nullable: true })
+  public createdByPersonId: string;
+
   // optional: transfer assets
 
   @Field({ nullable: true })
   public assetId: string;
-
-  @Field({ nullable: true })
-  public ownerUsername: string;
 }

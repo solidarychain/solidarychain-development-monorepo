@@ -13,7 +13,7 @@ export class Person {
   @Field(type => ID)
   @IsDefined()
   id: string;
-  
+
   // non citizenCard data
 
   @Field({ nullable: true })
@@ -31,21 +31,25 @@ export class Person {
   public attributes?: Attribute[];
 
   // TODO add roles to new-person.input.ts
-  @Field(type => String, { defaultValue: UserRoles.User })
+  @Field(type => [String], { defaultValue: UserRoles.User })
   public roles: string[];
 
   @Field()
   @IsDefined()
   public participant: Participant;
 
-  @Field(type => [x509Identities])
-  @IsDefined()
-  public identities: x509Identities[];
+  // hide it from graphql stuff, this way we won't expose fingerprints
+  // @Field(type => [x509Identities])
+  // @IsDefined()
+  // public identities: x509Identities[];
 
   @Field()
   @IsDefined()
   @Validate(yup.number)
   public createdDate: number;
+
+  @Field({ nullable: true })
+  public createdByPersonId: string;
 
   // extended non citizenCard data
 

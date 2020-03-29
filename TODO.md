@@ -216,22 +216,22 @@ person.participant = gov;
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-GRAPHQL VIEW ambassadors in all 2 models, 
-add ambassador to all myuttaiosnto
+commit message: improved JWT with sub userId and Roles, added createdByPersonId, and updateByPersonId, and updateDate, refactor all public ownerUsername to public createdPersonId, update all lerna packages, fixed Dependency cycles detected, all models have createdPersonId
 
-remove all participants fingerprint from graphql queries
-  "participant": {
-    "identities": [
-      {
-        "fingerprint": "AC:4D:B7:A3:5F:88:ED:B5:FF:6C:8A:E2:3E:40:F0:32:DA:66:3D:E5"
-  
-if we like to have ambassadors in assets the best way is to transfer the asset to other person that will be the owner
 
-all codes to lowercase
+- [-] - create a common function in common to get loggedPerson model from richQuery, this way we don't have circular dependencies `const loggedPerson: Person = await Person.getById(transaction.loggedPersonId);`
+- [-] add common function `checkValidPersons` to common to not have circular dependencies and use it Participants and Transactions, in participants are comment `// TODO: enable again`
+- [-] - use shared function in all create chaincode methods and assign it in `transaction.createdByPersonId = transaction.loggedPersonId;`
+- [-] edit all models, add ambassadors to cause and participants, and asset todo
 
-all models have owner/admin the person that creates the record
+backup before bootstrap lerna packages
+src/participant.controller.ts(2,35): error TS2307: Cannot find module '@solidary-network/person-cc'.
+lerna WARN ECYCLE Dependency cycles detected, you should fix these!
+lerna WARN ECYCLE @solidary-network/participant-cc -> @solidary-network/person-cc -> @solidary-network/participant-cc
 
-edit all models, add ambassadors to cause and participants, and assetc todo
+- [X] Add createdByPersonId to all models
+- [ ] Add updatedByPersonId to all models
+- [ ] Add updatedDate to all models
 
 improve transferes, to use all modes
 
