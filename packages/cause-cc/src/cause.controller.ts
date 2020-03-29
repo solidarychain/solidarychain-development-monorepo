@@ -1,11 +1,11 @@
 import { appConstants as c } from '@solidary-network/common-cc';
-import { Controller, ConvectorController, Invokable, Param, FlatConvectorModel } from '@worldsibu/convector-core';
+import { getParticipantByIdentity, Participant } from '@solidary-network/participant-cc';
+import { checkValidPersons } from '@solidary-network/person-cc';
+import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
 import * as yup from 'yup';
 import { Cause } from './cause.model';
-import { getEntity, checkUniqueField } from './utils';
-import { Participant, getParticipantByIdentity } from '@solidary-network/participant-cc';
-import { Person, checkValidPersons } from '@solidary-network/person-cc';
+import { checkUniqueField, getEntity } from './utils';
 
 @Controller('cause')
 export class CauseController extends ConvectorController<ChaincodeTx> {

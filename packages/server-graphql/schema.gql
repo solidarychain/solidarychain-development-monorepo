@@ -42,6 +42,7 @@ type Attribute {
 type Cause {
   id: ID!
   name: String!
+  ambassadors: [String!]
   startDate: Float
   endDate: Float
   location: String
@@ -115,6 +116,7 @@ input NewAssetInput {
 input NewCauseInput {
   id: String
   name: String!
+  ambassadors: [String!]
   startDate: Date
   endDate: Date
   location: String
@@ -128,6 +130,7 @@ input NewParticipantInput {
   id: String
   code: String!
   name: String!
+  ambassadors: [String!]
 }
 
 input NewPersonInput {
@@ -190,6 +193,7 @@ type Participant {
   id: ID!
   code: String!
   name: String!
+  ambassadors: [String!]
   msp: String!
   participant: Participant
   identities: [x509Identities!]!

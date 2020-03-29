@@ -216,8 +216,18 @@ person.participant = gov;
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-GRAPHQL VIEW ambassadors in all 3 models
+GRAPHQL VIEW ambassadors in all 2 models, 
+add ambassador to all myuttaiosnto
 
+remove all participants fingerprint from graphql queries
+  "participant": {
+    "identities": [
+      {
+        "fingerprint": "AC:4D:B7:A3:5F:88:ED:B5:FF:6C:8A:E2:3E:40:F0:32:DA:66:3D:E5"
+  
+if we like to have ambassadors in assets the best way is to transfer the asset to other person that will be the owner
+
+all codes to lowercase
 
 all models have owner/admin the person that creates the record
 
