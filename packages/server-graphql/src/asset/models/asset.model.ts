@@ -6,6 +6,7 @@ import { Field, ID, ObjectType } from 'type-graphql';
 import * as yup from 'yup';
 import { x509Identities, EntityResult } from '../../common/models';
 import { Participant } from '../../participant/models/participant.model';
+import { Optional } from '@nestjs/common';
 
 @ObjectType()
 export class Asset {
@@ -22,6 +23,10 @@ export class Asset {
   @Field()
   @IsDefined()
   public assetType: AssetType;
+
+  @Field(type => String, { nullable: true })
+  @Optional()
+  public ambassadors: string[];
 
   // WARN different from model, must be a GraphQLJSONObject in input and EntityResult in model
   @Field(type => EntityResult)

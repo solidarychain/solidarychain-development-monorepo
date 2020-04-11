@@ -19,6 +19,9 @@ export class Asset extends ConvectorModel<Asset> {
   @Validate(assetTypeSchema)
   public assetType: AssetType;
 
+  @Validate(yup.array().of(yup.string()))
+  public ambassadors: string[];
+
   @Validate(yup.string().matches(c.REGEX_LOCATION))
   public location: string;
 

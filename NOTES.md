@@ -81,6 +81,7 @@
   - [After Update to new Packages we have Conversion of type 'FlatConvectorModel<Asset>[]' to type 'Asset[]' may be a mistake because neither type sufficiently overlaps with the other](#after-update-to-new-packages-we-have-conversion-of-type-flatconvectormodelasset-to-type-asset-may-be-a-mistake-because-neither-type-sufficiently-overlaps-with-the-other)
   - [Class-validator](#class-validator)
   - [Problem on create person can't find participant fingerprint? comes from `this.sender`](#problem-on-create-person-cant-find-participant-fingerprint-comes-from-thissender)
+  - [Problem again with "Cant find a participant with that fingerprint"](#problem-again-with-%22cant-find-a-participant-with-that-fingerprint%22)
 
 This is a simple NestJs starter, based on above links, I only extended it with a few things like **swagger api**, **https**, **jwt**, and other stuff, thanks m8s
 
@@ -3050,7 +3051,7 @@ public location: string;
 
 ## Problem on create person can't find participant fingerprint? comes from `this.sender`
 
-after restart laptop....another probelm when restart network
+after restart laptop....another problem when restart network
 
 ```shell
 $ npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" -u admin
@@ -3079,14 +3080,10 @@ public async create(
 
 if we uncomment above block, PUTF welcome to hell
 
+UPDATE: check working version of Participant.create notes
 
+## Problem again with "Cant find a participant with that fingerprint"
 
+`{\"name\":\"Error\",\"status\":500,\"message\":\"Cant find a participant with that fingerprint\"}`
 
-
-
-https://lists.hyperledger.org/g/fabric/topic/hyperledger_1_4_install/71852629?p=,,,20,0,0,0::recentpostdate%2Fsticky,,,20,2,0,71852629
-
-Error: could not assemble transaction, err proposal response was not successful, error code 500, msg error starting container: error starting container: Failed to generate platform-specific docker build: Error returned from build: 127 "/bin/sh: npm: not found
-
-
-Not sure if it is same as your case. I encountered something similar when I tried to start hlf v1.4 and had both 1.4 and 2.0 version of hyperledger/fabric-ccenv docker images in my laptop. Fixed it by rmi my 2.0 images.
+restarted network, and fails create cause, but after a while it start to work, under inpection, for now it works with all models

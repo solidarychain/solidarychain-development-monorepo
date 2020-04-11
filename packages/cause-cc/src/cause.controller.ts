@@ -1,6 +1,5 @@
-import { appConstants as c } from '@solidary-network/common-cc';
+import { appConstants as c, checkValidModelIds } from '@solidary-network/common-cc';
 import { getParticipantByIdentity, Participant } from '@solidary-network/participant-cc';
-import { checkValidPersons } from '@solidary-network/person-cc';
 import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
 import * as yup from 'yup';
@@ -21,7 +20,7 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
     }
 
     // check if all ambassadors are valid persons
-    await checkValidPersons(cause.ambassadors);
+    await checkValidModelIds(c.CONVECTOR_MODEL_PATH_PERSON, c.CONVECTOR_MODEL_PATH_PERSON_NAME, cause.ambassadors);
 
     // get postfix name this way we can have multiple causes with same name
     const postfixCode: string = cause.id.split('-')[0];

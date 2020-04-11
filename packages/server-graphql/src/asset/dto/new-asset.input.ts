@@ -4,6 +4,7 @@ import { IsDefined, IsOptional, IsUUID } from 'class-validator';
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, InputType } from 'type-graphql';
 import { EntityResult } from '../../common/models';
+import { Optional } from '@nestjs/common';
 
 @InputType()
 export class NewAssetInput {
@@ -23,6 +24,10 @@ export class NewAssetInput {
   @Field()
   @IsDefined()
   public assetType: AssetType;
+
+  @Field(type => [String], { nullable: true })
+  @Optional()
+  public ambassadors: string[];
 
   // WARN different from model, must be a GraphQLJSONObject in input and EntityResult in model
   @Field(type => GraphQLJSONObject)

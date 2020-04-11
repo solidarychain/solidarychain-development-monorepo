@@ -40,7 +40,8 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
       throw new Error('No active identity found for participant');
     }
     if (this.sender !== govActiveIdentity.fingerprint) {
-      throw new Error(`Just the government - ID=gov - can create people - requesting organization was ${this.sender}`);
+      // throw new Error(`Just the government - ID=gov - can create people - requesting organization was ${this.sender}`);
+      throw new Error('Just the government (participant with id gov) can create people');
     }
 
     // add person

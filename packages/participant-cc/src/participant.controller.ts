@@ -1,6 +1,4 @@
-import { appConstants as c, x509Identities } from '@solidary-network/common-cc';
-// TODO: enable again
-// import { checkValidPersons } from '@solidary-network/person-cc';
+import { appConstants as c, x509Identities, checkValidModelIds } from '@solidary-network/common-cc';
 import { BaseStorage, Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ClientIdentity } from 'fabric-shim';
 import * as yup from 'yup';
@@ -18,7 +16,7 @@ export class ParticipantController extends ConvectorController {
   public async create(
     // TODO: when use this, even if it not used we get the infamous { Error: transaction returned with failure: {"name":"Error","status":500,"message":"Cant find a participant with that fingerprint"}
     // warning the error only occurs if we invoke person_create with `-u admin` ex `npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" -u admin`
-    // if we invoke without it, it works, for now don't use `-u admin` user
+    // if we invoke without it, it works, for now don't use `-u admin` user in invoke
     @Param(Participant)
     participant: Participant,
   ) {
@@ -34,9 +32,8 @@ export class ParticipantController extends ConvectorController {
       }
     }
 
-    // TODO: enable again: try not using Person model here
     // check if all ambassadors are valid persons
-    // await checkValidPersons(participant.ambassadors);
+    await checkValidModelIds(c.CONVECTOR_MODEL_PATH_PERSON, c.CONVECTOR_MODEL_PATH_PERSON_NAME, participant.ambassadors);
 
     // check unique fields
     await checkUniqueField('_id', participant.id, true);

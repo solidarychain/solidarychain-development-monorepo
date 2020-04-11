@@ -1,4 +1,4 @@
-import { appConstants as c } from '@solidary-network/common-cc';
+import { appConstants as c, checkValidModelIds } from '@solidary-network/common-cc';
 import { Participant, getParticipantByIdentity } from '@solidary-network/participant-cc';
 import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
@@ -18,6 +18,9 @@ export class AssetController extends ConvectorController<ChaincodeTx> {
     if (!!participant && !participant.id) {
       throw new Error('There is no participant with that identity');
     }
+
+    // check if all ambassadors are valid persons
+    await checkValidModelIds(c.CONVECTOR_MODEL_PATH_PERSON, c.CONVECTOR_MODEL_PATH_PERSON_NAME, asset.ambassadors);
 
     // get postfix name this way we can have multiple assets with same name
     const postfixCode: string = asset.id.split('-')[0];

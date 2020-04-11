@@ -216,18 +216,24 @@ person.participant = gov;
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-commit message: improved JWT with sub userId and Roles, added createdByPersonId, and updateByPersonId, and updateDate, refactor all public ownerUsername to public createdPersonId, update all lerna packages, fixed Dependency cycles detected, all models have createdPersonId
-
-
-- [-] - create a common function in common to get loggedPerson model from richQuery, this way we don't have circular dependencies `const loggedPerson: Person = await Person.getById(transaction.loggedPersonId);`
 - [-] add common function `checkValidPersons` to common to not have circular dependencies and use it Participants and Transactions, in participants are comment `// TODO: enable again`
+
+- [-] create a common function in common to get loggedPerson model from richQuery, this way we don't have circular dependencies `const loggedPerson: Person = await Person.getById(transaction.loggedPersonId);`
+
+- [ ] Get Rid of all .getOne(id)
+
 - [-] - use shared function in all create chaincode methods and assign it in `transaction.createdByPersonId = transaction.loggedPersonId;`
 - [-] edit all models, add ambassadors to cause and participants, and asset todo
+
+- [ ] update Person with NIF with extended citizenCard data
 
 backup before bootstrap lerna packages
 src/participant.controller.ts(2,35): error TS2307: Cannot find module '@solidary-network/person-cc'.
 lerna WARN ECYCLE Dependency cycles detected, you should fix these!
 lerna WARN ECYCLE @solidary-network/participant-cc -> @solidary-network/person-cc -> @solidary-network/participant-cc
+
+- [-] finish transfers when are one of the ambassadors in cause and participant
+
 
 - [X] Add createdByPersonId to all models
 - [ ] Add updatedByPersonId to all models

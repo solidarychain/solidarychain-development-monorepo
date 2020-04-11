@@ -249,7 +249,8 @@ OWNER_TYPE=network.solidary.convector.person
 OWNER_ID=4ea88521-031b-4279-9165-9c10e1839001
 LOCATION=40.1890144,-8.5171909
 TAGS="[\"red\", \"blue\"]"
-PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"assetType\":\"${ASSET_TYPE}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"metaData\":{\"key\":\"value\"},\"owner\":{\"id\":\"${OWNER_ID}\",\"type\":\"${OWNER_TYPE}\"}}"
+AMBASSADORS="[\"${JOHN_ID}\", \"${JANE_ID}\"]"
+PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"assetType\":\"${ASSET_TYPE}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"ambassadors\":${AMBASSADORS},\"metaData\":{\"key\":\"value\"},\"owner\":{\"id\":\"${OWNER_ID}\",\"type\":\"${OWNER_TYPE}\"}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} asset_create "${PAYLOAD}"
 # npx hurl invoke ${CHAINCODE_NAME} asset_get ${ID}
