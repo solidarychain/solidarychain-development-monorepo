@@ -6,6 +6,8 @@ import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
 import { NewParticipantInput } from './dto';
 import { Participant } from './models/participant.model';
 import { ParticipantService } from './participant.service';
+import { CurrentUser } from '../common/decorators';
+import CurrentUserPayload from '../common/types/current-user-payload';
 
 const pubSub = new PubSub();
 
@@ -54,8 +56,11 @@ export class ParticipantResolver {
 
   @Mutation(returns => Participant)
   async participantNew(
+    @CurrentUser() user: CurrentUserPayload,
     @Args('newParticipantData') newParticipantData: NewParticipantInput,
   ): Promise<Participant> {
+    // inject username into newTransactionData
+    newParticipantData.loggedPersonId = user.userId;
     const participant = await this.participantService.create(newParticipantData);
     // fire subscription
     pubSub.publish('participantAdded', { participantAdded: participant });

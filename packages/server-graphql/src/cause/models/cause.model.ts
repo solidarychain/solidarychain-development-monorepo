@@ -71,5 +71,6 @@ export class Cause {
   public createdDate: number;
 
   @Field({ nullable: true })
+  @IsDefined()
   public createdByPersonId: string;
 }

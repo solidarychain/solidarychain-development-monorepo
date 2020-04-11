@@ -52,6 +52,11 @@ export class NewCauseInput {
   @Optional()
   public metaDataInternal: any;
 
+  // this is used to pass loggedIn userId to fabric
+  @Field({ nullable: true })
+  @IsOptional()
+  public loggedPersonId: string;
+
   // WARN different from model, must be a GraphQLJSONObject in input and EntityResult in model
   @Field(type => GraphQLJSONObject)
   @IsDefined()

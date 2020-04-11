@@ -1,11 +1,13 @@
 import { NotFoundException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'apollo-server-express';
+import { GqlAuthGuard } from '../auth/guards';
+import { CurrentUser } from '../common/decorators';
+import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
+import CurrentUserPayload from '../common/types/current-user-payload';
+import { CauseService } from './cause.service';
 import { NewCauseInput } from './dto';
 import { Cause } from './models';
-import { CauseService } from './cause.service';
-import { GqlAuthGuard } from '../auth/guards';
-import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
 
 const pubSub = new PubSub();
 
@@ -50,8 +52,11 @@ export class CauseResolver {
 
   @Mutation(returns => Cause)
   async causeNew(
+    @CurrentUser() user: CurrentUserPayload,
     @Args('newCauseData') newCauseData: NewCauseInput,
   ): Promise<Cause> {
+    // inject username into newCauseData
+    newCauseData.loggedPersonId = user.userId;
     const cause = await this.causeService.create(newCauseData);
     // fire subscription
     pubSub.publish('causeAdded', { causeAdded: cause });
@@ -62,5 +67,4 @@ export class CauseResolver {
   causeAdded() {
     return pubSub.asyncIterator('causeAdded');
   }
-
 }

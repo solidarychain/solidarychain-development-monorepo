@@ -1,6 +1,7 @@
-import { IsDefined, Length, MaxLength, IsOptional, IsUUID } from 'class-validator';
-import { Field, InputType } from 'type-graphql';
 import { Optional } from '@nestjs/common';
+import { IsDefined, IsOptional, IsUUID, Length } from 'class-validator';
+import { GraphQLJSONObject } from 'graphql-type-json';
+import { Field, InputType } from 'type-graphql';
 
 @InputType()
 export class NewParticipantInput {
@@ -23,4 +24,17 @@ export class NewParticipantInput {
   @Field(type => [String], { nullable: true })
   @Optional()
   public ambassadors: string[];
+
+  @Field(type => GraphQLJSONObject, { nullable: true })
+  @IsOptional()
+  public metaData: any;
+
+  @Field(type => GraphQLJSONObject, { nullable: true })
+  @IsOptional()
+  public metaDataInternal: any;
+
+  // this is used to pass loggedIn userId to fabric
+  @Field({ nullable: true })
+  @IsOptional()
+  public loggedPersonId: string;
 }

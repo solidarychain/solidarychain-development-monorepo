@@ -47,8 +47,13 @@ export class ParticipantController extends ConvectorController {
       fingerprint: this.sender,
       status: true
     }];
+    // assign createdByPersonId before delete loggedPersonId
+    participant.createdByPersonId = participant.loggedPersonId;
     // add date in epoch unix time
     participant.createdDate = new Date().getTime();
+
+    // clean non useful props, are required only receive id and entityType
+    delete participant.loggedPersonId;
 
     // always add gov participant, if its is not the gov itself, gov don't have participant
     if (gov) {
@@ -117,7 +122,10 @@ export class ParticipantController extends ConvectorController {
     let requesterMSP = this.fullIdentity.getMSPID();
 
     // Retrieve to see if exists
-    const existing = await Participant.getOne(id);
+    const existing = await Participant.getById(id);
+    // TODO: remove after confirm that above line works
+    // const existing = await Participant.getOne(id);
+    
     if (!existing || !existing.id) {
       throw new Error('No identity exists with that ID');
     }

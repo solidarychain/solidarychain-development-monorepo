@@ -58,9 +58,19 @@ export class NewPersonInput {
   // @IsDefined()
   public personalInfo?: string;
 
-  @Field({ nullable: true })
-  // @IsDefined()
-  public internalInfo?: string;
+  @Field(type => GraphQLJSONObject, { nullable: true })
+  @IsOptional()
+  public metaData: any;
+
+  @Field(type => GraphQLJSONObject, { nullable: true })
+  @IsOptional()
+  public metaDataInternal: any;
+
+  // TODO: can remove person don't use createdByPersonId
+  // this is used to pass loggedIn userId to fabric
+  // @Field({ nullable: true })
+  // @IsOptional()
+  // public loggedPersonId: string;
 
   // store future profile and reputation average object
   @Field(type => GraphQLJSONObject, { nullable: true })

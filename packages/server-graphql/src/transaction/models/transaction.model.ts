@@ -66,6 +66,7 @@ export class Transaction {
   public createdDate: number;
 
   @Field({ nullable: true })
+  @IsDefined()
   public createdByPersonId: string;
 
   // optional: transfer assets

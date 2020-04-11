@@ -48,8 +48,10 @@ export class Person {
   @Validate(yup.number)
   public createdDate: number;
 
-  @Field({ nullable: true })
-  public createdByPersonId: string;
+  // TODO: can remove person don't use createdByPersonId
+  // @Field({ nullable: true })
+  // @IsDefined()
+  // public createdByPersonId: string;
 
   // extended non citizenCard data
 
@@ -86,9 +88,11 @@ export class Person {
   @IsDefined()
   public personalInfo?: string;
 
-  @Field({ nullable: true })
-  @IsDefined()
-  public internalInfo?: string;
+  @Field(type => GraphQLJSONObject, { nullable: true })
+  public metaData: any;
+
+  @Field(type => GraphQLJSONObject, { nullable: true })
+  public metaDataInternal: any;
 
   // store future profile and reputation average object
   @Field(type => GraphQLJSONObject, { nullable: true })

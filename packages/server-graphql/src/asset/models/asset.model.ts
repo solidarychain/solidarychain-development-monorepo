@@ -65,6 +65,6 @@ export class Asset {
   public createdDate: number;
 
   @Field({ nullable: true })
+  @IsDefined()
   public createdByPersonId: string;
-
 }

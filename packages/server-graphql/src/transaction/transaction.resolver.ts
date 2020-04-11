@@ -59,5 +59,4 @@ export class TransactionResolver {
   transactionAdded() {
     return pubSub.asyncIterator('transactionAdded');
   }
-
 }

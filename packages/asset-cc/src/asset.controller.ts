@@ -40,12 +40,15 @@ export class AssetController extends ConvectorController<ChaincodeTx> {
     }];
     // assign input
     asset.owner.entity = await getEntity(asset.owner.type, asset.owner.id);
+    // assign createdByPersonId before delete loggedPersonId
+    asset.createdByPersonId = asset.loggedPersonId;
+    // add date in epoch unix time
+    asset.createdDate = new Date().getTime();
+
     // clean non useful props, are required only receive id and entityType
     delete asset.owner.id;
     delete asset.owner.type;
-
-    // add date in epoch unix time
-    asset.createdDate = new Date().getTime();
+    delete asset.loggedPersonId;
 
     await asset.save();
   }

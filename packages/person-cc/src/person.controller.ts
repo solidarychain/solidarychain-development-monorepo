@@ -51,12 +51,17 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
       fingerprint: this.sender,
       status: true
     }];
+    // assign createdByPersonId before delete loggedPersonId
+    person.createdByPersonId = person.loggedPersonId;
     // hashPassword before save model
     person.password = hashPassword(person.password);
     // add date in epoch unix time
     person.registrationDate = new Date().getTime();
     // add date in epoch unix time
     person.createdDate = new Date().getTime();
+
+    // clean non useful props, are required only receive id and entityType
+    delete person.loggedPersonId;
 
     // save person
     await person.save();
@@ -253,5 +258,5 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     };
     const resultSet: Person | Person[] = await Person.query(Person, complexQuery);
     return resultSet;
-  }  
+  }
 }

@@ -79,13 +79,15 @@ export class PersonResolver {
 
   @UseGuards(GqlAuthGuard)
   @Query(returns => Person)
-  async personProfile(@CurrentUser() user: CurrentUserPayload): Promise<Person> {
+  async personProfile(
+    @CurrentUser() user: CurrentUserPayload,
+  ): Promise<Person> {
     return await this.personService.findOneByUsername(user.username);
   }
 
-  // unprotected method
+  // unprotected method, person register don't use createdByPersonId
   @Mutation(returns => Person)
-  async personNew(
+  async personRegister(
     @Args('newPersonData') newPersonData: NewPersonInput,
   ): Promise<Person> {
     const person = await this.personService.create(newPersonData);

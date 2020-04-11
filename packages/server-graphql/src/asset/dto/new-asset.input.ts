@@ -51,4 +51,8 @@ export class NewAssetInput {
   @IsOptional()
   public metaDataInternal: any;
 
+  // this is used to pass loggedIn userId to fabric
+  @Field({ nullable: true })
+  @IsOptional()
+  public loggedPersonId: string;
 }

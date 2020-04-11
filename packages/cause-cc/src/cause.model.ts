@@ -28,17 +28,10 @@ export class Cause extends ConvectorModel<Cause> {
 
   @Validate(yup.array().of(yup.string()))
   public tags: string[];
-    
-  @Validate(yup.object().nullable())
-  public metaData: any;
 
   @Required()
   @Validate(entitySchema)
   public input: Entity;
-
-  @Required()
-  @Validate(yup.number())
-  public createdDate: number;
 
   @Required()
   @Validate(Participant.schema())
@@ -47,6 +40,24 @@ export class Cause extends ConvectorModel<Cause> {
   @Required()
   @Validate(yup.array(x509Identities.schema()))
   public identities: Array<FlatConvectorModel<x509Identities>>;
+
+  @Validate(yup.object().nullable())
+  public metaData: any;
+
+  @Validate(yup.object().nullable())
+  public metaDataInternal: any;
+
+  @Required()
+  @Validate(yup.number())
+  public createdDate: number;
+
+  // persisted with loggedPersonId
+  @Validate(yup.string())
+  public createdByPersonId?: string;
+
+  // send by graphql api
+  @Validate(yup.string())
+  public loggedPersonId?: string;
 
   // above implementation is equal in all models, only change the type and CONVECTOR_MODEL_PATH_${MODEL}
 

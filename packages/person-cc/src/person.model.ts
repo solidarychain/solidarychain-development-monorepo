@@ -46,10 +46,26 @@ export class Person extends ConvectorModel<Person> {
   @Validate(yup.array(x509Identities.schema()))
   public identities: Array<FlatConvectorModel<x509Identities>>;
 
+  @Validate(yup.object().nullable())
+  public metaData: any;
+
+  @Validate(yup.object().nullable())
+  public metaDataInternal: any;
+
   @Required()
   @Validate(yup.number())
   public createdDate: number;
 
+  // TODO: can remove person don't use createdByPersonId
+  // persisted with loggedPersonId
+  // @Validate(yup.string())
+  // public createdByPersonId?: string;
+
+  // TODO: can remove person don't use createdByPersonId
+  // send by graphql api
+  // @Validate(yup.string())
+  // public loggedPersonId?: string;
+  
   // extended non citizenCard data
 
   @Required()
@@ -76,9 +92,6 @@ export class Person extends ConvectorModel<Person> {
 
   @Validate(yup.string())
   public personalInfo: string;
-
-  @Validate(yup.string())
-  public internalInfo: string;
 
   // store future profile and reputation average object
   @Validate(yup.object().nullable())

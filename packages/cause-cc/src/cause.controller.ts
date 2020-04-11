@@ -41,12 +41,15 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
     }];
     // assign input
     cause.input.entity = await getEntity(cause.input.type, cause.input.id);
+    // assign createdByPersonId before delete loggedPersonId
+    cause.createdByPersonId = cause.loggedPersonId;
+    // add date in epoch unix time
+    cause.createdDate = new Date().getTime();
+
     // clean non useful props, are required only receive id and entityType
     delete cause.input.id;
     delete cause.input.type;
-
-    // add date in epoch unix time
-    cause.createdDate = new Date().getTime();
+    delete cause.loggedPersonId;
 
     await cause.save();
   }

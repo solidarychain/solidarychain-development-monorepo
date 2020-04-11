@@ -51,6 +51,10 @@ export class Transaction extends ConvectorModel<Transaction> {
   @Validate(yup.number())
   public createdDate: number;
 
+  // persisted with loggedPersonId
+  @Validate(yup.string())
+  public createdByPersonId?: string;
+
   // DON'T add @Required
   @Validate(Participant.schema())
   public participant: FlatConvectorModel<Participant>;
@@ -61,16 +65,12 @@ export class Transaction extends ConvectorModel<Transaction> {
 
   // optional, only when we transfer assets we require it
 
+  @Validate(yup.string())
+  public assetId: string;
+
   // send by graphql api
   @Validate(yup.string())
   public loggedPersonId?: string;
-
-  // persisted with loggedPersonId
-  @Validate(yup.string())
-  public createdByPersonId?: string;
-
-  @Validate(yup.string())
-  public assetId: string;
 
   // above implementation is equal in all models, only change the type and CONVECTOR_MODEL_PATH_${MODEL}
 

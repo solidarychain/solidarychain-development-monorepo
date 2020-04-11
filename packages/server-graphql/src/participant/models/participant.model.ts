@@ -1,8 +1,8 @@
-import { Field, ID, ObjectType } from 'type-graphql';
-import { x509Identities } from '../../common/models';
-import { Validate, IsDefined } from 'class-validator';
-import * as yup from 'yup';
 import { Optional } from '@nestjs/common';
+import { IsDefined, Validate } from 'class-validator';
+import { GraphQLJSONObject } from 'graphql-type-json';
+import { Field, ID, ObjectType } from 'type-graphql';
+import * as yup from 'yup';
 
 @ObjectType()
 export class Participant {
@@ -27,6 +27,12 @@ export class Participant {
   @IsDefined()
   public participant: Participant;
 
+  @Field(type => GraphQLJSONObject, { nullable: true })
+  public metaData: any;
+
+  @Field(type => GraphQLJSONObject, { nullable: true })
+  public metaDataInternal: any;
+
   // hide it from graphql stuff, this way we won't expose fingerprints
   // @Field(type => [x509Identities])
   // @IsDefined()
@@ -38,5 +44,6 @@ export class Participant {
   public createdDate: number;
 
   @Field({ nullable: true })
+  @IsDefined()
   public createdByPersonId: string;
 }

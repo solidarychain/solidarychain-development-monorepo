@@ -216,16 +216,16 @@ person.participant = gov;
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-- [-] add common function `checkValidPersons` to common to not have circular dependencies and use it Participants and Transactions, in participants are comment `// TODO: enable again`
+- [X] add common function `checkValidPersons` to common to not have circular dependencies and use it Participants and Transactions, in participants are comment `// TODO: enable again`
+- [X] create a common function in common to get loggedPerson model from richQuery, this way we don't have circular dependencies `const loggedPerson: Person = await Person.getById(transaction.loggedPersonId);`
+- [X] Get Rid of all getOne(id)
 
-- [-] create a common function in common to get loggedPerson model from richQuery, this way we don't have circular dependencies `const loggedPerson: Person = await Person.getById(transaction.loggedPersonId);`
-
-- [ ] Get Rid of all .getOne(id)
-
-- [-] - use shared function in all create chaincode methods and assign it in `transaction.createdByPersonId = transaction.loggedPersonId;`
+- [-] get all username, id and roles in all controllers (shared function), and add use it it in `transaction.createdByPersonId = transaction.loggedPersonId;`
+- 
 - [-] edit all models, add ambassadors to cause and participants, and asset todo
 
 - [ ] update Person with NIF with extended citizenCard data
+- [ ] Update Models, add subscription to all models
 
 backup before bootstrap lerna packages
 src/participant.controller.ts(2,35): error TS2307: Cannot find module '@solidary-network/person-cc'.

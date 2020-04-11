@@ -6,6 +6,8 @@ import { Asset } from './models';
 import { AssetService } from './asset.service';
 import { GqlAuthGuard } from '../auth/guards';
 import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
+import { CurrentUser } from '../common/decorators';
+import CurrentUserPayload from '../common/types/current-user-payload';
 
 const pubSub = new PubSub();
 
@@ -42,8 +44,11 @@ export class AssetResolver {
 
   @Mutation(returns => Asset)
   async assetNew(
+    @CurrentUser() user: CurrentUserPayload,
     @Args('newAssetData') newAssetData: NewAssetInput,
   ): Promise<Asset> {
+    // inject username into newAssetData
+    newAssetData.loggedPersonId = user.userId;
     const asset = await this.assetService.create(newAssetData);
     // fire subscription
     pubSub.publish('assetAdded', { assetAdded: asset });
@@ -54,5 +59,4 @@ export class AssetResolver {
   assetAdded() {
     return pubSub.asyncIterator('assetAdded');
   }
-
 }

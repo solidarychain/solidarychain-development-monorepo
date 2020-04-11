@@ -96,7 +96,7 @@ type Mutation {
   revokeUserRefreshTokens(username: String!): Boolean!
   causeNew(newCauseData: NewCauseInput!): Cause!
   participantNew(newParticipantData: NewParticipantInput!): Participant!
-  personNew(newPersonData: NewPersonInput!): Person!
+  personRegister(newPersonData: NewPersonInput!): Person!
   personAddAttribute(addPersonAttributeData: AddPersonAttributeInput!, personId: String!): Person!
   transactionNew(newTransactionData: NewTransactionInput!): Transaction!
   assetNew(newAssetData: NewAssetInput!): Asset!
@@ -112,6 +112,7 @@ input NewAssetInput {
   tags: [String!]
   metaData: JSONObject
   metaDataInternal: JSONObject
+  loggedPersonId: String
 }
 
 input NewCauseInput {
@@ -124,6 +125,7 @@ input NewCauseInput {
   tags: [String!]
   metaData: JSONObject
   metaDataInternal: JSONObject
+  loggedPersonId: String
   input: JSONObject!
 }
 
@@ -132,6 +134,9 @@ input NewParticipantInput {
   code: String!
   name: String!
   ambassadors: [String!]
+  metaData: JSONObject
+  metaDataInternal: JSONObject
+  loggedPersonId: String
 }
 
 input NewPersonInput {
@@ -146,7 +151,8 @@ input NewPersonInput {
   geoLocation: String
   timezone: String
   personalInfo: String
-  internalInfo: String
+  metaData: JSONObject
+  metaDataInternal: JSONObject
   profile: JSONObject
   firstname: String
   lastname: String
@@ -197,6 +203,8 @@ type Participant {
   ambassadors: [String!]
   msp: String!
   participant: Participant
+  metaData: JSONObject
+  metaDataInternal: JSONObject
   createdDate: Float!
   createdByPersonId: String
 }
@@ -209,7 +217,6 @@ type Person {
   roles: [String!]
   participant: Participant!
   createdDate: Float!
-  createdByPersonId: String
   registrationDate: Date!
   mobilePhone: Float
   postal: String
@@ -218,7 +225,8 @@ type Person {
   geoLocation: String
   timezone: String
   personalInfo: String
-  internalInfo: String
+  metaData: JSONObject
+  metaDataInternal: JSONObject
   profile: JSONObject
   firstname: String
   lastname: String
