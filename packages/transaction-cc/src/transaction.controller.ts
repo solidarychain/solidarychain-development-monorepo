@@ -26,6 +26,11 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     }
 
     // protect from transfer from same input has output
+    if (!transaction.input.id || !transaction.output.id || !transaction.input.type || !transaction.output.type) {
+      throw new Error('You must supply valid values for transaction id and type on input/output parameters!');
+    }
+
+    // protect from transfer from same input has output
     if (transaction.input.id === transaction.output.id && transaction.input.type === transaction.output.type) {
       throw new Error('You can\'t transfer from input to same output entity, you must transfer from input to a different output entity!');
     }

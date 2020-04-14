@@ -64,10 +64,14 @@ export const checkValidModelIds = async (type: string, modelName: string, modelI
  * @param ambassadors ambassadors array
  * @param ownerId owner uuid
  */
-export const removeOwnerFromAmbassadorsArray = (ambassadors: string[], ownerId: string): string[] => {  
-  const index = ambassadors.indexOf(ownerId);
-  if (index !== -1) {
-    ambassadors.splice(index, 1);
+export const removeOwnerFromAmbassadorsArray = (ambassadors: string[], ownerId: string): string[] => {
+  if (ambassadors && Array.isArray(ambassadors) && ambassadors.length > 0) {
+    const index = ambassadors.indexOf(ownerId);
+    if (index !== -1) {
+      // splice ownerId
+      ambassadors.splice(index, 1);
+    }
   }
+  // always return original or modified ambassadors
   return ambassadors;
 }
