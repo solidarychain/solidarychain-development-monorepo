@@ -1,7 +1,7 @@
 // not used anymore
 
 import { Common } from './common.model';
-import {appConstants as c } from './constants';
+import { appConstants as c } from './constants';
 
 // convert comma string float to float ex '1,81' to 1.81
 export const convertStringToFloat = (input: string): number => parseFloat(input.replace(/,/g, '.'));
@@ -57,4 +57,17 @@ export const checkValidModelIds = async (type: string, modelName: string, modelI
       throw new Error(`There is no ${modelName}(s) with Id(s) (${invalidIds.join(',')})`);
     }
   }
+}
+
+/**
+ * remove owner from ambassadors, owner cannot be an ambassador, it owns it, there is no point to be a ambassador
+ * @param ambassadors ambassadors array
+ * @param ownerId owner uuid
+ */
+export const removeOwnerFromAmbassadorsArray = (ambassadors: string[], ownerId: string): string[] => {  
+  const index = ambassadors.indexOf(ownerId);
+  if (index !== -1) {
+    ambassadors.splice(index, 1);
+  }
+  return ambassadors;
 }

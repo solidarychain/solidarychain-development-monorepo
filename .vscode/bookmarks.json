@@ -3,27 +3,27 @@
 		"path": "$ROOTPATH$/NOTES.md",
 		"bookmarks": [
 			{
-				"line": 122,
+				"line": 124,
 				"column": 51,
 				"label": ""
 			},
 			{
-				"line": 136,
+				"line": 138,
 				"column": 24,
 				"label": ""
 			},
 			{
-				"line": 170,
+				"line": 172,
 				"column": 0,
 				"label": ""
 			},
 			{
-				"line": 2759,
+				"line": 2761,
 				"column": 93,
 				"label": ""
 			},
 			{
-				"line": 2949,
+				"line": 2951,
 				"column": 28,
 				"label": ""
 			}
@@ -33,7 +33,7 @@
 		"path": "$ROOTPATH$/packages/server-graphql/src/person/person.resolver.ts",
 		"bookmarks": [
 			{
-				"line": 77,
+				"line": 78,
 				"column": 2,
 				"label": ""
 			}
@@ -75,6 +75,16 @@
 			{
 				"line": 18,
 				"column": 39,
+				"label": ""
+			}
+		]
+	},
+	{
+		"path": "$ROOTPATH$/packages/common-cc/src/util.ts",
+		"bookmarks": [
+			{
+				"line": 21,
+				"column": 11,
 				"label": ""
 			}
 		]

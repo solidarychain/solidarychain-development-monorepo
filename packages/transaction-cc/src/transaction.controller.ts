@@ -64,19 +64,19 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
         const loggedPerson: Person = await Person.getById(transaction.loggedPersonId);
         // protection check if ownerPerson exists 
         if (!loggedPerson && !loggedPerson.id) {
-          throw new Error(`There is no person with loggedPersonId '${transaction.loggedPersonId}'`);
-        }
-
-        // protection check if loggedPersonId is different from transaction.input.id
-        if (transaction.input.id != loggedPerson.id) {
-          // debugMessage = `transaction.input.id: ${transaction.input.id} != ownerPerson[0].id: ${ownerPerson[0].id}`;
-          throw new Error(`loggedPersonId '${transaction.loggedPersonId}' is not the owner of the asset${debugMessage}`);
+          throw new Error(`There is no person with Id '${transaction.loggedPersonId}'`);
         }
 
         // protection check if transaction input owner is the same as asset owner and same type, if one is different throw exception
         if (transaction.input.id != (asset.owner.entity as any).id || transaction.input.type != (asset.owner.entity as any).type) {
           // debugMessage = `transaction.input.id: ${transaction.input.id} != asset.owner.entity: ${(asset.owner.entity as any).id} && transaction.input.type: ${transaction.input.type} != asset.owner.entity: ${(asset.owner.entity as any).type}`;
           throw new Error(`Transaction input owner is not the owner of the asset${debugMessage}`);
+        }
+
+        // protection check if loggedPerson is the owner or if loggedPerson in in authorized ambassador's
+        if (transaction.input.id != loggedPerson.id && !asset.ambassadors.includes(loggedPerson.id)) {
+          // debugMessage = `:debugMessage:transaction.input.id: ${transaction.input.id} != loggedPerson.id: ${loggedPerson.id} (${transaction.input.id != loggedPerson.id}}) - ${JSON.stringify(asset.ambassadors)}:${asset.ambassadors.includes(loggedPerson.id)}:(${!asset.ambassadors.includes(loggedPerson.id)})`;
+          throw new Error(`logged person is not the owner of the asset, or is not an authorized asset ambassador${debugMessage}`);
         }
 
         // assign new owner id and type

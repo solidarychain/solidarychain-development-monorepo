@@ -219,23 +219,43 @@ person.participant = gov;
 - [X] add common function `checkValidPersons` to common to not have circular dependencies and use it Participants and Transactions, in participants are comment `// TODO: enable again`
 - [X] create a common function in common to get loggedPerson model from richQuery, this way we don't have circular dependencies `const loggedPerson: Person = await Person.getById(transaction.loggedPersonId);`
 - [X] Get Rid of all getOne(id)
+- [X] get all username, id and roles in all controllers (shared function), and add use it it in `transaction.createdByPersonId = transaction.loggedPersonId;`
+- [X] Add createdByPersonId to all models
+- [X] edit all models, add ambassadors to cause and participants, and asset todo
+- [X] Remove owner from ambassador array, is used, NOT NEED
+- [-] finish transfers when are one of the ambassadors in asset, cause and participant
+- [ ] transfer amount's, and transferable types ex we can't transfer when amount ex 1000 -100 = 900
+  - [ ]  add totals from every type ex currently we can only transfer UnitType.Funds from participants, person and causes if has amount, if is owner or ambassador
+  - [ ]  must discount from one and add to other, maybe only add to other because we dont know how much one person have, only causes and participants have amount?
+  - [ ]  convert all currencies to EUR before add to ledger, store original currency and cambio used ex currencyOrg: USD, quantityOrg: 1.45, cambio: 1.12
 
-- [-] get all username, id and roles in all controllers (shared function), and add use it it in `transaction.createdByPersonId = transaction.loggedPersonId;`
-- 
-- [-] edit all models, add ambassadors to cause and participants, and asset todo
+
+https://github.com/apache/couchdb/issues/1254
+{
+	"selector": {
+		"type": "network.solidary.convector.transaction",
+		"resourceType": "FUNDS",
+		"transactionType": "CREATE",
+		"currency": "EUR",
+		"output": {
+			"entity": {
+				"id": "4ea88521-031b-4279-9165-9c10e1839053"
+			}
+		}
+	},
+	"aggregator": {
+		"operation": "sum",
+		"of": ["quantity"]
+	}
+}
+Error running query. Reason: (invalid_key) Invalid key aggregator for this request.
+
+
 
 - [ ] update Person with NIF with extended citizenCard data
 - [ ] Update Models, add subscription to all models
 
-backup before bootstrap lerna packages
-src/participant.controller.ts(2,35): error TS2307: Cannot find module '@solidary-network/person-cc'.
-lerna WARN ECYCLE Dependency cycles detected, you should fix these!
-lerna WARN ECYCLE @solidary-network/participant-cc -> @solidary-network/person-cc -> @solidary-network/participant-cc
 
-- [-] finish transfers when are one of the ambassadors in cause and participant
-
-
-- [X] Add createdByPersonId to all models
 - [ ] Add updatedByPersonId to all models
 - [ ] Add updatedDate to all models
 

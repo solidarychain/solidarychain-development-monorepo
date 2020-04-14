@@ -82,6 +82,7 @@
   - [Class-validator](#class-validator)
   - [Problem on create person can't find participant fingerprint? comes from `this.sender`](#problem-on-create-person-cant-find-participant-fingerprint-comes-from-thissender)
   - [Problem again with "Cant find a participant with that fingerprint"](#problem-again-with-%22cant-find-a-participant-with-that-fingerprint%22)
+  - [How to use CouchDBStorage to query CouchDb api, views etc](#how-to-use-couchdbstorage-to-query-couchdb-api-views-etc)
 
 This is a simple NestJs starter, based on above links, I only extended it with a few things like **swagger api**, **https**, **jwt**, and other stuff, thanks m8s
 
@@ -2996,7 +2997,6 @@ npm ERR! errno 1
 
 # fix use --unsafe-perm - it starts to rebuild
 $ npm i -g @worldsibu/hurley --unsafe-perm
-
 # upgrade
 $ npm upgrade -g @worldsibu/hurley
 # get the version of your Hurley installation.
@@ -3087,3 +3087,8 @@ UPDATE: check working version of Participant.create notes
 `{\"name\":\"Error\",\"status\":500,\"message\":\"Cant find a participant with that fingerprint\"}`
 
 restarted network, and fails create cause, but after a while it start to work, under inpection, for now it works with all models
+
+## How to use CouchDBStorage to query CouchDb api, views etc
+
+- <https://gist.githubusercontent.com/worldsibu-bot/45164fb9fa7b9981adaeb82025c4e2d3/raw/05991fbf3058e275fffb8b4363b9683dbe933222/person.controller.ts>
+

@@ -1,4 +1,4 @@
-import { appConstants as c, checkValidModelIds } from '@solidary-network/common-cc';
+import { appConstants as c, checkValidModelIds, removeOwnerFromAmbassadorsArray } from '@solidary-network/common-cc';
 import { Participant, getParticipantByIdentity } from '@solidary-network/participant-cc';
 import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
@@ -44,6 +44,9 @@ export class AssetController extends ConvectorController<ChaincodeTx> {
     asset.createdByPersonId = asset.loggedPersonId;
     // add date in epoch unix time
     asset.createdDate = new Date().getTime();
+
+    // detect if owner is in ambassador array, and remove it
+    asset.ambassadors = removeOwnerFromAmbassadorsArray(asset.ambassadors, asset.owner.id);
 
     // clean non useful props, are required only receive id and entityType
     delete asset.owner.id;
