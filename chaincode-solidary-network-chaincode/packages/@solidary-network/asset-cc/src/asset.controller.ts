@@ -1,13 +1,10 @@
-import { appConstants as c } from '@solidary-network/common-cc';
-import { Participant } from '@solidary-network/participant-cc';
-import { getParticipantByIdentity } from '@solidary-network/person-cc';
+import { appConstants as c, checkValidModelIds, removeOwnerFromAmbassadorsArray } from '@solidary-network/common-cc';
+import { Participant, getParticipantByIdentity } from '@solidary-network/participant-cc';
 import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
 import * as yup from 'yup';
-import { getEntity } from '.';
+import { getEntity, checkUniqueField } from './utils';
 import { Asset } from './asset.model';
-
-// TODO: transfer asset to Entity
 
 @Controller('asset')
 export class AssetController extends ConvectorController<ChaincodeTx> {
@@ -17,33 +14,21 @@ export class AssetController extends ConvectorController<ChaincodeTx> {
     asset: Asset
   ) {
     // get host participant from fingerprint
-    // TODO: move to common-cc in all uses
     const participant: Participant = await getParticipantByIdentity(this.sender);
     if (!!participant && !participant.id) {
       throw new Error('There is no participant with that identity');
     }
 
-    // TODO: get owner from id
+    // check if all ambassadors are valid persons
+    await checkValidModelIds(c.CONVECTOR_MODEL_PATH_PERSON, c.CONVECTOR_MODEL_PATH_PERSON_NAME, asset.ambassadors);
 
-    // check duplicated id
-    const exists = await Asset.getOne(asset.id);
-    if (!!exists && exists.id) {
-      throw new Error(`There is a asset with that Id already (${asset.id})`);
-    }
-
-    // check duplicated name
-    const existsName = await Asset.query(Asset, {
-      selector: {
-        type: c.CONVECTOR_MODEL_PATH_ASSET,
-        name: asset.name,
-        participant: {
-          id: participant.id
-        }
-      }
-    });
-    if ((existsName as Asset[]).length > 0) {
-      throw new Error(`There is a asset registered with that name already (${asset.name})`);
-    }
+    // get postfix name this way we can have multiple assets with same name
+    const postfixCode: string = asset.id.split('-')[0];
+    // modify asset.name, used in save to
+    asset.name = `${asset.name} [${postfixCode}]`;
+    // check unique fields
+    await checkUniqueField('_id', asset.id, true);
+    await checkUniqueField('name', asset.name, true);
 
     // add participant
     asset.participant = participant;
@@ -55,28 +40,59 @@ export class AssetController extends ConvectorController<ChaincodeTx> {
     }];
     // assign input
     asset.owner.entity = await getEntity(asset.owner.type, asset.owner.id);
+    // assign createdByPersonId before delete loggedPersonId
+    asset.createdByPersonId = asset.loggedPersonId;
+    // add date in epoch unix time
+    asset.createdDate = new Date().getTime();
+
+    // detect if owner is in ambassador array, and remove it
+    asset.ambassadors = removeOwnerFromAmbassadorsArray(asset.ambassadors, asset.owner.id);
+
     // clean non useful props, are required only receive id and entityType
     delete asset.owner.id;
     delete asset.owner.type;
-
-    // add date in epoch unix time
-    asset.createdDate = new Date().getTime();
+    delete asset.loggedPersonId;
 
     await asset.save();
   }
 
+  // @Invokable()
+  // public async get(
+  //   @Param(yup.string())
+  //   id: string
+  // ) {
+  //   const existing = await Asset.getOne(id);
+  //   if (!existing || !existing.id) {
+  //     throw new Error(`No asset exists with that ID ${id}`);
+  //   }
+  //   return existing;
+  // }
+
+  /**
+   * get id: custom function to use `type` and `participant` in rich query
+   * default convector get don't use `type` property and give problems, 
+   * like we use ids of other models and it works 
+   */
   @Invokable()
   public async get(
     @Param(yup.string())
-    id: string
-  ) {
-    const existing = await Asset.getOne(id);
-    if (!existing || !existing.id) {
-      throw new Error(`No asset exists with that ID ${id}`);
+    id: string,
+  ): Promise<Asset> {
+    // get host participant from fingerprint
+    // const participant: Participant = await getParticipantByIdentity(this.sender);
+    const existing = await Asset.query(Asset, {
+      selector: {
+        type: c.CONVECTOR_MODEL_PATH_ASSET,
+        id,
+      }
+    });
+    // require to check if existing before try to access existing[0].id prop
+    if (!existing || !existing[0] || !existing[0].id) {
+      throw new Error(`No asset exists with that id ${id}`);
     }
-    return existing;
+    return existing[0];
   }
-
+  
   @Invokable()
   public async getAll(): Promise<FlatConvectorModel<Asset>[]> {
     return (await Asset.getAll(c.CONVECTOR_MODEL_PATH_ASSET)).map(asset => asset.toJSON() as any);
@@ -106,5 +122,4 @@ export class AssetController extends ConvectorController<ChaincodeTx> {
     const resultSet: Asset | Asset[] = await Asset.query(Asset, complexQuery);
     return resultSet;
   }
-
 }

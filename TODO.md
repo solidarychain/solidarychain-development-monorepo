@@ -76,11 +76,9 @@ mutations
 	change profile > username, password, email, phone, mobilePhone, district, coordinates, reputation(object), personalInfo, internalInfo
 
 
-
 GENERATE solidary.network certificates
 and use it in project graphqlserver etc
 change localhost to domain
-
 
 
 

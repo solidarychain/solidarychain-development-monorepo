@@ -44,8 +44,10 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     transaction.input.entity = await getEntity(transaction.input.type, transaction.input.id);
     transaction.output.entity = await getEntity(transaction.output.type, transaction.output.id);
 
+    // TransactionType.Transfer
+
     // detect if is a transfer type, and asset resourceType
-    if (transaction.transactionType === TransactionType.Transfer && (
+    if (transaction.transactionType === TransactionType.TransferAsset && (
       transaction.resourceType === ResourceType.PhysicalAsset || transaction.resourceType === ResourceType.DigitalAsset
     )) {
       // empty username
@@ -91,7 +93,16 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
         // save asset
         await asset.save();
       }
+    
+    // TransactionType.Transfer
+
+    } else if (transaction.transactionType === TransactionType.TransferAsset && (
+      transaction.resourceType === ResourceType.PhysicalAsset || transaction.resourceType === ResourceType.DigitalAsset
+    )) {
     }
+
+
+    // tra
 
     // assign createdByPersonId before delete loggedPersonId
     transaction.createdByPersonId = transaction.loggedPersonId;

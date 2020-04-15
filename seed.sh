@@ -217,7 +217,7 @@ npx hurl invoke ${CHAINCODE_NAME} cause_create "${PAYLOAD}"
 
 # create transaction
 ID=acef70e5-cd25-4533-8392-9fa57e43cf32
-TRANSACTION_TYPE=CREATE
+TRANSACTION_TYPE=TRANSFER_FUNDS
 RESOURCE_TYPE=FUNDS
 INPUT_TYPE=network.solidary.convector.participant
 INPUT_ID=${GOV_ID}
@@ -244,6 +244,7 @@ npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" # -u admin / i
 # create asset with all data (filter with date=1582414657)
 ID=acef70e5-cd25-4533-8392-1fa57e430001
 NAME=Asset001
+TRANSACTION_TYPE=TRANSFER_ASSET
 ASSET_TYPE=PHYSICAL_ASSET
 OWNER_TYPE=network.solidary.convector.person
 OWNER_ID=4ea88521-031b-4279-9165-9c10e1839001
@@ -270,8 +271,6 @@ npx hurl invoke ${CHAINCODE_NAME} asset_create "${PAYLOAD}" # -u admin / if use 
 
 # transaction asset from johndoe to janedoe
 ID=acef70e5-cd25-4533-8392-9fa57e43cf56
-TRANSACTION_TYPE=TRANSFER
-RESOURCE_TYPE=DIGITAL_ASSET
 LOCATION=40.1890144,-8.5171909
 INPUT_TYPE=network.solidary.convector.person
 INPUT_ID=${JOHN_ID}

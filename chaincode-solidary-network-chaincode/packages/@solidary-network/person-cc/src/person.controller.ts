@@ -1,11 +1,11 @@
 import { appConstants as c } from '@solidary-network/common-cc';
-import { Participant } from '@solidary-network/participant-cc';
+import { Participant, getParticipantByIdentity } from '@solidary-network/participant-cc';
 import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
 import * as yup from 'yup';
 import { PersonAttribute } from './person-attribute.model';
 import { Person } from './person.model';
-import { getParticipantByIdentity, hashPassword } from './utils';
+import { hashPassword, checkUniqueField } from './utils';
 
 @Controller('person')
 export class PersonController extends ConvectorController<ChaincodeTx> {
@@ -20,41 +20,17 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
       throw new Error('There is no participant with that identity');
     }
 
-    // check duplicated id
-    const exists = await Person.getOne(person.id);
-    if (!!exists && exists.id) {
-      throw new Error(`There is a person registered with that Id already (${person.id})`);
-    }
+    // check unique fields
+    await checkUniqueField('_id', person.id, true);
+    await checkUniqueField('username', person.username, true);
+    await checkUniqueField('fiscalNumber', person.fiscalNumber, true);
+    await checkUniqueField('email', person.email, false);
+    await checkUniqueField('identityNumber', person.identityNumber, false);
+    await checkUniqueField('socialSecurityNumber', person.socialSecurityNumber, false);
+    await checkUniqueField('beneficiaryNumber', person.beneficiaryNumber, false);
+    await checkUniqueField('documentNumber', person.documentNumber, false);
 
-    // check duplicated username
-    const existsUsername = await Person.query(Person, {
-      selector: {
-        type: c.CONVECTOR_MODEL_PATH_PERSON,
-        username: person.username,
-        participant: {
-          id: participant.id
-        }
-      }
-    });
-    if ((existsUsername as Person[]).length > 0) {
-      throw new Error(`There is a person registered with that username already (${person.username})`);
-    }
-
-    // check duplicated fiscalNumber
-    const existsFiscalnumber = await Person.query(Person, {
-      selector: {
-        type: c.CONVECTOR_MODEL_PATH_PERSON,
-        fiscalNumber: person.fiscalNumber,
-        participant: {
-          id: participant.id
-        }
-      }
-    });
-    if ((existsFiscalnumber as Person[]).length > 0) {
-      throw new Error(`There is a person registered with that fiscalNumber already (${person.fiscalNumber})`);
-    }
-
-    let gov = await Participant.getOne('gov');
+    let gov = await Participant.getOne(c.UUID_GOV_ID);
     if (!gov || !gov.identities) {
       throw new Error('No government identity has been registered yet');
     }
@@ -64,7 +40,8 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
       throw new Error('No active identity found for participant');
     }
     if (this.sender !== govActiveIdentity.fingerprint) {
-      throw new Error(`Just the government - ID=gov - can create people - requesting organization was ${this.sender}`);
+      // throw new Error(`Just the government - ID=gov - can create people - requesting organization was ${this.sender}`);
+      throw new Error('Just the government (participant with id gov) can create people');
     }
 
     // add person
@@ -74,12 +51,17 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
       fingerprint: this.sender,
       status: true
     }];
+    // TODO: can remove person don't use createdByPersonId
+    // person.createdByPersonId = person.loggedPersonId;
     // hashPassword before save model
     person.password = hashPassword(person.password);
     // add date in epoch unix time
     person.registrationDate = new Date().getTime();
     // add date in epoch unix time
     person.createdDate = new Date().getTime();
+
+    // clean non useful props, are required only receive id and entityType
+    delete person.loggedPersonId;
 
     // save person
     await person.save();
@@ -99,6 +81,7 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
       throw new Error(`No participant found with id ${attribute.certifierID}`);
     }
 
+    // get active identity (status true)
     const participantActiveIdentity = participant.identities.find(
       identity => identity.status === true);
 
@@ -139,16 +122,41 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     await person.save();
   }
 
+  // @Invokable()
+  // public async get(
+  //   @Param(yup.string())
+  //   id: string
+  // ) {
+  //   const existing = await Person.getOne(id);
+  //   if (!existing || !existing.id) {
+  //     throw new Error(`No person exists with that ID ${id}`);
+  //   }
+  //   return existing;
+  // }
+
+  /**
+   * get id: custom function to use `type` and `participant` in rich query
+   * default convector get don't use `type` property and give problems, 
+   * like we use ids of other models and it works 
+   */
   @Invokable()
   public async get(
     @Param(yup.string())
-    id: string
-  ) {
-    const existing = await Person.getOne(id);
-    if (!existing || !existing.id) {
-      throw new Error(`No person exists with that ID ${id}`);
+    id: string,
+  ): Promise<Person> {
+    // get host participant from fingerprint
+    // const participant: Participant = await getParticipantByIdentity(this.sender);
+    const existing = await Person.query(Person, {
+      selector: {
+        type: c.CONVECTOR_MODEL_PATH_PERSON,
+        id,
+      }
+    });
+    // require to check if existing before try to access existing[0].id prop
+    if (!existing || !existing[0] || !existing[0].id) {
+      throw new Error(`No person exists with that id ${id}`);
     }
-    return existing;
+    return existing[0];
   }
 
   @Invokable()
@@ -182,7 +190,7 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
   }
 
   /**
-   * get username from participant
+   * get person from username
    */
   @Invokable()
   public async getByUsername(
@@ -190,14 +198,11 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     username: string,
   ): Promise<Person | Person[]> {
     // get host participant from fingerprint
-    const participant: Participant = await getParticipantByIdentity(this.sender);
+    // const participant: Participant = await getParticipantByIdentity(this.sender);
     const existing = await Person.query(Person, {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_PERSON,
         username,
-        participant: {
-          id: participant.id
-        }
       }
     });
     // require to check if existing before try to access existing[0].id prop
@@ -208,7 +213,7 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
   }
 
   /**
-   * get fiscalNumber from participant
+   * get person from fiscalNumber
    */
   @Invokable()
   public async getByFiscalnumber(
@@ -216,14 +221,11 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     fiscalNumber: string,
   ): Promise<Person | Person[]> {
     // get host participant from fingerprint
-    const participant: Participant = await getParticipantByIdentity(this.sender);
+    // const participant: Participant = await getParticipantByIdentity(this.sender);
     const existing = await Person.query(Person, {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_PERSON,
         fiscalNumber,
-        participant: {
-          id: participant.id
-        }
       }
     });
     // require to check if existing before try to access existing[0].id prop
@@ -256,5 +258,5 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     };
     const resultSet: Person | Person[] = await Person.query(Person, complexQuery);
     return resultSet;
-  }  
+  }
 }

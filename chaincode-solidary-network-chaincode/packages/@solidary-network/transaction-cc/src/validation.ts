@@ -6,7 +6,7 @@ export const transactionTypeSchema = yup
   // seems that .mixed<type | type...>() syntax changed from...to .mixed()
   // .mixed<TransactionType.Create | TransactionType.Transfer>()
   .mixed()
-  .oneOf([TransactionType.Create, TransactionType.Transfer])
+  .oneOf([TransactionType.CreateAsset, TransactionType.TransferAsset])
   .required();
 
 export const resourceTypeSchema = yup

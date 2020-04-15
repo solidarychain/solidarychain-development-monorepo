@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcrypt';
 import { appConstants as c } from '@solidary-network/common-cc';
-import { Participant } from '.';
+import { Participant } from './participant.model';
 
 // duplicated with 
 // packages/person-cc/src/utils.ts
@@ -33,4 +33,28 @@ export const getParticipantByIdentity = async (fingerprint: string): Promise<Par
     throw new Error('Cant find a participant with that fingerprint');
   }
   return participant[0];
+}
+
+/**
+ * every model has is checkUniqueField implementation with its type
+ * richQuery helper to check unique fields on model Participant
+ */
+export const checkUniqueField = async (fieldName: string, fieldValue: string, required: boolean) => {
+  if (!required && !fieldValue) {
+    return;
+  }
+  const exists = await Participant.query(Participant, {
+    selector: {
+      type: c.CONVECTOR_MODEL_PATH_PARTICIPANT,
+      [fieldName]: fieldValue,
+      // participant: {
+      //   id: participant.id
+      // }
+    }
+  });
+  if ((exists as Participant[]).length > 0) {
+    // remove first _ ex _id to id before display error
+    const fieldDisplay: string = (fieldName.startsWith('_')) ? fieldName.substr(1, fieldName.length) : fieldName;
+    throw new Error(`There is a participant registered with that ${fieldDisplay} '${fieldValue}'`);
+  }
 }

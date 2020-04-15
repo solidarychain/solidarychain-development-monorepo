@@ -1,11 +1,10 @@
-import { appConstants as c } from '@solidary-network/common-cc';
-import { Controller, ConvectorController, Invokable, Param, FlatConvectorModel } from '@worldsibu/convector-core';
+import { appConstants as c, checkValidModelIds } from '@solidary-network/common-cc';
+import { getParticipantByIdentity, Participant } from '@solidary-network/participant-cc';
+import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
 import * as yup from 'yup';
 import { Cause } from './cause.model';
-import { getEntity } from './utils';
-import { Participant } from '@solidary-network/participant-cc';
-import { getParticipantByIdentity } from '@solidary-network/person-cc';
+import { checkUniqueField, getEntity } from './utils';
 
 @Controller('cause')
 export class CauseController extends ConvectorController<ChaincodeTx> {
@@ -20,25 +19,17 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
       throw new Error('There is no participant with that identity');
     }
 
-    // check duplicated id
-    const exists = await Cause.getOne(cause.id);
-    if (!!exists && exists.id) {
-      throw new Error(`There is a cause with that Id already (${cause.id})`);
-    }
+    // check if all ambassadors are valid persons
+    await checkValidModelIds(c.CONVECTOR_MODEL_PATH_PERSON, c.CONVECTOR_MODEL_PATH_PERSON_NAME, cause.ambassadors);
 
-    // check duplicated name
-    const existsName = await Cause.query(Cause, {
-      selector: {
-        type: c.CONVECTOR_MODEL_PATH_CAUSE,
-        name: cause.name,
-        participant: {
-          id: participant.id
-        }
-      }
-    });
-    if ((existsName as Cause[]).length > 0) {
-      throw new Error(`There is a cause registered with that name already (${cause.name})`);
-    }
+    // get postfix name this way we can have multiple causes with same name
+    const postfixCode: string = cause.id.split('-')[0];
+    // modify cause.name, used in save to
+    cause.name = `${cause.name} [${postfixCode}]`;
+
+    // check unique fields
+    await checkUniqueField('_id', cause.id, true);
+    await checkUniqueField('name', cause.name, true);
 
     // add participant
     cause.participant = participant;
@@ -50,26 +41,54 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
     }];
     // assign input
     cause.input.entity = await getEntity(cause.input.type, cause.input.id);
+    // assign createdByPersonId before delete loggedPersonId
+    cause.createdByPersonId = cause.loggedPersonId;
+    // add date in epoch unix time
+    cause.createdDate = new Date().getTime();
+
     // clean non useful props, are required only receive id and entityType
     delete cause.input.id;
     delete cause.input.type;
-
-    // add date in epoch unix time
-    cause.createdDate = new Date().getTime();
+    delete cause.loggedPersonId;
 
     await cause.save();
   }
 
+  // @Invokable()
+  // public async get(
+  //   @Param(yup.string())
+  //   id: string
+  // ) {
+  //   const existing = await Cause.getOne(id);
+  //   if (!existing || !existing.id) {
+  //     throw new Error(`No cause exists with that ID ${id}`);
+  //   }
+  //   return existing;
+  // }
+
+  /**
+   * get id: custom function to use `type` and `participant` in rich query
+   * default convector get don't use `type` property and give problems, 
+   * like we use ids of other models and it works 
+   */
   @Invokable()
   public async get(
     @Param(yup.string())
-    id: string
-  ) {
-    const existing = await Cause.getOne(id);
-    if (!existing || !existing.id) {
-      throw new Error(`No cause exists with that ID ${id}`);
+    id: string,
+  ): Promise<Cause> {
+    // get host participant from fingerprint
+    // const participant: Participant = await getParticipantByIdentity(this.sender);
+    const existing = await Cause.query(Cause, {
+      selector: {
+        type: c.CONVECTOR_MODEL_PATH_CAUSE,
+        id,
+      }
+    });
+    // require to check if existing before try to access existing[0].id prop
+    if (!existing || !existing[0] || !existing[0].id) {
+      throw new Error(`No cause exists with that id ${id}`);
     }
-    return existing;
+    return existing[0];
   }
 
   @Invokable()

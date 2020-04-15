@@ -1,10 +1,10 @@
 import { appConstants as c, entitySchema, x509Identities } from '@solidary-network/common-cc';
-import { ConvectorModel, ReadOnly, Required, Validate, FlatConvectorModel } from '@worldsibu/convector-core-model';
-import * as yup from 'yup';
-import { transactionTypeSchema, resourceTypeSchema, currencySchema } from './validation';
-import { Entity } from '.';
-import { TransactionType, ResourceType } from './enums';
 import { Participant } from '@solidary-network/participant-cc';
+import { ConvectorModel, FlatConvectorModel, ReadOnly, Required, Validate } from '@worldsibu/convector-core-model';
+import * as yup from 'yup';
+import { ResourceType, TransactionType } from './enums';
+import { Entity } from './types';
+import { currencySchema, resourceTypeSchema, transactionTypeSchema } from './validation';
 
 export class Transaction extends ConvectorModel<Transaction> {
   @ReadOnly()
@@ -29,24 +29,17 @@ export class Transaction extends ConvectorModel<Transaction> {
   @Validate(entitySchema)
   public output: Entity;
 
-  @Required()
-  @Validate(yup.string())
-  public assetId: string;
-
-  @Required()
-  @Validate(yup.number())
+  @Validate(yup.number().nullable())
   public quantity: number;
 
-  @Required()
   @Validate(currencySchema)
   public currency: string;
 
   @Validate(yup.string().matches(c.REGEX_LOCATION))
   public location: string;
 
-  // TODO: tags
   @Validate(yup.array().of(yup.string()))
-  public tags: Array<String>;
+  public tags: string[];
   
   @Validate(yup.object().nullable())
   public metaData: any;
@@ -58,6 +51,10 @@ export class Transaction extends ConvectorModel<Transaction> {
   @Validate(yup.number())
   public createdDate: number;
 
+  // persisted with loggedPersonId
+  @Validate(yup.string())
+  public createdByPersonId?: string;
+
   // DON'T add @Required
   @Validate(Participant.schema())
   public participant: FlatConvectorModel<Participant>;
@@ -66,4 +63,35 @@ export class Transaction extends ConvectorModel<Transaction> {
   @Validate(yup.array(x509Identities.schema()))
   public identities: Array<FlatConvectorModel<x509Identities>>;
 
+  // optional, only when we transfer assets we require it
+
+  @Validate(yup.string())
+  public assetId: string;
+
+  // send by graphql api
+  @Validate(yup.string())
+  public loggedPersonId?: string;
+
+  // above implementation is equal in all models, only change the type and CONVECTOR_MODEL_PATH_${MODEL}
+
+  // custom static implementation getById
+  public static async getById(id: string): Promise<Transaction> {
+    const result: Transaction | Transaction[] = await this.getByFilter({ _id: id });
+    return (result) ? result[0] : null;
+  }
+
+  // custom static implementation getByField
+  public static async getByField(fieldName: string, fieldValue: string): Promise<Transaction | Transaction[]> {
+    return await this.getByFilter({ [fieldName]: fieldValue });
+  }
+
+  // custom static implementation getByFilter
+  public static async getByFilter(filter: any): Promise<Transaction | Transaction[]> {
+    return await this.query(Transaction, {
+      selector: {
+        type: c.CONVECTOR_MODEL_PATH_ASSET,
+        ...filter,
+      }
+    });
+  }
 }

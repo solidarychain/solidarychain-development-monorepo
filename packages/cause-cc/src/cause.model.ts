@@ -61,19 +61,11 @@ export class Cause extends ConvectorModel<Cause> {
 
   @Required()
   @Validate(yup.number())
-  public fundsDebit: number;
+  public fundsBalance: EntityBalance;
   
   @Required()
   @Validate(yup.number())
-  public fundsCredit: number;
-
-  @Required()
-  @Validate(yup.number())
-  public fundsBalance: number;
-
-  @Required()
-  @Validate(yup.number())
-  public timeCredit: number;
+  public volunteeringHoursBalance: EntityBalance;
 
   // above implementation is equal in all models, only change the type and CONVECTOR_MODEL_PATH_${MODEL}
 

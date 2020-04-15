@@ -7,11 +7,15 @@ import { Participant } from '@solidary-network/participant-cc';
 
 export class Cause extends ConvectorModel<Cause> {
   @ReadOnly()
+  @Required()
   public readonly type = c.CONVECTOR_MODEL_PATH_CAUSE;
 
   @Required()
   @Validate(yup.string())
   public name: string;
+
+  @Validate(yup.array().of(yup.string()))
+  public ambassadors: string[];
 
   @Validate(yup.number())
   public startDate: number;
@@ -22,20 +26,12 @@ export class Cause extends ConvectorModel<Cause> {
   @Validate(yup.string().matches(c.REGEX_LOCATION))
   public location: string;
 
-  // TODO: tags
   @Validate(yup.array().of(yup.string()))
-  public tags: Array<String>;
-    
-  @Validate(yup.object().nullable())
-  public metaData: any;
+  public tags: string[];
 
   @Required()
   @Validate(entitySchema)
   public input: Entity;
-
-  @Required()
-  @Validate(yup.number())
-  public createdDate: number;
 
   @Required()
   @Validate(Participant.schema())
@@ -45,4 +41,52 @@ export class Cause extends ConvectorModel<Cause> {
   @Validate(yup.array(x509Identities.schema()))
   public identities: Array<FlatConvectorModel<x509Identities>>;
 
+  @Validate(yup.object().nullable())
+  public metaData: any;
+
+  @Validate(yup.object().nullable())
+  public metaDataInternal: any;
+
+  @Required()
+  @Validate(yup.number())
+  public createdDate: number;
+
+  // persisted with loggedPersonId
+  @Validate(yup.string())
+  public createdByPersonId?: string;
+
+  // send by graphql api
+  @Validate(yup.string())
+  public loggedPersonId?: string;
+
+  @Required()
+  @Validate(yup.number())
+  public fundsBalance: EntityBalance;
+  
+  @Required()
+  @Validate(yup.number())
+  public volunteeringHoursBalance: EntityBalance;
+
+  // above implementation is equal in all models, only change the type and CONVECTOR_MODEL_PATH_${MODEL}
+
+  // custom static implementation getById
+  public static async getById(id: string): Promise<Cause> {
+    const result: Cause | Cause[] = await this.getByFilter({ _id: id });
+    return (result) ? result[0] : null;
+  }
+
+  // custom static implementation getByField
+  public static async getByField(fieldName: string, fieldValue: string): Promise<Cause | Cause[]> {
+    return await this.getByFilter({ [fieldName]: fieldValue });
+  }
+
+  // custom static implementation getByFilter
+  public static async getByFilter(filter: any): Promise<Cause | Cause[]> {
+    return await this.query(Cause, {
+      selector: {
+        type: c.CONVECTOR_MODEL_PATH_CAUSE,
+        ...filter,
+      }
+    });
+  }
 }

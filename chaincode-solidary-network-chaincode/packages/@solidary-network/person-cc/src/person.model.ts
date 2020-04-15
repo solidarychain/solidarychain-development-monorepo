@@ -1,4 +1,4 @@
-import { appConstants as c, UserRoles, x509Identities } from '@solidary-network/common-cc';
+import { appConstants as c, UserRoles, x509Identities, EntityBalance } from '@solidary-network/common-cc';
 import { Participant } from '@solidary-network/participant-cc';
 import { ConvectorModel, Default, FlatConvectorModel, ReadOnly, Required, Validate } from '@worldsibu/convector-core';
 import * as yup from 'yup';
@@ -46,10 +46,33 @@ export class Person extends ConvectorModel<Person> {
   @Validate(yup.array(x509Identities.schema()))
   public identities: Array<FlatConvectorModel<x509Identities>>;
 
+  @Validate(yup.object().nullable())
+  public metaData: any;
+
+  @Validate(yup.object().nullable())
+  public metaDataInternal: any;
+
   @Required()
   @Validate(yup.number())
   public createdDate: number;
 
+  @Required()
+  @Validate(yup.number())
+  public fundsBalance: EntityBalance;
+  
+  @Required()
+  @Validate(yup.number())
+  public volunteeringHoursBalance: EntityBalance;
+
+  // TODO: can remove person don't use createdByPersonId
+  // persisted with loggedPersonId
+  // @Validate(yup.string())
+  // public createdByPersonId?: string;
+
+  // send by graphql api
+  @Validate(yup.string())
+  public loggedPersonId?: string;
+  
   // extended non citizenCard data
 
   @Required()
@@ -76,9 +99,6 @@ export class Person extends ConvectorModel<Person> {
 
   @Validate(yup.string())
   public personalInfo: string;
-
-  @Validate(yup.string())
-  public internalInfo: string;
 
   // store future profile and reputation average object
   @Validate(yup.object().nullable())
@@ -204,4 +224,27 @@ export class Person extends ConvectorModel<Person> {
   // @Required()
   @Validate(yup.string()/*.nullable()*/)
   public otherInformation: string;
+
+  // above implementation is equal in all models, only change the type and CONVECTOR_MODEL_PATH_${MODEL}
+
+  // custom static implementation getById
+  public static async getById(id: string): Promise<Person> {
+    const result: Person | Person[] = await this.getByFilter({ _id: id });
+    return (result) ? result[0] : null;
+  }
+
+  // custom static implementation getByField
+  public static async getByField(fieldName: string, fieldValue: string): Promise<Person | Person[]> {
+    return await this.getByFilter({ [fieldName]: fieldValue });
+  }
+
+  // custom static implementation getByFilter
+  public static async getByFilter(filter: any): Promise<Person | Person[]> {
+    return await this.query(Person, {
+      selector: {
+        type: c.CONVECTOR_MODEL_PATH_PERSON,
+        ...filter,
+      }
+    });
+  }
 }
