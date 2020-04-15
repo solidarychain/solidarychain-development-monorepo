@@ -1,7 +1,6 @@
 // not used anymore
 
 import { Common } from './common.model';
-import { appConstants as c } from './constants';
 
 // convert comma string float to float ex '1,81' to 1.81
 export const convertStringToFloat = (input: string): number => parseFloat(input.replace(/,/g, '.'));

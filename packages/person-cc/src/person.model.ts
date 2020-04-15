@@ -61,10 +61,9 @@ export class Person extends ConvectorModel<Person> {
   // @Validate(yup.string())
   // public createdByPersonId?: string;
 
-  // TODO: can remove person don't use createdByPersonId
   // send by graphql api
-  // @Validate(yup.string())
-  // public loggedPersonId?: string;
+  @Validate(yup.string())
+  public loggedPersonId?: string;
   
   // extended non citizenCard data
 

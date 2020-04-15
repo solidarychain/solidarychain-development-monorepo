@@ -59,6 +59,22 @@ export class Cause extends ConvectorModel<Cause> {
   @Validate(yup.string())
   public loggedPersonId?: string;
 
+  @Required()
+  @Validate(yup.number())
+  public fundsDebit: number;
+  
+  @Required()
+  @Validate(yup.number())
+  public fundsCredit: number;
+
+  @Required()
+  @Validate(yup.number())
+  public fundsBalance: number;
+
+  @Required()
+  @Validate(yup.number())
+  public timeCredit: number;
+
   // above implementation is equal in all models, only change the type and CONVECTOR_MODEL_PATH_${MODEL}
 
   // custom static implementation getById

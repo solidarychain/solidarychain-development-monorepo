@@ -51,8 +51,8 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
       fingerprint: this.sender,
       status: true
     }];
-    // assign createdByPersonId before delete loggedPersonId
-    person.createdByPersonId = person.loggedPersonId;
+    // TODO: can remove person don't use createdByPersonId
+    // person.createdByPersonId = person.loggedPersonId;
     // hashPassword before save model
     person.password = hashPassword(person.password);
     // add date in epoch unix time

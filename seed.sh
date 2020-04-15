@@ -259,8 +259,10 @@ npx hurl invoke ${CHAINCODE_NAME} asset_create "${PAYLOAD}"
 ID=acef70e5-cd25-4533-8392-1fa57e430002
 NAME=Asset002
 ASSET_TYPE=DIGITAL_ASSET
-OWNER_TYPE=network.solidary.convector.person
+LOCATION=40.1890144,-8.5171909
+TAGS="[\"red\", \"blue\"]"
 OWNER_ID=4ea88521-031b-4279-9165-9c10e1839001
+OWNER_TYPE=network.solidary.convector.person
 PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"assetType\":\"${ASSET_TYPE}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"metaData\":{\"key\":\"value\"},\"owner\":{\"id\":\"${OWNER_ID}\",\"type\":\"${OWNER_TYPE}\"}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} asset_create "${PAYLOAD}" # -u admin / if use "Cant find a participant with that fingerprint"

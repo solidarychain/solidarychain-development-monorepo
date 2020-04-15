@@ -3090,5 +3090,48 @@ restarted network, and fails create cause, but after a while it start to work, u
 
 ## How to use CouchDBStorage to query CouchDb api, views etc
 
+- [Tutorial - Advanced - CouchDB](https://docs.covalentx.com/article/101-tutorial-advanced-couchdb)
 - <https://gist.githubusercontent.com/worldsibu-bot/45164fb9fa7b9981adaeb82025c4e2d3/raw/05991fbf3058e275fffb8b4363b9683dbe933222/person.controller.ts>
 
+create a Design Document and a View
+
+Design Document: transaction-balance-index
+Index name: transaction-balance-index
+Map Function:
+
+```javascript
+function (doc) {
+  if (doc.type === 'network.solidary.convector.transaction' && doc.resourceType === 'FUNDS' && doc.transactionType === 'CREATE' && doc.quantity > 0) {
+    // The emit() function always takes two arguments: the first is key, and the second is value. The emit(key, value) function creates an entry in our view result
+    // documents are group by, in this example we group by doc.type to have all documents, if we use _id for ex we have reduce act in every document, and not in a group
+    emit(doc.type, doc.quantity)
+  }  
+}
+```
+
+Reduce Function:
+
+```javascript
+function (keys, values, rereduce) {
+  var sum = 0;
+  values.forEach(function(element) {
+    sum = sum + element;
+  });
+  return sum;
+}
+```
+
+next add `@worldsibu/convector-storage-couchdb` to package
+
+```shell
+$ npx lerna add @worldsibu/convector-storage-couchdb --scope @solidary-network/common-cc
+$ npx lerna add nano --scope @solidary-network/common-cc
+```
+
+```json
+"dependencies": {
+  "@worldsibu/convector-core": "^1.3.8",
+  "@worldsibu/convector-storage-couchdb": "^1.3.8",
+  "yup": "^0.28.1"
+},
+```
