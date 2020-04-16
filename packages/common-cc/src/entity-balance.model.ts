@@ -3,6 +3,13 @@ import * as yup from 'yup';
 import { appConstants as c } from './constants';
 
 export class EntityBalance extends ConvectorModel<EntityBalance>{
+  constructor() {
+    super();
+    this.debit = 0;
+    this.credit = 0;
+    this.balance = 0;
+  }
+
   @ReadOnly()
   @Required()
   public readonly type = c.CONVECTOR_MODEL_PATH_ENTITY_BALANCE;

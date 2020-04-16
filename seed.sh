@@ -75,7 +75,7 @@ CODE=${MIT_CODE}
 NAME="MIT"
 PAYLOAD="{\"id\":\"${ID}\",\"code\":\"${CODE}\",\"name\":\"${NAME}\"}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} participant_create "${PAYLOAD}" -u user1 -o org1
+npx hurl invoke ${CHAINCODE_NAME} participant_create "${PAYLOAD}" -u admin
 # there is no need for -u user1, it is the default
 # npx hurl invoke ${CHAINCODE_NAME} participant_get ${MIT_ID}
 # npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${MIT_CODE}
@@ -90,7 +90,7 @@ CODE=${NABA_CODE}
 NAME="National Bank"
 PAYLOAD="{\"id\":\"${ID}\",\"code\":\"${CODE}\",\"name\":\"${NAME}\"}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} participant_create "${PAYLOAD}"  -u user1 -o org2
+npx hurl invoke ${CHAINCODE_NAME} participant_create "${PAYLOAD}"  -u user1 -o org1
 # there is no need for -u user1, it is the default
 # npx hurl invoke ${CHAINCODE_NAME} participant_get ${NABA_ID}
 # npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${NABA_CODE}
@@ -227,7 +227,8 @@ QUANTITY=1.11
 CURRENCY=EUR
 LOCATION=40.1890144,-8.5171909
 TAGS="[\"red\", \"blue\"]"
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"}}"
+LOGGED_PERSON_ID=${JOHN_ID}
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\",\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u user1
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u user1
@@ -236,7 +237,8 @@ npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u user1
 ID=acef70e5-cd25-4533-8392-9fa57e43cf33
 INPUT_TYPE=network.solidary.convector.cause
 INPUT_ID=acef70e5-cd25-4533-8392-9fa57e43cf69
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"}}"
+LOGGED_PERSON_ID=${JOHN_ID}
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"loggedPersonId\":\"${LOGGED_PERSON_ID}\",\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" # -u admin / if use "Cant find a participant with that fingerprint"
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin

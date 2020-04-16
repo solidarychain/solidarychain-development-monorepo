@@ -8,6 +8,7 @@ import { ResourceType, TransactionType } from './enums';
 import { Transaction } from './transaction.model';
 import { checkUniqueField, getEntity } from './utils';
 import { Person } from '@solidary-network/person-cc';
+import { Cause } from '@solidary-network/cause-cc';
 
 @Controller('transaction')
 export class TransactionController extends ConvectorController<ChaincodeTx> {
@@ -35,6 +36,11 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
       throw new Error('You can\'t transfer from input to same output entity, you must transfer from input to a different output entity!');
     }
 
+    // protection required loggedPersonId
+    if (!transaction.loggedPersonId) {
+      throw new Error(`You must supply a loggedPersonId in transfers`);
+    }
+
     // check unique fields
     await checkUniqueField('_id', transaction.id, true);
 
@@ -44,16 +50,14 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     transaction.input.entity = await getEntity(transaction.input.type, transaction.input.id);
     transaction.output.entity = await getEntity(transaction.output.type, transaction.output.id);
 
-    // TransactionType.Transfer
+    // TransactionType.TransferAsset
 
     // detect if is a transfer type, and asset resourceType
     if (transaction.transactionType === TransactionType.TransferAsset && (
       transaction.resourceType === ResourceType.PhysicalAsset || transaction.resourceType === ResourceType.DigitalAsset
     )) {
       // empty username
-      if (!transaction.loggedPersonId) {
-        throw new Error(`You must supply owner user loggedPersonId when transfer assets of type '${transaction.resourceType}'`);
-      } else if (!transaction.assetId) {
+      if (!transaction.assetId) {
         throw new Error(`You must supply a assetId when transfer assets of type '${transaction.resourceType}'`);
       } else {
         // get asset
@@ -93,16 +97,34 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
         // save asset
         await asset.save();
       }
-    
-    // TransactionType.Transfer
-
-    } else if (transaction.transactionType === TransactionType.TransferAsset && (
+    }
+    // TransactionType.TransferGoods
+    else if (transaction.transactionType === TransactionType.TransferGoods && (
       transaction.resourceType === ResourceType.PhysicalAsset || transaction.resourceType === ResourceType.DigitalAsset
     )) {
+      // under construction
     }
-
-
-    // tra
+    // TransactionType.TransferFunds
+    else if ((transaction.transactionType === TransactionType.TransferFunds && transaction.resourceType === ResourceType.Funds)
+    ) {
+      debugger;
+      // input debit&balance
+      (transaction.input.entity as FlatConvectorModel<Participant | Person | Cause>).fundsBalance.debit = - transaction.quantity;
+      (transaction.input.entity as FlatConvectorModel<Participant | Person | Cause>).fundsBalance.balance = - transaction.quantity;
+      // input credit&balance
+      (transaction.output.entity as FlatConvectorModel<Participant | Person | Cause>).fundsBalance.credit = + transaction.quantity;
+      (transaction.output.entity as FlatConvectorModel<Participant | Person | Cause>).fundsBalance.balance = - transaction.quantity;
+    }
+    // TransactionType.TransferVolunteeringHours
+    else if (transaction.transactionType === TransactionType.TransferVolunteeringHours && transaction.resourceType === ResourceType.VolunteeringHours) {
+      debugger;
+      // input debit&balance
+      (transaction.input.entity as FlatConvectorModel<Participant | Person | Cause>).volunteeringHoursBalance.debit = - transaction.quantity;
+      (transaction.input.entity as FlatConvectorModel<Participant | Person | Cause>).volunteeringHoursBalance.balance = - transaction.quantity;
+      // input credit&balance
+      (transaction.output.entity as FlatConvectorModel<Participant | Person | Cause>).volunteeringHoursBalance.credit = + transaction.quantity;
+      (transaction.output.entity as FlatConvectorModel<Participant | Person | Cause>).volunteeringHoursBalance.balance = - transaction.quantity;
+    }
 
     // assign createdByPersonId before delete loggedPersonId
     transaction.createdByPersonId = transaction.loggedPersonId;

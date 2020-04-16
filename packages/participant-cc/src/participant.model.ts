@@ -48,13 +48,13 @@ export class Participant extends ConvectorModel<Participant> {
   @Validate(yup.string())
   public loggedPersonId?: string;
 
-  @Required()
-  @Validate(yup.number())
-  public fundsBalance: EntityBalance;
+  // @Required()
+  @Validate(EntityBalance.schema())
+  public fundsBalance?: EntityBalance;
   
-  @Required()
-  @Validate(yup.number())
-  public volunteeringHoursBalance: EntityBalance;
+  // @Required()
+  @Validate(EntityBalance.schema())
+  public volunteeringHoursBalance?: EntityBalance;
 
   // above implementation is equal in all models, only change the type and CONVECTOR_MODEL_PATH_${MODEL}
 
