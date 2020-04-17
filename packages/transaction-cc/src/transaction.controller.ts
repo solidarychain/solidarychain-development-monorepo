@@ -37,6 +37,11 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     }
 
     // protection required loggedPersonId
+    if (!transaction.quantity || transaction.quantity <= 0 ) {
+      throw new Error(`You must supply a quantity greater than 0`);
+    }
+    
+    // protection required loggedPersonId
     if (!transaction.loggedPersonId) {
       throw new Error(`You must supply a loggedPersonId in transfers`);
     }
@@ -107,6 +112,7 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     // TransactionType.TransferFunds
     else if ((transaction.transactionType === TransactionType.TransferFunds && transaction.resourceType === ResourceType.Funds)
     ) {
+      debugger;
       // input debit&balance
       (transaction.input.entity as Participant | Person | Cause).fundsBalance.debit += transaction.quantity;
       (transaction.input.entity as Participant | Person | Cause).fundsBalance.balance -= transaction.quantity;
@@ -121,6 +127,7 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     }
     // TransactionType.TransferVolunteeringHours
     else if (transaction.transactionType === TransactionType.TransferVolunteeringHours && transaction.resourceType === ResourceType.VolunteeringHours) {
+      debugger;
       // input debit&balance
       (transaction.input.entity as Participant | Person | Cause).volunteeringHoursBalance.debit += transaction.quantity;
       (transaction.input.entity as Participant | Person | Cause).volunteeringHoursBalance.balance -= transaction.quantity;

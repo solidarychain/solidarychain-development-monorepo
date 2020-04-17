@@ -56,13 +56,13 @@ export class Person extends ConvectorModel<Person> {
   @Validate(yup.number())
   public createdDate: number;
 
-  @Required()
-  @Validate(yup.number())
-  public fundsBalance: EntityBalance;
+  // @Required()
+  @Validate(EntityBalance.schema())
+  public fundsBalance?: EntityBalance;
   
-  @Required()
-  @Validate(yup.number())
-  public volunteeringHoursBalance: EntityBalance;
+  // @Required()
+  @Validate(EntityBalance.schema())
+  public volunteeringHoursBalance?: EntityBalance;
 
   // TODO: can remove person don't use createdByPersonId
   // persisted with loggedPersonId

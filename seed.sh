@@ -292,6 +292,7 @@ npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}"
 ID=acef70e5-cd25-4533-8392-9fa57e43cf57
 INPUT_ID=${JANE_ID}
 OUTPUT_ID=${JOHN_ID}
+QUANTITY=1
 LOGGED_PERSON_ID=${JANE_ID}
 PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"},\"assetId\":\"${ASSET_ID}\",\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
 # echo $PAYLOAD  | jq
@@ -303,6 +304,7 @@ ID=acef70e5-cd25-4533-8392-9fa57e43cf61
 MINI_ID=4ea88521-031b-4279-9165-9c10e1839053
 INPUT_ID=${JOHN_ID}
 OUTPUT_ID=${MINI_ID}
+QUANTITY=1
 LOGGED_PERSON_ID=${JOHN_ID}
 PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"},\"assetId\":\"${ASSET_ID}\",\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
 # echo $PAYLOAD  | jq
@@ -314,12 +316,14 @@ ID=acef70e5-cd25-4533-8392-9fa57e43cf62
 MINI_ID=4ea88521-031b-4279-9165-9c10e1839053
 INPUT_ID=${MINI_ID}
 OUTPUT_ID=${JOHN_ID}
+QUANTITY=1
 LOGGED_PERSON_ID=${MINI_ID}
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"assetId\":\"${ASSET_ID}\",\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"assetId\":\"${ASSET_ID}\",\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}"
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
 
+# todo add INDEXES to complex filters
 # complex filters
 
 # note for escaped $lte, work with sort:[{name:"asc"}] and sort:["name"]

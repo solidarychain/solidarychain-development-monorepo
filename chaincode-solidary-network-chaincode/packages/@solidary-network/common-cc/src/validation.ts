@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import { EntityType} from './types';
+import { EntityType } from './enums';
 
 // [schema objects](https://github.com/jquense/yup#extending-schema-types)
 export const entitySchema = yup.object().shape({

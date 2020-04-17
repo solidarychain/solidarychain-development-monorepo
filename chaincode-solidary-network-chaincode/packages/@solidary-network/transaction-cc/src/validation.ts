@@ -6,14 +6,25 @@ export const transactionTypeSchema = yup
   // seems that .mixed<type | type...>() syntax changed from...to .mixed()
   // .mixed<TransactionType.Create | TransactionType.Transfer>()
   .mixed()
-  .oneOf([TransactionType.CreateAsset, TransactionType.TransferAsset])
+  .oneOf([
+    TransactionType.TransferFunds,
+    TransactionType.TransferVolunteeringHours,
+    TransactionType.TransferGoods,
+    TransactionType.TransferAsset,
+  ])
   .required();
 
 export const resourceTypeSchema = yup
   // seems that .mixed<type | type...>() syntax changed from...to .mixed()
   // .mixed<ResourceType.Funds | ResourceType.Time | ResourceType.PhysicalAsset | ResourceType.DigitalAsset>()
   .mixed()
-  .oneOf([ResourceType.Funds, ResourceType.Time, ResourceType.PhysicalAsset, ResourceType.DigitalAsset])
+  .oneOf([
+    ResourceType.Funds,
+    ResourceType.VolunteeringHours,
+    ResourceType.GenericGoods,
+    ResourceType.PhysicalAsset,
+    ResourceType.DigitalAsset,
+  ])
   .required();
 
 // using custom login with .test()

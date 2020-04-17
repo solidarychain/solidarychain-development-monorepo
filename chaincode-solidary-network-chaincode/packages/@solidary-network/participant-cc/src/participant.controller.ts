@@ -1,4 +1,4 @@
-import { appConstants as c, x509Identities, checkValidModelIds } from '@solidary-network/common-cc';
+import { appConstants as c, x509Identities, checkValidModelIds, EntityBalance } from '@solidary-network/common-cc';
 import { BaseStorage, Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ClientIdentity } from 'fabric-shim';
 import * as yup from 'yup';
@@ -28,7 +28,7 @@ export class ParticipantController extends ConvectorController {
       gov = await Participant.getOne(c.UUID_GOV_ID);
       if (!!gov && !gov.id) {
         // throw new Error('There is no participant with that identity');
-        throw new Error('There is no go participant');
+        throw new Error('There is no gov participant');
       }
     }
 
@@ -51,6 +51,10 @@ export class ParticipantController extends ConvectorController {
     participant.createdByPersonId = participant.loggedPersonId;
     // add date in epoch unix time
     participant.createdDate = new Date().getTime();
+
+    // init objects
+    participant.fundsBalance = new EntityBalance();
+    participant.volunteeringHoursBalance = new EntityBalance();
 
     // clean non useful props, are required only receive id and entityType
     delete participant.loggedPersonId;

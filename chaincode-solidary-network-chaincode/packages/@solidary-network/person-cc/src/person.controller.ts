@@ -1,4 +1,4 @@
-import { appConstants as c } from '@solidary-network/common-cc';
+import { appConstants as c, EntityBalance } from '@solidary-network/common-cc';
 import { Participant, getParticipantByIdentity } from '@solidary-network/participant-cc';
 import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
@@ -59,6 +59,10 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     person.registrationDate = new Date().getTime();
     // add date in epoch unix time
     person.createdDate = new Date().getTime();
+
+    // init objects
+    person.fundsBalance = new EntityBalance();
+    person.volunteeringHoursBalance = new EntityBalance();
 
     // clean non useful props, are required only receive id and entityType
     delete person.loggedPersonId;

@@ -227,6 +227,10 @@ person.participant = gov;
   - [ ]  must discount from one and add to other, maybe only add to other because we dont know how much one person have, only causes and participants have amount?
   - [ ]  convert all currencies to EUR before add to ledger, store original currency and cambio used ex currencyOrg: USD, quantityOrg: 1.45, cambio: 1.12
 
+- [ ] Quantity start be teh quantity like how many items, and amount is the totalAmount of the transfer
+- [ ] Add unitPrice
+
+- [ ] Model Bag of Googs with EAN, name, quantity, priceUnit, amount, and a global for Totals, like a JsonObejct
 
 https://github.com/apache/couchdb/issues/1254
 {
