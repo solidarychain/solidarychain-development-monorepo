@@ -1,11 +1,11 @@
+import { Optional } from '@nestjs/common';
 import { Entity } from '@solidary-network/transaction-cc';
 import { IsDefined, Validate } from 'class-validator';
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, ID, ObjectType } from 'type-graphql';
 import * as yup from 'yup';
-import { EntityResult, x509Identities } from '../../common/models';
+import { EntityResult, EntityBalance } from '../../common/models';
 import { Participant } from '../../participant/models/participant.model';
-import { Optional } from '@nestjs/common';
 
 @ObjectType()
 export class Cause {
@@ -73,4 +73,12 @@ export class Cause {
   @Field({ nullable: true })
   @IsDefined()
   public createdByPersonId: string;
+
+  @Field(type => EntityBalance)
+  @IsDefined()
+  public fundsBalance?: EntityBalance;
+
+  @Field(type => EntityBalance)
+  @IsDefined()
+  public volunteeringHoursBalance?: EntityBalance;
 }

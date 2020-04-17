@@ -54,6 +54,8 @@ type Cause {
   participant: Participant!
   createdDate: Float!
   createdByPersonId: String
+  fundsBalance: EntityBalance!
+  volunteeringHoursBalance: EntityBalance!
 }
 
 """Date custom scalar type"""
@@ -63,6 +65,12 @@ type Entity {
   id: ID!
   type: String!
   createdDate: Float!
+}
+
+type EntityBalance {
+  debit: Float!
+  credit: Float!
+  balance: Float!
 }
 
 type EntityResult {
@@ -207,6 +215,8 @@ type Participant {
   metaDataInternal: JSONObject
   createdDate: Float!
   createdByPersonId: String
+  fundsBalance: EntityBalance!
+  volunteeringHoursBalance: EntityBalance!
 }
 
 type Person {
@@ -228,6 +238,8 @@ type Person {
   metaData: JSONObject
   metaDataInternal: JSONObject
   profile: JSONObject
+  fundsBalance: EntityBalance!
+  volunteeringHoursBalance: EntityBalance!
   firstname: String
   lastname: String
   gender: String

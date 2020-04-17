@@ -107,23 +107,31 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     // TransactionType.TransferFunds
     else if ((transaction.transactionType === TransactionType.TransferFunds && transaction.resourceType === ResourceType.Funds)
     ) {
-      debugger;
       // input debit&balance
-      (transaction.input.entity as FlatConvectorModel<Participant | Person | Cause>).fundsBalance.debit = - transaction.quantity;
-      (transaction.input.entity as FlatConvectorModel<Participant | Person | Cause>).fundsBalance.balance = - transaction.quantity;
+      (transaction.input.entity as Participant | Person | Cause).fundsBalance.debit += transaction.quantity;
+      (transaction.input.entity as Participant | Person | Cause).fundsBalance.balance -= transaction.quantity;
       // input credit&balance
-      (transaction.output.entity as FlatConvectorModel<Participant | Person | Cause>).fundsBalance.credit = + transaction.quantity;
-      (transaction.output.entity as FlatConvectorModel<Participant | Person | Cause>).fundsBalance.balance = - transaction.quantity;
+      (transaction.output.entity as Participant | Person | Cause).fundsBalance.credit += transaction.quantity;
+      (transaction.output.entity as Participant | Person | Cause).fundsBalance.balance += transaction.quantity;
+      // save models
+      await (transaction.input.entity as Participant | Person | Cause).save();
+      await (transaction.output.entity as Participant | Person | Cause).save();
+      // console.log('transaction.input.entity', JSON.stringify(transaction.input.entity, undefined, 2));
+      // console.log('transaction.output.entity', JSON.stringify(transaction.output.entity, undefined, 2));
     }
     // TransactionType.TransferVolunteeringHours
     else if (transaction.transactionType === TransactionType.TransferVolunteeringHours && transaction.resourceType === ResourceType.VolunteeringHours) {
-      debugger;
       // input debit&balance
-      (transaction.input.entity as FlatConvectorModel<Participant | Person | Cause>).volunteeringHoursBalance.debit = - transaction.quantity;
-      (transaction.input.entity as FlatConvectorModel<Participant | Person | Cause>).volunteeringHoursBalance.balance = - transaction.quantity;
+      (transaction.input.entity as Participant | Person | Cause).volunteeringHoursBalance.debit += transaction.quantity;
+      (transaction.input.entity as Participant | Person | Cause).volunteeringHoursBalance.balance -= transaction.quantity;
       // input credit&balance
-      (transaction.output.entity as FlatConvectorModel<Participant | Person | Cause>).volunteeringHoursBalance.credit = + transaction.quantity;
-      (transaction.output.entity as FlatConvectorModel<Participant | Person | Cause>).volunteeringHoursBalance.balance = - transaction.quantity;
+      (transaction.output.entity as Participant | Person | Cause).volunteeringHoursBalance.credit += transaction.quantity;
+      (transaction.output.entity as Participant | Person | Cause).volunteeringHoursBalance.balance += transaction.quantity;
+      // save models
+      await (transaction.input.entity as Participant | Person | Cause).save();
+      await (transaction.output.entity as Participant | Person | Cause).save();
+      // console.log('transaction.input.entity', JSON.stringify(transaction.input.entity, undefined, 2));
+      // console.log('transaction.output.entity', JSON.stringify(transaction.output.entity, undefined, 2));
     }
 
     // assign createdByPersonId before delete loggedPersonId

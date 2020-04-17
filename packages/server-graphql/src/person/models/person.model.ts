@@ -4,7 +4,7 @@ import { IsDate, IsDefined, IsNumber, MaxLength, Validate } from 'class-validato
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, ID, ObjectType } from 'type-graphql';
 import * as yup from 'yup';
-import { x509Identities } from '../../common/models';
+import { EntityBalance } from '../../common/models';
 import { Participant } from '../../participant/models/participant.model';
 import { Attribute } from './attribute.model';
 
@@ -98,6 +98,14 @@ export class Person {
   @Field(type => GraphQLJSONObject, { nullable: true })
   @IsDefined()
   public profile?: any;
+
+  @Field(type => EntityBalance)
+  @IsDefined()
+  public fundsBalance?: EntityBalance;
+
+  @Field(type => EntityBalance)
+  @IsDefined()
+  public volunteeringHoursBalance?: EntityBalance;
 
   // citizenCard data
 

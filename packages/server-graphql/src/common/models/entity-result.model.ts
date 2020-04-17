@@ -1,6 +1,5 @@
 import { IsDefined } from 'class-validator';
 import { Field, ID, ObjectType } from 'type-graphql';
-import { x509Identities } from './x509Identities.model';
 
 /**
  * EntityResult as a subclass Entity with common Entity fields,

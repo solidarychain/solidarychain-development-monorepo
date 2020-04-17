@@ -3,6 +3,7 @@ import { IsDefined, Validate } from 'class-validator';
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, ID, ObjectType } from 'type-graphql';
 import * as yup from 'yup';
+import { EntityBalance } from '../../common/models';
 
 @ObjectType()
 export class Participant {
@@ -46,4 +47,12 @@ export class Participant {
   @Field({ nullable: true })
   @IsDefined()
   public createdByPersonId: string;
+
+  @Field(type => EntityBalance)
+  @IsDefined()
+  public fundsBalance?: EntityBalance;
+
+  @Field(type => EntityBalance)
+  @IsDefined()
+  public volunteeringHoursBalance?: EntityBalance;
 }

@@ -58,6 +58,10 @@ export class Asset extends ConvectorModel<Asset> {
   @Validate(yup.string())
   public loggedPersonId?: string;
 
+  @Required()
+  @Validate(Participant.schema())
+  public participant: FlatConvectorModel<Participant>;
+
   // above implementation is equal in all models, only change the type and CONVECTOR_MODEL_PATH_${MODEL}
 
   // custom static implementation getById

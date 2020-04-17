@@ -215,7 +215,7 @@ PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"input\":{\"id\":\"${INPUT_ID}\
 npx hurl invoke ${CHAINCODE_NAME} cause_create "${PAYLOAD}"
 # npx hurl invoke ${CHAINCODE_NAME} cause_get ${ID}
 
-# create transaction
+# create transaction : gov to john 1.11
 ID=acef70e5-cd25-4533-8392-9fa57e43cf32
 TRANSACTION_TYPE=TRANSFER_FUNDS
 RESOURCE_TYPE=FUNDS
