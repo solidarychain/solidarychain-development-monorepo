@@ -41,6 +41,11 @@ export class NewTransactionInput {
   @IsOptional()
   public currency: string;
 
+  // TODO: removed goods
+  // @Field(type => GraphQLJSONObject, { nullable: true })
+  // @IsOptional()
+  // public goods: any;
+
   @Field({ nullable: true })
   @IsOptional()
   public location: string;

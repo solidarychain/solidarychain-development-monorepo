@@ -36,11 +36,17 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
       throw new Error('You can\'t transfer from input to same output entity, you must transfer from input to a different output entity!');
     }
 
-    // protection required loggedPersonId
-    if (!transaction.quantity || transaction.quantity <= 0 ) {
-      throw new Error(`You must supply a quantity greater than 0`);
+    // protection for quantity when working with TransactionType's
+    if ((transaction.transactionType === TransactionType.TransferAsset || transaction.transactionType === TransactionType.TransferFunds || transaction.transactionType === TransactionType.TransferVolunteeringHours) && !transaction.quantity || transaction.quantity <= 0) {
+      throw new Error(`You must supply a quantity greater than 0 when work with transactionType: [${TransactionType.TransferAsset},${TransactionType.TransferFunds} or ${TransactionType.TransferVolunteeringHours}]`);
     }
-    
+
+    // TODO: removed goods
+    // protection when working with TransactionType.TransferGoods
+    // if (transaction.transactionType === TransactionType.TransferGoods && (!transaction.goods || !Array.isArray(transaction.goods) || transaction.goods.length < 0)) {
+    //   throw new Error(`You must supply a valid goods item array when work with transactionType ${TransactionType.TransferGoods}`);
+    // }
+
     // protection required loggedPersonId
     if (!transaction.loggedPersonId) {
       throw new Error(`You must supply a loggedPersonId in transfers`);
@@ -104,15 +110,15 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
       }
     }
     // TransactionType.TransferGoods
-    else if (transaction.transactionType === TransactionType.TransferGoods && (
-      transaction.resourceType === ResourceType.PhysicalAsset || transaction.resourceType === ResourceType.DigitalAsset
-    )) {
-      // under construction
+    else if (transaction.transactionType === TransactionType.TransferGoods) {
+      debugger;
+      // assign new owner id and type
+      // asset.owner.entity = transaction.output.entity;
+      // assign which asset was transferred to transaction
+      // transaction.assetId = asset.id;
     }
     // TransactionType.TransferFunds
-    else if ((transaction.transactionType === TransactionType.TransferFunds && transaction.resourceType === ResourceType.Funds)
-    ) {
-      debugger;
+    else if (transaction.transactionType === TransactionType.TransferFunds && transaction.resourceType === ResourceType.Funds) {
       // input debit&balance
       (transaction.input.entity as Participant | Person | Cause).fundsBalance.debit += transaction.quantity;
       (transaction.input.entity as Participant | Person | Cause).fundsBalance.balance -= transaction.quantity;
@@ -122,12 +128,9 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
       // save models
       await (transaction.input.entity as Participant | Person | Cause).save();
       await (transaction.output.entity as Participant | Person | Cause).save();
-      // console.log('transaction.input.entity', JSON.stringify(transaction.input.entity, undefined, 2));
-      // console.log('transaction.output.entity', JSON.stringify(transaction.output.entity, undefined, 2));
     }
     // TransactionType.TransferVolunteeringHours
     else if (transaction.transactionType === TransactionType.TransferVolunteeringHours && transaction.resourceType === ResourceType.VolunteeringHours) {
-      debugger;
       // input debit&balance
       (transaction.input.entity as Participant | Person | Cause).volunteeringHoursBalance.debit += transaction.quantity;
       (transaction.input.entity as Participant | Person | Cause).volunteeringHoursBalance.balance -= transaction.quantity;
@@ -137,8 +140,10 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
       // save models
       await (transaction.input.entity as Participant | Person | Cause).save();
       await (transaction.output.entity as Participant | Person | Cause).save();
-      // console.log('transaction.input.entity', JSON.stringify(transaction.input.entity, undefined, 2));
-      // console.log('transaction.output.entity', JSON.stringify(transaction.output.entity, undefined, 2));
+    }
+    // Not Detected Transaction Type or  Wrong Combination ex TRANSFER_VOLUNTEERING_HOURS with FUNDS
+    else {
+      throw new Error(`invalid transaction type combination, you must supply a valid combination ex TransactionType:[${TransactionType.TransferFunds}] with ResourceType: [${ResourceType.Funds}]`);
     }
 
     // assign createdByPersonId before delete loggedPersonId

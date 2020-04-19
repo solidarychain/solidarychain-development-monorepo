@@ -321,3 +321,19 @@ we can have objects yet
 maybe we dont need it because participants create causes :) and is in cause that is the ambassadorUsername
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+remove from models
+
+// TODO: removed goods
+@Validate(yup.object().nullable())
+public goods: any;
+
+
+
+add to seed find
+
+added code to cause,
+  // new: causeField
+
+add to asset
+  // new: assetField | is by the code that we aggregate assets

@@ -34,6 +34,10 @@ export class Transaction extends ConvectorModel<Transaction> {
 
   @Validate(currencySchema)
   public currency: string;
+  
+  // TODO: removed goods  
+  // @Validate(yup.object().nullable())
+  // public goods: any;
 
   @Validate(yup.string().matches(c.REGEX_LOCATION))
   public location: string;

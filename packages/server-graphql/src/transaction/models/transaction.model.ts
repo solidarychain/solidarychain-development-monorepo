@@ -39,6 +39,10 @@ export class Transaction {
   @Field({ nullable: true })
   public currency: string;
 
+  // TODO: removed goods
+  // @Field(type => GraphQLJSONObject, { nullable: true })
+  // public goods: any;
+
   @Field({ nullable: true })
   public location: string;
 
