@@ -4,9 +4,10 @@ import { IsDate, IsDefined, IsNumber, MaxLength, Validate } from 'class-validato
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, ID, ObjectType } from 'type-graphql';
 import * as yup from 'yup';
-import { EntityBalance } from '../../common/models';
+import { GenericBalance } from '../../common/models';
 import { Participant } from '../../participant/models/participant.model';
 import { Attribute } from './attribute.model';
+import { Goods } from '../../common/models/goods.model';
 
 @ObjectType()
 export class Person {
@@ -99,13 +100,16 @@ export class Person {
   @IsDefined()
   public profile?: any;
 
-  @Field(type => EntityBalance)
+  @Field(type => GenericBalance)
   @IsDefined()
-  public fundsBalance?: EntityBalance;
+  public fundsBalance: GenericBalance;
 
-  @Field(type => EntityBalance)
+  @Field(type => GenericBalance)
   @IsDefined()
-  public volunteeringHoursBalance?: EntityBalance;
+  public volunteeringHoursBalance: GenericBalance;
+
+  @Field(type => [Goods], { nullable: true })
+  public goodsStock?: Goods[];
 
   // citizenCard data
 

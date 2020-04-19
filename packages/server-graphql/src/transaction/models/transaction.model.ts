@@ -3,7 +3,7 @@ import { IsDefined, IsNumber, Validate } from 'class-validator';
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, ID, ObjectType } from 'type-graphql';
 import * as yup from 'yup';
-import { EntityResult, x509Identities } from '../../common/models';
+import { EntityResult } from '../../common/models';
 import { Participant } from '../../participant/models/participant.model';
 
 @ObjectType()

@@ -246,6 +246,7 @@ npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" # -u admin / i
 # create asset with all data (filter with date=1582414657)
 ID=acef70e5-cd25-4533-8392-1fa57e430001
 NAME=Asset001
+DESCRIPTION=someDescription
 TRANSACTION_TYPE=TRANSFER_ASSET
 ASSET_TYPE=PHYSICAL_ASSET
 OWNER_TYPE=network.solidary.convector.person
@@ -253,7 +254,7 @@ OWNER_ID=4ea88521-031b-4279-9165-9c10e1839001
 LOCATION=40.1890144,-8.5171909
 TAGS="[\"red\", \"blue\"]"
 AMBASSADORS="[\"${JOHN_ID}\", \"${JANE_ID}\"]"
-PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"assetType\":\"${ASSET_TYPE}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"ambassadors\":${AMBASSADORS},\"metaData\":{\"key\":\"value\"},\"owner\":{\"id\":\"${OWNER_ID}\",\"type\":\"${OWNER_TYPE}\"}}"
+PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"description\":\"${DESCRIPTION}\",\"assetType\":\"${ASSET_TYPE}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"ambassadors\":${AMBASSADORS},\"metaData\":{\"key\":\"value\"},\"owner\":{\"id\":\"${OWNER_ID}\",\"type\":\"${OWNER_TYPE}\"}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} asset_create "${PAYLOAD}"
 # npx hurl invoke ${CHAINCODE_NAME} asset_get ${ID}

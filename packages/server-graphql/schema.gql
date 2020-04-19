@@ -19,6 +19,7 @@ input AddPersonAttributeInput {
 type Asset {
   id: ID!
   name: String!
+  description: String!
   assetType: String!
   ambassadors: [String!]
   owner: EntityResult!
@@ -54,8 +55,9 @@ type Cause {
   participant: Participant!
   createdDate: Float!
   createdByPersonId: String
-  fundsBalance: EntityBalance!
-  volunteeringHoursBalance: EntityBalance!
+  fundsBalance: GenericBalance!
+  volunteeringHoursBalance: GenericBalance!
+  goodsStock: [Goods!]
 }
 
 """Date custom scalar type"""
@@ -67,14 +69,14 @@ type Entity {
   createdDate: Float!
 }
 
-type EntityBalance {
+type EntityResult {
+  entity: Entity!
+}
+
+type GenericBalance {
   debit: Float!
   credit: Float!
   balance: Float!
-}
-
-type EntityResult {
-  entity: Entity!
 }
 
 input GetByAttributeInput {
@@ -86,6 +88,20 @@ input GetByComplexQueryInput {
   filter: JSONObject!
   fields: [String!]
   sort: [JSONObject!]
+}
+
+type Goods {
+  id: ID!
+  code: String!
+  barCode: String!
+  name: String!
+  description: String!
+  tags: [String!]
+  balance: GenericBalance!
+  metaData: JSONObject
+  metaDataInternal: JSONObject
+  createdDate: Float!
+  createdByPersonId: String
 }
 
 """
@@ -215,8 +231,9 @@ type Participant {
   metaDataInternal: JSONObject
   createdDate: Float!
   createdByPersonId: String
-  fundsBalance: EntityBalance!
-  volunteeringHoursBalance: EntityBalance!
+  fundsBalance: GenericBalance!
+  volunteeringHoursBalance: GenericBalance!
+  goodsStock: [Goods!]
 }
 
 type Person {
@@ -238,8 +255,9 @@ type Person {
   metaData: JSONObject
   metaDataInternal: JSONObject
   profile: JSONObject
-  fundsBalance: EntityBalance!
-  volunteeringHoursBalance: EntityBalance!
+  fundsBalance: GenericBalance!
+  volunteeringHoursBalance: GenericBalance!
+  goodsStock: [Goods!]
   firstname: String
   lastname: String
   gender: String

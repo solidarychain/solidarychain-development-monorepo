@@ -1,4 +1,4 @@
-import { appConstants as c, x509Identities, EntityBalance } from '@solidary-network/common-cc';
+import { appConstants as c, x509Identities, GenericBalance, Goods } from '@solidary-network/common-cc';
 import { ConvectorModel, FlatConvectorModel, ReadOnly, Required, Validate } from '@worldsibu/convector-core';
 import * as yup from 'yup';
 
@@ -48,13 +48,17 @@ export class Participant extends ConvectorModel<Participant> {
   @Validate(yup.string())
   public loggedPersonId?: string;
 
-  // @Required()
-  @Validate(EntityBalance.schema())
-  public fundsBalance?: EntityBalance;
+  @Required()
+  @Validate(GenericBalance.schema())
+  public fundsBalance: GenericBalance;
   
-  // @Required()
-  @Validate(EntityBalance.schema())
-  public volunteeringHoursBalance?: EntityBalance;
+  @Required()
+  @Validate(GenericBalance.schema())
+  public volunteeringHoursBalance: GenericBalance;
+
+  @Required()
+  @Validate(yup.array(Goods.schema()))
+  public goodsStock: Array<FlatConvectorModel<Goods>>;
 
   // above implementation is equal in all models, only change the type and CONVECTOR_MODEL_PATH_${MODEL}
 

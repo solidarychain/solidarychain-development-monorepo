@@ -1,12 +1,12 @@
+import { Optional } from '@nestjs/common';
 import { AssetType } from '@solidary-network/asset-cc';
 import { Entity } from '@solidary-network/transaction-cc';
 import { IsDefined, IsOptional, Validate } from 'class-validator';
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, ID, ObjectType } from 'type-graphql';
 import * as yup from 'yup';
-import { x509Identities, EntityResult } from '../../common/models';
+import { EntityResult } from '../../common/models';
 import { Participant } from '../../participant/models/participant.model';
-import { Optional } from '@nestjs/common';
 
 @ObjectType()
 export class Asset {
@@ -19,6 +19,10 @@ export class Asset {
   @Field()
   @IsDefined()
   public name: string;
+
+  @Field()
+  @Optional()
+  public description: string;
 
   @Field()
   @IsDefined()
@@ -35,7 +39,6 @@ export class Asset {
 
   @Field({ nullable: true })
   @IsOptional()
-  @IsDefined()
   public location: string;
 
   @Field(type => [String], { nullable: true })

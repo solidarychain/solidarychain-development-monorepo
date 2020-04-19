@@ -15,5 +15,4 @@ export class GetByComplexQueryInput {
 
   @Field(type => [GraphQLJSONObject], { nullable: true })
   public sort?: any;
-
 }

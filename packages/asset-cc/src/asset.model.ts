@@ -11,15 +11,6 @@ export class Asset extends ConvectorModel<Asset> {
   @Required()
   public readonly type = c.CONVECTOR_MODEL_PATH_ASSET;
 
-  // new: assetField | is by the code that we aggregate assets
-  @Required()
-  @Validate(yup.string())
-  public code: string;
-
-  // new: assetField
-  @Validate(yup.string())
-  public barCode: string;
-
   @Required()
   @Validate(yup.string())
   public name: string;

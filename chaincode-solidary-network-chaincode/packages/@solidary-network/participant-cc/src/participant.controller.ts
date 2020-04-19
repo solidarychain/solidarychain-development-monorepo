@@ -1,4 +1,4 @@
-import { appConstants as c, x509Identities, checkValidModelIds, EntityBalance } from '@solidary-network/common-cc';
+import { appConstants as c, x509Identities, checkValidModelIds, GenericBalance, Goods } from '@solidary-network/common-cc';
 import { BaseStorage, Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ClientIdentity } from 'fabric-shim';
 import * as yup from 'yup';
@@ -53,8 +53,9 @@ export class ParticipantController extends ConvectorController {
     participant.createdDate = new Date().getTime();
 
     // init objects
-    participant.fundsBalance = new EntityBalance();
-    participant.volunteeringHoursBalance = new EntityBalance();
+    participant.fundsBalance = new GenericBalance();
+    participant.volunteeringHoursBalance = new GenericBalance();
+    participant.goodsStock = new Array<Goods>()
 
     // clean non useful props, are required only receive id and entityType
     delete participant.loggedPersonId;

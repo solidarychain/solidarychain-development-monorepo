@@ -1,4 +1,4 @@
-import { appConstants as c, checkValidModelIds, EntityBalance } from '@solidary-network/common-cc';
+import { appConstants as c, checkValidModelIds, GenericBalance, Goods } from '@solidary-network/common-cc';
 import { getParticipantByIdentity, Participant } from '@solidary-network/participant-cc';
 import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
@@ -47,8 +47,9 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
     cause.createdDate = new Date().getTime();
 
     // init objects
-    cause.fundsBalance = new EntityBalance();
-    cause.volunteeringHoursBalance = new EntityBalance();
+    cause.fundsBalance = new GenericBalance();
+    cause.volunteeringHoursBalance = new GenericBalance();
+    cause.goodsStock = new Array<Goods>()
 
     // clean non useful props, are required only receive id and entityType
     delete cause.input.id;

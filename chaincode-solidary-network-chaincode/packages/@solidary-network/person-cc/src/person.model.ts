@@ -1,4 +1,4 @@
-import { appConstants as c, UserRoles, x509Identities, EntityBalance } from '@solidary-network/common-cc';
+import { appConstants as c, UserRoles, x509Identities, GenericBalance, Goods } from '@solidary-network/common-cc';
 import { Participant } from '@solidary-network/participant-cc';
 import { ConvectorModel, Default, FlatConvectorModel, ReadOnly, Required, Validate } from '@worldsibu/convector-core';
 import * as yup from 'yup';
@@ -56,14 +56,18 @@ export class Person extends ConvectorModel<Person> {
   @Validate(yup.number())
   public createdDate: number;
 
-  // @Required()
-  @Validate(EntityBalance.schema())
-  public fundsBalance?: EntityBalance;
+  @Required()
+  @Validate(GenericBalance.schema())
+  public fundsBalance: GenericBalance;
   
-  // @Required()
-  @Validate(EntityBalance.schema())
-  public volunteeringHoursBalance?: EntityBalance;
+  @Required()
+  @Validate(GenericBalance.schema())
+  public volunteeringHoursBalance: GenericBalance;
 
+  @Required()
+  @Validate(yup.array(Goods.schema()))
+  public goodsStock: Array<FlatConvectorModel<Goods>>;
+  
   // TODO: can remove person don't use createdByPersonId
   // persisted with loggedPersonId
   // @Validate(yup.string())

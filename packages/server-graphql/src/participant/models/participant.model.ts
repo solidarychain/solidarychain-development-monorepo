@@ -3,7 +3,8 @@ import { IsDefined, Validate } from 'class-validator';
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, ID, ObjectType } from 'type-graphql';
 import * as yup from 'yup';
-import { EntityBalance } from '../../common/models';
+import { GenericBalance } from '../../common/models';
+import { Goods } from '../../common/models/goods.model';
 
 @ObjectType()
 export class Participant {
@@ -48,11 +49,14 @@ export class Participant {
   @IsDefined()
   public createdByPersonId: string;
 
-  @Field(type => EntityBalance)
+  @Field(type => GenericBalance)
   @IsDefined()
-  public fundsBalance?: EntityBalance;
+  public fundsBalance: GenericBalance;
 
-  @Field(type => EntityBalance)
+  @Field(type => GenericBalance)
   @IsDefined()
-  public volunteeringHoursBalance?: EntityBalance;
+  public volunteeringHoursBalance: GenericBalance;
+
+  @Field(type => [Goods], { nullable: true })
+  public goodsStock?: Goods[];
 }

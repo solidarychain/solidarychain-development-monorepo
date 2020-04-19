@@ -337,3 +337,16 @@ added code to cause,
 
 add to asset
   // new: assetField | is by the code that we aggregate assets
+
+
+must init 
+fundsBalance
+volunteeringHoursBalance
+goods
+objects
+
+
+// init objects
+participant.fundsBalance = new GenericBalance();
+participant.volunteeringHoursBalance = new GenericBalance();
+participant.goodsStock = new Array<Goods>()

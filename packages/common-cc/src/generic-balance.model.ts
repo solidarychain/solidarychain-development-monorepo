@@ -2,7 +2,7 @@ import { ConvectorModel, ReadOnly, Required, Validate } from '@worldsibu/convect
 import * as yup from 'yup';
 import { appConstants as c } from './constants';
 
-export class EntityBalance extends ConvectorModel<EntityBalance>{
+export class GenericBalance extends ConvectorModel<GenericBalance>{
   constructor() {
     super();
     this.debit = 0;
