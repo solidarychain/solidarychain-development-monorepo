@@ -4,8 +4,9 @@ import { FlatConvectorModel } from '@worldsibu/convector-core-model';
 import { v4 as uuid } from 'uuid';
 import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
 import { TransactionControllerBackEnd } from '../convector';
-import { NewTransactionInput } from './dto';
+import { NewTransactionInput, GoodsInput } from './dto';
 import { Transaction } from './models';
+import { GoodsInput as GoodsInputConvectorModel } from '@solidary-network/common-cc';
 
 @Injectable()
 export class TransactionService {
@@ -13,9 +14,26 @@ export class TransactionService {
     try {
       // require to use or generate new id
       const newId: string = (data.id) ? data.id : uuid();
+      // init convector model goods
+      // const goods: Goods[] = new Array<Goods>();
+      const goodsInput: GoodsInputConvectorModel[] = data.goodsInput.map((e: GoodsInput) => {
+        return {
+          code: e.code,
+          barCode: e.barCode,
+          name: e.name,
+          description: e.description,
+          // quantity: e.quantity,
+          tags: e.tags,
+          metaData: e.metaData,
+          metaDataInternal: e.metaDataInternal,
+        };
+      });
+      debugger;
       // compose ConvectorModel from NewInput
       const transactionToCreate: TransactionConvectorModel = new TransactionConvectorModel({
         ...data,
+        // convector model goods
+        goodsInput,
         // require to inject values
         id: newId,
       });

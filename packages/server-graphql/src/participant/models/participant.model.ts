@@ -4,7 +4,7 @@ import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, ID, ObjectType } from 'type-graphql';
 import * as yup from 'yup';
 import { GenericBalance } from '../../common/models';
-import { Goods } from '../../common/models/goods.model';
+import { Goods } from '../../common/models';
 
 @ObjectType()
 export class Participant {

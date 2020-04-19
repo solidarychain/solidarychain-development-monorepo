@@ -6,7 +6,7 @@ import { Field, ID, ObjectType } from 'type-graphql';
 import * as yup from 'yup';
 import { EntityResult, GenericBalance } from '../../common/models';
 import { Participant } from '../../participant/models/participant.model';
-import { Goods } from '../../common/models/goods.model';
+import { Goods } from '../../common/models';
 
 @ObjectType()
 export class Cause {

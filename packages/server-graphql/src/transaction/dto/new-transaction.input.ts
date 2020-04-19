@@ -1,7 +1,8 @@
 import { Entity, ResourceType, TransactionType } from '@solidary-network/transaction-cc';
-import { IsDefined, IsNumber, IsEmpty, IsUUID, IsOptional } from 'class-validator';
+import { IsDefined, IsNumber, IsOptional, IsUUID } from 'class-validator';
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, InputType } from 'type-graphql';
+import { GoodsInput } from './goods.input';
 
 @InputType()
 export class NewTransactionInput {
@@ -41,11 +42,6 @@ export class NewTransactionInput {
   @IsOptional()
   public currency: string;
 
-  // TODO: removed goods
-  // @Field(type => GraphQLJSONObject, { nullable: true })
-  // @IsOptional()
-  // public goods: any;
-
   @Field({ nullable: true })
   @IsOptional()
   public location: string;
@@ -72,4 +68,8 @@ export class NewTransactionInput {
   @Field({ nullable: true })
   @IsOptional()
   public assetId: string;
+
+  // optional: transfer goods
+  @Field(type => [GoodsInput], { nullable: true })
+  public goodsInput?: GoodsInput[];
 }

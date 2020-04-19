@@ -33,6 +33,8 @@
   - [A circular dependency has been detected](#a-circular-dependency-has-been-detected)
   - [re-install all packages dependencies in case of "cannot find module 'typescript/bin/tsc'"](#re-install-all-packages-dependencies-in-case-of-%22cannot-find-module-typescriptbintsc%22)
   - [TypeError: httpAdapter.getType is not a function](#typeerror-httpadaptergettype-is-not-a-function)
+  - [Cannot determine GraphQL input type](#cannot-determine-graphql-input-type)
+    - [Input types](#input-types)
 
 ## Start
 
@@ -652,4 +654,29 @@ npx lerna bootstrap --scope @solidary-network/server-graphql
 "@nestjs/jwt": "6.1.2",
 "@nestjs/passport": "6.2.0",
 "@nestjs/platform-express": "6.11.8",
+```
+
+## Cannot determine GraphQL input type
+
+- [Cannot determine GraphQL input type ](https://github.com/MichalLytek/type-graphql/issues/371)
+
+This may have been due to using an `@ObjectType()` CompanyData as an `@InputType()` in the resolver.
+
+See docs for: [inputType](https://github.com/MichalLytek/type-graphql/blob/master/docs/resolvers.md#input-types)
+
+### Input types
+
+GraphQL mutations can be similarly created: Declare the class method, use the @Mutation decorator, create arguments, provide a return type (if needed) etc. But for mutations **we usually use input types**, hence TypeGraphQL allows us to **create inputs** in the **same way as object types** but by using the `@InputType()` decorator
+
+ex
+
+```typescript
+@InputType({ description: "New recipe data" })
+class AddRecipeInput implements Partial<Recipe> {
+  @Field()
+  title: string;
+
+  @Field({ nullable: true })
+  description?: string;
+}
 ```

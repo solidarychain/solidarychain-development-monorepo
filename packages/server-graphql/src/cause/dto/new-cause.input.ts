@@ -61,5 +61,4 @@ export class NewCauseInput {
   @Field(type => GraphQLJSONObject)
   @IsDefined()
   public input?: Entity;
-
 }

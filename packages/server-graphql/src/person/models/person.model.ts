@@ -7,7 +7,7 @@ import * as yup from 'yup';
 import { GenericBalance } from '../../common/models';
 import { Participant } from '../../participant/models/participant.model';
 import { Attribute } from './attribute.model';
-import { Goods } from '../../common/models/goods.model';
+import { Goods } from '../../common/models';
 
 @ObjectType()
 export class Person {

@@ -8,8 +8,10 @@ import * as yup from 'yup';
 @ObjectType()
 export class Goods {
   @Field(type => ID)
-  @IsDefined()
-  id: string;
+  public id: string;
+
+  // above is equal dto/new-x.input.ts and models/x.model.ts
+  // minus balance, createdDate, createdByPersonId...
 
   @Field()
   public code: string;

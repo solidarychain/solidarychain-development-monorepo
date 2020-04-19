@@ -41,11 +41,16 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
       throw new Error(`You must supply a quantity greater than 0 when work with transactionType: [${TransactionType.TransferAsset},${TransactionType.TransferFunds} or ${TransactionType.TransferVolunteeringHours}]`);
     }
 
-    // TODO: removed goods
-    // protection when working with TransactionType.TransferGoods
-    // if (transaction.transactionType === TransactionType.TransferGoods && (!transaction.goods || !Array.isArray(transaction.goods) || transaction.goods.length < 0)) {
-    //   throw new Error(`You must supply a valid goods item array when work with transactionType ${TransactionType.TransferGoods}`);
-    // }
+    // protection check if TransactionType.TransferGoods has valid ResourceType
+    if (transaction.transactionType === TransactionType.TransferGoods && transaction.resourceType !== ResourceType.GenericGoods)  {
+      throw new Error(`You must use a valid combination of TransactionType: [${TransactionType.TransferGoods}] with a valid ResourceType ex: [${ResourceType.GenericGoods}], or nd have a valid goods item array when work with transactionType`);
+    }
+    // protection check if TransactionType.TransferGoods has valid goods item array
+    if (transaction.transactionType === TransactionType.TransferGoods && transaction.resourceType !== ResourceType.GenericGoods && (!transaction.goods || !Array.isArray(transaction.goods) || transaction.goods.length < 0))  {
+      throw new Error(`You must have a valid goods item array when work with transactionType: [${transaction.transactionType}]`);
+    }
+
+    // TODO: protection goods can't have quantity in main body, quantities are in array, and currency to
 
     // protection required loggedPersonId
     if (!transaction.loggedPersonId) {
@@ -112,6 +117,7 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     // TransactionType.TransferGoods
     else if (transaction.transactionType === TransactionType.TransferGoods) {
       debugger;
+      console.log(transaction.goodsInput);
       // assign new owner id and type
       // asset.owner.entity = transaction.output.entity;
       // assign which asset was transferred to transaction

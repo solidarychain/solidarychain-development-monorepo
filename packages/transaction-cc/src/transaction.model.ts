@@ -1,4 +1,4 @@
-import { appConstants as c, entitySchema, x509Identities } from '@solidary-network/common-cc';
+import { appConstants as c, entitySchema, x509Identities, Goods, GoodsInput } from '@solidary-network/common-cc';
 import { Participant } from '@solidary-network/participant-cc';
 import { ConvectorModel, FlatConvectorModel, ReadOnly, Required, Validate } from '@worldsibu/convector-core-model';
 import * as yup from 'yup';
@@ -34,10 +34,6 @@ export class Transaction extends ConvectorModel<Transaction> {
 
   @Validate(currencySchema)
   public currency: string;
-  
-  // TODO: removed goods  
-  // @Validate(yup.object().nullable())
-  // public goods: any;
 
   @Validate(yup.string().matches(c.REGEX_LOCATION))
   public location: string;
@@ -72,9 +68,18 @@ export class Transaction extends ConvectorModel<Transaction> {
   @Validate(yup.string())
   public assetId: string;
 
+  // optional, only when we transfer goods we require it
+
+  @Validate(yup.array(Goods.schema()).nullable())
+  public goods?: Array<Goods>;
+
   // send by graphql api
   @Validate(yup.string())
   public loggedPersonId?: string;
+
+  // send by graphql api
+  @Validate(yup.array().of(yup.object()))
+  public goodsInput?: Array<GoodsInput>;
 
   // above implementation is equal in all models, only change the type and CONVECTOR_MODEL_PATH_${MODEL}
 
