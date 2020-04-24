@@ -7,9 +7,9 @@ import { GoodsInput } from './goods.input';
 @InputType()
 export class NewTransactionInput {
   // optional: generated automatically, but can optionally be used
-  @IsOptional()
   @IsUUID()
   @Field({ nullable: true })
+  @IsOptional()
   public id: string;
 
   // above is equal dto/new-x.input.ts and models/x.model.ts
@@ -69,7 +69,7 @@ export class NewTransactionInput {
   @IsOptional()
   public assetId: string;
 
-  // optional: transfer goods
+  // optional: transfer goods, use goods here to be more intuitive for graphql users
   @Field(type => [GoodsInput], { nullable: true })
-  public goodsInput?: GoodsInput[];
+  public goods?: GoodsInput[];
 }

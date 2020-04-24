@@ -4,6 +4,10 @@ import * as yup from 'yup';
 export class GoodsInput  {
   @Required()
   @Validate(yup.string())
+  public id: string;
+
+  @Required()
+  @Validate(yup.string())
   public code: string;
 
   @Validate(yup.string())

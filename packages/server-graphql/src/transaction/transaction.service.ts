@@ -14,25 +14,18 @@ export class TransactionService {
     try {
       // require to use or generate new id
       const newId: string = (data.id) ? data.id : uuid();
-      // init convector model goods
-      // const goods: Goods[] = new Array<Goods>();
-      const goodsInput: GoodsInputConvectorModel[] = data.goodsInput.map((e: GoodsInput) => {
-        return {
-          code: e.code,
-          barCode: e.barCode,
-          name: e.name,
-          description: e.description,
-          // quantity: e.quantity,
-          tags: e.tags,
-          metaData: e.metaData,
-          metaDataInternal: e.metaDataInternal,
-        };
-      });
-      debugger;
+      // init convector model goods, map input to convectorModel input
+      // and add if not sent by user, some generated uuid's to goods items, in case we need to create new items in goodsStock arrays, this way we send preGenerated uuid's from graphql
+      const goodsInput: GoodsInputConvectorModel[] = data.goods.map((e: GoodsInput) => ({
+        ...e,
+        id: (e.id) ? e.id : uuid(),
+      }));
       // compose ConvectorModel from NewInput
       const transactionToCreate: TransactionConvectorModel = new TransactionConvectorModel({
         ...data,
-        // convector model goods
+        // require to assign undefined to goods, we use goods and not goodsInput to be more intuitive to graphql user, this way he uses goods property
+        goods: undefined,
+        // convector model goods: now we can pass goods input
         goodsInput,
         // require to inject values
         id: newId,

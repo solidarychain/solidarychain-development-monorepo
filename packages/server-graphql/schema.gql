@@ -93,23 +93,24 @@ input GetByComplexQueryInput {
 type Goods {
   id: ID!
   code: String!
-  barCode: String!
+  barCode: String
   name: String!
-  description: String!
+  description: String
   tags: [String!]
   balance: GenericBalance!
   metaData: JSONObject
   metaDataInternal: JSONObject
   createdDate: Float!
-  createdByPersonId: String
+  createdByPersonId: String!
 }
 
 input GoodsInput {
+  id: ID
   code: String!
-  barCode: String!
+  barCode: String
   name: String!
-  description: String!
-  quantity: Float
+  description: String
+  quantity: Float!
   tags: [String!]
   metaData: JSONObject
   metaDataInternal: JSONObject
@@ -229,7 +230,7 @@ input NewTransactionInput {
   metaDataInternal: JSONObject
   loggedPersonId: String
   assetId: String
-  goodsInput: [GoodsInput!]
+  goods: [GoodsInput!]
 }
 
 type Participant {

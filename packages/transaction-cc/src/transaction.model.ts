@@ -68,7 +68,7 @@ export class Transaction extends ConvectorModel<Transaction> {
   @Validate(yup.string())
   public assetId: string;
 
-  // optional, only when we transfer goods we require it
+  // search 2354 : do we need this for what: optional, only when we transfer goods we require it
 
   @Validate(yup.array(Goods.schema()).nullable())
   public goods?: Array<Goods>;

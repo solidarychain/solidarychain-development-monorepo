@@ -9,3 +9,4 @@ export * from './x509identities.model';
 export * from './validation';
 // whole dir
 export * from './data';
+export * from './dto';

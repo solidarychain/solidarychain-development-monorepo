@@ -6,7 +6,7 @@ import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
 import * as yup from 'yup';
 import { ResourceType, TransactionType } from './enums';
 import { Transaction } from './transaction.model';
-import { checkUniqueField, getEntity } from './utils';
+import { checkUniqueField, getEntity, processGoodsInput } from './utils';
 import { Person } from '@solidary-network/person-cc';
 import { Cause } from '@solidary-network/cause-cc';
 
@@ -24,6 +24,13 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     const participant: Participant = await getParticipantByIdentity(this.sender);
     if (!!participant && !participant.id) {
       throw new Error('There is no participant with that identity');
+    }
+
+    // get loggedPerson from loggedPersonId
+    const loggedPerson: Person = await Person.getById(transaction.loggedPersonId);
+    // protection check if ownerPerson exists 
+    if (!loggedPerson && !loggedPerson.id) {
+      throw new Error(`There is no person with Id '${transaction.loggedPersonId}'`);
     }
 
     // protect from transfer from same input has output
@@ -87,13 +94,6 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
           throw new Error(`Transaction resourceType '${transaction.resourceType}' is different from asset resourceType '${asset.assetType}', you can't change resourceType in transfers`);
         }
 
-        // get loggedPerson from loggedPersonId
-        const loggedPerson: Person = await Person.getById(transaction.loggedPersonId);
-        // protection check if ownerPerson exists 
-        if (!loggedPerson && !loggedPerson.id) {
-          throw new Error(`There is no person with Id '${transaction.loggedPersonId}'`);
-        }
-
         // protection check if transaction input owner is the same as asset owner and same type, if one is different throw exception
         if (transaction.input.id != (asset.owner.entity as any).id || transaction.input.type != (asset.owner.entity as any).type) {
           // debugMessage = `transaction.input.id: ${transaction.input.id} != asset.owner.entity: ${(asset.owner.entity as any).id} && transaction.input.type: ${transaction.input.type} != asset.owner.entity: ${(asset.owner.entity as any).type}`;
@@ -103,7 +103,7 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
         // protection check if loggedPerson is the owner or if loggedPerson in in authorized ambassador's
         if (transaction.input.id != loggedPerson.id && !asset.ambassadors.includes(loggedPerson.id)) {
           // debugMessage = `:debugMessage:transaction.input.id: ${transaction.input.id} != loggedPerson.id: ${loggedPerson.id} (${transaction.input.id != loggedPerson.id}}) - ${JSON.stringify(asset.ambassadors)}:${asset.ambassadors.includes(loggedPerson.id)}:(${!asset.ambassadors.includes(loggedPerson.id)})`;
-          throw new Error(`logged person is not the owner of the asset, or is not an authorized asset ambassador${debugMessage}`);
+          throw new Error(`Logged person is not the owner of the asset, or is not an authorized asset ambassador${debugMessage}`);
         }
 
         // assign new owner id and type
@@ -116,12 +116,11 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     }
     // TransactionType.TransferGoods
     else if (transaction.transactionType === TransactionType.TransferGoods) {
-      debugger;
-      console.log(transaction.goodsInput);
-      // assign new owner id and type
-      // asset.owner.entity = transaction.output.entity;
-      // assign which asset was transferred to transaction
-      // transaction.assetId = asset.id;
+      (transaction.output.entity as Participant | Person | Cause).goodsStock = await processGoodsInput((transaction.output.entity as Participant | Person | Cause), transaction.goodsInput, true, loggedPerson);
+      // TODO: check if this will be ok and transaction.save() fails
+      (transaction.output.entity as Participant | Person | Cause).save();
+      // debugger;
+      // console.log('(transaction.output.entity as Participant | Person | Cause).goodsStock', JSON.stringify((transaction.output.entity as Participant | Person | Cause).goodsStock, undefined, 2));
     }
     // TransactionType.TransferFunds
     else if (transaction.transactionType === TransactionType.TransferFunds && transaction.resourceType === ResourceType.Funds) {
@@ -149,7 +148,7 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     }
     // Not Detected Transaction Type or  Wrong Combination ex TRANSFER_VOLUNTEERING_HOURS with FUNDS
     else {
-      throw new Error(`invalid transaction type combination, you must supply a valid combination ex TransactionType:[${TransactionType.TransferFunds}] with ResourceType: [${ResourceType.Funds}]`);
+      throw new Error(`Invalid transaction type combination, you must supply a valid combination ex TransactionType:[${TransactionType.TransferFunds}] with ResourceType: [${ResourceType.Funds}]`);
     }
 
     // assign createdByPersonId before delete loggedPersonId

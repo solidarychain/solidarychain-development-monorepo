@@ -52,7 +52,7 @@ CHAINCODE_NAME=solidary-network-chaincode
 # # there is no need for -u user1, it is the default
 # # npx hurl invoke ${CHAINCODE_NAME} participant_get ${GODB_ID} -u user1 -o org2
 
-# gov
+# gov: this is the first participant, must be created without user -u admin
 echo "Creating participant: Big Government"
 GOV_ID=c8ca045c-9d1b-407f-b9ae-31711758f2d0
 GOV_CODE=gov
@@ -247,7 +247,6 @@ npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" # -u admin / i
 ID=acef70e5-cd25-4533-8392-1fa57e430001
 NAME=Asset001
 DESCRIPTION=someDescription
-TRANSACTION_TYPE=TRANSFER_ASSET
 ASSET_TYPE=PHYSICAL_ASSET
 OWNER_TYPE=network.solidary.convector.person
 OWNER_ID=4ea88521-031b-4279-9165-9c10e1839001
@@ -274,6 +273,8 @@ npx hurl invoke ${CHAINCODE_NAME} asset_create "${PAYLOAD}" # -u admin / if use 
 
 # transaction asset from johndoe to janedoe
 ID=acef70e5-cd25-4533-8392-9fa57e43cf56
+TRANSACTION_TYPE=TRANSFER_ASSET
+RESOURCE_TYPE=DIGITAL_ASSET
 LOCATION=40.1890144,-8.5171909
 INPUT_TYPE=network.solidary.convector.person
 INPUT_ID=${JOHN_ID}
@@ -289,7 +290,7 @@ PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourc
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}"
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
 
-# transaction asset janedoe back to johnode
+# transaction asset janedoe back to johndoe
 ID=acef70e5-cd25-4533-8392-9fa57e43cf57
 INPUT_ID=${JANE_ID}
 OUTPUT_ID=${JOHN_ID}

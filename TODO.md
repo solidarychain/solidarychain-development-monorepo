@@ -322,31 +322,41 @@ maybe we dont need it because participants create causes :) and is in cause that
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+- [-] create couchdb indexex
+
+
+
+
+- [-] test a big array of goods,to test transaction limit
+- [-] credit and debit goods, with protections to not debit if balance is less than zero or quantity to debit is greater than balance
+- [-] if barCode exists but not code use code = barCode
+- [-] protection to check if sent duplicated codes in goods, if it occurs it will inc/dec more than one time the same code
+- error if we have 4 items, and remove on it simply clears the missing ond in goodsInput
+
+add type to person to cause new, even is always a person is more clear for all
+  "data": {
+    "causeNew": {
+      "id": "8fd03aaf-49f1-47f3-88d8-ae78af4971fa",
+      "name": "NewCause#07 [8fd03aaf]",
+      "input": {
+        "entity": {
+          "id": "c8ca045c-9d1b-407f-b9ae-31711758f2d0"
+        }
+
 remove from models
 
-// TODO: removed goods
-@Validate(yup.object().nullable())
-public goods: any;
-
-
-
-add to seed find
-
-added code to cause,
-  // new: causeField
-
-add to asset
-  // new: assetField | is by the code that we aggregate assets
-
+add validation to goods models, ex barcode
 
 must init 
 fundsBalance
 volunteeringHoursBalance
 goods
 objects
-
-
 // init objects
 participant.fundsBalance = new GenericBalance();
 participant.volunteeringHoursBalance = new GenericBalance();
 participant.goodsStock = new Array<Goods>()
+
+- [-] goods validation
+- [-] cc protections for empty array of goods, miss quantity and other required fields on itens in array, try use Goods and GraqphQL validation FIRST is required fields
+- [- ] create function check if good exists in entity, and if not create, aiexists increment credit and balance 

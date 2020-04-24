@@ -16,13 +16,15 @@ export class Goods {
   @Field()
   public code: string;
 
-  @Field()
+  @Field({ nullable: true })
+  @Optional()
   public barCode: string;
 
   @Field()
   public name: string;
 
-  @Field()
+  @Field({ nullable: true })
+  @Optional()
   public description: string;
 
   @Field(type => String, { nullable: true })
@@ -46,7 +48,7 @@ export class Goods {
   @Validate(yup.number)
   public createdDate: number;
 
-  @Field({ nullable: true })
+  @Field()
   @IsDefined()
   public createdByPersonId: string;
 }
