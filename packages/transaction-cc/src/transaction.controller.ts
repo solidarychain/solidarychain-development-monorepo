@@ -6,7 +6,7 @@ import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
 import * as yup from 'yup';
 import { ResourceType, TransactionType } from './enums';
 import { Transaction } from './transaction.model';
-import { checkUniqueField, getEntity, processGoodsInput } from './utils';
+import { checkUniqueField, getEntity, processGoodsInput as processGoodsEntityTransfer } from './utils';
 import { Person } from '@solidary-network/person-cc';
 import { Cause } from '@solidary-network/cause-cc';
 
@@ -116,11 +116,16 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     }
     // TransactionType.TransferGoods
     else if (transaction.transactionType === TransactionType.TransferGoods) {
-      (transaction.output.entity as Participant | Person | Cause).goodsStock = await processGoodsInput((transaction.input.entity as Participant | Person | Cause), (transaction.output.entity as Participant | Person | Cause), transaction.goodsInput, true, loggedPerson);
-      // TODO: check if this will be ok and transaction.save() fails
-      (transaction.output.entity as Participant | Person | Cause).save();
+      // transfer goods from one entity to other entity
+      await processGoodsEntityTransfer((transaction.input.entity as Participant | Person | Cause), (transaction.output.entity as Participant | Person | Cause), transaction.goodsInput, loggedPerson);
+      // (transaction.output.entity as Participant | Person | Cause).goodsStock = await processGoodsInput((transaction.input.entity as Participant | Person | Cause), (transaction.output.entity as Participant | Person | Cause), transaction.goodsInput, true, loggedPerson);
+      // // TODO: check if this will be ok and transaction.save() fails
+      // (transaction.output.entity as Participant | Person | Cause).save();
       // debugger;
       // console.log('(transaction.output.entity as Participant | Person | Cause).goodsStock', JSON.stringify((transaction.output.entity as Participant | Person | Cause).goodsStock, undefined, 2));
+      // save references modified in processGoodsInput
+      (transaction.input.entity as Participant | Person | Cause).save();
+      (transaction.output.entity as Participant | Person | Cause).save();
     }
     // TransactionType.TransferFunds
     else if (transaction.transactionType === TransactionType.TransferFunds && transaction.resourceType === ResourceType.Funds) {
@@ -146,21 +151,21 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
       await (transaction.input.entity as Participant | Person | Cause).save();
       await (transaction.output.entity as Participant | Person | Cause).save();
     }
-    // Not Detected Transaction Type or  Wrong Combination ex TRANSFER_VOLUNTEERING_HOURS with FUNDS
+    // Not Detected Transaction Type or Wrong Combination ex TRANSFER_VOLUNTEERING_HOURS with FUNDS
     else {
       throw new Error(`Invalid transaction type combination, you must supply a valid combination ex TransactionType:[${TransactionType.TransferFunds}] with ResourceType: [${ResourceType.Funds}]`);
     }
 
+    // common post transaction for all modes
+
     // assign createdByPersonId before delete loggedPersonId
     transaction.createdByPersonId = transaction.loggedPersonId;
-
     // clean non useful props, are required only to know sent entityType in payload, else they are stored in ledger
     delete transaction.input.id;
     delete transaction.output.id;
     delete transaction.input.type;
     delete transaction.output.type;
     delete transaction.loggedPersonId;
-    // must act has a db transaction, only get here if asset.save pass
     // add date in epoch unix time
     transaction.createdDate = new Date().getTime();
     // save transaction

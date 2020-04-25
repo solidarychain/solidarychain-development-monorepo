@@ -64,82 +64,146 @@ export const checkUniqueField = async (fieldName: string, fieldValue: string, re
   }
 }
 
+// inner function to get item from input/output entity models
+const getEntityGoodsStockItem = (goodsStock: Array<FlatConvectorModel<Goods>>, code: string): FlatConvectorModel<Goods> => {
+  return goodsStock.find((e: Goods) => e.code === code);
+};
+
+// helper function to get entity model from input/output entity
+export const getEntityModel = (type: string, id: string): Promise<Participant | Person | Cause> => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let entityModel: Participant | Person | Cause;
+      switch (type) {
+        case c.CONVECTOR_MODEL_PATH_PARTICIPANT:
+          entityModel = await Participant.getById(id);
+          break;
+        case c.CONVECTOR_MODEL_PATH_PERSON:
+          entityModel = await Person.getById(id);
+          break;
+        case c.CONVECTOR_MODEL_PATH_CAUSE:
+          entityModel = await Cause.getById(id);
+          break;
+        default:
+          throw new Error(`Unknown entity type '${type}'`);
+      }
+      resolve(entityModel);
+    } catch (error) {
+      reject(error);
+    };
+  })
+};
+
 /**
  * this process goodsInput, this will 
  * @param outputEntity target entity
- * @param goodsInput payload array of goods to add/credit or subtract/debit
+ * @param transactionGoodsInput payload array of goods to add/credit or subtract/debit
  * @param credit credit/true or debit/false
  * @param loggedPerson the person that sent the transaction
  */
-export const processGoodsInput = (outputEntity: Participant | Person | Cause, goodsInput: Array<GoodsInput>, credit: boolean, loggedPerson: Person): Promise<Array<FlatConvectorModel<Goods>>> => {
+export const processGoodsInput = (inputEntity: Participant | Person | Cause, outputEntity: Participant | Person | Cause, transactionGoodsInput: Array<GoodsInput>, loggedPerson: Person)
+  // TODO: remove this
+  : Promise<Array<FlatConvectorModel<Goods>>> => {
+  // TODO: OR SAVE models inside this function
   return new Promise(async (resolve, reject) => {
     try {
-      // inner function to get item from 
-      const getEntityGoodsStockItem = (code: string): FlatConvectorModel<Goods> => entityModel.goodsStock.find((e: Goods) => e.code === code);
-
-      // initialize model entity
-      let entityModel: Participant | Person | Cause;
-      switch (outputEntity.type) {
-        case c.CONVECTOR_MODEL_PATH_PARTICIPANT:
-          entityModel = await Participant.getById(outputEntity.id);
-          break;
-        case c.CONVECTOR_MODEL_PATH_PERSON:
-          entityModel = await Person.getById(outputEntity.id);
-          break;
-        case c.CONVECTOR_MODEL_PATH_CAUSE:
-          entityModel = await Cause.getById(outputEntity.id);
-          break;
-        default:
-          throw new Error(`Unknown entity type '${outputEntity.type}'`);
-      }
-
-      // array of codes of existing items, this will be used to loop and get all items for merge with goodsInputResult
-      const existingCodes: string[] = entityModel.goodsStock.map((e: Goods) => e.code);
-      // process result
-      const goodsInputResult: Array<FlatConvectorModel<Goods>> = goodsInput.map((e: GoodsInput) => {
+      // start looping goodsInputResult
+      transactionGoodsInput.forEach((e: GoodsInput) => {
+        debugger;
+        // get input and output indexes
+        const inputItemIndex = inputEntity.goodsStock.findIndex((i: Goods) => i.code == e.code);
+        const outputItemIndex = outputEntity.goodsStock.findIndex((i: Goods) => i.code == e.code);
 
         // protection required fields
-        if (!e.quantity || (e.quantity && e.quantity < 0)) {
-          throw new Error(`You must supply a positive quantity in all items of the goods property array'`);
+        if (!e.quantity || (e.quantity && e.quantity <= 0)) {
+          throw new Error(`You must supply a positive quantity in item code: [${e.code}]'`);
         }
 
-        // get currentGoods item
-        let currentGoods: FlatConvectorModel<Goods> = getEntityGoodsStockItem(e.code);
+        // protection valid stock balance: if is a cause or participant must contemplate the stock in balance, persons don't have stock balance, can go to negative value
+        if (inputEntity.type === c.CONVECTOR_MODEL_PATH_PARTICIPANT || inputEntity.type === c.CONVECTOR_MODEL_PATH_CAUSE) {
+          // protection for stock balance
+          if (!inputItemIndex || inputEntity.goodsStock[inputItemIndex].balance.balance < e.quantity)
+          throw new Error(`You must have a sufficient quantity of goods of item code:[${e.code}] to complete the transaction'`);
+        }
 
-        // if don't exists create a new one and assign its properties from payload, this init is only created once, on new fresh object
-        if (!currentGoods) {
-          // protection required fields
-          if (!e.code/* || !e.name name can be omitted if just add quantity we only need code */) {
-            throw new Error(`You must supply a code and name in all items of the goods property array'`);
+        // init balance, if don't have input balance can occur if is a person, other entities fail in above protection, and must have a balance
+        // if (!('balance' in inputEntity.goodsStock[inputItemIndex])) {
+        //   inputEntity.goodsStock[inputItemIndex].balance = new GenericBalance();
+        // }
+        // if have sufficient quantity proceed discount item quantity in inputEntity.goodsStock, for all entities (if fails in stock for participant or cause it throw error on the above code block)
+        // inputEntity.goodsStock[inputItemIndex].balance.debit += e.quantity;
+        // inputEntity.goodsStock[inputItemIndex].balance.balance -= e.quantity;
+
+        // if don't exists create a new one and push it to outputEntity.goodsStock
+        if (inputItemIndex < 0) {
+          // protection required fields, only when are create a new item in goodsStock
+          if (!e.code || !e.name) {
+            throw new Error(`You must supply a code and name when create new goods'`);
           }
-          // init a new goodsObject with id/uuid
-          currentGoods = new Goods(e.id);
-          currentGoods.balance = new GenericBalance();
+          // init a new goodsObject with id/uuid (uuid is sent in graphql, and if is a new item we use it here)
+          const newItemGoods = new Goods(e.id);
+          newItemGoods.balance = new GenericBalance();
           // required fields
-          currentGoods.code = e.code;
-          currentGoods.name = e.name;
-          currentGoods.barCode = (e.barCode) ? e.barCode : undefined;
-          currentGoods.description = (e.description) ? e.description : undefined;
-          currentGoods.tags = (e.tags) ? e.tags : undefined;
-          currentGoods.metaData = (e.metaData) ? e.metaData : undefined;
-          currentGoods.metaDataInternal = (e.metaDataInternal) ? e.metaDataInternal : undefined;
+          newItemGoods.code = e.code;
+          newItemGoods.name = e.name;
+          newItemGoods.barCode = (e.barCode) ? e.barCode : undefined;
+          newItemGoods.description = (e.description) ? e.description : undefined;
+          newItemGoods.tags = (e.tags) ? e.tags : undefined;
+          newItemGoods.metaData = (e.metaData) ? e.metaData : undefined;
+          newItemGoods.metaDataInternal = (e.metaDataInternal) ? e.metaDataInternal : undefined;
           // add date in epoch unix time
-          currentGoods.createdDate = new Date().getTime();
+          newItemGoods.createdDate = new Date().getTime();
           // assign createdByPersonId
-          currentGoods.createdByPersonId = loggedPerson.id;
+          newItemGoods.createdByPersonId = loggedPerson.id;
+// debit balance properties
+newItemGoods.balance.debit += e.quantity;
+newItemGoods.balance.balance -= e.quantity;
+// push it to inputEntity.goodsStock
+inputEntity.goodsStock.push(newItemGoods);
         } else {
-          // if already exists, remove item from existingCodes, and just increment balance below, without change in any other property
-          existingCodes.splice(existingCodes.indexOf(e.code), 1);
+// if already exists, work in it's balance
+inputEntity.goodsStock[inputItemIndex].balance.debit += e.quantity;
+inputEntity.goodsStock[inputItemIndex].balance.balance -= e.quantity;
         }
-        // work on balance for both
-        currentGoods.balance.credit += e.quantity;
-        currentGoods.balance.balance += e.quantity;
-        // return the currentGoods
-        return currentGoods;
+
+        // if don't exists create a new one and push it to outputEntity.goodsStock
+        if (outputItemIndex < 0) {
+          // protection required fields, only when are create a new item in goodsStock
+          if (!e.code || !e.name) {
+            throw new Error(`You must supply a code and name when create new goods'`);
+          }
+          // init a new goodsObject with id/uuid (uuid is sent in graphql, and if is a new item we use it here)
+          const newItemGoods = new Goods(e.id);
+          newItemGoods.balance = new GenericBalance();
+          // required fields
+          newItemGoods.code = e.code;
+          newItemGoods.name = e.name;
+          newItemGoods.barCode = (e.barCode) ? e.barCode : undefined;
+          newItemGoods.description = (e.description) ? e.description : undefined;
+          newItemGoods.tags = (e.tags) ? e.tags : undefined;
+          newItemGoods.metaData = (e.metaData) ? e.metaData : undefined;
+          newItemGoods.metaDataInternal = (e.metaDataInternal) ? e.metaDataInternal : undefined;
+          // add date in epoch unix time
+          newItemGoods.createdDate = new Date().getTime();
+          // assign createdByPersonId
+          newItemGoods.createdByPersonId = loggedPerson.id;
+// credit balance properties
+newItemGoods.balance.credit += e.quantity;
+newItemGoods.balance.balance += e.quantity;
+// push it to outputEntity.goodsStock
+outputEntity.goodsStock.push(newItemGoods);
+        } else {
+          // if already exists, work in it's balance
+outputEntity.goodsStock[inputItemIndex].balance.credit += e.quantity;
+outputEntity.goodsStock[inputItemIndex].balance.balance += e.quantity;
+        }
       });
-      const currentNonUsedInGoodsInputResult: Array<FlatConvectorModel<Goods>> = existingCodes.map((e: string) => getEntityGoodsStockItem(e));
+      // const currentNonUsedInGoodsInputResult: Array<FlatConvectorModel<Goods>> = existingCodes.map((e: string) => getEntityGoodsStockItem(outputEntity.goodsStock, e));
       // resolve promise, combining both arrays
-      resolve([...goodsInputResult, ...currentNonUsedInGoodsInputResult]);
+      // resolve([...goodsOutputResult, ...currentNonUsedInGoodsInputResult]);
+      
+      // TODO: resolve something useful
+      resolve();
     } catch (error) {
       // reject promise
       reject(error);

@@ -323,7 +323,7 @@ maybe we dont need it because participants create causes :) and is in cause that
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 - [-] create couchdb indexex
-
+- [ ] "error": "Just the government (participant with id gov) can create people"
 
 
 
