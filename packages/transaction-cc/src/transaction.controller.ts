@@ -116,7 +116,7 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     }
     // TransactionType.TransferGoods
     else if (transaction.transactionType === TransactionType.TransferGoods) {
-      (transaction.output.entity as Participant | Person | Cause).goodsStock = await processGoodsInput((transaction.output.entity as Participant | Person | Cause), transaction.goodsInput, true, loggedPerson);
+      (transaction.output.entity as Participant | Person | Cause).goodsStock = await processGoodsInput((transaction.input.entity as Participant | Person | Cause), (transaction.output.entity as Participant | Person | Cause), transaction.goodsInput, true, loggedPerson);
       // TODO: check if this will be ok and transaction.save() fails
       (transaction.output.entity as Participant | Person | Cause).save();
       // debugger;

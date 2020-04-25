@@ -64,6 +64,36 @@ export const checkUniqueField = async (fieldName: string, fieldValue: string, re
   }
 }
 
+// inner function to get item from input/output entity models
+const getEntityGoodsStockItem = (goodsStock: Array<FlatConvectorModel<Goods>>, code: string): FlatConvectorModel<Goods> => {
+  return goodsStock.find((e: Goods) => e.code === code);
+};
+
+// helper function to get entity model from input/output entity
+export const getEntityModel = (type: string, id: string): Promise<Participant | Person | Cause> => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let entityModel: Participant | Person | Cause;
+      switch (type) {
+        case c.CONVECTOR_MODEL_PATH_PARTICIPANT:
+          entityModel = await Participant.getById(id);
+          break;
+        case c.CONVECTOR_MODEL_PATH_PERSON:
+          entityModel = await Person.getById(id);
+          break;
+        case c.CONVECTOR_MODEL_PATH_CAUSE:
+          entityModel = await Cause.getById(id);
+          break;
+        default:
+          throw new Error(`Unknown entity type '${type}'`);
+      }
+      resolve(entityModel);
+    } catch (error) {
+      reject(error);
+    };
+  })
+};
+
 /**
  * this process goodsInput, this will 
  * @param outputEntity target entity
@@ -71,40 +101,53 @@ export const checkUniqueField = async (fieldName: string, fieldValue: string, re
  * @param credit credit/true or debit/false
  * @param loggedPerson the person that sent the transaction
  */
-export const processGoodsInput = (outputEntity: Participant | Person | Cause, goodsInput: Array<GoodsInput>, credit: boolean, loggedPerson: Person): Promise<Array<FlatConvectorModel<Goods>>> => {
+export const processGoodsInput = (inputEntity: Participant | Person | Cause, outputEntity: Participant | Person | Cause, goodsInput: Array<GoodsInput>, credit: boolean, loggedPerson: Person): Promise<Array<FlatConvectorModel<Goods>>> => {
+  // TODO: respond with object of input/output.goodsStock to be saved in caller function
+  // TODO: OR SAVE models inside this function
   return new Promise(async (resolve, reject) => {
     try {
       // inner function to get item from 
-      const getEntityGoodsStockItem = (code: string): FlatConvectorModel<Goods> => entityModel.goodsStock.find((e: Goods) => e.code === code);
-
+      // const getEntityGoodsStockItem = (code: string): FlatConvectorModel<Goods> => outputEntityModel.goodsStock.find((e: Goods) => e.code === code);
       // initialize model entity
-      let entityModel: Participant | Person | Cause;
-      switch (outputEntity.type) {
-        case c.CONVECTOR_MODEL_PATH_PARTICIPANT:
-          entityModel = await Participant.getById(outputEntity.id);
-          break;
-        case c.CONVECTOR_MODEL_PATH_PERSON:
-          entityModel = await Person.getById(outputEntity.id);
-          break;
-        case c.CONVECTOR_MODEL_PATH_CAUSE:
-          entityModel = await Cause.getById(outputEntity.id);
-          break;
-        default:
-          throw new Error(`Unknown entity type '${outputEntity.type}'`);
-      }
+      // let outputEntityModel: Participant | Person | Cause;
+      // switch (outputEntity.type) {
+      //   case c.CONVECTOR_MODEL_PATH_PARTICIPANT:
+      //     outputEntityModel = await Participant.getById(outputEntity.id);
+      //     break;
+      //   case c.CONVECTOR_MODEL_PATH_PERSON:
+      //     outputEntityModel = await Person.getById(outputEntity.id);
+      //     break;
+      //   case c.CONVECTOR_MODEL_PATH_CAUSE:
+      //     outputEntityModel = await Cause.getById(outputEntity.id);
+      //     break;
+      //   default:
+      //     throw new Error(`Unknown entity type '${outputEntity.type}'`);
+      // }
 
+      // get entityModels
+      // let inputEntityModel: Participant | Person | Cause = await getEntityModel(inputEntity.type, inputEntity.id);
+      // let outputEntityModel: Participant | Person | Cause = await getEntityModel(outputEntity.type, outputEntity.id);
       // array of codes of existing items, this will be used to loop and get all items for merge with goodsInputResult
-      const existingCodes: string[] = entityModel.goodsStock.map((e: Goods) => e.code);
-      // process result
-      const goodsInputResult: Array<FlatConvectorModel<Goods>> = goodsInput.map((e: GoodsInput) => {
+      const existingCodes: string[] = outputEntity.goodsStock.map((e: Goods) => e.code);
 
+      // process goodsInputResult
+      const goodsInputResult: Array<FlatConvectorModel<Goods>> = goodsInput.map((e: GoodsInput) => {
         // protection required fields
         if (!e.quantity || (e.quantity && e.quantity < 0)) {
           throw new Error(`You must supply a positive quantity in all items of the goods property array'`);
         }
 
-        // get currentGoods item
-        let currentGoods: FlatConvectorModel<Goods> = getEntityGoodsStockItem(e.code);
+        // get currentGoods input currentGoods item, to check if input has amount balance to debit
+        const currentGoodsInput: FlatConvectorModel<Goods> = getEntityGoodsStockItem(inputEntity.goodsStock, e.code);
+        // if item in debit mode, check if input entity has existing balance, else throw an error
+        if ((inputEntity.type === c.CONVECTOR_MODEL_PATH_PARTICIPANT || inputEntity.type === c.CONVECTOR_MODEL_PATH_CAUSE)
+          && e.quantity < 0 && (!currentGoodsInput && !currentGoodsInput.balance && currentGoodsInput.balance.balance <= e.quantity)
+        ) {
+          throw new Error(`You try to create a transaction of one of the good items [${e.code}], but but there is not amount available in input entity balance'`);
+        }
+
+        // get currentGoods output currentGoods item
+        let currentGoods: FlatConvectorModel<Goods> = getEntityGoodsStockItem(outputEntity.goodsStock, e.code);
 
         // if don't exists create a new one and assign its properties from payload, this init is only created once, on new fresh object
         if (!currentGoods) {
@@ -131,13 +174,21 @@ export const processGoodsInput = (outputEntity: Participant | Person | Cause, go
           // if already exists, remove item from existingCodes, and just increment balance below, without change in any other property
           existingCodes.splice(existingCodes.indexOf(e.code), 1);
         }
-        // work on balance for both
+
+        // work on item credit or debit
+        // if (e.quantity > 0) {
+        // } else {
+        //   currentGoods.balance.debit += e.quantity;
+        // }
+        // work on balance for both positive/credit and negative/debit
         currentGoods.balance.credit += e.quantity;
         currentGoods.balance.balance += e.quantity;
+
         // return the currentGoods
         return currentGoods;
       });
-      const currentNonUsedInGoodsInputResult: Array<FlatConvectorModel<Goods>> = existingCodes.map((e: string) => getEntityGoodsStockItem(e));
+
+      const currentNonUsedInGoodsInputResult: Array<FlatConvectorModel<Goods>> = existingCodes.map((e: string) => getEntityGoodsStockItem(outputEntity.goodsStock, e));
       // resolve promise, combining both arrays
       resolve([...goodsInputResult, ...currentNonUsedInGoodsInputResult]);
     } catch (error) {
