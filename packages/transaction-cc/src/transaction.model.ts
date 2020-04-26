@@ -71,7 +71,7 @@ export class Transaction extends ConvectorModel<Transaction> {
   // search 2354 : do we need this for what: optional, only when we transfer goods we require it
 
   @Validate(yup.array(Goods.schema()).nullable())
-  public goods?: Array<Goods>;
+  public goods?: Array<FlatConvectorModel<Goods>>;
 
   // send by graphql api
   @Validate(yup.string())

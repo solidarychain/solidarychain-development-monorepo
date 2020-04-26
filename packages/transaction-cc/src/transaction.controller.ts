@@ -116,13 +116,8 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     }
     // TransactionType.TransferGoods
     else if (transaction.transactionType === TransactionType.TransferGoods) {
-      // transfer goods from one entity to other entity
-      await processGoodsEntityTransfer((transaction.input.entity as Participant | Person | Cause), (transaction.output.entity as Participant | Person | Cause), transaction.goodsInput, loggedPerson);
-      // (transaction.output.entity as Participant | Person | Cause).goodsStock = await processGoodsInput((transaction.input.entity as Participant | Person | Cause), (transaction.output.entity as Participant | Person | Cause), transaction.goodsInput, true, loggedPerson);
-      // // TODO: check if this will be ok and transaction.save() fails
-      // (transaction.output.entity as Participant | Person | Cause).save();
-      // debugger;
-      // console.log('(transaction.output.entity as Participant | Person | Cause).goodsStock', JSON.stringify((transaction.output.entity as Participant | Person | Cause).goodsStock, undefined, 2));
+      // transfer goods from one entity to other entity, and receive final goods to be stored in transaction
+      transaction.goods = await processGoodsEntityTransfer((transaction.input.entity as Participant | Person | Cause), (transaction.output.entity as Participant | Person | Cause), transaction.goodsInput, loggedPerson);
       // save references modified in processGoodsInput
       (transaction.input.entity as Participant | Person | Cause).save();
       (transaction.output.entity as Participant | Person | Cause).save();

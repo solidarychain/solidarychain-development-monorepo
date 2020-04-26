@@ -95,21 +95,20 @@ export const getEntityModel = (type: string, id: string): Promise<Participant | 
 };
 
 /**
- * this process goodsInput, this will 
+ * this process goodsInput from inputEntity to outputEntity
+ * @param inputEntity target entity
  * @param outputEntity target entity
  * @param transactionGoodsInput payload array of goods to add/credit or subtract/debit
- * @param credit credit/true or debit/false
  * @param loggedPerson the person that sent the transaction
  */
 export const processGoodsInput = (inputEntity: Participant | Person | Cause, outputEntity: Participant | Person | Cause, transactionGoodsInput: Array<GoodsInput>, loggedPerson: Person)
-  // TODO: remove this
-  : Promise<Array<FlatConvectorModel<Goods>>> => {
-  // TODO: OR SAVE models inside this function
+  : Promise<Array<Goods>> => {
   return new Promise(async (resolve, reject) => {
     try {
+      const resultGoodsTransacted: Array<Goods> = new Array<Goods>();
+
       // start looping goodsInputResult
       transactionGoodsInput.forEach((e: GoodsInput) => {
-        debugger;
         // get input and output indexes
         const inputItemIndex = inputEntity.goodsStock.findIndex((i: Goods) => i.code == e.code);
         const outputItemIndex = outputEntity.goodsStock.findIndex((i: Goods) => i.code == e.code);
@@ -126,13 +125,26 @@ export const processGoodsInput = (inputEntity: Participant | Person | Cause, out
           throw new Error(`You must have a sufficient quantity of goods of item code:[${e.code}] to complete the transaction'`);
         }
 
-        // init balance, if don't have input balance can occur if is a person, other entities fail in above protection, and must have a balance
-        // if (!('balance' in inputEntity.goodsStock[inputItemIndex])) {
-        //   inputEntity.goodsStock[inputItemIndex].balance = new GenericBalance();
-        // }
-        // if have sufficient quantity proceed discount item quantity in inputEntity.goodsStock, for all entities (if fails in stock for participant or cause it throw error on the above code block)
-        // inputEntity.goodsStock[inputItemIndex].balance.debit += e.quantity;
-        // inputEntity.goodsStock[inputItemIndex].balance.balance -= e.quantity;
+        const resultItemGoods = new Goods(e.id);
+        resultItemGoods.balance = new GenericBalance();
+        // required fields
+        resultItemGoods.code = e.code;
+        resultItemGoods.name = e.name;
+        resultItemGoods.barCode = (e.barCode) ? e.barCode : undefined;
+        resultItemGoods.description = (e.description) ? e.description : undefined;
+        resultItemGoods.tags = (e.tags) ? e.tags : undefined;
+        resultItemGoods.metaData = (e.metaData) ? e.metaData : undefined;
+        resultItemGoods.metaDataInternal = (e.metaDataInternal) ? e.metaDataInternal : undefined;
+        // add date in epoch unix time
+        resultItemGoods.createdDate = new Date().getTime();
+        // assign createdByPersonId
+        resultItemGoods.createdByPersonId = loggedPerson.id;
+// only add credit and balance acts has quantity transacted
+resultItemGoods.balance.credit = e.quantity;
+resultItemGoods.balance.balance = e.quantity;
+
+// now push it resultItemGoods
+resultGoodsTransacted.push(resultItemGoods);
 
         // if don't exists create a new one and push it to outputEntity.goodsStock
         if (inputItemIndex < 0) {
@@ -198,12 +210,9 @@ outputEntity.goodsStock[inputItemIndex].balance.credit += e.quantity;
 outputEntity.goodsStock[inputItemIndex].balance.balance += e.quantity;
         }
       });
-      // const currentNonUsedInGoodsInputResult: Array<FlatConvectorModel<Goods>> = existingCodes.map((e: string) => getEntityGoodsStockItem(outputEntity.goodsStock, e));
-      // resolve promise, combining both arrays
-      // resolve([...goodsOutputResult, ...currentNonUsedInGoodsInputResult]);
       
-      // TODO: resolve something useful
-      resolve();
+      // resolve resultGoodsTransacted
+      resolve(resultGoodsTransacted);
     } catch (error) {
       // reject promise
       reject(error);
