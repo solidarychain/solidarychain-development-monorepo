@@ -1,12 +1,12 @@
 import { Asset, Entity } from '@solidary-network/asset-cc';
-import { appConstants as c } from '@solidary-network/common-cc';
+import { appConstants as c, GoodsInput } from '@solidary-network/common-cc';
 import { getParticipantByIdentity, Participant } from '@solidary-network/participant-cc';
 import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
 import * as yup from 'yup';
 import { ResourceType, TransactionType } from './enums';
 import { Transaction } from './transaction.model';
-import { checkUniqueField, getEntity, processGoodsInput as processGoodsEntityTransfer } from './utils';
+import { checkUniqueField, getEntity, processTransferGoodsInput } from './utils';
 import { Person } from '@solidary-network/person-cc';
 import { Cause } from '@solidary-network/cause-cc';
 
@@ -33,7 +33,7 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
       throw new Error(`There is no person with Id '${transaction.loggedPersonId}'`);
     }
 
-    // protect from transfer from same input has output
+    // protect if any input/output has a missing id ot type
     if (!transaction.input.id || !transaction.output.id || !transaction.input.type || !transaction.output.type) {
       throw new Error('You must supply valid values for transaction id and type on input/output parameters!');
     }
@@ -43,21 +43,32 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
       throw new Error('You can\'t transfer from input to same output entity, you must transfer from input to a different output entity!');
     }
 
-    // protection for quantity when working with TransactionType's
-    if ((transaction.transactionType === TransactionType.TransferAsset || transaction.transactionType === TransactionType.TransferFunds || transaction.transactionType === TransactionType.TransferVolunteeringHours) && !transaction.quantity || transaction.quantity <= 0) {
-      throw new Error(`You must supply a quantity greater than 0 when work with transactionType: [${TransactionType.TransferAsset},${TransactionType.TransferFunds} or ${TransactionType.TransferVolunteeringHours}]`);
+    // protection for quantity when working TransactionType.TransferAsset, we require a positive quantity
+    if ((transaction.transactionType === TransactionType.TransferAsset || transaction.transactionType === TransactionType.TransferFunds || transaction.transactionType === TransactionType.TransferVolunteeringHours)
+      && (!transaction.quantity && transaction.quantity <= 0)) {
+      throw new Error(`You must supply a quantity greater than 0 when work with transactionType: [${TransactionType.TransferAsset}, ${TransactionType.TransferFunds} or ${TransactionType.TransferVolunteeringHours}]`);
     }
 
-    // protection check if TransactionType.TransferGoods has valid ResourceType
-    if (transaction.transactionType === TransactionType.TransferGoods && transaction.resourceType !== ResourceType.GenericGoods)  {
-      throw new Error(`You must use a valid combination of TransactionType: [${TransactionType.TransferGoods}] with a valid ResourceType ex: [${ResourceType.GenericGoods}], or nd have a valid goods item array when work with transactionType`);
-    }
-    // protection check if TransactionType.TransferGoods has valid goods item array
-    if (transaction.transactionType === TransactionType.TransferGoods && transaction.resourceType !== ResourceType.GenericGoods && (!transaction.goods || !Array.isArray(transaction.goods) || transaction.goods.length < 0))  {
-      throw new Error(`You must have a valid goods item array when work with transactionType: [${transaction.transactionType}]`);
+    // protection for currency when working TransactionType.TransferFunds
+    if (transaction.transactionType === TransactionType.TransferFunds && !transaction.currency) {
+      throw new Error(`You must supply a currency when work with transactionType: [${TransactionType.TransferFunds}]`);
     }
 
-    // TODO: protection goods can't have quantity in main body, quantities are in array, and currency to
+    // protection TransactionType.TransferGoods
+    if (transaction.transactionType === TransactionType.TransferGoods) {
+      // protection check if TransactionType.TransferGoods has valid ResourceType
+      if (transaction.resourceType !== ResourceType.GenericGoods) {
+        throw new Error(`You must use a valid combination of TransactionType: [${TransactionType.TransferGoods}] with a valid ResourceType ex: [${ResourceType.GenericGoods}]`);
+      }
+      // protection check if TransactionType.TransferGoods has valid goods item array
+      if (!transaction.goodsInput || !Array.isArray(transaction.goodsInput) || transaction.goodsInput.length <= 0) {
+        throw new Error(`You must have a valid goods item array when work with transactionType: [${transaction.transactionType}]`);
+      }
+      // protection check if when working with TransferGoods and have quantity, we have currency defined (always exists property quantity, is sent in api)
+      if (transaction.quantity > 0 && !transaction.currency) {
+        throw new Error(`Detected transaction quantity without specifying currency, while working with transactionType: [${transaction.transactionType}]`);
+      }
+    }
 
     // protection required loggedPersonId
     if (!transaction.loggedPersonId) {
@@ -117,7 +128,7 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     // TransactionType.TransferGoods
     else if (transaction.transactionType === TransactionType.TransferGoods) {
       // transfer goods from one entity to other entity, and receive final goods to be stored in transaction
-      transaction.goods = await processGoodsEntityTransfer((transaction.input.entity as Participant | Person | Cause), (transaction.output.entity as Participant | Person | Cause), transaction.goodsInput, loggedPerson);
+      transaction.goods = await processTransferGoodsInput((transaction.input.entity as Participant | Person | Cause), (transaction.output.entity as Participant | Person | Cause), transaction.goodsInput, loggedPerson);
       // save references modified in processGoodsInput
       (transaction.input.entity as Participant | Person | Cause).save();
       (transaction.output.entity as Participant | Person | Cause).save();

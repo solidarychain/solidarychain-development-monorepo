@@ -35,4 +35,6 @@ export const currencySchema = yup
   // test-name is used by Yup internally
   .test('test-name', 'iso 4217 currency code is required',
     (value) => (currencyCodesISO4217.indexOf(value) > 0))
-  .required();
+    .nullable();
+  // not it can be null, ex when work with volunteeringHours for ex
+  // .required();

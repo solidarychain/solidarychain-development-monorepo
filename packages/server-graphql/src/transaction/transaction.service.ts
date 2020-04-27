@@ -16,7 +16,8 @@ export class TransactionService {
       const newId: string = (data.id) ? data.id : uuid();
       // init convector model goods, map input to convectorModel input
       // and add if not sent by user, some generated uuid's to goods items, in case we need to create new items in goodsStock arrays, this way we send preGenerated uuid's from graphql
-      const goodsInput: GoodsInputConvectorModel[] = data.goods.map((e: GoodsInput) => ({
+      // require to use ?, data.goods can be undefined
+      const goodsInput: GoodsInputConvectorModel[] = data.goods?.map((e: GoodsInput) => ({
         ...e,
         id: (e.id) ? e.id : uuid(),
       }));

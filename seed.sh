@@ -217,7 +217,7 @@ PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"input\":{\"id\":\"${INPUT_ID}\
 npx hurl invoke ${CHAINCODE_NAME} cause_create "${PAYLOAD}"
 # npx hurl invoke ${CHAINCODE_NAME} cause_get ${ID}
 
-# create transaction : gov to john 1.11
+# create funds transaction : gov to john 1.11
 ID=acef70e5-cd25-4533-8392-9fa57e43cf32
 TRANSACTION_TYPE=TRANSFER_FUNDS
 RESOURCE_TYPE=FUNDS
@@ -235,7 +235,7 @@ PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourc
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u user1
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u user1
 
-# transaction with cause
+# create funds transaction : Cause003 to john 1.11
 ID=acef70e5-cd25-4533-8392-9fa57e43cf33
 INPUT_TYPE=network.solidary.convector.cause
 INPUT_ID=acef70e5-cd25-4533-8392-9fa57e43cf69
@@ -244,6 +244,45 @@ PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourc
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" # -u admin / if use "Cant find a participant with that fingerprint"
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
+
+# create volunteeringHours transaction : john 10hours to Cause001
+ID=acef70e5-cd25-4533-8392-9fa57e43cf34
+TRANSACTION_TYPE=TRANSFER_VOLUNTEERING_HOURS
+RESOURCE_TYPE=VOLUNTEERING_HOURS
+INPUT_TYPE=network.solidary.convector.person
+INPUT_ID=${JOHN_ID}
+OUTPUT_TYPE=network.solidary.convector.cause
+OUTPUT_ID=acef70e5-cd25-4533-8392-9fa57e43cf11
+QUANTITY=10
+LOCATION=10.1890144,-28.5171909
+TAGS="[\"red\", \"blue\"]"
+LOGGED_PERSON_ID=${JOHN_ID}
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\",\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"}}"
+# echo $PAYLOAD  | jq
+npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u user1
+# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u user1
+
+# create volunteeringHours transaction : jane 20hours to Cause002
+ID=acef70e5-cd25-4533-8392-9fa57e43cf35
+INPUT_TYPE=network.solidary.convector.person
+INPUT_ID=${JANE_ID}
+OUTPUT_TYPE=network.solidary.convector.cause
+OUTPUT_ID=acef70e5-cd25-4533-8392-9fa57e43cf12
+QUANTITY=20
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\",\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"}}"
+# echo $PAYLOAD  | jq
+npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u user1
+# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u user1
+
+# create volunteeringHours transaction : jane 20hours to Cause002
+ID=acef70e5-cd25-4533-8392-9fa57e43cf36
+INPUT_TYPE=network.solidary.convector.person
+INPUT_ID=${JANE_ID}
+QUANTITY=20
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\",\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"}}"
+# echo $PAYLOAD  | jq
+npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u user1
+# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u user1
 
 # create asset with all data (filter with date=1582414657)
 ID=acef70e5-cd25-4533-8392-1fa57e430001
@@ -315,7 +354,7 @@ PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourc
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}"
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
 
-# transaction user with minimal required data back to johndoe without minimal transaction data, ex without 
+# transaction asset user with minimal required data back to johndoe without minimal transaction data
 ID=acef70e5-cd25-4533-8392-9fa57e43cf62
 MINI_ID=4ea88521-031b-4279-9165-9c10e1839053
 INPUT_ID=${MINI_ID}
@@ -326,6 +365,44 @@ PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourc
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}"
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
+
+
+
+
+
+
+
+# removed protection Detected transaction quantity while working with transactionType: [TRANSFER_GOODS]"}
+# to work with payed goods transaction
+
+# TODO: MUST SUM or CREDIT OUTPUT_ID with AMOUNT of goods transfer
+
+
+
+# transaction of goods: person johnDoe to cause001: with a FEE of 100eur
+ID=acef70e5-cd25-4533-8392-9fa57e43cf93
+TRANSACTION_TYPE=TRANSFER_GOODS
+RESOURCE_TYPE=GENERIC_GOODS
+INPUT_TYPE=network.solidary.convector.person
+INPUT_ID=${JOHN_ID}
+OUTPUT_TYPE=network.solidary.convector.cause
+OUTPUT_ID=acef70e5-cd25-4533-8392-9fa57e43cf11
+QUANTITY=100
+CURRENCY=EUR
+LOGGED_PERSON_ID=${JANE_ID}
+GOODS_INPUT='[{"id":"80450045-d20d-4cdd-b937-c9bb46a48581","code": "008","barCode": "ean008","name": "name008","description": "description008","quantity": 200},{"id":"80450045-d20d-4cdd-b937-c9bb46a48582","code": "009","barCode": "ean009","name": "name009","description": "description009","quantity": 900}]'
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"goodsInput\":${GOODS_INPUT},\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
+# echo $PAYLOAD  | jq
+npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}"
+# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
+
+
+
+# transaction of goods: person to cause 2
+
+# transaction of goods: person to cause 3
+
+# transaction of goods: cause to person 1: empty stock
 
 # todo add INDEXES to complex filters
 # complex filters

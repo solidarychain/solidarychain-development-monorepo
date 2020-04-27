@@ -1,9 +1,7 @@
-import { FlatConvectorModel } from '@worldsibu/convector-core';
-import { appConstants as c, GoodsInput, Goods, GenericBalance } from '@solidary-network/common-cc';
+import { Cause } from '@solidary-network/cause-cc';
+import { appConstants as c, EntityType, GenericBalance, Goods, GoodsInput } from '@solidary-network/common-cc';
 import { Participant } from '@solidary-network/participant-cc';
 import { Person } from '@solidary-network/person-cc';
-import { Cause } from '@solidary-network/cause-cc';
-import { EntityType } from '@solidary-network/common-cc';
 import { Transaction } from './transaction.model';
 
 // interface Entity and getEntity() function duplicated with asset, cause and transaction, to prevent circular dependencies, 
@@ -64,35 +62,32 @@ export const checkUniqueField = async (fieldName: string, fieldValue: string, re
   }
 }
 
-// inner function to get item from input/output entity models
-const getEntityGoodsStockItem = (goodsStock: Array<FlatConvectorModel<Goods>>, code: string): FlatConvectorModel<Goods> => {
-  return goodsStock.find((e: Goods) => e.code === code);
-};
-
-// helper function to get entity model from input/output entity
-export const getEntityModel = (type: string, id: string): Promise<Participant | Person | Cause> => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      let entityModel: Participant | Person | Cause;
-      switch (type) {
-        case c.CONVECTOR_MODEL_PATH_PARTICIPANT:
-          entityModel = await Participant.getById(id);
-          break;
-        case c.CONVECTOR_MODEL_PATH_PERSON:
-          entityModel = await Person.getById(id);
-          break;
-        case c.CONVECTOR_MODEL_PATH_CAUSE:
-          entityModel = await Cause.getById(id);
-          break;
-        default:
-          throw new Error(`Unknown entity type '${type}'`);
-      }
-      resolve(entityModel);
-    } catch (error) {
-      reject(error);
-    };
-  })
-};
+/**
+ * common helper function to be used to create new good items in processGoodsInput function
+ * this function will be called when create goodsItem fo result, for inputEntity and outputEntity 
+ * when they don't have yet, the goods item in goodsStock, we need to create one and add it to the array
+ * after we create the newItemGoods based on current goodsInput element, we just need to add balance and push to final arrays
+ * @param goodsInput 
+ * @param loggedPersonId 
+ */
+const newGoodsItem = (goodsInput: GoodsInput, loggedPerson: Person): Goods => {
+  const newItemGoods = new Goods(goodsInput.id);
+  newItemGoods.balance = new GenericBalance();
+  // required fields
+  newItemGoods.code = goodsInput.code;
+  newItemGoods.name = goodsInput.name;
+  newItemGoods.barCode = (goodsInput.barCode) ? goodsInput.barCode : undefined;
+  newItemGoods.description = (goodsInput.description) ? goodsInput.description : undefined;
+  newItemGoods.tags = (goodsInput.tags) ? goodsInput.tags : undefined;
+  newItemGoods.metaData = (goodsInput.metaData) ? goodsInput.metaData : undefined;
+  newItemGoods.metaDataInternal = (goodsInput.metaDataInternal) ? goodsInput.metaDataInternal : undefined;
+  // add date in epoch unix time
+  newItemGoods.createdDate = new Date().getTime();
+  // assign createdByPersonId
+  newItemGoods.createdByPersonId = loggedPerson.id;
+  // return the new goods object
+  return newItemGoods;
+}
 
 /**
  * this process goodsInput from inputEntity to outputEntity
@@ -101,10 +96,11 @@ export const getEntityModel = (type: string, id: string): Promise<Participant | 
  * @param transactionGoodsInput payload array of goods to add/credit or subtract/debit
  * @param loggedPerson the person that sent the transaction
  */
-export const processGoodsInput = (inputEntity: Participant | Person | Cause, outputEntity: Participant | Person | Cause, transactionGoodsInput: Array<GoodsInput>, loggedPerson: Person)
+export const processTransferGoodsInput = (inputEntity: Participant | Person | Cause, outputEntity: Participant | Person | Cause, transactionGoodsInput: Array<GoodsInput>, loggedPerson: Person)
   : Promise<Array<Goods>> => {
   return new Promise(async (resolve, reject) => {
     try {
+      // init resultGoodsTransacted
       const resultGoodsTransacted: Array<Goods> = new Array<Goods>();
 
       // start looping goodsInputResult
@@ -121,61 +117,35 @@ export const processGoodsInput = (inputEntity: Participant | Person | Cause, out
         // protection valid stock balance: if is a cause or participant must contemplate the stock in balance, persons don't have stock balance, can go to negative value
         if (inputEntity.type === c.CONVECTOR_MODEL_PATH_PARTICIPANT || inputEntity.type === c.CONVECTOR_MODEL_PATH_CAUSE) {
           // protection for stock balance
-          if (!inputItemIndex || inputEntity.goodsStock[inputItemIndex].balance.balance < e.quantity)
-          throw new Error(`You must have a sufficient quantity of goods of item code:[${e.code}] to complete the transaction'`);
+          if (!inputItemIndex || e.quantity > inputEntity.goodsStock[inputItemIndex].balance.balance)
+            throw new Error(`You must have a sufficient quantity of goods of item code:[${e.code}] to complete the transaction'`);
         }
 
-        const resultItemGoods = new Goods(e.id);
-        resultItemGoods.balance = new GenericBalance();
-        // required fields
-        resultItemGoods.code = e.code;
-        resultItemGoods.name = e.name;
-        resultItemGoods.barCode = (e.barCode) ? e.barCode : undefined;
-        resultItemGoods.description = (e.description) ? e.description : undefined;
-        resultItemGoods.tags = (e.tags) ? e.tags : undefined;
-        resultItemGoods.metaData = (e.metaData) ? e.metaData : undefined;
-        resultItemGoods.metaDataInternal = (e.metaDataInternal) ? e.metaDataInternal : undefined;
-        // add date in epoch unix time
-        resultItemGoods.createdDate = new Date().getTime();
-        // assign createdByPersonId
-        resultItemGoods.createdByPersonId = loggedPerson.id;
-// only add credit and balance acts has quantity transacted
-resultItemGoods.balance.credit = e.quantity;
-resultItemGoods.balance.balance = e.quantity;
-
-// now push it resultItemGoods
-resultGoodsTransacted.push(resultItemGoods);
+        // always create a goods item to add to result, this will be resolved in promise to be stored in transaction
+        const resultItemGoods = newGoodsItem(e, loggedPerson);
+        // only add credit and balance acts has quantity transacted
+        resultItemGoods.balance.credit = e.quantity;
+        resultItemGoods.balance.balance = e.quantity;
+        // now push it resultItemGoods
+        resultGoodsTransacted.push(resultItemGoods);
 
         // if don't exists create a new one and push it to outputEntity.goodsStock
         if (inputItemIndex < 0) {
           // protection required fields, only when are create a new item in goodsStock
-          if (!e.code || !e.name) {
-            throw new Error(`You must supply a code and name when create new goods'`);
+          if (!e.id || !e.code || !e.name) {
+            throw new Error(`You must supply a id, code and name when create new goods'`);
           }
           // init a new goodsObject with id/uuid (uuid is sent in graphql, and if is a new item we use it here)
-          const newItemGoods = new Goods(e.id);
-          newItemGoods.balance = new GenericBalance();
-          // required fields
-          newItemGoods.code = e.code;
-          newItemGoods.name = e.name;
-          newItemGoods.barCode = (e.barCode) ? e.barCode : undefined;
-          newItemGoods.description = (e.description) ? e.description : undefined;
-          newItemGoods.tags = (e.tags) ? e.tags : undefined;
-          newItemGoods.metaData = (e.metaData) ? e.metaData : undefined;
-          newItemGoods.metaDataInternal = (e.metaDataInternal) ? e.metaDataInternal : undefined;
-          // add date in epoch unix time
-          newItemGoods.createdDate = new Date().getTime();
-          // assign createdByPersonId
-          newItemGoods.createdByPersonId = loggedPerson.id;
-// debit balance properties
-newItemGoods.balance.debit += e.quantity;
-newItemGoods.balance.balance -= e.quantity;
-// push it to inputEntity.goodsStock
-inputEntity.goodsStock.push(newItemGoods);
+          const newItemGoods = newGoodsItem(e, loggedPerson);
+          // debit balance properties
+          newItemGoods.balance.debit += e.quantity;
+          newItemGoods.balance.balance -= e.quantity;
+          // push it to inputEntity.goodsStock
+          inputEntity.goodsStock.push(newItemGoods);
         } else {
-// if already exists, work in it's balance
-inputEntity.goodsStock[inputItemIndex].balance.debit += e.quantity;
-inputEntity.goodsStock[inputItemIndex].balance.balance -= e.quantity;
+          // if already exists, work in it's balance
+          inputEntity.goodsStock[inputItemIndex].balance.debit += e.quantity;
+          inputEntity.goodsStock[inputItemIndex].balance.balance -= e.quantity;
         }
 
         // if don't exists create a new one and push it to outputEntity.goodsStock
@@ -185,32 +155,18 @@ inputEntity.goodsStock[inputItemIndex].balance.balance -= e.quantity;
             throw new Error(`You must supply a code and name when create new goods'`);
           }
           // init a new goodsObject with id/uuid (uuid is sent in graphql, and if is a new item we use it here)
-          const newItemGoods = new Goods(e.id);
-          newItemGoods.balance = new GenericBalance();
-          // required fields
-          newItemGoods.code = e.code;
-          newItemGoods.name = e.name;
-          newItemGoods.barCode = (e.barCode) ? e.barCode : undefined;
-          newItemGoods.description = (e.description) ? e.description : undefined;
-          newItemGoods.tags = (e.tags) ? e.tags : undefined;
-          newItemGoods.metaData = (e.metaData) ? e.metaData : undefined;
-          newItemGoods.metaDataInternal = (e.metaDataInternal) ? e.metaDataInternal : undefined;
-          // add date in epoch unix time
-          newItemGoods.createdDate = new Date().getTime();
-          // assign createdByPersonId
-          newItemGoods.createdByPersonId = loggedPerson.id;
-// credit balance properties
-newItemGoods.balance.credit += e.quantity;
-newItemGoods.balance.balance += e.quantity;
-// push it to outputEntity.goodsStock
-outputEntity.goodsStock.push(newItemGoods);
+          const newItemGoods = newGoodsItem(e, loggedPerson);
+          // credit balance properties
+          newItemGoods.balance.credit += e.quantity;
+          newItemGoods.balance.balance += e.quantity;
+          // push it to outputEntity.goodsStock
+          outputEntity.goodsStock.push(newItemGoods);
         } else {
           // if already exists, work in it's balance
-outputEntity.goodsStock[inputItemIndex].balance.credit += e.quantity;
-outputEntity.goodsStock[inputItemIndex].balance.balance += e.quantity;
+          outputEntity.goodsStock[outputItemIndex].balance.credit += e.quantity;
+          outputEntity.goodsStock[outputItemIndex].balance.balance += e.quantity;
         }
       });
-      
       // resolve resultGoodsTransacted
       resolve(resultGoodsTransacted);
     } catch (error) {
