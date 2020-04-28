@@ -348,7 +348,7 @@ add type to person to cause new, even is always a person is more clear for all
 
 remove from models
 
-add validation to goods models, ex barcode
+add validation to goods models, ex barCode
 
 must init 
 fundsBalance
