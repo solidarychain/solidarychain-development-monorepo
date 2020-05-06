@@ -221,16 +221,13 @@ person.participant = gov;
 - [X] Add createdByPersonId to all models
 - [X] edit all models, add ambassadors to cause and participants, and asset todo
 - [X] Remove owner from ambassador array, is used, NOT NEED
+
 - [-] finish transfers when are one of the ambassadors in asset, cause and participant
+
 - [ ] transfer amount's, and transferable types ex we can't transfer when amount ex 1000 -100 = 900
   - [ ]  add totals from every type ex currently we can only transfer UnitType.Funds from participants, person and causes if has amount, if is owner or ambassador
   - [ ]  must discount from one and add to other, maybe only add to other because we dont know how much one person have, only causes and participants have amount?
   - [ ]  convert all currencies to EUR before add to ledger, store original currency and cambio used ex currencyOrg: USD, quantityOrg: 1.45, cambio: 1.12
-
-- [ ] Quantity start be teh quantity like how many items, and amount is the totalAmount of the transfer
-- [ ] Add unitPrice
-
-- [ ] Model Bag of Googs with EAN, name, quantity, priceUnit, amount, and a global for Totals, like a JsonObejct
 
 https://github.com/apache/couchdb/issues/1254
 {
@@ -252,28 +249,28 @@ https://github.com/apache/couchdb/issues/1254
 }
 Error running query. Reason: (invalid_key) Invalid key aggregator for this request.
 
-
-
-- [ ] update Person with NIF with extended citizenCard data
+- [ ] upsert Person with NIF with extended citizenCard data
 - [ ] Update Models, add subscription to all models
-
-
-- [ ] Add updatedByPersonId to all models
-- [ ] Add updatedDate to all models
+  - [ ] Add updatedByPersonId to all models
+  - [ ] Add updatedDate to all models
 
 improve transferes, to use all modes
 
+add the 9 transfer types to seed
 person > person
-person > cause
 person > participant
-
-cause > person
+person > cause
 participant > person
+participant > participant
+participant > cause
+cause > person
+cause > participant
+cause > cause
 
 protections
-asset: only ambassador or OWNER can transfer resources from causes to ENTITIES
-cause: only ambassador can transfer resources from causes to ENTITIES
-participant: only ambassador can transfer resources from participant to ENTITIES
+- [-] asset: only ambassador or OWNER can transfer resources from causes to ENTITIES
+- [-] cause : only ambassador can transfer resources from causes to ENTITIES
+- [-] participant : only ambassador can transfer resources from participant to ENTITIES
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -363,3 +360,152 @@ participant.goodsStock = new Array<Goods>()
 - [-] goods validation
 - [-] cc protections for empty array of goods, miss quantity and other required fields on itens in array, try use Goods and GraqphQL validation FIRST is required fields
 - [- ] create function check if good exists in entity, and if not create, aiexists increment credit and balance 
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+2020-05-05 22:59:44
+
+- [-] entity(a) to entity(b)
+  - a decrement its goodsStock
+  - b increment its goodsStock
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+2020-05-06 11:51:34
+
+running in debug mode error#1
+
+Error: Failed to load gRPC binary module because it was not installed for the current system
+Expected directory: node-v64-linux-x64-glibc
+Found: [node-v59-linux-x64-glibc]
+This problem can often be fixed by running "npm rebuild" on the current system
+Original error: Cannot find module '/media/mario/Storage/Documents/Development/@Solidary.Network/solidarynetwork-development-monorepo/chaincode-solidary-network-chaincode/node_modules/fabric-shim/node_modules/grpc/src/node/extension_binary/node-v64-linux-x64-glibc/grpc_node.node'
+
+$ cd /media/mario/Storage/Documents/Development/@Solidary.Network/solidarynetwork-development-monorepo/chaincode-solidary-network-chaincode/node_modules/fabric-shim/
+$ npm rebuild
+
+fixs it? YES move to fixes
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+2020-05-06 11:51:43
+
+running in debug mode error#2
+npm WARN @worldsibu/convector-adapter-fabric@1.3.8 requires a peer of fabric-ca-client@>=1.1.2 but none is installed. You must install peer dependencies yourself.
+
+$ ls node_modules/@worldsibu/convector-adapter-fabric -la
+total 24
+drwxrwxr-x  2 mario mario  4096 May  6 10:51 .
+drwxrwxr-x 18 mario mario  4096 May  6 11:51 ..
+-rw-rw-r--  1 mario mario 11566 May  4 01:49 LICENSE.txt
+-rw-rw-r--  1 mario mario  2816 May  4 01:49 package.json
+
+EMPTY PACKAGE?
+
+won't work
+ADD_PACKAGE=@worldsibu/convector-adapter-fabric@1.3.8
+TO_PACKAGE=@solidary-network/server-graphql
+npx lerna add ${ADD_PACKAGE} --scope ${TO_PACKAGE}
+
+fix 
+
+$ cp /tmp/foo/node_modules/@worldsibu/convector-adapter-
+fabric/dist/ node_modules/@worldsibu/convector-adapter-fabric/ -r
+
+$ npm rebuild
+
+done
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+npm i
+../../node_modules/jest-diff/build/diffLines.d.ts:8:34 - error TS1005: ';' expected.
+8 import type { DiffOptions } from './types';
+fix :https://github.com/facebook/jest/issues/9703
+$ tsc -v
+Version 3.4.5
+It looks like you need typescript > 3.8.0
+$ npx tsc --version
+Version 3.8.3
+
+remove
+		"@types/jest-diff": {
+			"version": "24.3.0",
+			"resolved": "https://registry.npmjs.org/@types/jest-diff/-/jest-diff-24.3.0.tgz",
+			"integrity": "sha512-vx1CRDeDUwQ0Pc7v+hS61O1ETA81kD04IMEC0hS1kPyVtHDdZrokAvpF7MT9VI/fVSzicelUZNCepDvhRV1PeA==",
+			"requires": {
+				"jest-diff": "*"
+			}
+		},
+from
+/media/mario/Storage/Documents/Development/@Solidary.Network/solidarynetwork-development-monorepo/package-lock.json
+
+and to finish
+
+npm i 
+
+fixed
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+2020-05-06 12:55:22
+
+npm run cc:start:debug -- ${CHAINCODE_NAME}
+
+Original error: Cannot find module '/media/mario/Storage/Documents/Development/@Solidary.Network/solidarynetwork-development-monorepo/chaincode-solidary-network-chaincode/node_modules/fabric-shim/node_modules/grpc/src/node/extension_binary/node-v57-linux-x64-glibc/grpc_node.node'
+
+npm rebuild
+
+fixed, but no way to stop at breakpoints yet
+
+FIX BREAKPOINT
+
+ending ERROR message back to peer  
+(node:25900) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 uncaughtException listeners added. Use emitter.setMaxListeners() to increase limit
+Found config in package [ { name: '@solidary-network/common-cc',
+
+
+$ npm run env:restart
+
+> @solidary-network/lerna-monorepo@0.1.0 env:restart /tmp/sn/solidarynetwork-development-monorepo
+> hurl new
+
+/usr/local/lib/node_modules/@worldsibu/hurley/node_modules/grpc/src/grpc_extension.js:55
+    throw error;
+    ^
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Error: Failed to load gRPC binary module because it was not installed for the current system
+Expected directory: node-v57-linux-x64-glibc
+Found: [node-v59-linux-x64-glibc]
+This problem can often be fixed by running "npm rebuild" on the current system
+Original error: Cannot find module '/usr/local/lib/node_modules/@worldsibu/hurley/node_modules/grpc/src/node/extension_binary/node-v57-linux-x64-glibc/grpc_node.node'
+
+$ cd /usr/local/lib/node_modules/@worldsibu/hurley/node_modules/
+$ npm rebuild
+
+fixed
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+2020-05-06 20:30:16
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+- [] in // protection valid stock balance, check if casue or participant have stock
+
+
+move 
+
+check script `copy:indexes`
+
+couchdb/indexes/name-json-index.json
+couchdb/indexes/quantity-json-index.json
+couchdb/indexes/username-json-index.json
+
+to ./indexes
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+

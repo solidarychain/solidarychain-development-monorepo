@@ -17,6 +17,8 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     @Param(Transaction)
     transaction: Transaction,
   ) {
+    // TODO: remove
+    debugger;
     // use '' to prevent undefined when empty
     let debugMessage: string = '';
 
@@ -64,9 +66,9 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
       if (!transaction.goodsInput || !Array.isArray(transaction.goodsInput) || transaction.goodsInput.length <= 0) {
         throw new Error(`You must have a valid goods item array when work with transactionType: [${transaction.transactionType}]`);
       }
-      // protection check if when working with TransferGoods and have quantity, we have currency defined (always exists property quantity, is sent in api)
-      if (transaction.quantity > 0 && !transaction.currency) {
-        throw new Error(`Detected transaction quantity without specifying currency, while working with transactionType: [${transaction.transactionType}]`);
+      // protection if invalid properties are presented when working with TransferGoods
+      if (transaction.quantity || transaction.currency || transaction.assetId ) {
+        throw new Error(`Detected invalid properties quantity, currency defined or asset when working with transactionType: [${transaction.transactionType}]!`);
       }
     }
 
@@ -83,6 +85,16 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     // assign input/output
     transaction.input.entity = await getEntity(transaction.input.type, transaction.input.id);
     transaction.output.entity = await getEntity(transaction.output.type, transaction.output.id);
+
+    // check if is a valid input and output form entity
+    if (!transaction.input.entity) {
+      const entityType: string = transaction.input.type.replace(`${c.CONVECTOR_MODEL_PATH_PREFIX}.`,'');
+      throw new Error(`There is no entity of type '${entityType}' with Id '${transaction.input.id}'`);
+    }
+    if (!transaction.output.entity) {
+      const entityType: string = transaction.output.type.replace(`${c.CONVECTOR_MODEL_PATH_PREFIX}.`,'');
+      throw new Error(`There is no entity of type '${entityType}' with Id '${transaction.output.id}'`);
+    }
 
     // TransactionType.TransferAsset
 

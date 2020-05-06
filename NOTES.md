@@ -203,7 +203,7 @@ $ TO_PACKAGE=@solidary-network/transaction-cc
 $ npx lerna add ${ADD_PACKAGE} --scope ${TO_PACKAGE}
 
 # $ ADD_PACKAGE=@solidary-network/common-cc
-$ ADD_PACKAGE=type-graphql:^0.17.6
+$ ADD_PACKAGE=@worldsibu/convector-adapter-fabric@1.3.8
 $ TO_PACKAGE=@solidary-network/server-graphql
 $ npx lerna add ${ADD_PACKAGE} --scope ${TO_PACKAGE}
 ```

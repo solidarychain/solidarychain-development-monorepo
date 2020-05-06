@@ -114,10 +114,10 @@ export const processTransferGoodsInput = (inputEntity: Participant | Person | Ca
           throw new Error(`You must supply a positive quantity in item code: [${e.code}]'`);
         }
 
-        // protection valid stock balance: if is a cause or participant must contemplate the stock in balance, persons don't have stock balance, can go to negative value
+        // protection valid stock balance: if input is a cause or participant, must contemplate the stock in balance, persons don't have stock balance and can go to negative values
         if (inputEntity.type === c.CONVECTOR_MODEL_PATH_PARTICIPANT || inputEntity.type === c.CONVECTOR_MODEL_PATH_CAUSE) {
-          // protection for stock balance
-          if (!inputItemIndex || e.quantity > inputEntity.goodsStock[inputItemIndex].balance.balance)
+          // protection for stock balance, compare with -1 (not found), else index 0(first index) gives a false negative
+          if (inputItemIndex === -1|| e.quantity > inputEntity.goodsStock[inputItemIndex].balance.balance)
             throw new Error(`You must have a sufficient quantity of goods of item code:[${e.code}] to complete the transaction'`);
         }
 
