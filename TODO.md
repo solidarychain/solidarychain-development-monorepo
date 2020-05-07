@@ -1,5 +1,19 @@
 # ToDo
 
+## Chaincode's
+
+- [-] getAll must have pagination, with some limits
+- [-] receive hyperledger events
+- [-] upsert person with citizenCard data, ex when person is registred only with fiscalNumber for ex
+- [-] change profile > username, password, email, phone, mobilePhone, district, coordinates, reputation(object), personalInfo, internalInfo
+- [X] `packages/server-graphql/src/participant/models/x509Identities.model.ts` to `packages/server-graphql/src/common/models`
+- [-] protection only ambassadors can transfer goods, money or assets from participants and causes to other entities
+- [-] add email to participants and causes
+- [-] convert all currencies to EUR before add to ledger, store original currency and exchange rate used ex currencyOrg: USD, quantityOrg: 1.45, cambio: 1.12
+- [-] protection to transfer amount's, for now we don't have access to entity wallets, we only balance what is transfer nothing more
+- [-] update participant/person, add/remove ambassadors add by NIF/FiscalNumber
+
+
 ## Rest API
 
 - [D] Swagger Docs
@@ -41,7 +55,7 @@
 all methods cc
   participant
     [X] register
-    [ ] changeIdentity
+    [ ] changeIdentity /working but must have a user with wallet and abac / attributes ADMIN
     [X] get
     [X] getAll
   person
@@ -56,161 +70,25 @@ auth
   [x] login mutation > jwt
   [x] authentication/authorization
 
-receive transaction id, to store in neo4j
+## Neo4J / GraphQL Data Layer
+
+- [] receive transaction id, to store in neo4j, with block id
 
 ## Todo: NOTES and README
 
 - [-] Finish `packages/server-rest/README.md`
-- [-] Replace all Curls `curl http://localhost:3000/participant/gov` with auth and https, ex curl -k `https://localhost:3443/api/participant/gov`
-- [-] Checkout whole repo and test all in other folder without dependencies etc
-- [-] all curls add /api/, -h token
-- [-] all curls all hurley invoke equivalent
-
 - [X] Protect from create Person with same username, fiscalNumber and Id
 - [X] create user only with fiscalNumber
 
+## InfraStructure: Servers
 
-start transaction module
-mutations
-	update person with citizenCard data
-	change profile > username, password, email, phone, mobilePhone, district, coordinates, reputation(object), personalInfo, internalInfo
-
-
-GENERATE solidary.network certificates
-and use it in project graphqlserver etc
-change localhost to domain
-
-
-
-packages/server-graphql/src/participant/models/x509Identities.model.ts
-move to
-packages/server-graphql/src/common/models
-
-
-  // public transactionType: TransactionType;
-  // public resourceType: ResourceType;
-  // public input: Entity;
-  // public output: Entity;
-  // public quantity: number;
-  // public currency: string;
-  // public location: string;
-  // public metaData: any;
-  // public metaDataInternal: any;
-  // public created: number;
-
-- [-] add CREATED to Person and all models, change to createdDate
-- [-] rename `common` to `common-cc`
-- [-] add cause graphql module
+- [ ] GENERATE solidary.network and solidarychain.com let's encrypt certificates
+- [ ] use certificates in graphql api server, and react frontend
 
 ## React FrontEnd
 
 - [-] Clean state after logout
-
-
-
-
-
-
-
-change created to createdDate
-
-some class don't have public
-
-and add
-
-
-
-mail dont have validate rule
-
-
-graphql models dont have any validation?
-
-add participant, identities and created, to all gql queries and mutations
-
-change common to common-cc
-
-rename file x090 identities para nao dar confusao ex um e -cc
-
-
-use same 
-  @Field()
-  @IsDefined()
-  public participant: Participant;
-in all
-
-
-
-return good message when user not exists etc
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-----------------------------------------------------------------------
-
-add checkDuplicatedField to all models
-checkDuplicatedField('code', code);
-checkDuplicatedField('name', name);
-
-
-
-participant validate chaincode and throw if with same name and code exists, currently it pass
-   check if participant with same code exists and throw ex
-
-
-transfer PROPTECTION cant transfer when input and output is the same
-
-fix public async ALL getAll(), getAll suffer from the same problem is get, dont use participants :( get all records without separate by participants
-
-
-change username to ownerUsername
-validations of transfers like mus be the owner, and owner cannot tranfer to is self
-particpiantByCode
-
-
-BUG, or leave it this way: Asset.name is not unique, we can create Assets with same name
-
-
-HOW TO USE ROLES, pass ROLES LIKE USER TO TRANSFER ASSETS
-
-
-
-
-
-
-todo transfer assets to Entity, Participants, and Causes
-
-
-
-
-add changeIdentity GraphQL stuff
-participantChangeIdentity[TODO]
-
-
-FOR NOW LEAVE IT
-there is no need to store this, leave it commented
-REMOVE all model.participant = 
-ex
-person.participant = gov;
-
-
-
-
-
+- [-] On enter page Refresh token....console errrors
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -221,13 +99,8 @@ person.participant = gov;
 - [X] Add createdByPersonId to all models
 - [X] edit all models, add ambassadors to cause and participants, and asset todo
 - [X] Remove owner from ambassador array, is used, NOT NEED
-
 - [-] finish transfers when are one of the ambassadors in asset, cause and participant
 
-- [ ] transfer amount's, and transferable types ex we can't transfer when amount ex 1000 -100 = 900
-  - [ ]  add totals from every type ex currently we can only transfer UnitType.Funds from participants, person and causes if has amount, if is owner or ambassador
-  - [ ]  must discount from one and add to other, maybe only add to other because we dont know how much one person have, only causes and participants have amount?
-  - [ ]  convert all currencies to EUR before add to ledger, store original currency and cambio used ex currencyOrg: USD, quantityOrg: 1.45, cambio: 1.12
 
 https://github.com/apache/couchdb/issues/1254
 {
@@ -474,24 +347,6 @@ $ npm run env:restart
     throw error;
     ^
 
---------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-Error: Failed to load gRPC binary module because it was not installed for the current system
-Expected directory: node-v57-linux-x64-glibc
-Found: [node-v59-linux-x64-glibc]
-This problem can often be fixed by running "npm rebuild" on the current system
-Original error: Cannot find module '/usr/local/lib/node_modules/@worldsibu/hurley/node_modules/grpc/src/node/extension_binary/node-v57-linux-x64-glibc/grpc_node.node'
-
-$ cd /usr/local/lib/node_modules/@worldsibu/hurley/node_modules/
-$ npm rebuild
-
-fixed
-
---------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-2020-05-06 20:30:16
-
---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 - [] in // protection valid stock balance, check if casue or participant have stock

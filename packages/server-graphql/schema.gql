@@ -19,7 +19,7 @@ input AddPersonAttributeInput {
 type Asset {
   id: ID!
   name: String!
-  description: String!
+  description: String
   assetType: String!
   ambassadors: [String!]
   owner: EntityResult!

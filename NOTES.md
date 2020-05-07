@@ -83,6 +83,7 @@
   - [Problem on create person can't find participant fingerprint? comes from `this.sender`](#problem-on-create-person-cant-find-participant-fingerprint-comes-from-thissender)
   - [Problem again with "Cant find a participant with that fingerprint"](#problem-again-with-%22cant-find-a-participant-with-that-fingerprint%22)
   - [Problem `(node:32043) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'curve' of undefined`](#problem-node32043-unhandledpromiserejectionwarning-typeerror-cannot-read-property-curve-of-undefined)
+  - [Error: Failed to load gRPC binary module because it was not installed for the current system](#error-failed-to-load-grpc-binary-module-because-it-was-not-installed-for-the-current-system)
 
 This is a simple NestJs starter, based on above links, I only extended it with a few things like **swagger api**, **https**, **jwt**, and other stuff, thanks m8s
 
@@ -3098,3 +3099,19 @@ restarted network, and fails create cause, but after a while it start to work, u
 4. Again Register and enroll users in the network.
 
 > NOTES: just restart netowork, and move on
+
+## Error: Failed to load gRPC binary module because it was not installed for the current system
+
+```
+Error: Failed to load gRPC binary module because it was not installed for the current system
+Expected directory: node-v57-linux-x64-glibc
+Found: [node-v59-linux-x64-glibc]
+This problem can often be fixed by running "npm rebuild" on the current system
+Original error: Cannot find module '/usr/local/lib/node_modules/@worldsibu/hurley/node_modules/grpc/src/node/extension_binary/node-v57-linux-x64-glibc/grpc_node.node'
+```
+
+```shell
+# fix
+$ cd /usr/local/lib/node_modules/@worldsibu/hurley/node_modules/
+$ npm rebuild
+```

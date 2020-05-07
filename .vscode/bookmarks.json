@@ -3,27 +3,27 @@
 		"path": "$ROOTPATH$/NOTES.md",
 		"bookmarks": [
 			{
-				"line": 124,
+				"line": 125,
 				"column": 51,
 				"label": ""
 			},
 			{
-				"line": 138,
+				"line": 139,
 				"column": 24,
 				"label": ""
 			},
 			{
-				"line": 172,
+				"line": 173,
 				"column": 0,
 				"label": ""
 			},
 			{
-				"line": 2761,
+				"line": 2762,
 				"column": 93,
 				"label": ""
 			},
 			{
-				"line": 2951,
+				"line": 2952,
 				"column": 28,
 				"label": ""
 			}
@@ -85,6 +85,16 @@
 			{
 				"line": 20,
 				"column": 11,
+				"label": ""
+			}
+		]
+	},
+	{
+		"path": "$ROOTPATH$/seed.sh",
+		"bookmarks": [
+			{
+				"line": 335,
+				"column": 0,
 				"label": ""
 			}
 		]

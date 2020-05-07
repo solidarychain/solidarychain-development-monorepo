@@ -20,7 +20,7 @@ export class Asset {
   @IsDefined()
   public name: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Optional()
   public description: string;
 
@@ -28,7 +28,7 @@ export class Asset {
   @IsDefined()
   public assetType: AssetType;
 
-  @Field(type => String, { nullable: true })
+  @Field(type => [String], { nullable: true })
   @Optional()
   public ambassadors: string[];
 

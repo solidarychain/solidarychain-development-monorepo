@@ -1,5 +1,5 @@
 import { Asset, Entity } from '@solidary-network/asset-cc';
-import { appConstants as c, GoodsInput } from '@solidary-network/common-cc';
+import { appConstants as c, GoodsInput, EntityType } from '@solidary-network/common-cc';
 import { getParticipantByIdentity, Participant } from '@solidary-network/participant-cc';
 import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
@@ -26,6 +26,11 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     const participant: Participant = await getParticipantByIdentity(this.sender);
     if (!!participant && !participant.id) {
       throw new Error('There is no participant with that identity');
+    }
+
+    // protection required loggedPersonId
+    if (!transaction.loggedPersonId) {
+      throw new Error(`You must supply a loggedPersonId in transfers`);
     }
 
     // get loggedPerson from loggedPersonId
@@ -67,14 +72,9 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
         throw new Error(`You must have a valid goods item array when work with transactionType: [${transaction.transactionType}]`);
       }
       // protection if invalid properties are presented when working with TransferGoods
-      if (transaction.quantity || transaction.currency || transaction.assetId ) {
+      if (transaction.quantity || transaction.currency || transaction.assetId) {
         throw new Error(`Detected invalid properties quantity, currency defined or asset when working with transactionType: [${transaction.transactionType}]!`);
       }
-    }
-
-    // protection required loggedPersonId
-    if (!transaction.loggedPersonId) {
-      throw new Error(`You must supply a loggedPersonId in transfers`);
     }
 
     // check unique fields
@@ -88,12 +88,19 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
 
     // check if is a valid input and output form entity
     if (!transaction.input.entity) {
-      const entityType: string = transaction.input.type.replace(`${c.CONVECTOR_MODEL_PATH_PREFIX}.`,'');
+      const entityType: string = transaction.input.type.replace(`${c.CONVECTOR_MODEL_PATH_PREFIX}.`, '');
       throw new Error(`There is no entity of type '${entityType}' with Id '${transaction.input.id}'`);
     }
     if (!transaction.output.entity) {
-      const entityType: string = transaction.output.type.replace(`${c.CONVECTOR_MODEL_PATH_PREFIX}.`,'');
+      const entityType: string = transaction.output.type.replace(`${c.CONVECTOR_MODEL_PATH_PREFIX}.`, '');
       throw new Error(`There is no entity of type '${entityType}' with Id '${transaction.output.id}'`);
+    }
+
+    // ambassador protection: if entity is participant or cause, the logged user must be a ambassador else throw error
+    if (transaction.input.type === EntityType.Participant || transaction.input.type === EntityType.Cause) {
+      if (!(transaction.input.entity as Participant | Cause).ambassadors || !(transaction.input.entity as Participant | Cause).ambassadors.find((id: string) => id === loggedPerson.id)) {
+        throw new Error(`Logged user must be an ambassador of input entity`);
+      }
     }
 
     // TransactionType.TransferAsset
