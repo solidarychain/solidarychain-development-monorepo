@@ -29,6 +29,8 @@ CAUSE_003=acef70e5-cd25-4533-8392-9fa57e43cf69
 # Misc
 TAGS="[\"red\", \"blue\"]"
 LOCATION=40.1890144,-8.5171909
+METADATA="{\"key\":\"value\"}"
+METADATA_INTERNAL="{\"key\":\"internal value\"}"
 
 # commands
 # npx hurl invoke ${CHAINCODE_NAME} participant_getAll
@@ -123,7 +125,7 @@ USER_NAME=janedoe
 EMAIL=${USER_NAME}@mail.com
 FISCAL_NUMBER=582692178
 DATE=61985472
-PAYLOAD="{\"id\":\"${JANE_ID}\",\"firstname\":\"${FIRST_NAME}\",\"lastname\":\"${LAST_NAME}\",\"beneficiaryNumber\":\"385191659\",\"birthDate\":\"${DATE}\",\"cardVersion\":\"006.007.23\",\"country\":\"PRT\",\"documentNumber\":\"19879462 0 ZZ3\",\"documentType\":\"Cartão De Cidadão\",\"emissionDate\":\"${DATE}\",\"emittingEntity\":\"República Portuguesa\",\"expirationDate\":\"${DATE}\",\"fatherFirstname\":\"Alberto\",\"fatherLastname\":\"De Andrade Monteiro\",\"fiscalNumber\":\"${FISCAL_NUMBER}\",\"gender\":\"M\",\"height\":\"1.81\",\"identityNumber\":\"198794620\",\"motherFirstname\":\"Maria Da Graça De Oliveira Mendes\",\"motherLastname\":\"Monteiro\",\"nationality\":\"PRT\",\"otherInformation\":\"\",\"pan\":\"0000036014662658\",\"requestLocation\":\"CRCiv. Figueira da Foz\",\"socialSecurityNumber\":\"21103478242\",\"username\":\"${USER_NAME}\",\"password\":\"12345678\",\"email\":\"${EMAIL}\",\"mobilePhone\":\"351936202288\",\"postal\":\"3080-032\",\"city\":\"Figueira da Foz\",\"region\":\"Coimbra\",\"geoLocation\":\"40.1508,-8.8618\",\"timezone\":\"Europe/Lisbon\",\"personalInfo\":\"Just an ordinary man\",\"internalInfo\":\"Aspiring Good Hearth\",\"profile\":{\"data\":{\"key\":\"value\"}}}"
+PAYLOAD="{\"id\":\"${JANE_ID}\",\"firstname\":\"${FIRST_NAME}\",\"lastname\":\"${LAST_NAME}\",\"beneficiaryNumber\":\"385191659\",\"birthDate\":\"${DATE}\",\"cardVersion\":\"006.007.23\",\"country\":\"PRT\",\"documentNumber\":\"19879462 0 ZZ3\",\"documentType\":\"Cartão De Cidadão\",\"emissionDate\":\"${DATE}\",\"emittingEntity\":\"República Portuguesa\",\"expirationDate\":\"${DATE}\",\"fatherFirstname\":\"Alberto\",\"fatherLastname\":\"De Andrade Monteiro\",\"fiscalNumber\":\"${FISCAL_NUMBER}\",\"gender\":\"M\",\"height\":\"1.81\",\"identityNumber\":\"198794620\",\"motherFirstname\":\"Maria Da Graça De Oliveira Mendes\",\"motherLastname\":\"Monteiro\",\"nationality\":\"PRT\",\"otherInformation\":\"\",\"pan\":\"0000036014662658\",\"requestLocation\":\"CRCiv. Figueira da Foz\",\"socialSecurityNumber\":\"21103478242\",\"username\":\"${USER_NAME}\",\"password\":\"12345678\",\"email\":\"${EMAIL}\",\"mobilePhone\":\"351936202288\",\"postal\":\"3080-032\",\"city\":\"Figueira da Foz\",\"region\":\"Coimbra\",\"geoLocation\":\"40.1508,-8.8618\",\"timezone\":\"Europe/Lisbon\",\"personalInfo\":\"Just an ordinary man\",\"internalInfo\":\"Aspiring Good Hearth\",\"profile\":{\"data\":${METADATA}}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" # -u admin / if use "Cant find a participant with that fingerprint"
 # npx hurl invoke ${CHAINCODE_NAME} person_get ${JANE_ID} -u admin
@@ -167,7 +169,7 @@ START_DATE=1577836800
 # Date and time (GMT): Friday, 31 December 2021 23:59:59
 END_DATE=1640995199
 AMBASSADORS="[\"${JOHN_ID}\", \"${JANE_ID}\"]"
-PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"startDate\":\"${START_DATE}\",\"endDate\":\"${END_DATE}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"ambassadors\":${AMBASSADORS},\"metaData\":{\"key\":\"value\"},\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"}}"
+PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"startDate\":\"${START_DATE}\",\"endDate\":\"${END_DATE}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"ambassadors\":${AMBASSADORS},\"metaData\":${METADATA},\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"}}"
 # echo $PAYLOAD  | jq
 # create and get with admin
 npx hurl invoke ${CHAINCODE_NAME} cause_create "${PAYLOAD}" # -u admin / if use "Cant find a participant with that fingerprint"
@@ -177,7 +179,7 @@ npx hurl invoke ${CHAINCODE_NAME} cause_create "${PAYLOAD}" # -u admin / if use 
 ID=${CAUSE_002}
 NAME=Cause002
 TAGS="[\"black\", \"white\"]"
-PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"startDate\":\"${START_DATE}\",\"endDate\":\"${END_DATE}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"metaData\":{\"key\":\"value\"},\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"}}"
+PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"startDate\":\"${START_DATE}\",\"endDate\":\"${END_DATE}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"metaData\":${METADATA},\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} cause_create "${PAYLOAD}" # -u admin / if use "Cant find a participant with that fingerprint"
 # npx hurl invoke ${CHAINCODE_NAME} cause_get ${ID} -u admin
@@ -204,7 +206,7 @@ OUTPUT_ID=4ea88521-031b-4279-9165-9c10e1839053
 QUANTITY=1.11
 CURRENCY=EUR
 LOGGED_PERSON_ID=${JOHN_ID}
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\",\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"}}"
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\",\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u user1
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u user1
@@ -214,7 +216,7 @@ ID=acef70e5-cd25-4533-8392-9fa57e43cf33
 INPUT_TYPE=${CONVECTOR_MODEL_PATH_CAUSE}
 INPUT_ID=${CAUSE_003}
 LOGGED_PERSON_ID=${JOHN_ID}
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"loggedPersonId\":\"${LOGGED_PERSON_ID}\",\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"}}"
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"loggedPersonId\":\"${LOGGED_PERSON_ID}\",\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" # -u admin / if use "Cant find a participant with that fingerprint"
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
@@ -229,7 +231,7 @@ OUTPUT_TYPE=${CONVECTOR_MODEL_PATH_CAUSE}
 OUTPUT_ID=${CAUSE_001}
 QUANTITY=10
 LOGGED_PERSON_ID=${JOHN_ID}
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\",\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"}}"
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\",\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u user1
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u user1
@@ -241,7 +243,7 @@ INPUT_ID=${JANE_ID}
 OUTPUT_TYPE=${CONVECTOR_MODEL_PATH_CAUSE}
 OUTPUT_ID=${CAUSE_002}
 QUANTITY=20
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\",\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"}}"
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\",\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u user1
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u user1
@@ -251,7 +253,7 @@ ID=acef70e5-cd25-4533-8392-9fa57e43cf36
 INPUT_TYPE=${CONVECTOR_MODEL_PATH_PERSON}
 INPUT_ID=${JANE_ID}
 QUANTITY=20
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\",\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"}}"
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\",\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u user1
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u user1
@@ -264,7 +266,7 @@ ASSET_TYPE=PHYSICAL_ASSET
 OWNER_TYPE=${CONVECTOR_MODEL_PATH_PERSON}
 OWNER_ID=4ea88521-031b-4279-9165-9c10e1839001
 AMBASSADORS="[\"${JOHN_ID}\", \"${JANE_ID}\"]"
-PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"description\":\"${DESCRIPTION}\",\"assetType\":\"${ASSET_TYPE}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"ambassadors\":${AMBASSADORS},\"metaData\":{\"key\":\"value\"},\"owner\":{\"id\":\"${OWNER_ID}\",\"type\":\"${OWNER_TYPE}\"}}"
+PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"description\":\"${DESCRIPTION}\",\"assetType\":\"${ASSET_TYPE}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"ambassadors\":${AMBASSADORS},\"metaData\":${METADATA},\"owner\":{\"id\":\"${OWNER_ID}\",\"type\":\"${OWNER_TYPE}\"}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} asset_create "${PAYLOAD}"
 # npx hurl invoke ${CHAINCODE_NAME} asset_get ${ID}
@@ -275,7 +277,7 @@ NAME=Asset002
 ASSET_TYPE=DIGITAL_ASSET
 OWNER_ID=4ea88521-031b-4279-9165-9c10e1839001
 OWNER_TYPE=${CONVECTOR_MODEL_PATH_PERSON}
-PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"assetType\":\"${ASSET_TYPE}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"metaData\":{\"key\":\"value\"},\"owner\":{\"id\":\"${OWNER_ID}\",\"type\":\"${OWNER_TYPE}\"}}"
+PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"assetType\":\"${ASSET_TYPE}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"metaData\":${METADATA},\"owner\":{\"id\":\"${OWNER_ID}\",\"type\":\"${OWNER_TYPE}\"}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} asset_create "${PAYLOAD}" # -u admin / if use "Cant find a participant with that fingerprint"
 # npx hurl invoke ${CHAINCODE_NAME} asset_get ${ID} -u admin
@@ -293,7 +295,7 @@ LOGGED_PERSON_ID=${JOHN_ID}
 # transferer by amount
 QUANTITY=1000
 CURRENCY=EUR
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"},\"assetId\":\"${ASSET_ID}\",\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL},\"assetId\":\"${ASSET_ID}\",\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}"
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
@@ -304,7 +306,7 @@ INPUT_ID=${JANE_ID}
 OUTPUT_ID=${JOHN_ID}
 QUANTITY=1
 LOGGED_PERSON_ID=${JANE_ID}
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"},\"assetId\":\"${ASSET_ID}\",\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL},\"assetId\":\"${ASSET_ID}\",\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}"
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
@@ -316,7 +318,7 @@ INPUT_ID=${JOHN_ID}
 OUTPUT_ID=${MINI_ID}
 QUANTITY=1
 LOGGED_PERSON_ID=${JOHN_ID}
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"},\"assetId\":\"${ASSET_ID}\",\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL},\"assetId\":\"${ASSET_ID}\",\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}"
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
@@ -333,18 +335,6 @@ PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourc
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}"
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
 
-
-
-
-
-
-
-# removed protection Detected transaction quantity while working with transactionType: [TRANSFER_GOODS]"}
-# to work with payed goods transaction
-
-# TODO: MUST SUM or CREDIT OUTPUT_ID with AMOUNT of goods transfer
-
-
 # transaction of goods: person johnDoe to cause001
 ID=acef70e5-cd25-4533-8392-9fa57e43cf94
 TRANSACTION_TYPE=TRANSFER_GOODS
@@ -356,7 +346,7 @@ OUTPUT_ID=${CAUSE_001}
 # this must fail in type of TRANSFER_GOODS
 LOGGED_PERSON_ID=${JOHN_ID}
 GOODS_INPUT='[{"id":"80450045-d20d-4cdd-b937-c9bb46a48581","code": "008","barCode": "ean008","name": "name008","description": "description008","quantity": 200},{"id":"80450045-d20d-4cdd-b937-c9bb46a48582","code": "009","barCode": "ean009","name": "name009","description": "description009","quantity": 900}]'
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"goodsInput\":${GOODS_INPUT},\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"goodsInput\":${GOODS_INPUT},\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}"
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
@@ -366,7 +356,7 @@ ID=acef70e5-cd25-4533-8392-9fa57e43cf95
 INPUT_ID=${JANE_ID}
 LOGGED_PERSON_ID=${JANE_ID}
 GOODS_INPUT='[{"id":"80450045-d20d-4cdd-b937-c9bb46a48581","code": "010","barCode": "ean010","name": "name010","description": "description010","quantity": 10},{"id":"80450045-d20d-4cdd-b937-c9bb46a48582","code": "011","barCode": "ean011","name": "name011","description": "description011","quantity": 11}]'
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"goodsInput\":${GOODS_INPUT},\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"goodsInput\":${GOODS_INPUT},\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}"
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
@@ -376,60 +366,32 @@ ID=acef70e5-cd25-4533-8392-9fa57e43cf16
 INPUT_ID=${CAUSE_001}
 INPUT_TYPE=${CONVECTOR_MODEL_PATH_CAUSE}
 OUTPUT_ID=${CAUSE_002}
-# GOODS_INPUT='[{"id":"80450045-d20d-4cdd-b937-c9bb46a48581","code": "008","barCode": "ean008","name": "name008","description": "description008","quantity": 10},{"id":"80450045-d20d-4cdd-b937-c9bb46a48582","code": "009","barCode": "ean009","name": "name009","description": "description009","quantity": 10},{"id":"80450045-d20d-4cdd-b937-c9bb46a48581","code": "010","barCode": "ean010","name": "name010","description": "description010","quantity": 10},{"id":"80450045-d20d-4cdd-b937-c9bb46a48582","code": "011","barCode": "ean011","name": "name011","description": "description011","quantity": 10}]'
-GOODS_INPUT='[{"id":"80450045-d20d-4cdd-b937-c9bb46a48581","code": "008","barCode": "ean008","name": "name008","description": "description008","quantity": 10},{"id":"80450045-d20d-4cdd-b937-c9bb46a48582","code": "009","barCode": "ean009","name": "name009","description": "description009","quantity": 10}]'
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"goodsInput\":${GOODS_INPUT},\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
+GOODS_INPUT='[{"id":"80450045-d20d-4cdd-b937-c9bb46a48581","code": "008","barCode": "ean008","name": "name008","description": "description008","quantity": 8},{"id":"80450045-d20d-4cdd-b937-c9bb46a48582","code": "009","barCode": "ean009","name": "name009","description": "description009","quantity": 9},{"id":"80450045-d20d-4cdd-b937-c9bb46a48581","code": "010","barCode": "ean010","name": "name010","description": "description010","quantity": 10},{"id":"80450045-d20d-4cdd-b937-c9bb46a48582","code": "011","barCode": "ean011","name": "name011","description": "description011","quantity": 11}]'
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"goodsInput\":${GOODS_INPUT},\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}"
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
 
+# transaction of goods: cause001 to cause002 (must have goods in stock)
+ID=acef70e5-cd25-4533-8392-9fa57e43cf18
+GOODS_INPUT='[{"id":"80450045-d20d-4cdd-b937-c9bb46a48581","code": "008","barCode": "ean008","name": "name008CHANGE-FAIL","description": "description008CHANGE-FAIL","quantity": 92},{"id":"80450045-d20d-4cdd-b937-c9bb46a48582","code": "009","barCode": "ean009","name": "name009CHANGE-FAIL","description": "description009CHANGE-FAIL","quantity": 91}]'
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"goodsInput\":${GOODS_INPUT},\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
+# echo $PAYLOAD  | jq
+npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}"
+# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
 
-# create a shared VAR for TAGS and metaData, metaDataInternal to use everywhere
-# TODO: add tags and metaData, metaDataInternal to goodStocks
-
-# transaction of goods: cause001 to participant gov (must have goods in stock) : MINIMAL goodsInput with only id,code,quantiry properties (works when goods already exists)
-ID=acef70e5-cd25-4533-8392-9fa57e43cf26
-OUTPUT_ID=${GODB_ID}
+# transaction of goods: cause001 to participant gov (must have goods in stock), clean stocks, all 4 items will  be zeroed
+ID=acef70e5-cd25-4533-8392-9fa57e43cf19
 OUTPUT_TYPE=${CONVECTOR_MODEL_PATH_PARTICIPANT}
-GOODS_INPUT='[{"id":"80450045-d20d-4cdd-b937-c9bb46a48581","code": "008","barCode": "ean008","name": "name008","description": "description008","quantity": 10},{"id":"80450045-d20d-4cdd-b937-c9bb46a48582","code": "009","barCode": "ean009","name": "name009","description": "description009","quantity": 10}]'
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"goodsInput\":${GOODS_INPUT},\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
+OUTPUT_ID=${GOV_ID}
+GOODS_INPUT='[{"id":"80450045-d20d-4cdd-b937-c9bb46a48581","code": "008","barCode": "ean008","name": "name008CHANGE-FAIL","description": "description008CHANGE-FAIL","quantity": 100},{"id":"80450045-d20d-4cdd-b937-c9bb46a48582","code": "009","barCode": "ean009","name": "name009CHANGE-FAIL","description": "description009CHANGED","quantity": 800}]'
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"goodsInput\":${GOODS_INPUT},\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}"
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
-
-
-
-
-# transaction of goods: cause001 to cause002 (must vahe goods in stock)
-# ID=acef70e5-cd25-4533-8392-9fa57e43cf96
-ID=acef70e5-cd25-4533-8392-9fa57e43cf08
-INPUT_ID=${CAUSE_001}
-INPUT_TYPE=${CONVECTOR_MODEL_PATH_CAUSE}
-OUTPUT_ID=${CAUSE_003}
-LOGGED_PERSON_ID=${JOHN_ID}
-# increase code 010 and 011 and add a new 012
-# GOODS_INPUT='[{"id":"80450045-d20d-4cdd-b937-c9bb46a48581","code": "010","barCode": "ean010","name": "name010","description": "description010","quantity": 100},{"id":"80450045-d20d-4cdd-b937-c9bb46a48582","code": "011","barCode": "ean011","name": "name011","description": "description011","quantity": 111},{"id":"80450045-d20d-4cdd-b937-c9bb46a48511","code": "012","barCode": "ean012","name": "name012","description": "description012","quantity": 12}]'
-GOODS_INPUT='[{"id":"80450045-d20d-4cdd-b937-c9bb46a48581","code": "008","barCode": "ean008","name": "name008","description": "description008","quantity": 200},{"id":"80450045-d20d-4cdd-b937-c9bb46a48582","code": "009","barCode": "ean009","name": "name009","description": "description009","quantity": 900}]'
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"goodsInput\":${GOODS_INPUT},\"metaData\":{\"key\":\"value\"},\"metaDataInternal\":{\"key\":\"internal value\"},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
-# echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}"
-# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
-
-
-
-
-
-
-# leave here { Error: transaction returned with failure: {"name":"Error","status":500,"message":"You must have a sufficient quantity of goods of item code:[010] to complete the transaction'"}
-
-
-# transaction of goods: person to cause 2
-
-# transaction of goods: person to cause 3
-
-# transaction of goods: cause to person 1: empty stock
 
 # todo add INDEXES to complex filters
+
 # complex filters
 
 # note for escaped $lte, work with sort:[{name:"asc"}] and sort:["name"]
