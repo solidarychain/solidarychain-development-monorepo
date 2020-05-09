@@ -18,6 +18,9 @@ export class Participant {
   @Field()
   public name: string;
 
+  @Field({ nullable: true })
+  public email?: string;
+
   @Field(type => [String], { nullable: true })
   @Optional()
   public ambassadors: string[];

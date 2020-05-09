@@ -22,6 +22,9 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     // use '' to prevent undefined when empty
     let debugMessage: string = '';
 
+    // check unique fields
+    await checkUniqueField('_id', transaction.id, true);
+
     // get host participant from fingerprint
     const participant: Participant = await getParticipantByIdentity(this.sender);
     if (!!participant && !participant.id) {
@@ -50,10 +53,10 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
       throw new Error('You can\'t transfer from input to same output entity, you must transfer from input to a different output entity!');
     }
 
-    // protection for quantity when working TransactionType.TransferAsset, we require a positive quantity
-    if ((transaction.transactionType === TransactionType.TransferAsset || transaction.transactionType === TransactionType.TransferFunds || transaction.transactionType === TransactionType.TransferVolunteeringHours)
-      && (!transaction.quantity && transaction.quantity <= 0)) {
-      throw new Error(`You must supply a quantity greater than 0 when work with transactionType: [${TransactionType.TransferAsset}, ${TransactionType.TransferFunds} or ${TransactionType.TransferVolunteeringHours}]`);
+    // protection for positive quantity when working TransactionType.TransferFunds or TransactionType.TransferVolunteeringHours
+    if ((transaction.transactionType === TransactionType.TransferFunds || transaction.transactionType === TransactionType.TransferVolunteeringHours)
+      && (!transaction.quantity || transaction.quantity <= 0)) {
+      throw new Error(`You must supply a quantity greater than 0 when work with transactionType: [${TransactionType.TransferFunds} or ${TransactionType.TransferVolunteeringHours}]`);
     }
 
     // protection for currency when working TransactionType.TransferFunds
@@ -71,14 +74,11 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
       if (!transaction.goodsInput || !Array.isArray(transaction.goodsInput) || transaction.goodsInput.length <= 0) {
         throw new Error(`You must have a valid goods item array when work with transactionType: [${transaction.transactionType}]`);
       }
-      // protection if invalid properties are presented when working with TransferGoods
+      // protection invalid properties are presented when working with TransferGoods
       if (transaction.quantity || transaction.currency || transaction.assetId) {
         throw new Error(`Detected invalid properties quantity, currency defined or asset when working with transactionType: [${transaction.transactionType}]!`);
       }
     }
-
-    // check unique fields
-    await checkUniqueField('_id', transaction.id, true);
 
     // participant
     transaction.participant = participant;
@@ -109,7 +109,6 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     if (transaction.transactionType === TransactionType.TransferAsset && (
       transaction.resourceType === ResourceType.PhysicalAsset || transaction.resourceType === ResourceType.DigitalAsset
     )) {
-      // empty username
       if (!transaction.assetId) {
         throw new Error(`You must supply a assetId when transfer assets of type '${transaction.resourceType}'`);
       } else {
@@ -136,10 +135,18 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
           throw new Error(`Logged person is not the owner of the asset, or is not an authorized asset ambassador${debugMessage}`);
         }
 
+        // REMOVED: not quantity and currency are optional, this way we can transfer assets and funds, like sell the asset
+        // // protection invalid properties are presented when working with TransferGoods
+        // if (transaction.quantity || transaction.currency) {
+        //   throw new Error(`Detected invalid properties quantity and currency when working with transactionType: [${transaction.transactionType}]!`);
+        // }
+
         // assign new owner id and type
         asset.owner.entity = transaction.output.entity;
         // assign which asset was transferred to transaction
         transaction.assetId = asset.id;
+        // delete the old ambassadors, else we leave old ones, new owner must nominate new ambassadors
+        asset.ambassadors = [];
         // save asset
         await asset.save();
       }

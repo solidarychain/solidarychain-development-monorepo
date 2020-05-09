@@ -11,7 +11,6 @@ export class Person extends ConvectorModel<Person> {
 
   // non citizenCard data
 
-  // @Required()
   @Validate(yup.string()
     .min(4, c.YUP_MESSAGE_USERNAME_TO_SHORT)
     .max(16, c.YUP_MESSAGE_USERNAME_TO_LONG)
@@ -25,10 +24,7 @@ export class Person extends ConvectorModel<Person> {
   )
   public password: string;
 
-  // @Required()
-  @Validate(yup.string()
-    .matches(c.REGEX_EMAIL, c.YUP_MESSAGE_INVALID_EMAIL)
-  )
+  @Validate(yup.string().matches(c.REGEX_EMAIL, c.YUP_MESSAGE_INVALID_EMAIL))
   public email: string;
 
   @Validate(yup.array(PersonAttribute.schema()))

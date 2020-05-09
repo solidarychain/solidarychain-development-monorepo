@@ -20,6 +20,9 @@ export class Cause {
   @IsDefined()
   public name: string;
 
+  @Field({ nullable: true })
+  public email?: string;
+
   @Field(type => [String], { nullable: true })
   @Optional()
   public ambassadors: string[];

@@ -17,6 +17,8 @@ npx lerna run build --scope @solidary-network/common-cc --stream
 
 # deploy smart contract/chaincode
 npm run cc:start -- ${CHAINCODE_NAME}
+# used to debug
+# npm run cc:start:debug -- ${CHAINCODE_NAME}
 
 # sleep 20 seconds
 sleep 20

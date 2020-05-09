@@ -21,6 +21,9 @@ export class NewParticipantInput {
   @Length(3, 100)
   name: string;
 
+  @Field({ nullable: true })
+  public email?: string;
+
   @Field(type => [String], { nullable: true })
   @Optional()
   public ambassadors: string[];

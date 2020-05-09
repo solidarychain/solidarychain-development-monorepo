@@ -195,7 +195,7 @@ export class ParticipantController extends ConvectorController {
 
     // require to check if existing before try to access existing[0].id prop
     if (!existing || !existing[0] || !existing[0].id) {
-      throw new Error(`No participant exists with that id ${id}`);
+      throw new Error(`No participant exists with that id!`);
     }
     return existing[0];
   }

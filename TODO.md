@@ -7,8 +7,9 @@
 - [-] upsert person with citizenCard data, ex when person is registred only with fiscalNumber for ex
 - [-] change profile > username, password, email, phone, mobilePhone, district, coordinates, reputation(object), personalInfo, internalInfo
 - [X] `packages/server-graphql/src/participant/models/x509Identities.model.ts` to `packages/server-graphql/src/common/models`
-- [-] protection only ambassadors can transfer goods, money or assets from participants and causes to other entities
-- [-] add email to participants and causes
+- [X] protection only ambassadors can transfer goods, money or assets from participants and causes to other entities
+- [X] remove ambassadors when we transfer asset, else we leave some ambassadors behind
+- [X] add email to participants and causes
 - [-] convert all currencies to EUR before add to ledger, store original currency and exchange rate used ex currencyOrg: USD, quantityOrg: 1.45, cambio: 1.12
 - [-] protection to transfer amount's, for now we don't have access to entity wallets, we only balance what is transfer nothing more
 - [-] update participant/person, add/remove ambassadors add by NIF/FiscalNumber

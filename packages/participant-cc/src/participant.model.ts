@@ -15,6 +15,9 @@ export class Participant extends ConvectorModel<Participant> {
   @Validate(yup.string())
   public name: string;
 
+  @Validate(yup.string().matches(c.REGEX_EMAIL, c.YUP_MESSAGE_INVALID_EMAIL))
+  public email: string;
+
   @Validate(yup.array().of(yup.string()))
   public ambassadors: string[];
 
