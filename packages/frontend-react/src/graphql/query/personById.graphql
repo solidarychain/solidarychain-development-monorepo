@@ -32,7 +32,6 @@ query personById($id: String!) {
 		geoLocation
 		timezone
 		personalInfo
-		internalInfo
 		profile
 		# citizenCard data
 		firstname

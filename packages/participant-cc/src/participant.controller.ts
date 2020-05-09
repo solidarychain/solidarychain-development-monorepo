@@ -108,6 +108,11 @@ export class ParticipantController extends ConvectorController {
     // add date in epoch unix time
     newParticipant.createdDate = new Date().getTime();
 
+    // init objects
+    newParticipant.fundsBalance = new GenericBalance();
+    newParticipant.volunteeringHoursBalance = new GenericBalance();
+    newParticipant.goodsStock = new Array<Goods>()
+
     // always add gov participant, if its is not the gov itself, gov don't have participant
     if (gov) {
       newParticipant.participant = gov;

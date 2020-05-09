@@ -32,7 +32,6 @@ query personProfile {
 		geoLocation
 		timezone
 		personalInfo
-		internalInfo
 		profile
 		# citizenCard data
 		firstname

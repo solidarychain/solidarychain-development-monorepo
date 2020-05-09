@@ -38,7 +38,6 @@ query persons($skip: Int, $take: Int) {
 		geoLocation
 		timezone
 		personalInfo
-		internalInfo
 		profile
 		# citizenCard data
 		firstname

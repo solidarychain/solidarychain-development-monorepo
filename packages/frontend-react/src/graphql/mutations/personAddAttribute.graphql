@@ -32,7 +32,6 @@ mutation personAddAttribute($personId: String!, $addPersonAttributeData: AddPers
 		geoLocation
 		timezone
 		personalInfo
-		internalInfo
 		profile
 		# citizenCard data
 		firstname

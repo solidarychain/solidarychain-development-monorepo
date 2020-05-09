@@ -79,6 +79,7 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     @Param(PersonAttribute.schema())
     attribute: PersonAttribute
   ) {
+    debugger;
     // Check if the "stated" participant as certifier of the attribute is actually the one making the request
     let participant = await Participant.getOne(attribute.certifierID);
 

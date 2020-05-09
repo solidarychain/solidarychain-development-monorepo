@@ -32,7 +32,6 @@ query personByAttribute($getByAttributeInput: GetByAttributeInput!, $skip: Int, 
 		geoLocation
 		timezone
 		personalInfo
-		internalInfo
 		profile
 		# citizenCard data
 		firstname
