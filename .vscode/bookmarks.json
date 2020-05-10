@@ -88,15 +88,5 @@
 				"label": ""
 			}
 		]
-	},
-	{
-		"path": "$ROOTPATH$/packages/participant-cc/src/participant.controller.ts",
-		"bookmarks": [
-			{
-				"line": 110,
-				"column": 19,
-				"label": ""
-			}
-		]
 	}
 ]

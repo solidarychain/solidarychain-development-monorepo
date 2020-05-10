@@ -33,7 +33,6 @@ POPB_CODE=pop
 JOHN_ID=4ea88521-031b-4279-9165-9c10e1839001
 JANE_ID=4ea88521-031b-4279-9165-9c10e1838010
 MINI_ID=4ea88521-031b-4279-9165-9c10e1839053
-CARL_ID=4ea88521-031b-4279-9165-9c10e1839054
 # Causes
 CAUSE_001=acef70e5-cd25-4533-8392-9fa57e43cf11
 CAUSE_002=acef70e5-cd25-4533-8392-9fa57e43cf12
@@ -165,6 +164,14 @@ npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" -u admin
 # npx hurl invoke ${CHAINCODE_NAME} person_get ${ID} -u admin
 # npx hurl invoke ${CHAINCODE_NAME} person_getByUsername ${USER_NAME} -u admin
 # npx hurl invoke ${CHAINCODE_NAME} person_getByFiscalnumber ${FISCAL_NUMBER} -u admin
+
+# add atrributes has org1 / admin
+echo "Adding attribute 'birth-year' as the Big Government identity"
+npx hurl invoke ${CHAINCODE_NAME} person_addAttribute "${JOHN_ID}" "{\"id\": \"birth-year\", \"certifierID\": \"${GOV_ID}\", \"content\": \"1993\", \"issuedDate\": 1554239270 }" -u admin
+
+# add atrributes has org1 / admin
+echo "Adding attribute 'birth-year' as the Big Government identity"
+npx hurl invoke ${CHAINCODE_NAME} person_addAttribute "${JANE_ID}" "{\"id\": \"birth-year\", \"certifierID\": \"${GOV_ID}\", \"content\": \"1990\", \"issuedDate\": 1554239270 }" -u admin
 
 # org5 : with ambassadors : required to be after persons
 echo "Creating participant: Pop Bank"
@@ -423,11 +430,8 @@ npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u user1
 # complex filters
 
 
-
 # TODO: Today its seems that when we create participants it will using wallets of org, org2 etc
 # see : https://gitlab.koakh.com/koakh/node-nestjs-hyperledger-convector-starter/blob/master/seed.sh
-
-
 
 # IT WORKS if we create person with -u admin and send graphql request with certifierID id gov, 
 # in this case "certifierID": "{{ participantIdGov }}" 
@@ -438,25 +442,14 @@ npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u user1
 # if (this.sender !== participantActiveIdentity.fingerprint) {
 #   throw new Error(`Requester identity cannot sign with the current certificate ${this.sender}. This means that the user requesting the tx and the user set in the param certifierId do not match`);
 # }
-
-# create person with minimal required data
-ID=${CARL_ID}
-FISCAL_NUMBER=182692153
-# same as fiscalNumber
-USER_NAME=${FISCAL_NUMBER}
-PASS_WORD=12345678
-PAYLOAD="{\"id\":\"${ID}\",\"fiscalNumber\":\"${FISCAL_NUMBER}\",\"username\":\"${USER_NAME}\", \"password\":\"${PASS_WORD}\"}"
-# echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" -u admin
+# id:"c8ca045c-9d1b-407f-b9ae-31711758f2d0"
+# code:"gov"
+# fingerprint:"3B:BA:99:47:DD:68:90:A4:DA:01:34:93:B0:74:C0:91:F4:30:0D:5B"
 
 # Must be executed by user admin else it belongs to other participant.id/MIT_ID and NOT GOV_ID? - `-u admin`
 # npx hurl invoke ${CHAINCODE_NAME} person_get ${ID} -u admin
 # npx hurl invoke ${CHAINCODE_NAME} person_getByUsername ${USER_NAME} -u admin
 # npx hurl invoke ${CHAINCODE_NAME} person_getByFiscalnumber ${FISCAL_NUMBER} -u admin
-
-echo "Adding attribute 'birth-year' as the Big Government identity"
-npx hurl invoke person person_addAttribute "1-100-100" "{\"id\": \"birth-year\", \"certifierID\": \"gov\", \"content\": \"1993\", \"issuedDate\": 1554239270 }" -u admin
-
 
 
 

@@ -12,6 +12,59 @@ export class ParticipantController extends ConvectorController {
     return new ClientIdentity(stub.getStub());
   };
 
+  // used to create first participant
+  @Invokable()
+  public async createWithParameters(
+    @Param(yup.string())
+    id: string,
+    @Param(yup.string())
+    code: string,
+    @Param(yup.string())
+    name: string,
+  ) {
+    // get participant if not gov, in case of gov it won't exists yet and will be without participant
+    let gov: Participant;
+    if (id !== c.UUID_GOV_ID) {
+      // deprecated now always use gov to create participants
+      // participant = await getParticipantByIdentity(this.sender);
+      gov = await Participant.getOne(c.UUID_GOV_ID);
+      if (!!gov && !gov.id) {
+        // throw new Error('There is no participant with that identity');
+        throw new Error('There is no go participant');
+      }
+    }
+
+    // check unique fields
+    await checkUniqueField('_id', id, true);
+    await checkUniqueField('code', code, true);
+    await checkUniqueField('name', name, true);
+
+    // add participant
+    let newParticipant = new Participant();
+    newParticipant.id = id;
+    newParticipant.code = code || id;
+    newParticipant.name = name || id;
+    newParticipant.msp = this.fullIdentity.getMSPID();
+    // create a new identity
+    newParticipant.identities = [{
+      fingerprint: this.sender,
+      status: true
+    }];
+    // add date in epoch unix time
+    newParticipant.createdDate = new Date().getTime();
+
+    // init objects
+    newParticipant.fundsBalance = new GenericBalance();
+    newParticipant.volunteeringHoursBalance = new GenericBalance();
+    newParticipant.goodsStock = new Array<Goods>()
+
+    // always add gov participant, if its is not the gov itself, gov don't have participant
+    if (gov) {
+      newParticipant.participant = gov;
+    }
+    await newParticipant.save();
+  }
+
   @Invokable()
   public async create(
     // TODO: when use this, even if it not used we get the infamous { Error: transaction returned with failure: {"name":"Error","status":500,"message":"Cant find a participant with that fingerprint"}
@@ -67,59 +120,7 @@ export class ParticipantController extends ConvectorController {
     await participant.save();
   }
 
-  // TODO: remove this old method, fails if we invoke it with `-u admin`, deprectaded in favour of above method with @Param(Participant)
-  @Invokable()
-  public async createWithParameters(
-    @Param(yup.string())
-    id: string,
-    @Param(yup.string())
-    code: string,
-    @Param(yup.string())
-    name: string,
-  ) {
-    // get participant if not gov, in case of gov it won't exists yet and will be without participant
-    let gov: Participant;
-    if (id !== c.UUID_GOV_ID) {
-      // deprecated now always use gov to create participants
-      // participant = await getParticipantByIdentity(this.sender);
-      gov = await Participant.getOne(c.UUID_GOV_ID);
-      if (!!gov && !gov.id) {
-        // throw new Error('There is no participant with that identity');
-        throw new Error('There is no go participant');
-      }
-    }
-
-    // check unique fields
-    await checkUniqueField('_id', id, true);
-    await checkUniqueField('code', code, true);
-    await checkUniqueField('name', name, true);
-
-    // add participant
-    let newParticipant = new Participant();
-    newParticipant.id = id;
-    newParticipant.code = code || id;
-    newParticipant.name = name || id;
-    newParticipant.msp = this.fullIdentity.getMSPID();
-    // create a new identity
-    newParticipant.identities = [{
-      fingerprint: this.sender,
-      status: true
-    }];
-    // add date in epoch unix time
-    newParticipant.createdDate = new Date().getTime();
-
-    // init objects
-    newParticipant.fundsBalance = new GenericBalance();
-    newParticipant.volunteeringHoursBalance = new GenericBalance();
-    newParticipant.goodsStock = new Array<Goods>()
-
-    // always add gov participant, if its is not the gov itself, gov don't have participant
-    if (gov) {
-      newParticipant.participant = gov;
-    }
-    await newParticipant.save();
-  }
-
+  // TODO: this works when we know how to create a new identity fingerprint
   @Invokable()
   public async changeIdentity(
     @Param(yup.string())
@@ -135,7 +136,7 @@ export class ParticipantController extends ConvectorController {
     const existing = await Participant.getById(id);
     // TODO: remove after confirm that above line works
     // const existing = await Participant.getOne(id);
-    
+
     if (!existing || !existing.id) {
       throw new Error('No identity exists with that ID');
     }
