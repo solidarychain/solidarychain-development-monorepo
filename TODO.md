@@ -18,6 +18,13 @@
   - [-] person: (permissions frontend with gov wallet, or android app)
   - [-] cause: (permissions cause creator/owner or ambassador)
   - [-] asset: add/remove ambassadors add by NIF/FiscalNumber (permissions owner or ambassador)
+  - [-] use `public loggedPersonId?: string;` to ger ROLES on cc controllers, only admin Gov can update ROLES, person can only be updated by GOV
+  - [-] remove all getOne and replace with getById ex `Person.getOne`
+  - [-] remove send uuid in goods transaction, now we use uuid in cc, remove code form graphql to
+  - [-] A proteção de dados ao abrigo do RGPD, encrypt all users data with....https://www.npmjs.com/package/crypto-js
+    - [-] hide and replace hardCoded password 'secret key 123'
+
+env variable with password for crypto
 
 ## Rest API
 

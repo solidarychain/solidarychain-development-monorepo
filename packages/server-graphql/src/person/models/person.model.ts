@@ -63,7 +63,7 @@ export class Person {
 
   @Field({ nullable: true })
   @IsDefined()
-  public mobilePhone?: number;
+  public mobilePhone?: string;
 
   @Field({ nullable: true })
   @IsDefined()

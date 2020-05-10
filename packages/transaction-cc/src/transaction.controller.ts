@@ -242,6 +242,24 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
   //   return existing;
   // }
 
+  @Invokable()
+  public async update(
+    @Param(Transaction)
+    transaction: Transaction,
+  ) {
+    // Retrieve to see if exists
+    let existing = await Transaction.getById(transaction.id);
+
+    if (!existing || !existing.id) {
+      throw new Error('No transaction exists with that ID');
+    }
+
+    // update fields
+    existing.metaDataInternal = transaction.metaDataInternal;
+
+    await existing.save();
+  }
+
   /**
    * get id: custom function to use `type` and `participant` in rich query
    * default convector get don't use of this properties and give problems, 

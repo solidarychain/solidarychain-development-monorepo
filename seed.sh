@@ -40,6 +40,8 @@ CAUSE_003=acef70e5-cd25-4533-8392-9fa57e43cf69
 # Assets
 ASSET_001_ID=acef70e5-cd25-4533-8392-1fa57e430001
 ASSET_002_ID=acef70e5-cd25-4533-8392-1fa57e430002
+# Transactions
+TRANSACTION_001_ID=acef70e5-cd25-4533-8392-9fa57e43cf32
 # Misc
 TAGS="[\"red\", \"blue\"]"
 LOCATION=40.1890144,-8.5171909
@@ -47,6 +49,11 @@ METADATA="{\"key\":\"value\"}"
 METADATA_INTERNAL="{\"key\":\"internal value\"}"
 # amabassadors
 AMBASSADORS="[\"${JOHN_ID}\", \"${JANE_ID}\"]"
+# roles
+ROLE_USER="USER"
+ROLE_GOV="GOV"
+ROLE_ADMIN="ADMIN"
+ROLES="[\"${ROLE_USER}\",\"${ROLE_GOV}\",\"${ROLE_ADMIN}\"]"
 
 # commands
 # npx hurl invoke ${CHAINCODE_NAME} participant_getAll
@@ -130,9 +137,9 @@ FIRST_NAME=John
 LAST_NAME=Doe
 USER_NAME=johndoe
 EMAIL=${USER_NAME}@mail.com
-FISCAL_NUMBER=182692124
+FISCAL_NUMBER_JOHN=182692124
 DATE=61985472
-PAYLOAD="{\"id\":\"${JOHN_ID}\",\"firstname\":\"${FIRST_NAME}\",\"lastname\":\"${LAST_NAME}\",\"beneficiaryNumber\":\"285191659\",\"birthDate\":\"${DATE}\",\"cardVersion\":\"006.007.23\",\"country\":\"PRT\",\"documentNumber\":\"09879462 0 ZZ3\",\"documentType\":\"Cartão De Cidadão\",\"emissionDate\":\"${DATE}\",\"emittingEntity\":\"República Portuguesa\",\"expirationDate\":\"${DATE}\",\"fatherFirstname\":\"Alberto\",\"fatherLastname\":\"De Andrade Monteiro\",\"fiscalNumber\":\"${FISCAL_NUMBER}\",\"gender\":\"M\",\"height\":\"1.81\",\"identityNumber\":\"098794620\",\"motherFirstname\":\"Maria Da Graça De Oliveira Mendes\",\"motherLastname\":\"Monteiro\",\"nationality\":\"PRT\",\"otherInformation\":\"\",\"pan\":\"0000036014662658\",\"requestLocation\":\"CRCiv. Figueira da Foz\",\"socialSecurityNumber\":\"11103478242\",\"username\":\"${USER_NAME}\",\"password\":\"12345678\",\"email\":\"${EMAIL}\"}"
+PAYLOAD="{\"id\":\"${JOHN_ID}\",\"firstname\":\"${FIRST_NAME}\",\"lastname\":\"${LAST_NAME}\",\"beneficiaryNumber\":\"285191659\",\"birthDate\":\"${DATE}\",\"cardVersion\":\"006.007.23\",\"country\":\"PRT\",\"documentNumber\":\"09879462 0 ZZ3\",\"documentType\":\"Cartão De Cidadão\",\"emissionDate\":\"${DATE}\",\"emittingEntity\":\"República Portuguesa\",\"expirationDate\":\"${DATE}\",\"fatherFirstname\":\"Alberto\",\"fatherLastname\":\"De Andrade Monteiro\",\"fiscalNumber\":\"${FISCAL_NUMBER_JOHN}\",\"gender\":\"M\",\"height\":\"1.81\",\"identityNumber\":\"098794620\",\"motherFirstname\":\"Maria Da Graça De Oliveira Mendes\",\"motherLastname\":\"Monteiro\",\"nationality\":\"PRT\",\"otherInformation\":\"\",\"pan\":\"0000036014662658\",\"requestLocation\":\"CRCiv. Figueira da Foz\",\"socialSecurityNumber\":\"11103478242\",\"username\":\"${USER_NAME}\",\"password\":\"12345678\",\"email\":\"${EMAIL}\"}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" -u admin
 # npx hurl invoke ${CHAINCODE_NAME} person_get ${JOHN_ID} -u admin
@@ -144,9 +151,9 @@ FIRST_NAME=Jane
 LAST_NAME=Doe
 USER_NAME=janedoe
 EMAIL=${USER_NAME}@mail.com
-FISCAL_NUMBER=582692178
+FISCAL_NUMBER_JANE=582692178
 DATE=61985472
-PAYLOAD="{\"id\":\"${JANE_ID}\",\"firstname\":\"${FIRST_NAME}\",\"lastname\":\"${LAST_NAME}\",\"beneficiaryNumber\":\"385191659\",\"birthDate\":\"${DATE}\",\"cardVersion\":\"006.007.23\",\"country\":\"PRT\",\"documentNumber\":\"19879462 0 ZZ3\",\"documentType\":\"Cartão De Cidadão\",\"emissionDate\":\"${DATE}\",\"emittingEntity\":\"República Portuguesa\",\"expirationDate\":\"${DATE}\",\"fatherFirstname\":\"Alberto\",\"fatherLastname\":\"De Andrade Monteiro\",\"fiscalNumber\":\"${FISCAL_NUMBER}\",\"gender\":\"M\",\"height\":\"1.81\",\"identityNumber\":\"198794620\",\"motherFirstname\":\"Maria Da Graça De Oliveira Mendes\",\"motherLastname\":\"Monteiro\",\"nationality\":\"PRT\",\"otherInformation\":\"\",\"pan\":\"0000036014662658\",\"requestLocation\":\"CRCiv. Figueira da Foz\",\"socialSecurityNumber\":\"21103478242\",\"username\":\"${USER_NAME}\",\"password\":\"12345678\",\"email\":\"${EMAIL}\",\"mobilePhone\":\"351936202288\",\"postal\":\"3080-032\",\"city\":\"Figueira da Foz\",\"region\":\"Coimbra\",\"geoLocation\":\"40.1508,-8.8618\",\"timezone\":\"Europe/Lisbon\",\"personalInfo\":\"Just an ordinary man\",\"profile\":{\"data\":${METADATA}}}"
+PAYLOAD="{\"id\":\"${JANE_ID}\",\"firstname\":\"${FIRST_NAME}\",\"lastname\":\"${LAST_NAME}\",\"beneficiaryNumber\":\"385191659\",\"birthDate\":\"${DATE}\",\"cardVersion\":\"006.007.23\",\"country\":\"PRT\",\"documentNumber\":\"19879462 0 ZZ3\",\"documentType\":\"Cartão De Cidadão\",\"emissionDate\":\"${DATE}\",\"emittingEntity\":\"República Portuguesa\",\"expirationDate\":\"${DATE}\",\"fatherFirstname\":\"Alberto\",\"fatherLastname\":\"De Andrade Monteiro\",\"fiscalNumber\":\"${FISCAL_NUMBER_JANE}\",\"gender\":\"M\",\"height\":\"1.81\",\"identityNumber\":\"198794620\",\"motherFirstname\":\"Maria Da Graça De Oliveira Mendes\",\"motherLastname\":\"Monteiro\",\"nationality\":\"PRT\",\"otherInformation\":\"\",\"pan\":\"0000036014662658\",\"requestLocation\":\"CRCiv. Figueira da Foz\",\"socialSecurityNumber\":\"21103478242\",\"username\":\"${USER_NAME}\",\"password\":\"12345678\",\"email\":\"${EMAIL}\",\"mobilePhone\":\"351936202288\",\"postal\":\"3080-032\",\"city\":\"Figueira da Foz\",\"region\":\"Coimbra\",\"geoLocation\":\"40.1508,-8.8618\",\"timezone\":\"Europe/Lisbon\",\"personalInfo\":\"Just an ordinary man\",\"profile\":{\"data\":${METADATA}}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" -u admin
 # npx hurl invoke ${CHAINCODE_NAME} person_get ${JANE_ID} -u admin
@@ -221,7 +228,7 @@ npx hurl invoke ${CHAINCODE_NAME} cause_create "${PAYLOAD}" -u admin
 # npx hurl invoke ${CHAINCODE_NAME} cause_get ${ID}
 
 # create funds transaction : gov to john 1.11: john is ambassador of PopBank it works
-ID=acef70e5-cd25-4533-8392-9fa57e43cf32
+ID=${TRANSACTION_001_ID}
 TRANSACTION_TYPE=TRANSFER_FUNDS
 RESOURCE_TYPE=FUNDS
 INPUT_TYPE=${CONVECTOR_MODEL_PATH_PARTICIPANT}
@@ -425,17 +432,15 @@ PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourc
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u user1
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
 
-# todo add INDEXES to complex filters
+# TODO: add INDEXES to complex filters all _id, all type, 
 
-# complex filters
-
+# TOOD: complex filters
 
 # TODO: Today its seems that when we create participants it will using wallets of org, org2 etc
 # see : https://gitlab.koakh.com/koakh/node-nestjs-hyperledger-convector-starter/blob/master/seed.sh
 
-# IT WORKS if we create person with -u admin and send graphql request with certifierID id gov, 
+# TODO: IT WORKS if we create person with -u admin and send graphql request with certifierID id gov, 
 # in this case "certifierID": "{{ participantIdGov }}" 
-
 
 # TODO used to change attribute : must be created with admin user
 # BF:DB:60:71:98:D2:73:D7:BF:67:A4:1F:D6:BB:15:41:5C:29:6B:68 !== 93:AB:69:90:70:9E:63:32:05:C0:CC:49:8B:A9:A6:55:DA:BC:75:9A
@@ -451,11 +456,126 @@ npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u user1
 # npx hurl invoke ${CHAINCODE_NAME} person_getByUsername ${USER_NAME} -u admin
 # npx hurl invoke ${CHAINCODE_NAME} person_getByFiscalnumber ${FISCAL_NUMBER} -u admin
 
+# TODO: update participant, require to be user 'chaincodeAdmin' with 'admin' attribute
+AMBASSADORS_UPDATE="[\"${MINI_ID}\"]"
+EMAIL_UPDATE="gov-updated@.mail.com"
+METADATA_UPDATE="{\"key\":\"value updated\"}"
+METADATA_INTERNAL_UPDATE="{\"key\":\"internal value updated\"}"
+PAYLOAD="{\"id\":\"${GOV_ID}\",\"email\":\"${EMAIL_UPDATE}\",\"ambassadors\":${AMBASSADORS_UPDATE},\"metaData\":${METADATA_UPDATE},\"metaDataInternal\":${METADATA_INTERNAL_UPDATE}}"
+# echo $PAYLOAD  | jq
+npx hurl invoke ${CHAINCODE_NAME} participant_update "${PAYLOAD}" -u chaincodeAdmin
+
+# TODO: asset_update
+TAGS="[\"green\",\"cyan\",\"violet\"]"
+PAYLOAD="{\"id\":\"${ASSET_001_ID}\",\"ambassadors\":${AMBASSADORS_UPDATE},\"tags\":${TAGS},\"metaData\":${METADATA_UPDATE},\"metaDataInternal\":${METADATA_INTERNAL_UPDATE}}"
+# echo $PAYLOAD  | jq
+npx hurl invoke ${CHAINCODE_NAME} asset_update "${PAYLOAD}"
+
+# TODO: cause_update
+EMAIL_UPDATE="cause001-updated@mail.com"
+PAYLOAD="{\"id\":\"${CAUSE_001}\",\"email\":\"${EMAIL_UPDATE}\",\"ambassadors\":${AMBASSADORS_UPDATE},\"tags\":${TAGS},\"metaData\":${METADATA_UPDATE},\"metaDataInternal\":${METADATA_INTERNAL_UPDATE}}"
+# echo $PAYLOAD  | jq
+npx hurl invoke ${CHAINCODE_NAME} cause_update "${PAYLOAD}"
+
+# TODO: transaction_update
+PAYLOAD="{\"id\":\"${TRANSACTION_001_ID}\",\"metaDataInternal\":${METADATA_INTERNAL_UPDATE}}"
+# echo $PAYLOAD  | jq
+npx hurl invoke ${CHAINCODE_NAME} transaction_update "${PAYLOAD}"
+
+# TODO: person_update: required admin user (acting has Gov)
+PAYLOAD="{\"id\":\"${MINI_ID}\",\"roles\":${ROLES},\"metaDataInternal\":${METADATA_INTERNAL_UPDATE}}"
+# echo $PAYLOAD  | jq
+npx hurl invoke ${CHAINCODE_NAME} person_update "${PAYLOAD}" -u admin
+
+# TODO: person_upsertCitizenCard existing user: required admin user (acting has Gov)
+DOCUMENT_NUMBER="09879461 1 ZZ3"
+IDENTITY_NUMBER="098124620"
+FISCAL_NUMBER="182692152"
+SOCIAL_SECURITY_NUMBER="11103478242"
+BENEFICIARY_NUMBER="285191659"
+PAN="0010036014662658"
+FIRSTNAME="Mário"
+LASTNAME="Monteiro"
+GENDER="Male"
+HEIGHT="1.80"
+FATHER_FIRSTNAME="Alberto"
+FATHER_LASTNAME="Monteiro"
+MOTHER_FIRSTNAME="Maria"
+MOTHER_LASTNAME="Monteiro"
+BIRTH_DATE=${DATE}
+NATIONALITY="Portuguese"
+COUNTRY="Portugal"
+DOCUMENT_TYPE="Cartão De Cidadão"
+CARD_VERSION="006.007.23"
+EMISSION_DATE=${DATE}
+EXPIRATION_DATE=${DATE}
+EMITTING_ENTITY="República Portuguesa"
+REQUEST_LOCATION="CRCiv. Figueira da Foz"
+OTHER_INFORMATION="Other info...."
+PAYLOAD="{\"id\":\"${MINI_ID}\",\"documentNumber\": \"${DOCUMENT_NUMBER}\",\"identityNumber\": \"${IDENTITY_NUMBER}\",\"fiscalNumber\": \"${FISCAL_NUMBER}\",\"socialSecurityNumber\": \"${SOCIAL_SECURITY_NUMBER}\",\"beneficiaryNumber\": \"${BENEFICIARY_NUMBER}\",\"pan\": \"${PAN}\",\"firstname\": \"${FIRSTNAME}\",\"lastname\": \"${LASTNAME}\",\"gender\": \"${GENDER}\",\"height\": \"${HEIGHT}\",\"fatherFirstname\": \"${FATHER_FIRSTNAME}\",\"fatherLastname\": \"${FATHER_LASTNAME}\",\"motherFirstname\": \"${MOTHER_FIRSTNAME}\",\"motherLastname\": \"${MOTHER_LASTNAME}\",\"birthDate\": \"${BIRTH_DATE}\",\"nationality\": \"${NATIONALITY}\",\"country\": \"${COUNTRY}\",\"documentType\": \"${DOCUMENT_TYPE}\",\"cardVersion\": \"${CARD_VERSION}\",\"emissionDate\": \"${EMISSION_DATE}\",\"expirationDate\": \"${EXPIRATION_DATE}\",\"emittingEntity\": \"${EMITTING_ENTITY}\",\"requestLocation\": \"${REQUEST_LOCATION}\",\"otherInformation\": \"${OTHER_INFORMATION}\"}"
+# echo $PAYLOAD  | jq
+npx hurl invoke ${CHAINCODE_NAME} person_upsertCitizenCard "${PAYLOAD}" -u admin
 
 
+# # TODO: stopped here: { Error: transaction returned with failure: {"name":"Error","status":500,"message":"\"buf\" argument must be a Buffer or Uint8Array"}
+# await checkUniqueField('documentNumber', person.documentNumber, true);
+# await checkUniqueField('identityNumber', person.identityNumber, true);
+# await checkUniqueField('socialSecurityNumber', person.socialSecurityNumber, true);
+# await checkUniqueField('beneficiaryNumber', person.beneficiaryNumber, true);
+# await checkUniqueField('pan', person.pan, true);
+
+# TODO: person_upsertCitizenCard non existing user: required admin user (acting has Gov)
+DOCUMENT_NUMBER="09119461 1 ZZ3"
+IDENTITY_NUMBER="091124620"
+FISCAL_NUMBER="181192152"
+SOCIAL_SECURITY_NUMBER="11101178242"
+BENEFICIARY_NUMBER="285111659"
+PAN="0010036114662658"
+FIRSTNAME="Alexandre"
+LASTNAME="Monteiro"
+GENDER="Male"
+HEIGHT="1.80"
+FATHER_FIRSTNAME="Alberto"
+FATHER_LASTNAME="Monteiro"
+MOTHER_FIRSTNAME="Maria"
+MOTHER_LASTNAME="Monteiro"
+BIRTH_DATE=${DATE}
+NATIONALITY="Portuguese"
+COUNTRY="Portugal"
+DOCUMENT_TYPE="Cartão De Cidadão"
+CARD_VERSION="006.117.23"
+EMISSION_DATE=${DATE}
+EXPIRATION_DATE=${DATE}
+EMITTING_ENTITY="República Portuguesa"
+REQUEST_LOCATION="CRCiv. Figueira da Foz"
+OTHER_INFORMATION="Other info...."
+PAYLOAD="{\"documentNumber\": \"${DOCUMENT_NUMBER}\",\"identityNumber\": \"${IDENTITY_NUMBER}\",\"fiscalNumber\": \"${FISCAL_NUMBER}\",\"socialSecurityNumber\": \"${SOCIAL_SECURITY_NUMBER}\",\"beneficiaryNumber\": \"${BENEFICIARY_NUMBER}\",\"pan\": \"${PAN}\",\"firstname\": \"${FIRSTNAME}\",\"lastname\": \"${LASTNAME}\",\"gender\": \"${GENDER}\",\"height\": \"${HEIGHT}\",\"fatherFirstname\": \"${FATHER_FIRSTNAME}\",\"fatherLastname\": \"${FATHER_LASTNAME}\",\"motherFirstname\": \"${MOTHER_FIRSTNAME}\",\"motherLastname\": \"${MOTHER_LASTNAME}\",\"birthDate\": \"${BIRTH_DATE}\",\"nationality\": \"${NATIONALITY}\",\"country\": \"${COUNTRY}\",\"documentType\": \"${DOCUMENT_TYPE}\",\"cardVersion\": \"${CARD_VERSION}\",\"emissionDate\": \"${EMISSION_DATE}\",\"expirationDate\": \"${EXPIRATION_DATE}\",\"emittingEntity\": \"${EMITTING_ENTITY}\",\"requestLocation\": \"${REQUEST_LOCATION}\",\"otherInformation\": \"${OTHER_INFORMATION}\"}"
+# echo $PAYLOAD  | jq
+npx hurl invoke ${CHAINCODE_NAME} person_upsertCitizenCard "${PAYLOAD}" -u admin
+
+# TODO: person_updateProfile
+EMAIL_UPDATE="foobar@mail.com"
+MOBILE_PHONE_UPDATE="+351 938552288"
+POSTAL_UPDATE="1100-020"
+CITY_UPDATE="Lisbon"
+REGION_UPDATE="Lisbon"
+GEO_LOCATION_UPDATE=${LOCATION}
+TIMEZONE_UPDATE="Europe/Lisbon"
+PERSONAL_INFO_UPDATE="Personal info...."
+PROFILE_UPDATE="Profile info...."
+METADATA_UPDATE="{\"key\":\"value updated\"}"
+PAYLOAD="{\"id\":\"${MINI_ID}\",\"email\":\"${EMAIL_UPDATE}\",\"mobilePhone\":\"${MOBILE_PHONE_UPDATE}\",\"postal\":\"${POSTAL_UPDATE}\",\"city\":\"${CITY_UPDATE}\",\"region\":\"${REGION_UPDATE}\",\"geoLocation\":\"${GEO_LOCATION_UPDATE}\",\"timezone\":\"${TIMEZONE_UPDATE}\",\"personalInfo\":\"${PERSONAL_INFO_UPDATE}\",\"profile\":\"${PROFILE_UPDATE}\",\"metaData\":${METADATA_UPDATE}}"
+# echo $PAYLOAD  | jq
+npx hurl invoke ${CHAINCODE_NAME} person_updateProfile "${PAYLOAD}"
+
+# TODO: person_updatePassword
+PASSWORD_UPDATE="87654321"
+PAYLOAD="{\"id\":\"${MINI_ID}\",\"password\":\"${PASSWORD_UPDATE}\"}"
+# echo $PAYLOAD  | jq
+npx hurl invoke ${CHAINCODE_NAME} person_updatePassword "${PAYLOAD}"
 
 
-
+# TODO: upsert without existing user, must create it from citizenCard
 
 
 

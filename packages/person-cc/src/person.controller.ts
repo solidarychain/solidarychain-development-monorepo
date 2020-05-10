@@ -1,11 +1,11 @@
-import { appConstants as c, GenericBalance, Goods } from '@solidary-network/common-cc';
-import { Participant, getParticipantByIdentity } from '@solidary-network/participant-cc';
+import { appConstants as c, GenericBalance, Goods, newUuid, newPassword } from '@solidary-network/common-cc';
+import { getParticipantByIdentity, Participant } from '@solidary-network/participant-cc';
 import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
 import * as yup from 'yup';
 import { PersonAttribute } from './person-attribute.model';
 import { Person } from './person.model';
-import { hashPassword, checkUniqueField } from './utils';
+import { checkIfSenderIsGovernment, checkUniqueField, hashPassword } from './utils';
 
 @Controller('person')
 export class PersonController extends ConvectorController<ChaincodeTx> {
@@ -20,6 +20,10 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
       throw new Error('There is no participant with that identity');
     }
 
+    // check if sender is government
+    let gov: Participant = await Participant.getOne(c.UUID_GOV_ID);
+    await checkIfSenderIsGovernment(gov, this.sender);
+
     // check unique fields
     await checkUniqueField('_id', person.id, true);
     await checkUniqueField('username', person.username, true);
@@ -29,20 +33,22 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     await checkUniqueField('socialSecurityNumber', person.socialSecurityNumber, false);
     await checkUniqueField('beneficiaryNumber', person.beneficiaryNumber, false);
     await checkUniqueField('documentNumber', person.documentNumber, false);
+    await checkUniqueField('pan', person.pan, false);
 
-    let gov = await Participant.getOne(c.UUID_GOV_ID);
-    if (!gov || !gov.identities) {
-      throw new Error('No government identity has been registered yet');
-    }
-    const govActiveIdentity = gov.identities.find(identity => identity.status === true);
+    // TODO: remove after test checkIfSenderIsGovernment
+    // let gov = await Participant.getOne(c.UUID_GOV_ID);
+    // if (!gov || !gov.identities) {
+    //   throw new Error('No government identity has been registered yet');
+    // }
+    // const govActiveIdentity = gov.identities.find(identity => identity.status === true);
 
-    if (!govActiveIdentity) {
-      throw new Error('No active identity found for participant');
-    }
-    if (this.sender !== govActiveIdentity.fingerprint) {
-      // throw new Error(`Just the government - ID=gov - can create people - requesting organization was ${this.sender}`);
-      throw new Error('Just the government (participant with id gov) can create people');
-    }
+    // if (!govActiveIdentity) {
+    //   throw new Error('No active identity found for participant');
+    // }
+    // if (this.sender !== govActiveIdentity.fingerprint) {
+    //   // throw new Error(`Just the government - ID=gov - can create people - requesting organization was ${this.sender}`);
+    //   throw new Error('Just the government (participant with id gov) can create people');
+    // }
 
     // add person
     person.participant = gov;
@@ -51,8 +57,6 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
       fingerprint: this.sender,
       status: true
     }];
-    // TODO: can remove person don't use createdByPersonId
-    // person.createdByPersonId = person.loggedPersonId;
     // hashPassword before save model
     person.password = hashPassword(person.password);
     // add date in epoch unix time
@@ -70,6 +74,172 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
 
     // save person
     await person.save();
+  }
+
+  @Invokable()
+  public async update(
+    @Param(Person)
+    person: Person,
+  ) {
+    debugger;
+    // check if sender is government
+    let gov: Participant = await Participant.getOne(c.UUID_GOV_ID);
+    await checkIfSenderIsGovernment(gov, this.sender);
+
+    // Retrieve to see if exists
+    let existing = await Person.getById(person.id);
+
+    if (!existing || !existing.id) {
+      throw new Error('No person exists with that ID');
+    }
+
+    // update fields
+    existing.roles = person.roles;
+    existing.metaDataInternal = person.metaDataInternal;
+
+    await existing.save();
+  }
+
+  /**
+   * this can be changed by user
+   * @param person 
+   */
+  @Invokable()
+  public async updateProfile(
+    @Param(Person)
+    person: Person,
+  ) {
+    debugger;
+
+    // Retrieve to see if exists
+    let existing = await Person.getById(person.id);
+
+    if (!existing || !existing.id) {
+      throw new Error('No person exists with that ID');
+    }
+
+    // check unique fields
+    await checkUniqueField('email', person.email, true);
+    await checkUniqueField('mobilePhone', person.mobilePhone, true);
+
+    // update fields
+    existing.email = person.email;
+    existing.metaData = person.metaData;
+    existing.mobilePhone = person.mobilePhone;
+    existing.postal = person.postal;
+    existing.city = person.city;
+    existing.region = person.region;
+    existing.geoLocation = person.geoLocation;
+    existing.timezone = person.timezone;
+    existing.personalInfo = person.personalInfo;
+    existing.profile = person.profile;
+
+    await existing.save();
+  }
+
+  /**
+   * this can be changed by user
+   * @param person 
+   */
+  @Invokable()
+  public async updatePassword(
+    @Param(Person)
+    person: Person,
+  ) {
+    debugger;
+
+    // Retrieve to see if exists
+    let existing = await Person.getById(person.id);
+
+    if (!existing || !existing.id) {
+      throw new Error('No person exists with that ID');
+    }
+
+    // update fields
+    existing.password = hashPassword(person.password);
+
+    await existing.save();
+  }
+
+  @Invokable()
+  public async updateRoles(
+    @Param(Person)
+    person: Person,
+  ) {
+    debugger;
+    // check if sender is government
+    let gov: Participant = await Participant.getOne(c.UUID_GOV_ID);
+    await checkIfSenderIsGovernment(gov, this.sender);
+
+    // Retrieve to see if exists
+    let existing = await Person.getById(person.id);
+
+    if (!existing || !existing.id) {
+      throw new Error('No person exists with that ID');
+    }
+
+    // update fields
+    existing.roles = person.roles;
+
+    await existing.save();
+  }
+
+  @Invokable()
+  public async upsertCitizenCard(
+    @Param(Person)
+    person: Person,
+  ) {
+    debugger;
+    // check if sender is government
+    let gov: Participant = await Participant.getOne(c.UUID_GOV_ID);
+    await checkIfSenderIsGovernment(gov, this.sender);
+
+    // Retrieve to see if exists
+    let upsertPerson: Person;
+    let getPerson: Person | Person[] = await Person.getByField('fiscalNumber', person.fiscalNumber);
+    if (!getPerson || (getPerson && (getPerson as Person[]).length < 1)) {
+      upsertPerson = new Person(newUuid());
+      // check unique fields
+      await checkUniqueField('documentNumber', person.documentNumber, true);
+      await checkUniqueField('identityNumber', person.identityNumber, true);
+      await checkUniqueField('socialSecurityNumber', person.socialSecurityNumber, true);
+      await checkUniqueField('beneficiaryNumber', person.beneficiaryNumber, true);
+      await checkUniqueField('pan', person.pan, true);
+      // add a new password
+      upsertPerson.username = person.username || person.fiscalNumber;
+      upsertPerson.password = hashPassword(newPassword());
+    } else {
+      upsertPerson = getPerson[0];
+    }
+
+    // unique
+    upsertPerson.documentNumber = person.documentNumber;
+    upsertPerson.identityNumber = person.identityNumber;
+    upsertPerson.fiscalNumber = person.fiscalNumber;
+    upsertPerson.socialSecurityNumber = person.socialSecurityNumber;
+    upsertPerson.beneficiaryNumber = person.beneficiaryNumber;
+    upsertPerson.pan = person.pan;
+    // non unique
+    upsertPerson.firstname = person.firstname;
+    upsertPerson.lastname = person.lastname;
+    upsertPerson.gender = person.gender;
+    upsertPerson.height = person.height;
+    upsertPerson.fatherFirstname = person.fatherFirstname;
+    upsertPerson.fatherLastname = person.fatherLastname;
+    upsertPerson.motherFirstname = person.motherFirstname;
+    upsertPerson.motherLastname = person.motherLastname;
+    upsertPerson.birthDate = person.birthDate;
+    upsertPerson.nationality = person.nationality;
+    upsertPerson.country = person.country;
+    upsertPerson.documentType = person.documentType;
+    upsertPerson.cardVersion = person.cardVersion;
+    upsertPerson.emissionDate = person.emissionDate;
+    upsertPerson.expirationDate = person.expirationDate;
+    upsertPerson.emittingEntity = person.emittingEntity;
+    upsertPerson.requestLocation = person.requestLocation;
+    upsertPerson.otherInformation = person.otherInformation;
+
+    await upsertPerson.save();
   }
 
   @Invokable()

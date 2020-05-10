@@ -79,8 +79,8 @@ export class Person extends ConvectorModel<Person> {
   @Validate(yup.number())
   public registrationDate: number;
 
-  @Validate(yup.number())
-  public mobilePhone: number;
+  @Validate(yup.string())
+  public mobilePhone: string;
 
   @Validate(yup.string())
   public postal: string;

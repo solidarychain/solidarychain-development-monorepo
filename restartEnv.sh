@@ -29,6 +29,9 @@ sleep 20
 # seed ledger
 npm run seed
 
+# enroll member user "chaincodeAdmin"
+node registerIdentitiesManager.js
+
 # prevent lost props, rebuild chaincode packages: comment this already is executed in cc:start above
 # npx lerna run build --scope @solidary-network/common-cc --stream
 # npx lerna run build --scope @solidary-network/person-cc

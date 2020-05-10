@@ -1,9 +1,40 @@
 // not used anymore
 
 import { Common } from './common.model';
+import { v4 as uuid } from 'uuid';
+import * as cryptoJs from "crypto-js"
+import * as crypto from "crypto"
 
 // convert comma string float to float ex '1,81' to 1.81
 export const convertStringToFloat = (input: string): number => parseFloat(input.replace(/,/g, '.'));
+
+/**
+ * get newUuid
+ */
+export const newUuid = () => uuid();
+
+/**
+ * encrypt
+ */
+export const encrypt = (message: string): string => cryptoJs.AES.encrypt(message, 'secret key 123').toString();
+
+/**
+ * decrypt
+ */
+export const decrypt = (cipherText: string): string => {
+  const bytes = cryptoJs.AES.decrypt(cipherText, 'secret key 123');
+  return bytes.toString(cryptoJs.enc.Utf8);
+};
+
+/**
+ * random password
+ */
+export const newPassword = (length: number = 10) => {
+  const wishlist: string = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz~!@-#$';
+  return Array.from(crypto.randomFillSync(new Uint32Array(length)))
+    .map((x) => wishlist[x % wishlist.length])
+    .join('');
+}
 
 // not used anymore
 // convert from citizen card date format '19 12 1971' to Date

@@ -183,7 +183,7 @@ input NewPersonInput {
   username: String
   password: String
   email: String
-  mobilePhone: Float
+  mobilePhone: String
   postal: String
   city: String
   region: String
@@ -262,7 +262,7 @@ type Person {
   participant: Participant!
   createdDate: Float!
   registrationDate: Date!
-  mobilePhone: Float
+  mobilePhone: String
   postal: String
   city: String
   region: String

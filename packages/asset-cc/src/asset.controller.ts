@@ -56,17 +56,26 @@ export class AssetController extends ConvectorController<ChaincodeTx> {
     await asset.save();
   }
 
-  // @Invokable()
-  // public async get(
-  //   @Param(yup.string())
-  //   id: string
-  // ) {
-  //   const existing = await Asset.getOne(id);
-  //   if (!existing || !existing.id) {
-  //     throw new Error(`No asset exists with that ID ${id}`);
-  //   }
-  //   return existing;
-  // }
+  @Invokable()
+  public async update(
+    @Param(Asset)
+    asset: Asset,
+  ) {
+    // Retrieve to see if exists
+    let existing = await Asset.getById(asset.id);
+
+    if (!existing || !existing.id) {
+      throw new Error('No asset exists with that ID');
+    }
+
+    // update fields
+    existing.ambassadors = asset.ambassadors;
+    existing.tags = asset.tags;
+    existing.metaData = asset.metaData;
+    existing.metaDataInternal = asset.metaDataInternal;
+
+    await existing.save();
+  }
 
   /**
    * get id: custom function to use `type` and `participant` in rich query

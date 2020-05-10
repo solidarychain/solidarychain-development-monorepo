@@ -59,17 +59,27 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
     await cause.save();
   }
 
-  // @Invokable()
-  // public async get(
-  //   @Param(yup.string())
-  //   id: string
-  // ) {
-  //   const existing = await Cause.getOne(id);
-  //   if (!existing || !existing.id) {
-  //     throw new Error(`No cause exists with that ID ${id}`);
-  //   }
-  //   return existing;
-  // }
+  @Invokable()
+  public async update(
+    @Param(Cause)
+    cause: Cause,
+  ) {
+    // Retrieve to see if exists
+    let existing = await Cause.getById(cause.id);
+
+    if (!existing || !existing.id) {
+      throw new Error('No cause exists with that ID');
+    }
+
+    // update fields
+    existing.email = cause.email;
+    existing.ambassadors = cause.ambassadors;
+    existing.tags = cause.tags;
+    existing.metaData = cause.metaData;
+    existing.metaDataInternal = cause.metaDataInternal;
+
+    await existing.save();
+  }
 
   /**
    * get id: custom function to use `type` and `participant` in rich query

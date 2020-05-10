@@ -1,4 +1,4 @@
-import { appConstants as c, x509Identities, checkValidModelIds, GenericBalance, Goods } from '@solidary-network/common-cc';
+import { appConstants as c, checkValidModelIds, GenericBalance, Goods, x509Identities } from '@solidary-network/common-cc';
 import { BaseStorage, Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ClientIdentity } from 'fabric-shim';
 import * as yup from 'yup';
@@ -120,6 +120,39 @@ export class ParticipantController extends ConvectorController {
     await participant.save();
   }
 
+  @Invokable()
+  public async update(
+    @Param(Participant)
+    participant: Participant,
+  ) {
+    // Check permissions
+    let isAdmin = this.fullIdentity.getAttributeValue('admin');
+    let requesterMSP = this.fullIdentity.getMSPID();
+
+    // Retrieve to see if exists
+    let existing = await Participant.getById(participant.id);
+
+    if (!existing || !existing.id) {
+      throw new Error('No participant exists with that ID');
+    }
+
+    if (existing.msp != requesterMSP) {
+      throw new Error('Unauthorized. MSPs do not match');
+    }
+
+    if (!isAdmin) {
+      throw new Error('Unauthorized. Requester identity is not an admin');
+    }
+
+    // update fields
+    existing.email = participant.email;
+    existing.ambassadors = participant.ambassadors;
+    existing.metaData = participant.metaData;
+    existing.metaDataInternal = participant.metaDataInternal;
+
+    await existing.save();
+  }
+
   // TODO: this works when we know how to create a new identity fingerprint
   @Invokable()
   public async changeIdentity(
@@ -138,7 +171,7 @@ export class ParticipantController extends ConvectorController {
     // const existing = await Participant.getOne(id);
 
     if (!existing || !existing.id) {
-      throw new Error('No identity exists with that ID');
+      throw new Error('No participant exists with that ID');
     }
 
     if (existing.msp != requesterMSP) {
@@ -165,18 +198,6 @@ export class ParticipantController extends ConvectorController {
 
     await existing.save();
   }
-
-  // @Invokable()
-  // public async get(
-  //   @Param(yup.string())
-  //   id: string
-  // ) {
-  //   const existing = await Participant.getOne(id);
-  //   if (!existing || !existing.id) {
-  //     throw new Error(`No identity exists with that ID ${id}`);
-  //   }
-  //   return existing;
-  // }
 
   /**
    * get id: custom function to use `type` and `participant` in rich query

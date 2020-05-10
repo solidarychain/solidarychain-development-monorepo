@@ -4,8 +4,13 @@
  * convector-identity-patterns/packages/administrative/registerIdentitiesManager.js
  * https://raw.githubusercontent.com/worldsibu/convector-identity-patterns/master/packages/administrative/registerIdentitiesManager.js
  * 
- * this script is very very useful to create the chaincodeAdmin that has the  attrs."admin": "true" 
- * property used in `changeIdentity` in `let isAdmin = this.fullIdentity.getAttributeValue('admin');`
+ * this script is very very useful to enroll member enroll member user 'chaincodeAdmin'
+ * this user has the admin attribute `attrs: [{ name: 'admin', value: 'true', ecert: true }]`
+ * with this attribute one can use `changeIdentity` in `let isAdmin = this.fullIdentity.getAttributeValue('admin');`
+ * and all admin operations
+ * 
+ * use with `$ node registerIdentitiesManager.js`
+ * invoke with user -u chaincodeAdmin
  */
 
 const Fabric_Client = require('fabric-client');

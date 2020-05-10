@@ -98,7 +98,7 @@ export class Transaction extends ConvectorModel<Transaction> {
   public static async getByFilter(filter: any): Promise<Transaction | Transaction[]> {
     return await this.query(Transaction, {
       selector: {
-        type: c.CONVECTOR_MODEL_PATH_ASSET,
+        type: c.CONVECTOR_MODEL_PATH_TRANSACTION,
         ...filter,
       }
     });

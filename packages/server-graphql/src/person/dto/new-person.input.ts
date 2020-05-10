@@ -32,7 +32,7 @@ export class NewPersonInput {
 
   @Field({ nullable: true })
   // @IsDefined()
-  public mobilePhone?: number;
+  public mobilePhone?: string;
 
   @Field({ nullable: true })
   // @IsDefined()
