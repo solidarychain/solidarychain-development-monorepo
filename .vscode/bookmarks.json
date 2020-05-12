@@ -83,8 +83,18 @@
 		"path": "$ROOTPATH$/packages/common-cc/src/util.ts",
 		"bookmarks": [
 			{
-				"line": 51,
+				"line": 52,
 				"column": 11,
+				"label": ""
+			}
+		]
+	},
+	{
+		"path": "$ROOTPATH$/packages/transaction-cc/src/transaction.controller.ts",
+		"bookmarks": [
+			{
+				"line": 135,
+				"column": 26,
 				"label": ""
 			}
 		]

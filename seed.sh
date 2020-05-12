@@ -153,7 +153,7 @@ USER_NAME=janedoe
 EMAIL=${USER_NAME}@mail.com
 FISCAL_NUMBER_JANE=582692178
 DATE=61985472
-PAYLOAD="{\"id\":\"${JANE_ID}\",\"firstname\":\"${FIRST_NAME}\",\"lastname\":\"${LAST_NAME}\",\"beneficiaryNumber\":\"385191659\",\"birthDate\":\"${DATE}\",\"cardVersion\":\"006.007.23\",\"country\":\"PRT\",\"documentNumber\":\"19879462 0 ZZ3\",\"documentType\":\"Cartão De Cidadão\",\"emissionDate\":\"${DATE}\",\"emittingEntity\":\"República Portuguesa\",\"expirationDate\":\"${DATE}\",\"fatherFirstname\":\"Alberto\",\"fatherLastname\":\"De Andrade Monteiro\",\"fiscalNumber\":\"${FISCAL_NUMBER_JANE}\",\"gender\":\"M\",\"height\":\"1.81\",\"identityNumber\":\"198794620\",\"motherFirstname\":\"Maria Da Graça De Oliveira Mendes\",\"motherLastname\":\"Monteiro\",\"nationality\":\"PRT\",\"otherInformation\":\"\",\"pan\":\"0000036014662658\",\"requestLocation\":\"CRCiv. Figueira da Foz\",\"socialSecurityNumber\":\"21103478242\",\"username\":\"${USER_NAME}\",\"password\":\"12345678\",\"email\":\"${EMAIL}\",\"mobilePhone\":\"351936202288\",\"postal\":\"3080-032\",\"city\":\"Figueira da Foz\",\"region\":\"Coimbra\",\"geoLocation\":\"40.1508,-8.8618\",\"timezone\":\"Europe/Lisbon\",\"personalInfo\":\"Just an ordinary man\",\"profile\":{\"data\":${METADATA}}}"
+PAYLOAD="{\"id\":\"${JANE_ID}\",\"firstname\":\"${FIRST_NAME}\",\"lastname\":\"${LAST_NAME}\",\"beneficiaryNumber\":\"385191659\",\"birthDate\":\"${DATE}\",\"cardVersion\":\"006.007.23\",\"country\":\"PRT\",\"documentNumber\":\"19879462 0 ZZ3\",\"documentType\":\"Cartão De Cidadão\",\"emissionDate\":\"${DATE}\",\"emittingEntity\":\"República Portuguesa\",\"expirationDate\":\"${DATE}\",\"fatherFirstname\":\"Alberto\",\"fatherLastname\":\"De Andrade Monteiro\",\"fiscalNumber\":\"${FISCAL_NUMBER_JANE}\",\"gender\":\"M\",\"height\":\"1.81\",\"identityNumber\":\"198794620\",\"motherFirstname\":\"Maria Da Graça De Oliveira Mendes\",\"motherLastname\":\"Monteiro\",\"nationality\":\"PRT\",\"otherInformation\":\"\",\"pan\":\"0000036013272658\",\"requestLocation\":\"CRCiv. Figueira da Foz\",\"socialSecurityNumber\":\"21103478242\",\"username\":\"${USER_NAME}\",\"password\":\"12345678\",\"email\":\"${EMAIL}\",\"mobilePhone\":\"351936202288\",\"postal\":\"3080-032\",\"city\":\"Figueira da Foz\",\"region\":\"Coimbra\",\"geoLocation\":\"40.1508,-8.8618\",\"timezone\":\"Europe/Lisbon\",\"personalInfo\":\"Just an ordinary man\",\"profile\":{\"data\":${METADATA}}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" -u admin
 # npx hurl invoke ${CHAINCODE_NAME} person_get ${JANE_ID} -u admin
@@ -329,31 +329,41 @@ PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourc
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u user1
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
 
-# TODO: this will work in future when we have update and add new ambassadors to asset, after last transfers, we must nominate new ambassadors
-# # transaction asset from cause001, with logged user janedoe, acting has an ambassador of cause001, transfer to PopBank | require to send input id and type even if acting has an ambassador
-# ID=acef70e5-cd25-4533-8392-9fa57e43cf57
-# INPUT_TYPE=${CONVECTOR_MODEL_PATH_CAUSE}
-# INPUT_ID=${CAUSE_001}
-# OUTPUT_TYPE=${CONVECTOR_MODEL_PATH_PARTICIPANT}
-# OUTPUT_ID=${POPB_ID}
-# LOGGED_PERSON_ID=${JANE_ID}
-# PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL},\"assetId\":\"${ASSET_ID}\",\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
-# # echo $PAYLOAD  | jq
-# npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u user1
-# # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
+# asset update: update asset and add janedoe to ambassadors, before below transfer, else it fails because asset don't have ambassador, is lost in lastest transfer
+AMBASSADORS_UPDATE="[\"${JANE_ID}\"]"
+PAYLOAD="{\"id\":\"${ASSET_001_ID}\",\"ambassadors\":${AMBASSADORS_UPDATE}}"
+# echo $PAYLOAD  | jq
+npx hurl invoke ${CHAINCODE_NAME} asset_update "${PAYLOAD}"
 
-# TODO: this will work in future when we have update and add new ambassadors to asset, after last transfers, we must nominate new ambassadors
-# # transaction asset from PopBank, with logged user johndoe, acting has an ambassador of PopBank, transfer to cause002 | require to send input id and type even if acting has an ambassador
-# ID=acef70e5-cd25-4533-8392-9fa57e43cf61
-# INPUT_TYPE=${CONVECTOR_MODEL_PATH_PARTICIPANT}
-# INPUT_ID=${POPB_ID}
-# OUTPUT_TYPE=${CONVECTOR_MODEL_PATH_CAUSE}
-# OUTPUT_ID=${CAUSE_002}
-# LOGGED_PERSON_ID=${JOHN_ID}
-# PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL},\"assetId\":\"${ASSET_ID}\",\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
-# # echo $PAYLOAD  | jq
-# npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}"
-# # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
+# transaction asset from cause001, with logged user janedoe, acting has an ambassador of cause001, transfer to PopBank | require to send input id and type even if acting has an ambassador
+ID=acef70e5-cd25-4533-8392-9fa57e43cf57
+INPUT_TYPE=${CONVECTOR_MODEL_PATH_CAUSE}
+INPUT_ID=${CAUSE_001}
+OUTPUT_TYPE=${CONVECTOR_MODEL_PATH_PARTICIPANT}
+OUTPUT_ID=${POPB_ID}
+LOGGED_PERSON_ID=${JANE_ID}
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL},\"assetId\":\"${ASSET_ID}\",\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
+# echo $PAYLOAD  | jq
+npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u user1
+# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
+
+# asset update: update asset and add johndoe to ambassadors, before below transfer, else it fails because asset don't have ambassador, is lost in lastest transfer
+AMBASSADORS_UPDATE="[\"${JOHN_ID}\"]"
+PAYLOAD="{\"id\":\"${ASSET_001_ID}\",\"ambassadors\":${AMBASSADORS_UPDATE}}"
+# echo $PAYLOAD  | jq
+npx hurl invoke ${CHAINCODE_NAME} asset_update "${PAYLOAD}"
+
+# transaction asset from PopBank, with logged user johndoe, acting has an ambassador of PopBank, transfer to cause002 | require to send input id and type even if acting has an ambassador
+ID=acef70e5-cd25-4533-8392-9fa57e43cf61
+INPUT_TYPE=${CONVECTOR_MODEL_PATH_PARTICIPANT}
+INPUT_ID=${POPB_ID}
+OUTPUT_TYPE=${CONVECTOR_MODEL_PATH_CAUSE}
+OUTPUT_ID=${CAUSE_002}
+LOGGED_PERSON_ID=${JOHN_ID}
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL},\"assetId\":\"${ASSET_ID}\",\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
+# echo $PAYLOAD  | jq
+npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}"
+# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
 
 # transaction of goods: person johnDoe to cause001
 ID=acef70e5-cd25-4533-8392-9fa57e43cf94
@@ -456,7 +466,7 @@ npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u user1
 # npx hurl invoke ${CHAINCODE_NAME} person_getByUsername ${USER_NAME} -u admin
 # npx hurl invoke ${CHAINCODE_NAME} person_getByFiscalnumber ${FISCAL_NUMBER} -u admin
 
-# TODO: update participant, require to be user 'chaincodeAdmin' with 'admin' attribute
+# update participant gov: all updateable fields, require to be user 'chaincodeAdmin' with 'admin' attribute
 AMBASSADORS_UPDATE="[\"${MINI_ID}\"]"
 EMAIL_UPDATE="gov-updated@.mail.com"
 METADATA_UPDATE="{\"key\":\"value updated\"}"
@@ -465,34 +475,34 @@ PAYLOAD="{\"id\":\"${GOV_ID}\",\"email\":\"${EMAIL_UPDATE}\",\"ambassadors\":${A
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} participant_update "${PAYLOAD}" -u chaincodeAdmin
 
-# TODO: asset_update
+# asset update asset001: all updateable fields
 TAGS="[\"green\",\"cyan\",\"violet\"]"
 PAYLOAD="{\"id\":\"${ASSET_001_ID}\",\"ambassadors\":${AMBASSADORS_UPDATE},\"tags\":${TAGS},\"metaData\":${METADATA_UPDATE},\"metaDataInternal\":${METADATA_INTERNAL_UPDATE}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} asset_update "${PAYLOAD}"
 
-# TODO: cause_update
+# cause update cause001: all updateable fields
 EMAIL_UPDATE="cause001-updated@mail.com"
 PAYLOAD="{\"id\":\"${CAUSE_001}\",\"email\":\"${EMAIL_UPDATE}\",\"ambassadors\":${AMBASSADORS_UPDATE},\"tags\":${TAGS},\"metaData\":${METADATA_UPDATE},\"metaDataInternal\":${METADATA_INTERNAL_UPDATE}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} cause_update "${PAYLOAD}"
 
-# TODO: transaction_update
+# transaction update: all updateable fields
 PAYLOAD="{\"id\":\"${TRANSACTION_001_ID}\",\"metaDataInternal\":${METADATA_INTERNAL_UPDATE}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_update "${PAYLOAD}"
 
-# TODO: person_update: required admin user (acting has Gov)
+# person update mini: required admin user (acting has Gov)
 PAYLOAD="{\"id\":\"${MINI_ID}\",\"roles\":${ROLES},\"metaDataInternal\":${METADATA_INTERNAL_UPDATE}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} person_update "${PAYLOAD}" -u admin
 
-# TODO: person_upsertCitizenCard existing user: required admin user (acting has Gov)
+# person upsertCitizenCard: update existing user mini (minimal data): required admin user (acting has Gov)
 DOCUMENT_NUMBER="09879461 1 ZZ3"
 IDENTITY_NUMBER="098124620"
 FISCAL_NUMBER="182692152"
-SOCIAL_SECURITY_NUMBER="11103478242"
-BENEFICIARY_NUMBER="285191659"
+SOCIAL_SECURITY_NUMBER="11103178211"
+BENEFICIARY_NUMBER="281111659"
 PAN="0010036014662658"
 FIRSTNAME="Mário"
 LASTNAME="Monteiro"
@@ -516,15 +526,7 @@ PAYLOAD="{\"id\":\"${MINI_ID}\",\"documentNumber\": \"${DOCUMENT_NUMBER}\",\"ide
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} person_upsertCitizenCard "${PAYLOAD}" -u admin
 
-
-# # TODO: stopped here: { Error: transaction returned with failure: {"name":"Error","status":500,"message":"\"buf\" argument must be a Buffer or Uint8Array"}
-# await checkUniqueField('documentNumber', person.documentNumber, true);
-# await checkUniqueField('identityNumber', person.identityNumber, true);
-# await checkUniqueField('socialSecurityNumber', person.socialSecurityNumber, true);
-# await checkUniqueField('beneficiaryNumber', person.beneficiaryNumber, true);
-# await checkUniqueField('pan', person.pan, true);
-
-# TODO: person_upsertCitizenCard non existing user: required admin user (acting has Gov)
+# person_upsertCitizenCard: new person : non existing user: required admin user (acting has Gov)
 DOCUMENT_NUMBER="09119461 1 ZZ3"
 IDENTITY_NUMBER="091124620"
 FISCAL_NUMBER="181192152"
@@ -553,7 +555,7 @@ PAYLOAD="{\"documentNumber\": \"${DOCUMENT_NUMBER}\",\"identityNumber\": \"${IDE
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} person_upsertCitizenCard "${PAYLOAD}" -u admin
 
-# TODO: person_updateProfile
+# person updateProfile
 EMAIL_UPDATE="foobar@mail.com"
 MOBILE_PHONE_UPDATE="+351 938552288"
 POSTAL_UPDATE="1100-020"
@@ -568,16 +570,11 @@ PAYLOAD="{\"id\":\"${MINI_ID}\",\"email\":\"${EMAIL_UPDATE}\",\"mobilePhone\":\"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} person_updateProfile "${PAYLOAD}"
 
-# TODO: person_updatePassword
+# person updatePassword
 PASSWORD_UPDATE="87654321"
 PAYLOAD="{\"id\":\"${MINI_ID}\",\"password\":\"${PASSWORD_UPDATE}\"}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} person_updatePassword "${PAYLOAD}"
-
-
-# TODO: upsert without existing user, must create it from citizenCard
-
-
 
 # note for escaped $lte, work with sort:[{name:"asc"}] and sort:["name"]
 # persisted "createdDate": "1582410746061", "name":"Big Government"

@@ -3,7 +3,6 @@
 import { Common } from './common.model';
 import { v4 as uuid } from 'uuid';
 import * as cryptoJs from "crypto-js"
-import * as crypto from "crypto"
 
 // convert comma string float to float ex '1,81' to 1.81
 export const convertStringToFloat = (input: string): number => parseFloat(input.replace(/,/g, '.'));
@@ -29,11 +28,13 @@ export const decrypt = (cipherText: string): string => {
 /**
  * random password
  */
-export const newPassword = (length: number = 10) => {
-  const wishlist: string = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz~!@-#$';
-  return Array.from(crypto.randomFillSync(new Uint32Array(length)))
-    .map((x) => wishlist[x % wishlist.length])
-    .join('');
+export const newPassword = (length: number = 10): string => {
+  const charset: string = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz#%&~!@-#$';
+  let result = '';
+  for (let i = 0, n = charset.length; i < length; ++i) {
+    result += charset.charAt(Math.floor(Math.random() * n));
+  }
+  return result;
 }
 
 // not used anymore

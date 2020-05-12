@@ -17,6 +17,7 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     @Param(Transaction)
     transaction: Transaction,
   ) {
+    debugger;
     // use '' to prevent undefined when empty
     let debugMessage: string = '';
 

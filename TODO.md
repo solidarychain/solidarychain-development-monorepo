@@ -12,7 +12,7 @@
 - [X] add email to participants and causes
 - [X] convert all currencies to EUR before add to ledger, store original currency and exchange rate used ex currencyOrg: USD, quantityOrg: 1.45, exchangeRate: 1.12
   - [-] currently require to transfer EUR else fails, in a near future we start to work with exchange rates
-- [X] protection to transfer amount's, for now we don't have access to entity wallets balance, we only balance what is ttransfer in plataform, values canc have negative balances, no problem
+- [X] protection to transfer amount's, for now we don't have access to entity wallets balance, we only balance what is transfer in platform, values can have negative balances, no problem
 - [-] update
   - [-] participant: (permissions frontend with gov wallet, and a ambassador logged)
   - [-] person: (permissions frontend with gov wallet, or android app)
@@ -20,7 +20,22 @@
   - [-] asset: add/remove ambassadors add by NIF/FiscalNumber (permissions owner or ambassador)
   - [-] use `public loggedPersonId?: string;` to ger ROLES on cc controllers, only admin Gov can update ROLES, person can only be updated by GOV
   - [-] remove all getOne and replace with getById ex `Person.getOne`
-  - [-] remove send uuid in goods transaction, now we use uuid in cc, remove code form graphql to
+
+
+
+
+  - [-] remove send uuid in goods transaction, now we use uuid in cc, remove code form graphql to, ALL UUIDS will start be added in CC to prevent hacks
+  - [-] remove fingerprint from all models upsertPerson.identities = [{fingerprint: this.sender,status: true}]; WHY WE ADD sender fingerprint?
+  - [-] generated password in upsert, where to store it, USE same random password generator in create user
+
+
+
+
+
+
+
+
+  - [-] TODO: CHANGE-FAIL in goodStocks work goodsStock must fail and it seems it works> "name": "name008CHANGE-FAIL","description": "description008CHANGE-FAIL"
   - [-] A proteção de dados ao abrigo do RGPD, encrypt all users data with....https://www.npmjs.com/package/crypto-js
     - [-] hide and replace hardCoded password 'secret key 123'
 

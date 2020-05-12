@@ -45,16 +45,19 @@ export const getEntity = (entityType: EntityType, id: string): Promise<Participa
  * every model has is checkUniqueField implementation with its type
  * richQuery helper to check unique fields on model Transaction
  */
-export const checkUniqueField = async (fieldName: string, fieldValue: string, required: boolean) => {
+export const checkUniqueField = async (fieldName: string, fieldValue: string, required: boolean, excludeId: string = null) => {
   if (!required && !fieldValue) {
     return;
   }
-  const exists = await Transaction.query(Transaction, {
-    selector: {
-      type: c.CONVECTOR_MODEL_PATH_TRANSACTION,
-      [fieldName]: fieldValue,
-    }
-  });
+  const selector: any = {
+    type: c.CONVECTOR_MODEL_PATH_TRANSACTION,
+    [fieldName]: fieldValue,
+  };
+  // inject excludeId
+  if (excludeId) {
+    selector._id = { $ne: excludeId };
+  }
+  const exists = await Transaction.query(Transaction, { selector });
   if ((exists as Transaction[]).length > 0) {
     // remove first _ ex _id to id before display error
     const fieldDisplay: string = (fieldName.startsWith('_')) ? fieldName.substr(1, fieldName.length) : fieldName;

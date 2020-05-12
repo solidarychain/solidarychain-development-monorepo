@@ -14,11 +14,12 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     @Param(Person)
     person: Person
   ) {
+    // TODO: remove after test checkIfSenderIsGovernment
     // get host participant from fingerprint
-    const participant: Participant = await getParticipantByIdentity(this.sender);
-    if (!!participant && !participant.id) {
-      throw new Error('There is no participant with that identity');
-    }
+    // const participant: Participant = await getParticipantByIdentity(this.sender);
+    // if (!!participant && !participant.id) {
+    //   throw new Error('There is no participant with that identity');
+    // }
 
     // check if sender is government
     let gov: Participant = await Participant.getOne(c.UUID_GOV_ID);
@@ -105,43 +106,6 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
    * @param person 
    */
   @Invokable()
-  public async updateProfile(
-    @Param(Person)
-    person: Person,
-  ) {
-    debugger;
-
-    // Retrieve to see if exists
-    let existing = await Person.getById(person.id);
-
-    if (!existing || !existing.id) {
-      throw new Error('No person exists with that ID');
-    }
-
-    // check unique fields
-    await checkUniqueField('email', person.email, true);
-    await checkUniqueField('mobilePhone', person.mobilePhone, true);
-
-    // update fields
-    existing.email = person.email;
-    existing.metaData = person.metaData;
-    existing.mobilePhone = person.mobilePhone;
-    existing.postal = person.postal;
-    existing.city = person.city;
-    existing.region = person.region;
-    existing.geoLocation = person.geoLocation;
-    existing.timezone = person.timezone;
-    existing.personalInfo = person.personalInfo;
-    existing.profile = person.profile;
-
-    await existing.save();
-  }
-
-  /**
-   * this can be changed by user
-   * @param person 
-   */
-  @Invokable()
   public async updatePassword(
     @Param(Person)
     person: Person,
@@ -184,6 +148,43 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     await existing.save();
   }
 
+  /**
+   * this can be changed by user
+   * @param person 
+   */
+  @Invokable()
+  public async updateProfile(
+    @Param(Person)
+    person: Person,
+  ) {
+    debugger;
+
+    // Retrieve to see if exists
+    let existing = await Person.getById(person.id);
+
+    if (!existing || !existing.id) {
+      throw new Error('No person exists with that ID');
+    }
+
+    // check unique fields
+    await checkUniqueField('email', person.email, true, person.id);
+    await checkUniqueField('mobilePhone', person.mobilePhone, true, person.id);
+
+    // update fields
+    existing.email = person.email;
+    existing.mobilePhone = person.mobilePhone;
+    existing.postal = person.postal;
+    existing.city = person.city;
+    existing.region = person.region;
+    existing.geoLocation = person.geoLocation;
+    existing.timezone = person.timezone;
+    existing.personalInfo = person.personalInfo;
+    existing.profile = person.profile;
+    existing.metaData = person.metaData;
+
+    await existing.save();
+  }
+
   @Invokable()
   public async upsertCitizenCard(
     @Param(Person)
@@ -199,18 +200,30 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     let getPerson: Person | Person[] = await Person.getByField('fiscalNumber', person.fiscalNumber);
     if (!getPerson || (getPerson && (getPerson as Person[]).length < 1)) {
       upsertPerson = new Person(newUuid());
-      // check unique fields
-      await checkUniqueField('documentNumber', person.documentNumber, true);
-      await checkUniqueField('identityNumber', person.identityNumber, true);
-      await checkUniqueField('socialSecurityNumber', person.socialSecurityNumber, true);
-      await checkUniqueField('beneficiaryNumber', person.beneficiaryNumber, true);
-      await checkUniqueField('pan', person.pan, true);
-      // add a new password
       upsertPerson.username = person.username || person.fiscalNumber;
-      upsertPerson.password = hashPassword(newPassword());
+      upsertPerson.password = hashPassword(newPassword(10));
+      upsertPerson.participant = gov;
+      upsertPerson.identities = [{
+        fingerprint: this.sender,
+        status: true
+      }];
+      // add date in epoch unix time
+      upsertPerson.registrationDate = new Date().getTime();
+      upsertPerson.createdDate = new Date().getTime();
+      // init objects
+      upsertPerson.fundsBalance = new GenericBalance();
+      upsertPerson.volunteeringHoursBalance = new GenericBalance();
+      upsertPerson.goodsStock = new Array<Goods>()
     } else {
       upsertPerson = getPerson[0];
     }
+
+    // check unique fields, always check for inserts and updates
+    await checkUniqueField('documentNumber', person.documentNumber, true, person.id);
+    await checkUniqueField('identityNumber', person.identityNumber, true, person.id);
+    await checkUniqueField('socialSecurityNumber', person.socialSecurityNumber, true, person.id);
+    await checkUniqueField('beneficiaryNumber', person.beneficiaryNumber, true, person.id);
+    await checkUniqueField('pan', person.pan, true, person.id);
 
     // unique
     upsertPerson.documentNumber = person.documentNumber;
@@ -239,6 +252,10 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     upsertPerson.requestLocation = person.requestLocation;
     upsertPerson.otherInformation = person.otherInformation;
 
+    // clean non useful props, are required only receive id and entityType
+    delete upsertPerson.loggedPersonId;
+
+    // save person
     await upsertPerson.save();
   }
 
