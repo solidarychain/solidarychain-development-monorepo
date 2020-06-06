@@ -26,7 +26,7 @@
     "@solidary-network/person-cc": "^0.1.0",
     "@solidary-network/transaction-cc": "^0.1.0",
     "@worldsibu/convector-adapter-fabric": "^1.3.8",
-    "apollo-server-express": "2.8.1",
+    "apollo-server-express": "2.14.2",
     "bcrypt": "^3.0.6",
     "class-transformer": "^0.2.3",
     "class-validator": "^0.10.0",
