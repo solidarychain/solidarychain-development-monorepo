@@ -12,6 +12,7 @@
   - [Clean up and start working on App](#clean-up-and-start-working-on-app)
   - [Add Apollo](#add-apollo)
     - [Fix apollo react ERR_CERT_AUTHORITY_INVALID](#fix-apollo-react-errcertauthorityinvalid)
+    - [Fix Received status code 400 on Login](#fix-received-status-code-400-on-login)
     - [Add/Configure CORS](#addconfigure-cors)
     - [Add Cors Origin to express and apollo server](#add-cors-origin-to-express-and-apollo-server)
   - [Install GraphQL CodeGen](#install-graphql-codegen)
@@ -20,6 +21,8 @@
   - [Working with GraphQL-CodeGen](#working-with-graphql-codegen)
     - [Configure hooks plugins](#configure-hooks-plugins)
   - [Problems and Solutions with graphql-codegen](#problems-and-solutions-with-graphql-codegen)
+    - [Error #1](#error-1)
+    - [Error #2](#error-2)
   - [Configure react Router](#configure-react-router)
   - [Apollo resetStore /Cache](#apollo-resetstore-cache)
   - [Use JS-Cookie](#use-js-cookie)
@@ -241,9 +244,35 @@ the trick is open nestjs graphql playground (https) on chrome or chrome debugger
 
 ![ERR_CERT_AUTHORITY_INVALID](assets/images/030.png)
 
-working version with a fresh login token
+### Fix Received status code 400 on Login
 
-### Add/Configure CORS
+login failed please try again...
+
+inspect with devtools
+
+![Received status code 400](assets/images/032.png)
+
+it seems a change in models, we remove `identities`
+
+```json
+{message: "Cannot query field "identities" on type "Participant".", locations: [{line: 22, column: 9}]}
+```
+
+fix : remove identities from `personLogin.graphql` and generate graphql schema with `pkg:react:gen-graphql:watch`, and in all other queries, mutations and subscriptions to
+
+```graphql
+participant {
+  id
+  name
+  msp
+  identities {
+    id
+    status
+    fingerprint
+  }
+}
+
+```### Add/Configure CORS
 
 add cors to nest.js server
 
@@ -520,7 +549,7 @@ it works move on
 
 ## Working with GraphQL-CodeGen
 
-name queries from `query ($id: String!)` to `query participantById($id: String!)` this way we prevent 
+name queries from `query ($id: String!)` to `query participantById($id: String!)` this way we prevent above unnamed names
 
 ```typescript
 export type Unnamed_1_QueryVariables = {
@@ -557,6 +586,8 @@ generates:
 now we some good stuff hooks use functions like `useParticipantByIdQuery` and `useParticipantByIdLazyQuery`
 
 ## Problems and Solutions with graphql-codegen
+
+### Error #1
 
 > UPDATED: 2020-01-14 20:12:59, after sometime without using codegen, now it gives below error
 
@@ -598,6 +629,17 @@ $ npx lerna run gen:graphql --scope @solidary-network/frontend-react --stream
 @solidary-network/frontend-react: [20:10:05] Generate [completed]
 @solidary-network/frontend-react: [20:10:05] Generate ./graphql.schema.json [completed]
 @solidary-network/frontend-react: [20:10:05] Generate outputs [completed
+```
+
+### Error #2
+
+UPDATE: requires node v10.12.0 to prevent bellow error
+
+```shell
+$ pkg:react:gen-graphql:watch
+@solidary-network/frontend-react: > @solidary-network/frontend-react@0.1.0 gen:graphql:watch /media/mario/Storage/Documents/Development/@Solidary.Network/solidarynetwork-development-monorepo/packages/frontend-react
+@solidary-network/frontend-react: > NODE_TLS_REJECT_UNAUTHORIZED=0 graphql-codegen --watch
+@solidary-network/frontend-react: /media/mario/Storage/Documents/Development/@Solidary.Network/solidarynetwork-development-monorepo/node_modules/@graphql-toolkit/core/index.cjs.js:74
 ```
 
 ## Configure react Router

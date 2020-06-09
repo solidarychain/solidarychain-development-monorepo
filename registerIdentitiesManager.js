@@ -42,7 +42,7 @@ Fabric_Client.newDefaultKeyValueStore({
     fabric_client.setCryptoSuite(crypto_suite);
 
     // be sure to change the http to https when the CA is running TLS enabled
-    fabric_ca_client = new Fabric_CA_Client('http://localhost:7054', null, '', crypto_suite);
+    fabric_ca_client = new Fabric_CA_Client('http://192.168.1.64:7054', null, '', crypto_suite);
 
     // first check to see if the admin is already enrolled
     return fabric_client.getUserContext('admin', true);

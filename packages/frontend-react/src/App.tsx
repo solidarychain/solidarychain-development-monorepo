@@ -10,6 +10,7 @@ import { Routes } from './Routes';
 interface Props { }
 
 export const App: React.FC<Props> = () => {
+  debugger;
   // context state hook
   const [state, dispatch] = useStateValue();
   // state hook
@@ -31,6 +32,7 @@ export const App: React.FC<Props> = () => {
         const data = await res.json();
         // disable loading, and let it pass to render Routes
         setLoading(false);
+        // set inMemory AccessToken
         setAccessToken(data.accessToken);
         // fire profile hook
         if (!profileCalled) profileQuery();

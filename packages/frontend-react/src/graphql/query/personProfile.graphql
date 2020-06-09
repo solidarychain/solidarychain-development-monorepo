@@ -18,11 +18,6 @@ query personProfile {
 			id
 			name
 			msp
-			identities {
-				id
-				status
-				fingerprint
-			}
 		}
 		# extended non citizenCard data
 		mobilePhone
@@ -59,11 +54,6 @@ query personProfile {
 		requestLocation
 		otherInformation
 		registrationDate
-		identities {
-			id
-			status
-			fingerprint
-		}
 		createdDate
 	}
 }

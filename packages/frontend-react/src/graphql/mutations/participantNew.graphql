@@ -3,10 +3,5 @@ mutation participantNew($newParticipantData: NewParticipantInput!) {
 		id
 		name
 		msp
-		identities {
-			id
-			status
-			fingerprint
-		}
 	}
 }

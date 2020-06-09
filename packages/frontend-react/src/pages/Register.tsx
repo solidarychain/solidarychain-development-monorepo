@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
 import { Loading, ShowMessage } from '../components';
-import { NewPersonInput, usePersonNewMutation } from '../generated/graphql';
+import { NewPersonInput, usePersonRegisterMutation } from '../generated/graphql';
 import { Link } from 'react-router-dom';
 import { appConstants as c } from '../constants';
 import { v4 as uuid } from 'uuid';
@@ -22,7 +22,7 @@ export const Register: React.FC<RouteComponentProps> = ({ history }) => {
 	const [password, setPassword] = useState(defaultUser.password);
 
 	// hooks: apollo
-	const [personNewMutation, { loading, error }] = usePersonNewMutation();
+	const [personNewMutation, { loading, error }] = usePersonRegisterMutation();
 	// handlers
 	const onChangeIdHandler = (e: React.SyntheticEvent) => {
 		setId((e.target as HTMLSelectElement).value)

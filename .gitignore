@@ -3,8 +3,13 @@
 .src
 .trash
 .history/
+.vscode/chrome
 dist/
 chaincode-person/
-log/packages/server/.env
-.vscode/chrome
 chaincode-solidary-network-chaincode
+packages/server-graphql/config/koakh.com
+packages/server-graphql/config/solidarychain.com
+.env
+prod.env
+hurley-network-topology/
+.deleted-from-root/

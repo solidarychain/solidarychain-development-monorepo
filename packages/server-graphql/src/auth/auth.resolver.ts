@@ -39,7 +39,7 @@ export class AuthResolver {
     const tokenVersion = this.usersService.usersStore.incrementTokenVersion(loginPersonData.username);
     // refreshToken
     const refreshToken: AccessToken = await this.authService.signRefreshToken(signJwtTokenDto, tokenVersion);
-    // send refresh token
+    // send jid cookie refresh token to client (browser, insomnia etc)
     this.authService.sendRefreshToken(res, refreshToken);
     // return loginPersonResponse
     return { user: person, accessToken };

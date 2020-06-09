@@ -98,5 +98,25 @@
 				"label": ""
 			}
 		]
+	},
+	{
+		"path": "$ROOTPATH$/packages/frontend-react/NOTES.md",
+		"bookmarks": [
+			{
+				"line": 257,
+				"column": 0,
+				"label": ""
+			}
+		]
+	},
+	{
+		"path": "/media/mario/Storage/Documents/Development/@Solidary.Network/solidarynetwork-development-monorepo/packages/server-graphql/src/auth/auth.resolver.ts",
+		"bookmarks": [
+			{
+				"line": 42,
+				"column": 0,
+				"label": ""
+			}
+		]
 	}
 ]

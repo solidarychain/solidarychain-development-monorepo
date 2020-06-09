@@ -21,7 +21,8 @@ export class Participant extends ConvectorModel<Participant> {
   @Validate(yup.array().of(yup.string()))
   public ambassadors: string[];
 
-  @Required()
+  // TODO to let it pass in participant_createWithParameters
+  // @Required()
   @Validate(yup.string())
   public msp: string;
 
@@ -29,7 +30,8 @@ export class Participant extends ConvectorModel<Participant> {
   @Validate(Participant.schema())
   public participant: FlatConvectorModel<Participant>;
 
-  @Required()
+  // TODO to let it pass in participant_createWithParameters
+  // @Required()
   @Validate(yup.array(x509Identities.schema()))
   public identities: Array<FlatConvectorModel<x509Identities>>;
 
@@ -51,15 +53,18 @@ export class Participant extends ConvectorModel<Participant> {
   @Validate(yup.string())
   public loggedPersonId?: string;
 
-  @Required()
+  // TODO to let it pass in participant_createWithParameters
+  // @Required()
   @Validate(GenericBalance.schema())
   public fundsBalance: GenericBalance;
   
-  @Required()
+  // TODO to let it pass in participant_createWithParameters
+  // @Required()
   @Validate(GenericBalance.schema())
   public volunteeringHoursBalance: GenericBalance;
 
-  @Required()
+  // TODO to let it pass in participant_createWithParameters
+  // @Required()
   @Validate(yup.array(Goods.schema()))
   public goodsStock: Array<FlatConvectorModel<Goods>>;
 

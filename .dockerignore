@@ -1,0 +1,52 @@
+# all other
+volumes/
+README.md
+LICENSE
+npm-debug.log
+Dockerfile*
+docker-compose*
+.dockerignore
+.git
+.gitignore
+.vscode
+*.env
+*.sh
+*.md
+# lerna
+packages/**/node_modules
+# root dirs
+.bak
+.convector
+assets
+build
+chaincode-solidary-network-chaincode
+packages/server-graphql/.gitignore
+packages/server-graphql/assets
+packages/server-graphql/config
+#packages/server-graphql/.dockerignore
+packages/server-graphql/.env
+packages/server-graphql/Dockerfile
+packages/server-graphql/*.sh
+packages/server-graphql/*.md
+packages/server-graphql/*.env
+packages/server-graphql/*.gql
+packages/server-graphql/tsconfig.*
+packages/server-graphql/tslint.*
+# root files
+backup.sh
+chaincode.config.json
+FILE_VERSION
+chaincode.config.docker.json
+chaincode.config.json
+couchdb
+dist
+indexes
+insomnia-workspace
+lerna-debug.log
+org1.transaction.config.docker.json
+org1.transaction.config.json
+org2.transaction.config.json
+tsconfig.json
+update-paths.js
+upgrade-chaincode.txt
+DOCKER.md

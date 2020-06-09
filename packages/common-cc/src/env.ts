@@ -1,6 +1,7 @@
 // tslint:disable-next-line:no-var-requires
 import { homedir } from 'os';
 
+// re-used in two places
 const identityOrg: string = process.env.ORG || 'org1';
 
 export const envVariables: any = {

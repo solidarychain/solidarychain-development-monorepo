@@ -20,11 +20,6 @@ mutation personLogin($loginPersonData: LoginPersonInput!) {
 				id
 				name
 				msp
-				identities {
-					id
-					status
-					fingerprint
-				}
 			}
 			# extended non citizenCard data
 			mobilePhone

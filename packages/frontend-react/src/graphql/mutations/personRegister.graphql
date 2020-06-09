@@ -1,5 +1,5 @@
-mutation personNew($newPersonData: NewPersonInput!) {
-  personNew(newPersonData: $newPersonData) {
+mutation personRegister($newPersonData: NewPersonInput!) {
+  personRegister(newPersonData: $newPersonData) {
     id
     firstname
     lastname
@@ -18,11 +18,6 @@ mutation personNew($newPersonData: NewPersonInput!) {
       id
       name
       msp
-      identities {
-        id
-        status
-        fingerprint
-      }
     }
   }
 }

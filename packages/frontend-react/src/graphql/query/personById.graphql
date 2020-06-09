@@ -18,11 +18,6 @@ query personById($id: String!) {
 			id
 			name
 			msp
-			identities {
-				id
-				status
-				fingerprint
-			}
 		}
 		# extended non citizenCard data
 		mobilePhone
@@ -59,11 +54,6 @@ query personById($id: String!) {
 		requestLocation
 		otherInformation
 		registrationDate
-		identities {
-			id
-			status
-			fingerprint
-		}
 		createdDate		
 	}
 }

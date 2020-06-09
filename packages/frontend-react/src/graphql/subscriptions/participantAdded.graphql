@@ -3,10 +3,5 @@ subscription participantAdded {
 		id
 		name
 		msp
-		identities {
-			id
-			status
-			fingerprint
-		}
 	}
 }

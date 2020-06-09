@@ -4,359 +4,550 @@ import * as ApolloReactHooks from '@apollo/react-hooks';
 export type Maybe<T> = T | null;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string,
-  String: string,
-  Boolean: boolean,
-  Int: number,
-  Float: number,
-  JSONObject: any,
-  Date: any,
+  ID: string;
+  String: string;
+  Boolean: boolean;
+  Int: number;
+  Float: number;
+  /** The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
+  JSONObject: any;
+  /** Date custom scalar type */
+  Date: any;
+};
+
+export type AccessToken = {
+  __typename?: 'AccessToken';
+  accessToken: Scalars['String'];
 };
 
 export type AddPersonAttributeInput = {
-  id: Scalars['ID'],
-  content?: Maybe<Scalars['JSONObject']>,
-  issuedDate?: Maybe<Scalars['Float']>,
-  expiresDate?: Maybe<Scalars['Date']>,
-  expired?: Maybe<Scalars['Boolean']>,
-  certifierID?: Maybe<Scalars['String']>,
+  id: Scalars['ID'];
+  content?: Maybe<Scalars['JSONObject']>;
+  issuedDate?: Maybe<Scalars['Float']>;
+  expiresDate?: Maybe<Scalars['Date']>;
+  expired?: Maybe<Scalars['Boolean']>;
+  certifierID?: Maybe<Scalars['String']>;
+};
+
+export type Asset = {
+  __typename?: 'Asset';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  assetType: Scalars['String'];
+  ambassadors?: Maybe<Array<Scalars['String']>>;
+  owner: EntityResult;
+  location?: Maybe<Scalars['String']>;
+  tags?: Maybe<Array<Scalars['String']>>;
+  metaData?: Maybe<Scalars['JSONObject']>;
+  metaDataInternal?: Maybe<Scalars['JSONObject']>;
+  participant: Participant;
+  createdDate: Scalars['Float'];
+  createdByPersonId?: Maybe<Scalars['String']>;
 };
 
 export type Attribute = {
-   __typename?: 'Attribute',
-  id: Scalars['ID'],
-  content?: Maybe<Scalars['JSONObject']>,
-  issuedDate?: Maybe<Scalars['Float']>,
-  expiresDate?: Maybe<Scalars['Date']>,
-  expired?: Maybe<Scalars['Boolean']>,
-  certifierID?: Maybe<Scalars['String']>,
+  __typename?: 'Attribute';
+  id: Scalars['ID'];
+  content?: Maybe<Scalars['JSONObject']>;
+  issuedDate?: Maybe<Scalars['Float']>;
+  expiresDate?: Maybe<Scalars['Date']>;
+  expired?: Maybe<Scalars['Boolean']>;
+  certifierID?: Maybe<Scalars['String']>;
 };
 
 export type Cause = {
-   __typename?: 'Cause',
-  id: Scalars['ID'],
-  name: Scalars['String'],
-  startDate?: Maybe<Scalars['Float']>,
-  endDate?: Maybe<Scalars['Float']>,
-  location?: Maybe<Scalars['String']>,
-  tags?: Maybe<Array<Scalars['String']>>,
-  metaData?: Maybe<Scalars['JSONObject']>,
-  input: EntityResult,
-  participant: Participant,
-  identities: Array<X509Identities>,
-  createdDate: Scalars['Float'],
+  __typename?: 'Cause';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  email?: Maybe<Scalars['String']>;
+  ambassadors?: Maybe<Array<Scalars['String']>>;
+  startDate?: Maybe<Scalars['Float']>;
+  endDate?: Maybe<Scalars['Float']>;
+  location?: Maybe<Scalars['String']>;
+  tags?: Maybe<Array<Scalars['String']>>;
+  metaData?: Maybe<Scalars['JSONObject']>;
+  metaDataInternal?: Maybe<Scalars['JSONObject']>;
+  input: EntityResult;
+  participant: Participant;
+  createdDate: Scalars['Float'];
+  createdByPersonId?: Maybe<Scalars['String']>;
+  fundsBalance: GenericBalance;
+  volunteeringHoursBalance: GenericBalance;
+  goodsStock?: Maybe<Array<Goods>>;
 };
 
 
 export type Entity = {
-   __typename?: 'Entity',
-  id: Scalars['ID'],
-  type: Scalars['String'],
-  createdDate: Scalars['Float'],
-  identities: Array<X509Identities>,
+  __typename?: 'Entity';
+  id: Scalars['ID'];
+  type: Scalars['String'];
+  createdDate: Scalars['Float'];
 };
 
 export type EntityResult = {
-   __typename?: 'EntityResult',
-  entity: Entity,
+  __typename?: 'EntityResult';
+  entity: Entity;
+};
+
+export type GenericBalance = {
+  __typename?: 'GenericBalance';
+  debit: Scalars['Float'];
+  credit: Scalars['Float'];
+  balance: Scalars['Float'];
 };
 
 export type GetByAttributeInput = {
-  id: Scalars['String'],
-  content?: Maybe<Scalars['JSONObject']>,
+  id: Scalars['String'];
+  content?: Maybe<Scalars['JSONObject']>;
+};
+
+export type GetByComplexQueryInput = {
+  filter: Scalars['JSONObject'];
+  fields?: Maybe<Array<Scalars['String']>>;
+  sort?: Maybe<Array<Scalars['JSONObject']>>;
+};
+
+export type Goods = {
+  __typename?: 'Goods';
+  id: Scalars['ID'];
+  code: Scalars['String'];
+  barCode?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  tags?: Maybe<Array<Scalars['String']>>;
+  balance: GenericBalance;
+  metaData?: Maybe<Scalars['JSONObject']>;
+  metaDataInternal?: Maybe<Scalars['JSONObject']>;
+  createdDate: Scalars['Float'];
+  createdByPersonId: Scalars['String'];
+};
+
+export type GoodsInput = {
+  id?: Maybe<Scalars['ID']>;
+  code: Scalars['String'];
+  barCode?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  quantity: Scalars['Float'];
+  tags?: Maybe<Array<Scalars['String']>>;
+  metaData?: Maybe<Scalars['JSONObject']>;
+  metaDataInternal?: Maybe<Scalars['JSONObject']>;
 };
 
 
 export type LoginPersonInput = {
-  username: Scalars['String'],
-  password: Scalars['String'],
+  username: Scalars['String'];
+  password: Scalars['String'];
 };
 
 export type Mutation = {
-   __typename?: 'Mutation',
-  personLogin: PersonLoginResponse,
-  personLogout: Scalars['Boolean'],
-  revokeUserRefreshTokens: Scalars['Boolean'],
-  participantNew: Participant,
-  personNew: Person,
-  personAddAttribute: Person,
-  transactionNew: Transaction,
-  causeNew: Cause,
+  __typename?: 'Mutation';
+  personLogin: PersonLoginResponse;
+  personLogout: Scalars['Boolean'];
+  revokeUserRefreshTokens: Scalars['Boolean'];
+  causeNew: Cause;
+  participantNew: Participant;
+  personRegister: Person;
+  personAddAttribute: Person;
+  transactionNew: Transaction;
+  assetNew: Asset;
 };
 
 
 export type MutationPersonLoginArgs = {
-  loginPersonData: LoginPersonInput
+  loginPersonData: LoginPersonInput;
 };
 
 
 export type MutationRevokeUserRefreshTokensArgs = {
-  username: Scalars['String']
-};
-
-
-export type MutationParticipantNewArgs = {
-  newParticipantData: NewParticipantInput
-};
-
-
-export type MutationPersonNewArgs = {
-  newPersonData: NewPersonInput
-};
-
-
-export type MutationPersonAddAttributeArgs = {
-  addPersonAttributeData: AddPersonAttributeInput,
-  personId: Scalars['String']
-};
-
-
-export type MutationTransactionNewArgs = {
-  newTransactionData: NewTransactionInput
+  username: Scalars['String'];
 };
 
 
 export type MutationCauseNewArgs = {
-  newCauseData: NewCauseInput
+  newCauseData: NewCauseInput;
+};
+
+
+export type MutationParticipantNewArgs = {
+  newParticipantData: NewParticipantInput;
+};
+
+
+export type MutationPersonRegisterArgs = {
+  newPersonData: NewPersonInput;
+};
+
+
+export type MutationPersonAddAttributeArgs = {
+  addPersonAttributeData: AddPersonAttributeInput;
+  personId: Scalars['String'];
+};
+
+
+export type MutationTransactionNewArgs = {
+  newTransactionData: NewTransactionInput;
+};
+
+
+export type MutationAssetNewArgs = {
+  newAssetData: NewAssetInput;
+};
+
+export type NewAssetInput = {
+  id?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+  assetType: Scalars['String'];
+  ambassadors?: Maybe<Array<Scalars['String']>>;
+  owner: Scalars['JSONObject'];
+  location?: Maybe<Scalars['String']>;
+  tags?: Maybe<Array<Scalars['String']>>;
+  metaData?: Maybe<Scalars['JSONObject']>;
+  metaDataInternal?: Maybe<Scalars['JSONObject']>;
+  loggedPersonId?: Maybe<Scalars['String']>;
 };
 
 export type NewCauseInput = {
-  id?: Maybe<Scalars['String']>,
-  name: Scalars['String'],
-  startDate?: Maybe<Scalars['Date']>,
-  endDate?: Maybe<Scalars['Date']>,
-  location?: Maybe<Scalars['String']>,
-  tags?: Maybe<Array<Scalars['String']>>,
-  metaData?: Maybe<Scalars['JSONObject']>,
-  input: Scalars['JSONObject'],
+  id?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+  email?: Maybe<Scalars['String']>;
+  ambassadors?: Maybe<Array<Scalars['String']>>;
+  startDate?: Maybe<Scalars['Date']>;
+  endDate?: Maybe<Scalars['Date']>;
+  location?: Maybe<Scalars['String']>;
+  tags?: Maybe<Array<Scalars['String']>>;
+  metaData?: Maybe<Scalars['JSONObject']>;
+  metaDataInternal?: Maybe<Scalars['JSONObject']>;
+  loggedPersonId?: Maybe<Scalars['String']>;
+  input: Scalars['JSONObject'];
 };
 
 export type NewParticipantInput = {
-  id: Scalars['String'],
-  name: Scalars['String'],
+  id?: Maybe<Scalars['String']>;
+  code: Scalars['String'];
+  name: Scalars['String'];
+  email?: Maybe<Scalars['String']>;
+  ambassadors?: Maybe<Array<Scalars['String']>>;
+  metaData?: Maybe<Scalars['JSONObject']>;
+  metaDataInternal?: Maybe<Scalars['JSONObject']>;
+  loggedPersonId?: Maybe<Scalars['String']>;
 };
 
 export type NewPersonInput = {
-  id?: Maybe<Scalars['String']>,
-  username?: Maybe<Scalars['String']>,
-  password?: Maybe<Scalars['String']>,
-  email?: Maybe<Scalars['String']>,
-  mobilePhone?: Maybe<Scalars['Float']>,
-  postal?: Maybe<Scalars['String']>,
-  city?: Maybe<Scalars['String']>,
-  region?: Maybe<Scalars['String']>,
-  geoLocation?: Maybe<Scalars['String']>,
-  timezone?: Maybe<Scalars['String']>,
-  personalInfo?: Maybe<Scalars['String']>,
-  profile?: Maybe<Scalars['JSONObject']>,
-  firstname?: Maybe<Scalars['String']>,
-  lastname?: Maybe<Scalars['String']>,
-  gender?: Maybe<Scalars['String']>,
-  height?: Maybe<Scalars['Float']>,
-  fatherFirstname?: Maybe<Scalars['String']>,
-  fatherLastname?: Maybe<Scalars['String']>,
-  motherFirstname?: Maybe<Scalars['String']>,
-  motherLastname?: Maybe<Scalars['String']>,
-  birthDate?: Maybe<Scalars['Date']>,
-  nationality?: Maybe<Scalars['String']>,
-  country?: Maybe<Scalars['String']>,
-  documentNumber?: Maybe<Scalars['String']>,
-  documentType?: Maybe<Scalars['String']>,
-  cardVersion?: Maybe<Scalars['String']>,
-  emissionDate?: Maybe<Scalars['Date']>,
-  expirationDate?: Maybe<Scalars['Date']>,
-  emittingEntity?: Maybe<Scalars['String']>,
-  identityNumber?: Maybe<Scalars['String']>,
-  fiscalNumber: Scalars['String'],
-  socialSecurityNumber?: Maybe<Scalars['String']>,
-  beneficiaryNumber?: Maybe<Scalars['String']>,
-  pan?: Maybe<Scalars['String']>,
-  requestLocation?: Maybe<Scalars['String']>,
-  otherInformation?: Maybe<Scalars['String']>,
+  id?: Maybe<Scalars['String']>;
+  username?: Maybe<Scalars['String']>;
+  password?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  mobilePhone?: Maybe<Scalars['String']>;
+  postal?: Maybe<Scalars['String']>;
+  city?: Maybe<Scalars['String']>;
+  region?: Maybe<Scalars['String']>;
+  geoLocation?: Maybe<Scalars['String']>;
+  timezone?: Maybe<Scalars['String']>;
+  personalInfo?: Maybe<Scalars['String']>;
+  metaData?: Maybe<Scalars['JSONObject']>;
+  metaDataInternal?: Maybe<Scalars['JSONObject']>;
+  profile?: Maybe<Scalars['JSONObject']>;
+  firstname?: Maybe<Scalars['String']>;
+  lastname?: Maybe<Scalars['String']>;
+  gender?: Maybe<Scalars['String']>;
+  height?: Maybe<Scalars['Float']>;
+  fatherFirstname?: Maybe<Scalars['String']>;
+  fatherLastname?: Maybe<Scalars['String']>;
+  motherFirstname?: Maybe<Scalars['String']>;
+  motherLastname?: Maybe<Scalars['String']>;
+  birthDate?: Maybe<Scalars['Date']>;
+  nationality?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  documentNumber?: Maybe<Scalars['String']>;
+  documentType?: Maybe<Scalars['String']>;
+  cardVersion?: Maybe<Scalars['String']>;
+  emissionDate?: Maybe<Scalars['Date']>;
+  expirationDate?: Maybe<Scalars['Date']>;
+  emittingEntity?: Maybe<Scalars['String']>;
+  identityNumber?: Maybe<Scalars['String']>;
+  fiscalNumber: Scalars['String'];
+  socialSecurityNumber?: Maybe<Scalars['String']>;
+  beneficiaryNumber?: Maybe<Scalars['String']>;
+  pan?: Maybe<Scalars['String']>;
+  requestLocation?: Maybe<Scalars['String']>;
+  otherInformation?: Maybe<Scalars['String']>;
 };
 
 export type NewTransactionInput = {
-  id?: Maybe<Scalars['String']>,
-  transactionType: Scalars['String'],
-  resourceType: Scalars['String'],
-  input: Scalars['JSONObject'],
-  output: Scalars['JSONObject'],
-  quantity: Scalars['Float'],
-  currency: Scalars['String'],
-  location: Scalars['String'],
-  tags?: Maybe<Array<Scalars['String']>>,
-  metaData?: Maybe<Scalars['JSONObject']>,
-  metaDataInternal?: Maybe<Scalars['JSONObject']>,
+  id?: Maybe<Scalars['String']>;
+  transactionType: Scalars['String'];
+  resourceType: Scalars['String'];
+  input: Scalars['JSONObject'];
+  output: Scalars['JSONObject'];
+  quantity?: Maybe<Scalars['Float']>;
+  currency?: Maybe<Scalars['String']>;
+  location?: Maybe<Scalars['String']>;
+  tags?: Maybe<Array<Scalars['String']>>;
+  metaData?: Maybe<Scalars['JSONObject']>;
+  metaDataInternal?: Maybe<Scalars['JSONObject']>;
+  loggedPersonId?: Maybe<Scalars['String']>;
+  assetId?: Maybe<Scalars['String']>;
+  goods?: Maybe<Array<GoodsInput>>;
 };
 
 export type Participant = {
-   __typename?: 'Participant',
-  id: Scalars['ID'],
-  name: Scalars['String'],
-  msp: Scalars['String'],
-  participant?: Maybe<Participant>,
-  identities: Array<X509Identities>,
-  createdDate: Scalars['Float'],
+  __typename?: 'Participant';
+  id: Scalars['ID'];
+  code: Scalars['String'];
+  name: Scalars['String'];
+  email?: Maybe<Scalars['String']>;
+  ambassadors?: Maybe<Array<Scalars['String']>>;
+  msp: Scalars['String'];
+  participant?: Maybe<Participant>;
+  metaData?: Maybe<Scalars['JSONObject']>;
+  metaDataInternal?: Maybe<Scalars['JSONObject']>;
+  createdDate: Scalars['Float'];
+  createdByPersonId?: Maybe<Scalars['String']>;
+  fundsBalance: GenericBalance;
+  volunteeringHoursBalance: GenericBalance;
+  goodsStock?: Maybe<Array<Goods>>;
 };
 
 export type Person = {
-   __typename?: 'Person',
-  id: Scalars['ID'],
-  username?: Maybe<Scalars['String']>,
-  email?: Maybe<Scalars['String']>,
-  attributes?: Maybe<Array<Attribute>>,
-  roles?: Maybe<Array<Scalars['String']>>,
-  participant: Participant,
-  identities: Array<X509Identities>,
-  createdDate: Scalars['Float'],
-  registrationDate: Scalars['Date'],
-  mobilePhone?: Maybe<Scalars['Float']>,
-  postal?: Maybe<Scalars['String']>,
-  city?: Maybe<Scalars['String']>,
-  region?: Maybe<Scalars['String']>,
-  geoLocation?: Maybe<Scalars['String']>,
-  timezone?: Maybe<Scalars['String']>,
-  personalInfo?: Maybe<Scalars['String']>,
-  profile?: Maybe<Scalars['JSONObject']>,
-  firstname?: Maybe<Scalars['String']>,
-  lastname?: Maybe<Scalars['String']>,
-  gender?: Maybe<Scalars['String']>,
-  height?: Maybe<Scalars['Float']>,
-  fatherFirstname?: Maybe<Scalars['String']>,
-  fatherLastname?: Maybe<Scalars['String']>,
-  motherFirstname?: Maybe<Scalars['String']>,
-  motherLastname?: Maybe<Scalars['String']>,
-  birthDate?: Maybe<Scalars['Date']>,
-  nationality?: Maybe<Scalars['String']>,
-  country?: Maybe<Scalars['String']>,
-  documentNumber?: Maybe<Scalars['String']>,
-  documentType?: Maybe<Scalars['String']>,
-  cardVersion?: Maybe<Scalars['String']>,
-  emissionDate?: Maybe<Scalars['Date']>,
-  expirationDate?: Maybe<Scalars['Date']>,
-  emittingEntity?: Maybe<Scalars['String']>,
-  identityNumber?: Maybe<Scalars['String']>,
-  fiscalNumber: Scalars['String'],
-  socialSecurityNumber?: Maybe<Scalars['String']>,
-  beneficiaryNumber?: Maybe<Scalars['String']>,
-  pan?: Maybe<Scalars['String']>,
-  requestLocation?: Maybe<Scalars['String']>,
-  otherInformation?: Maybe<Scalars['String']>,
+  __typename?: 'Person';
+  id: Scalars['ID'];
+  username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  attributes?: Maybe<Array<Attribute>>;
+  roles?: Maybe<Array<Scalars['String']>>;
+  participant: Participant;
+  createdDate: Scalars['Float'];
+  registrationDate: Scalars['Date'];
+  mobilePhone?: Maybe<Scalars['String']>;
+  postal?: Maybe<Scalars['String']>;
+  city?: Maybe<Scalars['String']>;
+  region?: Maybe<Scalars['String']>;
+  geoLocation?: Maybe<Scalars['String']>;
+  timezone?: Maybe<Scalars['String']>;
+  personalInfo?: Maybe<Scalars['String']>;
+  metaData?: Maybe<Scalars['JSONObject']>;
+  metaDataInternal?: Maybe<Scalars['JSONObject']>;
+  profile?: Maybe<Scalars['JSONObject']>;
+  fundsBalance: GenericBalance;
+  volunteeringHoursBalance: GenericBalance;
+  goodsStock?: Maybe<Array<Goods>>;
+  firstname?: Maybe<Scalars['String']>;
+  lastname?: Maybe<Scalars['String']>;
+  gender?: Maybe<Scalars['String']>;
+  height?: Maybe<Scalars['Float']>;
+  fatherFirstname?: Maybe<Scalars['String']>;
+  fatherLastname?: Maybe<Scalars['String']>;
+  motherFirstname?: Maybe<Scalars['String']>;
+  motherLastname?: Maybe<Scalars['String']>;
+  birthDate?: Maybe<Scalars['Date']>;
+  nationality?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  documentNumber?: Maybe<Scalars['String']>;
+  documentType?: Maybe<Scalars['String']>;
+  cardVersion?: Maybe<Scalars['String']>;
+  emissionDate?: Maybe<Scalars['Date']>;
+  expirationDate?: Maybe<Scalars['Date']>;
+  emittingEntity?: Maybe<Scalars['String']>;
+  identityNumber?: Maybe<Scalars['String']>;
+  fiscalNumber: Scalars['String'];
+  socialSecurityNumber?: Maybe<Scalars['String']>;
+  beneficiaryNumber?: Maybe<Scalars['String']>;
+  pan?: Maybe<Scalars['String']>;
+  requestLocation?: Maybe<Scalars['String']>;
+  otherInformation?: Maybe<Scalars['String']>;
 };
 
 export type PersonLoginResponse = {
-   __typename?: 'PersonLoginResponse',
-  user: Person,
-  accessToken: Scalars['String'],
+  __typename?: 'PersonLoginResponse';
+  user: Person;
+  accessToken: Scalars['String'];
 };
 
 export type Query = {
-   __typename?: 'Query',
-  participantById: Participant,
-  participants: Array<Participant>,
-  personById: Person,
-  personByUsername: Person,
-  persons: Array<Person>,
-  personByAttribute: Array<Person>,
-  personProfile: Person,
-  transactionById: Transaction,
-  transactions: Array<Transaction>,
-  causeById: Cause,
-  causes: Array<Cause>,
-};
-
-
-export type QueryParticipantByIdArgs = {
-  id: Scalars['String']
-};
-
-
-export type QueryParticipantsArgs = {
-  skip?: Maybe<Scalars['Int']>,
-  take?: Maybe<Scalars['Int']>
-};
-
-
-export type QueryPersonByIdArgs = {
-  id: Scalars['String']
-};
-
-
-export type QueryPersonByUsernameArgs = {
-  username: Scalars['String']
-};
-
-
-export type QueryPersonsArgs = {
-  skip?: Maybe<Scalars['Int']>,
-  take?: Maybe<Scalars['Int']>
-};
-
-
-export type QueryPersonByAttributeArgs = {
-  skip?: Maybe<Scalars['Int']>,
-  take?: Maybe<Scalars['Int']>,
-  getByAttributeInput: GetByAttributeInput
-};
-
-
-export type QueryTransactionByIdArgs = {
-  id: Scalars['String']
-};
-
-
-export type QueryTransactionsArgs = {
-  skip?: Maybe<Scalars['Int']>,
-  take?: Maybe<Scalars['Int']>
-};
-
-
-export type QueryCauseByIdArgs = {
-  id: Scalars['String']
+  __typename?: 'Query';
+  causes: Array<Cause>;
+  causeOngoing: Array<Cause>;
+  causeComplexQuery: Array<Cause>;
+  causeById: Cause;
+  participants: Array<Participant>;
+  participantComplexQuery: Array<Participant>;
+  participantById: Participant;
+  participantByCode: Participant;
+  persons: Array<Person>;
+  personByAttribute: Array<Person>;
+  personComplexQuery: Array<Person>;
+  personById: Person;
+  personByUsername: Person;
+  personByFiscalnumber: Person;
+  personProfile: Person;
+  transactions: Array<Transaction>;
+  transactionComplexQuery: Array<Transaction>;
+  transactionById: Transaction;
+  assets: Array<Asset>;
+  assetComplexQuery: Array<Asset>;
+  assetById: Asset;
 };
 
 
 export type QueryCausesArgs = {
-  skip?: Maybe<Scalars['Int']>,
-  take?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>;
+  take?: Maybe<Scalars['Int']>;
+};
+
+
+export type QueryCauseOngoingArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  take?: Maybe<Scalars['Int']>;
+  date: Scalars['Float'];
+};
+
+
+export type QueryCauseComplexQueryArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  take?: Maybe<Scalars['Int']>;
+  getByComplexQueryInput: GetByComplexQueryInput;
+};
+
+
+export type QueryCauseByIdArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryParticipantsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  take?: Maybe<Scalars['Int']>;
+};
+
+
+export type QueryParticipantComplexQueryArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  take?: Maybe<Scalars['Int']>;
+  getByComplexQueryInput: GetByComplexQueryInput;
+};
+
+
+export type QueryParticipantByIdArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryParticipantByCodeArgs = {
+  code: Scalars['String'];
+};
+
+
+export type QueryPersonsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  take?: Maybe<Scalars['Int']>;
+};
+
+
+export type QueryPersonByAttributeArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  take?: Maybe<Scalars['Int']>;
+  getByAttributeInput: GetByAttributeInput;
+};
+
+
+export type QueryPersonComplexQueryArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  take?: Maybe<Scalars['Int']>;
+  getByComplexQueryInput: GetByComplexQueryInput;
+};
+
+
+export type QueryPersonByIdArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryPersonByUsernameArgs = {
+  username: Scalars['String'];
+};
+
+
+export type QueryPersonByFiscalnumberArgs = {
+  fiscalNumber: Scalars['String'];
+};
+
+
+export type QueryTransactionsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  take?: Maybe<Scalars['Int']>;
+};
+
+
+export type QueryTransactionComplexQueryArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  take?: Maybe<Scalars['Int']>;
+  getByComplexQueryInput: GetByComplexQueryInput;
+};
+
+
+export type QueryTransactionByIdArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryAssetsArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  take?: Maybe<Scalars['Int']>;
+};
+
+
+export type QueryAssetComplexQueryArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  take?: Maybe<Scalars['Int']>;
+  getByComplexQueryInput: GetByComplexQueryInput;
+};
+
+
+export type QueryAssetByIdArgs = {
+  id: Scalars['String'];
 };
 
 export type Subscription = {
-   __typename?: 'Subscription',
-  personLogged: Scalars['String'],
-  participantAdded: Participant,
-  personAdded: Person,
-  transactionAdded: Transaction,
-  causeAdded: Cause,
+  __typename?: 'Subscription';
+  personLogged: Scalars['String'];
+  causeAdded: Cause;
+  participantAdded: Participant;
+  personAdded: Person;
+  transactionAdded: Transaction;
+  assetAdded: Asset;
 };
 
 export type Transaction = {
-   __typename?: 'Transaction',
-  id: Scalars['ID'],
-  transactionType: Scalars['String'],
-  resourceType: Scalars['String'],
-  input: EntityResult,
-  output: EntityResult,
-  quantity: Scalars['Float'],
-  currency: Scalars['String'],
-  location: Scalars['String'],
-  tags?: Maybe<Array<Scalars['String']>>,
-  metaData?: Maybe<Scalars['JSONObject']>,
-  metaDataInternal?: Maybe<Scalars['JSONObject']>,
-  participant?: Maybe<Participant>,
-  identities?: Maybe<Array<X509Identities>>,
-  createdDate: Scalars['Float'],
+  __typename?: 'Transaction';
+  id: Scalars['ID'];
+  transactionType: Scalars['String'];
+  resourceType: Scalars['String'];
+  input: EntityResult;
+  output: EntityResult;
+  quantity?: Maybe<Scalars['Float']>;
+  currency?: Maybe<Scalars['String']>;
+  location?: Maybe<Scalars['String']>;
+  tags?: Maybe<Array<Scalars['String']>>;
+  metaData?: Maybe<Scalars['JSONObject']>;
+  metaDataInternal?: Maybe<Scalars['JSONObject']>;
+  participant?: Maybe<Participant>;
+  createdDate: Scalars['Float'];
+  createdByPersonId?: Maybe<Scalars['String']>;
+  assetId?: Maybe<Scalars['String']>;
+  goods?: Maybe<Array<Goods>>;
 };
 
 export type X509Identities = {
-   __typename?: 'x509Identities',
-  id?: Maybe<Scalars['ID']>,
-  status: Scalars['Boolean'],
-  fingerprint: Scalars['String'],
+  __typename?: 'x509Identities';
+  id?: Maybe<Scalars['ID']>;
+  status: Scalars['Boolean'];
+  fingerprint: Scalars['String'];
 };
 
 export type NewParticipantDataMutationVariables = {
-  newParticipantData: NewParticipantInput
+  newParticipantData: NewParticipantInput;
 };
 
 
@@ -365,15 +556,11 @@ export type NewParticipantDataMutation = (
   & { participantNew: (
     { __typename?: 'Participant' }
     & Pick<Participant, 'id' | 'name' | 'msp'>
-    & { identities: Array<(
-      { __typename?: 'x509Identities' }
-      & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
-    )> }
   ) }
 );
 
 export type ParticipantNewMutationVariables = {
-  newParticipantData: NewParticipantInput
+  newParticipantData: NewParticipantInput;
 };
 
 
@@ -382,16 +569,12 @@ export type ParticipantNewMutation = (
   & { participantNew: (
     { __typename?: 'Participant' }
     & Pick<Participant, 'id' | 'name' | 'msp'>
-    & { identities: Array<(
-      { __typename?: 'x509Identities' }
-      & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
-    )> }
   ) }
 );
 
 export type PersonAddAttributeMutationVariables = {
-  personId: Scalars['String'],
-  addPersonAttributeData: AddPersonAttributeInput
+  personId: Scalars['String'];
+  addPersonAttributeData: AddPersonAttributeInput;
 };
 
 
@@ -400,22 +583,18 @@ export type PersonAddAttributeMutation = (
   & { personAddAttribute: (
     { __typename?: 'Person' }
     & Pick<Person, 'id' | 'username' | 'email' | 'roles' | 'mobilePhone' | 'postal' | 'city' | 'region' | 'geoLocation' | 'timezone' | 'personalInfo' | 'profile' | 'firstname' | 'lastname' | 'gender' | 'height' | 'fatherFirstname' | 'fatherLastname' | 'motherFirstname' | 'motherLastname' | 'birthDate' | 'nationality' | 'country' | 'documentNumber' | 'documentType' | 'cardVersion' | 'emissionDate' | 'expirationDate' | 'emittingEntity' | 'identityNumber' | 'fiscalNumber' | 'socialSecurityNumber' | 'beneficiaryNumber' | 'pan' | 'requestLocation' | 'otherInformation' | 'registrationDate'>
-    & { attributes: Maybe<Array<(
+    & { attributes?: Maybe<Array<(
       { __typename?: 'Attribute' }
       & Pick<Attribute, 'id' | 'content' | 'issuedDate' | 'expiresDate' | 'expired' | 'certifierID'>
     )>>, participant: (
       { __typename?: 'Participant' }
       & Pick<Participant, 'id' | 'name' | 'msp'>
-      & { identities: Array<(
-        { __typename?: 'x509Identities' }
-        & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
-      )> }
     ) }
   ) }
 );
 
 export type PersonLoginMutationVariables = {
-  loginPersonData: LoginPersonInput
+  loginPersonData: LoginPersonInput;
 };
 
 
@@ -427,16 +606,12 @@ export type PersonLoginMutation = (
     & { user: (
       { __typename?: 'Person' }
       & Pick<Person, 'id' | 'username' | 'email' | 'roles' | 'mobilePhone' | 'postal' | 'city' | 'region' | 'geoLocation' | 'timezone' | 'personalInfo' | 'profile' | 'firstname' | 'lastname' | 'gender' | 'height' | 'fatherFirstname' | 'fatherLastname' | 'motherFirstname' | 'motherLastname' | 'birthDate' | 'nationality' | 'country' | 'documentNumber' | 'documentType' | 'cardVersion' | 'emissionDate' | 'expirationDate' | 'emittingEntity' | 'identityNumber' | 'fiscalNumber' | 'socialSecurityNumber' | 'beneficiaryNumber' | 'pan' | 'requestLocation' | 'otherInformation' | 'registrationDate'>
-      & { attributes: Maybe<Array<(
+      & { attributes?: Maybe<Array<(
         { __typename?: 'Attribute' }
         & Pick<Attribute, 'id' | 'content' | 'issuedDate' | 'expiresDate' | 'expired' | 'certifierID'>
       )>>, participant: (
         { __typename?: 'Participant' }
         & Pick<Participant, 'id' | 'name' | 'msp'>
-        & { identities: Array<(
-          { __typename?: 'x509Identities' }
-          & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
-        )> }
       ) }
     ) }
   ) }
@@ -450,33 +625,29 @@ export type PersonLogoutMutation = (
   & Pick<Mutation, 'personLogout'>
 );
 
-export type PersonNewMutationVariables = {
-  newPersonData: NewPersonInput
+export type PersonRegisterMutationVariables = {
+  newPersonData: NewPersonInput;
 };
 
 
-export type PersonNewMutation = (
+export type PersonRegisterMutation = (
   { __typename?: 'Mutation' }
-  & { personNew: (
+  & { personRegister: (
     { __typename?: 'Person' }
     & Pick<Person, 'id' | 'firstname' | 'lastname' | 'username' | 'email' | 'roles'>
-    & { attributes: Maybe<Array<(
+    & { attributes?: Maybe<Array<(
       { __typename?: 'Attribute' }
       & Pick<Attribute, 'id' | 'content' | 'issuedDate' | 'expiresDate' | 'expired' | 'certifierID'>
     )>>, participant: (
       { __typename?: 'Participant' }
       & Pick<Participant, 'id' | 'name' | 'msp'>
-      & { identities: Array<(
-        { __typename?: 'x509Identities' }
-        & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
-      )> }
     ) }
   ) }
 );
 
 export type CausesQueryVariables = {
-  skip?: Maybe<Scalars['Int']>,
-  take?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>;
+  take?: Maybe<Scalars['Int']>;
 };
 
 
@@ -496,7 +667,7 @@ export type CausesQuery = (
 );
 
 export type ParticipantByIdQueryVariables = {
-  id: Scalars['String']
+  id: Scalars['String'];
 };
 
 
@@ -505,19 +676,16 @@ export type ParticipantByIdQuery = (
   & { participantById: (
     { __typename?: 'Participant' }
     & Pick<Participant, 'id' | 'name' | 'msp' | 'createdDate'>
-    & { participant: Maybe<(
+    & { participant?: Maybe<(
       { __typename?: 'Participant' }
       & Pick<Participant, 'id' | 'name' | 'msp'>
-    )>, identities: Array<(
-      { __typename?: 'x509Identities' }
-      & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
     )> }
   ) }
 );
 
 export type ParticipantsQueryVariables = {
-  skip?: Maybe<Scalars['Int']>,
-  take?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>;
+  take?: Maybe<Scalars['Int']>;
 };
 
 
@@ -526,20 +694,17 @@ export type ParticipantsQuery = (
   & { participants: Array<(
     { __typename?: 'Participant' }
     & Pick<Participant, 'id' | 'name' | 'msp' | 'createdDate'>
-    & { participant: Maybe<(
+    & { participant?: Maybe<(
       { __typename?: 'Participant' }
       & Pick<Participant, 'id' | 'name' | 'msp'>
-    )>, identities: Array<(
-      { __typename?: 'x509Identities' }
-      & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
     )> }
   )> }
 );
 
 export type PersonByAttributeQueryVariables = {
-  getByAttributeInput: GetByAttributeInput,
-  skip?: Maybe<Scalars['Int']>,
-  take?: Maybe<Scalars['Int']>
+  getByAttributeInput: GetByAttributeInput;
+  skip?: Maybe<Scalars['Int']>;
+  take?: Maybe<Scalars['Int']>;
 };
 
 
@@ -548,25 +713,18 @@ export type PersonByAttributeQuery = (
   & { personByAttribute: Array<(
     { __typename?: 'Person' }
     & Pick<Person, 'id' | 'username' | 'email' | 'roles' | 'mobilePhone' | 'postal' | 'city' | 'region' | 'geoLocation' | 'timezone' | 'personalInfo' | 'profile' | 'firstname' | 'lastname' | 'gender' | 'height' | 'fatherFirstname' | 'fatherLastname' | 'motherFirstname' | 'motherLastname' | 'birthDate' | 'nationality' | 'country' | 'documentNumber' | 'documentType' | 'cardVersion' | 'emissionDate' | 'expirationDate' | 'emittingEntity' | 'identityNumber' | 'fiscalNumber' | 'socialSecurityNumber' | 'beneficiaryNumber' | 'pan' | 'requestLocation' | 'otherInformation' | 'registrationDate' | 'createdDate'>
-    & { attributes: Maybe<Array<(
+    & { attributes?: Maybe<Array<(
       { __typename?: 'Attribute' }
       & Pick<Attribute, 'id' | 'content' | 'issuedDate' | 'expiresDate' | 'expired' | 'certifierID'>
     )>>, participant: (
       { __typename?: 'Participant' }
       & Pick<Participant, 'id' | 'name' | 'msp'>
-      & { identities: Array<(
-        { __typename?: 'x509Identities' }
-        & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
-      )> }
-    ), identities: Array<(
-      { __typename?: 'x509Identities' }
-      & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
-    )> }
+    ) }
   )> }
 );
 
 export type PersonByIdQueryVariables = {
-  id: Scalars['String']
+  id: Scalars['String'];
 };
 
 
@@ -575,25 +733,18 @@ export type PersonByIdQuery = (
   & { personById: (
     { __typename?: 'Person' }
     & Pick<Person, 'id' | 'username' | 'email' | 'roles' | 'mobilePhone' | 'postal' | 'city' | 'region' | 'geoLocation' | 'timezone' | 'personalInfo' | 'profile' | 'firstname' | 'lastname' | 'gender' | 'height' | 'fatherFirstname' | 'fatherLastname' | 'motherFirstname' | 'motherLastname' | 'birthDate' | 'nationality' | 'country' | 'documentNumber' | 'documentType' | 'cardVersion' | 'emissionDate' | 'expirationDate' | 'emittingEntity' | 'identityNumber' | 'fiscalNumber' | 'socialSecurityNumber' | 'beneficiaryNumber' | 'pan' | 'requestLocation' | 'otherInformation' | 'registrationDate' | 'createdDate'>
-    & { attributes: Maybe<Array<(
+    & { attributes?: Maybe<Array<(
       { __typename?: 'Attribute' }
       & Pick<Attribute, 'id' | 'content' | 'issuedDate' | 'expiresDate' | 'expired' | 'certifierID'>
     )>>, participant: (
       { __typename?: 'Participant' }
       & Pick<Participant, 'id' | 'name' | 'msp'>
-      & { identities: Array<(
-        { __typename?: 'x509Identities' }
-        & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
-      )> }
-    ), identities: Array<(
-      { __typename?: 'x509Identities' }
-      & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
-    )> }
+    ) }
   ) }
 );
 
 export type PersonByUsernameQueryVariables = {
-  username: Scalars['String']
+  username: Scalars['String'];
 };
 
 
@@ -602,20 +753,13 @@ export type PersonByUsernameQuery = (
   & { personByUsername: (
     { __typename?: 'Person' }
     & Pick<Person, 'id' | 'firstname' | 'lastname' | 'username' | 'email' | 'roles' | 'createdDate'>
-    & { attributes: Maybe<Array<(
+    & { attributes?: Maybe<Array<(
       { __typename?: 'Attribute' }
       & Pick<Attribute, 'id' | 'content' | 'issuedDate' | 'expiresDate' | 'expired' | 'certifierID'>
     )>>, participant: (
       { __typename?: 'Participant' }
       & Pick<Participant, 'id' | 'name' | 'msp'>
-      & { identities: Array<(
-        { __typename?: 'x509Identities' }
-        & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
-      )> }
-    ), identities: Array<(
-      { __typename?: 'x509Identities' }
-      & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
-    )> }
+    ) }
   ) }
 );
 
@@ -627,26 +771,19 @@ export type PersonProfileQuery = (
   & { personProfile: (
     { __typename?: 'Person' }
     & Pick<Person, 'id' | 'username' | 'email' | 'roles' | 'mobilePhone' | 'postal' | 'city' | 'region' | 'geoLocation' | 'timezone' | 'personalInfo' | 'profile' | 'firstname' | 'lastname' | 'gender' | 'height' | 'fatherFirstname' | 'fatherLastname' | 'motherFirstname' | 'motherLastname' | 'birthDate' | 'nationality' | 'country' | 'documentNumber' | 'documentType' | 'cardVersion' | 'emissionDate' | 'expirationDate' | 'emittingEntity' | 'identityNumber' | 'fiscalNumber' | 'socialSecurityNumber' | 'beneficiaryNumber' | 'pan' | 'requestLocation' | 'otherInformation' | 'registrationDate' | 'createdDate'>
-    & { attributes: Maybe<Array<(
+    & { attributes?: Maybe<Array<(
       { __typename?: 'Attribute' }
       & Pick<Attribute, 'id' | 'content' | 'issuedDate' | 'expiresDate' | 'expired' | 'certifierID'>
     )>>, participant: (
       { __typename?: 'Participant' }
       & Pick<Participant, 'id' | 'name' | 'msp'>
-      & { identities: Array<(
-        { __typename?: 'x509Identities' }
-        & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
-      )> }
-    ), identities: Array<(
-      { __typename?: 'x509Identities' }
-      & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
-    )> }
+    ) }
   ) }
 );
 
 export type PersonsQueryVariables = {
-  skip?: Maybe<Scalars['Int']>,
-  take?: Maybe<Scalars['Int']>
+  skip?: Maybe<Scalars['Int']>;
+  take?: Maybe<Scalars['Int']>;
 };
 
 
@@ -655,20 +792,33 @@ export type PersonsQuery = (
   & { persons: Array<(
     { __typename?: 'Person' }
     & Pick<Person, 'id' | 'username' | 'email' | 'roles' | 'mobilePhone' | 'postal' | 'city' | 'region' | 'geoLocation' | 'timezone' | 'personalInfo' | 'profile' | 'firstname' | 'lastname' | 'gender' | 'height' | 'fatherFirstname' | 'fatherLastname' | 'motherFirstname' | 'motherLastname' | 'birthDate' | 'nationality' | 'country' | 'documentNumber' | 'documentType' | 'cardVersion' | 'emissionDate' | 'expirationDate' | 'emittingEntity' | 'identityNumber' | 'fiscalNumber' | 'socialSecurityNumber' | 'beneficiaryNumber' | 'pan' | 'requestLocation' | 'otherInformation' | 'registrationDate' | 'createdDate'>
-    & { attributes: Maybe<Array<(
+    & { attributes?: Maybe<Array<(
       { __typename?: 'Attribute' }
       & Pick<Attribute, 'id' | 'content' | 'issuedDate' | 'expiresDate' | 'expired' | 'certifierID'>
     )>>, participant: (
       { __typename?: 'Participant' }
-      & Pick<Participant, 'id' | 'name' | 'msp' | 'createdDate'>
-      & { identities: Array<(
-        { __typename?: 'x509Identities' }
-        & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
-      )> }
-    ), identities: Array<(
-      { __typename?: 'x509Identities' }
-      & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
-    )> }
+      & Pick<Participant, 'id' | 'code' | 'email' | 'name' | 'msp' | 'createdDate'>
+      & { fundsBalance: (
+        { __typename?: 'GenericBalance' }
+        & Pick<GenericBalance, 'debit' | 'credit' | 'balance'>
+      ), volunteeringHoursBalance: (
+        { __typename?: 'GenericBalance' }
+        & Pick<GenericBalance, 'debit' | 'credit' | 'balance'>
+      ) }
+    ), fundsBalance: (
+      { __typename?: 'GenericBalance' }
+      & Pick<GenericBalance, 'debit' | 'credit' | 'balance'>
+    ), volunteeringHoursBalance: (
+      { __typename?: 'GenericBalance' }
+      & Pick<GenericBalance, 'debit' | 'credit' | 'balance'>
+    ), goodsStock?: Maybe<Array<(
+      { __typename?: 'Goods' }
+      & Pick<Goods, 'id' | 'code' | 'barCode' | 'name' | 'description' | 'tags' | 'metaData' | 'metaDataInternal' | 'createdDate' | 'createdByPersonId'>
+      & { balance: (
+        { __typename?: 'GenericBalance' }
+        & Pick<GenericBalance, 'debit' | 'credit' | 'balance'>
+      ) }
+    )>> }
   )> }
 );
 
@@ -680,10 +830,6 @@ export type ParticipantAddedSubscription = (
   & { participantAdded: (
     { __typename?: 'Participant' }
     & Pick<Participant, 'id' | 'name' | 'msp'>
-    & { identities: Array<(
-      { __typename?: 'x509Identities' }
-      & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
-    )> }
   ) }
 );
 
@@ -695,16 +841,12 @@ export type PersonAddedSubscription = (
   & { personAdded: (
     { __typename?: 'Person' }
     & Pick<Person, 'id' | 'firstname' | 'lastname' | 'username' | 'email' | 'roles'>
-    & { attributes: Maybe<Array<(
+    & { attributes?: Maybe<Array<(
       { __typename?: 'Attribute' }
       & Pick<Attribute, 'id' | 'content' | 'issuedDate' | 'expiresDate' | 'expired' | 'certifierID'>
     )>>, participant: (
       { __typename?: 'Participant' }
       & Pick<Participant, 'id' | 'name' | 'msp'>
-      & { identities: Array<(
-        { __typename?: 'x509Identities' }
-        & Pick<X509Identities, 'id' | 'status' | 'fingerprint'>
-      )> }
     ) }
   ) }
 );
@@ -724,11 +866,6 @@ export const NewParticipantDataDocument = gql`
     id
     name
     msp
-    identities {
-      id
-      status
-      fingerprint
-    }
   }
 }
     `;
@@ -763,11 +900,6 @@ export const ParticipantNewDocument = gql`
     id
     name
     msp
-    identities {
-      id
-      status
-      fingerprint
-    }
   }
 }
     `;
@@ -815,11 +947,6 @@ export const PersonAddAttributeDocument = gql`
       id
       name
       msp
-      identities {
-        id
-        status
-        fingerprint
-      }
     }
     mobilePhone
     postal
@@ -904,11 +1031,6 @@ export const PersonLoginDocument = gql`
         id
         name
         msp
-        identities {
-          id
-          status
-          fingerprint
-        }
       }
       mobilePhone
       postal
@@ -1001,9 +1123,9 @@ export function usePersonLogoutMutation(baseOptions?: ApolloReactHooks.MutationH
 export type PersonLogoutMutationHookResult = ReturnType<typeof usePersonLogoutMutation>;
 export type PersonLogoutMutationResult = ApolloReactCommon.MutationResult<PersonLogoutMutation>;
 export type PersonLogoutMutationOptions = ApolloReactCommon.BaseMutationOptions<PersonLogoutMutation, PersonLogoutMutationVariables>;
-export const PersonNewDocument = gql`
-    mutation personNew($newPersonData: NewPersonInput!) {
-  personNew(newPersonData: $newPersonData) {
+export const PersonRegisterDocument = gql`
+    mutation personRegister($newPersonData: NewPersonInput!) {
+  personRegister(newPersonData: $newPersonData) {
     id
     firstname
     lastname
@@ -1022,40 +1144,35 @@ export const PersonNewDocument = gql`
       id
       name
       msp
-      identities {
-        id
-        status
-        fingerprint
-      }
     }
   }
 }
     `;
-export type PersonNewMutationFn = ApolloReactCommon.MutationFunction<PersonNewMutation, PersonNewMutationVariables>;
+export type PersonRegisterMutationFn = ApolloReactCommon.MutationFunction<PersonRegisterMutation, PersonRegisterMutationVariables>;
 
 /**
- * __usePersonNewMutation__
+ * __usePersonRegisterMutation__
  *
- * To run a mutation, you first call `usePersonNewMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `usePersonNewMutation` returns a tuple that includes:
+ * To run a mutation, you first call `usePersonRegisterMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePersonRegisterMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [personNewMutation, { data, loading, error }] = usePersonNewMutation({
+ * const [personRegisterMutation, { data, loading, error }] = usePersonRegisterMutation({
  *   variables: {
  *      newPersonData: // value for 'newPersonData'
  *   },
  * });
  */
-export function usePersonNewMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<PersonNewMutation, PersonNewMutationVariables>) {
-        return ApolloReactHooks.useMutation<PersonNewMutation, PersonNewMutationVariables>(PersonNewDocument, baseOptions);
+export function usePersonRegisterMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<PersonRegisterMutation, PersonRegisterMutationVariables>) {
+        return ApolloReactHooks.useMutation<PersonRegisterMutation, PersonRegisterMutationVariables>(PersonRegisterDocument, baseOptions);
       }
-export type PersonNewMutationHookResult = ReturnType<typeof usePersonNewMutation>;
-export type PersonNewMutationResult = ApolloReactCommon.MutationResult<PersonNewMutation>;
-export type PersonNewMutationOptions = ApolloReactCommon.BaseMutationOptions<PersonNewMutation, PersonNewMutationVariables>;
+export type PersonRegisterMutationHookResult = ReturnType<typeof usePersonRegisterMutation>;
+export type PersonRegisterMutationResult = ApolloReactCommon.MutationResult<PersonRegisterMutation>;
+export type PersonRegisterMutationOptions = ApolloReactCommon.BaseMutationOptions<PersonRegisterMutation, PersonRegisterMutationVariables>;
 export const CausesDocument = gql`
     query causes($skip: Int, $take: Int) {
   causes(skip: $skip, take: $take) {
@@ -1080,7 +1197,7 @@ export const CausesDocument = gql`
  * __useCausesQuery__
  *
  * To run a query within a React component, call `useCausesQuery` and pass it any options that fit your needs.
- * When your component renders, `useCausesQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `useCausesQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
@@ -1113,11 +1230,6 @@ export const ParticipantByIdDocument = gql`
       name
       msp
     }
-    identities {
-      id
-      status
-      fingerprint
-    }
     createdDate
   }
 }
@@ -1127,7 +1239,7 @@ export const ParticipantByIdDocument = gql`
  * __useParticipantByIdQuery__
  *
  * To run a query within a React component, call `useParticipantByIdQuery` and pass it any options that fit your needs.
- * When your component renders, `useParticipantByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `useParticipantByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
@@ -1159,11 +1271,6 @@ export const ParticipantsDocument = gql`
       name
       msp
     }
-    identities {
-      id
-      status
-      fingerprint
-    }
     createdDate
   }
 }
@@ -1173,7 +1280,7 @@ export const ParticipantsDocument = gql`
  * __useParticipantsQuery__
  *
  * To run a query within a React component, call `useParticipantsQuery` and pass it any options that fit your needs.
- * When your component renders, `useParticipantsQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `useParticipantsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
@@ -1214,11 +1321,6 @@ export const PersonByAttributeDocument = gql`
       id
       name
       msp
-      identities {
-        id
-        status
-        fingerprint
-      }
     }
     mobilePhone
     postal
@@ -1253,11 +1355,6 @@ export const PersonByAttributeDocument = gql`
     requestLocation
     otherInformation
     registrationDate
-    identities {
-      id
-      status
-      fingerprint
-    }
     createdDate
   }
 }
@@ -1267,7 +1364,7 @@ export const PersonByAttributeDocument = gql`
  * __usePersonByAttributeQuery__
  *
  * To run a query within a React component, call `usePersonByAttributeQuery` and pass it any options that fit your needs.
- * When your component renders, `usePersonByAttributeQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `usePersonByAttributeQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
@@ -1309,11 +1406,6 @@ export const PersonByIdDocument = gql`
       id
       name
       msp
-      identities {
-        id
-        status
-        fingerprint
-      }
     }
     mobilePhone
     postal
@@ -1348,11 +1440,6 @@ export const PersonByIdDocument = gql`
     requestLocation
     otherInformation
     registrationDate
-    identities {
-      id
-      status
-      fingerprint
-    }
     createdDate
   }
 }
@@ -1362,7 +1449,7 @@ export const PersonByIdDocument = gql`
  * __usePersonByIdQuery__
  *
  * To run a query within a React component, call `usePersonByIdQuery` and pass it any options that fit your needs.
- * When your component renders, `usePersonByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `usePersonByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
@@ -1404,16 +1491,6 @@ export const PersonByUsernameDocument = gql`
       id
       name
       msp
-      identities {
-        id
-        status
-        fingerprint
-      }
-    }
-    identities {
-      id
-      status
-      fingerprint
     }
     createdDate
   }
@@ -1424,7 +1501,7 @@ export const PersonByUsernameDocument = gql`
  * __usePersonByUsernameQuery__
  *
  * To run a query within a React component, call `usePersonByUsernameQuery` and pass it any options that fit your needs.
- * When your component renders, `usePersonByUsernameQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `usePersonByUsernameQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
@@ -1464,11 +1541,6 @@ export const PersonProfileDocument = gql`
       id
       name
       msp
-      identities {
-        id
-        status
-        fingerprint
-      }
     }
     mobilePhone
     postal
@@ -1503,11 +1575,6 @@ export const PersonProfileDocument = gql`
     requestLocation
     otherInformation
     registrationDate
-    identities {
-      id
-      status
-      fingerprint
-    }
     createdDate
   }
 }
@@ -1517,7 +1584,7 @@ export const PersonProfileDocument = gql`
  * __usePersonProfileQuery__
  *
  * To run a query within a React component, call `usePersonProfileQuery` and pass it any options that fit your needs.
- * When your component renders, `usePersonProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `usePersonProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
@@ -1554,18 +1621,20 @@ export const PersonsDocument = gql`
     roles
     participant {
       id
+      code
+      email
+      fundsBalance {
+        debit
+        credit
+        balance
+      }
+      volunteeringHoursBalance {
+        debit
+        credit
+        balance
+      }
       name
       msp
-      identities {
-        id
-        status
-        fingerprint
-      }
-      identities {
-        id
-        status
-        fingerprint
-      }
       createdDate
     }
     mobilePhone
@@ -1576,6 +1645,33 @@ export const PersonsDocument = gql`
     timezone
     personalInfo
     profile
+    fundsBalance {
+      debit
+      credit
+      balance
+    }
+    volunteeringHoursBalance {
+      debit
+      credit
+      balance
+    }
+    goodsStock {
+      id
+      code
+      barCode
+      name
+      description
+      tags
+      balance {
+        debit
+        credit
+        balance
+      }
+      metaData
+      metaDataInternal
+      createdDate
+      createdByPersonId
+    }
     firstname
     lastname
     gender
@@ -1601,11 +1697,6 @@ export const PersonsDocument = gql`
     requestLocation
     otherInformation
     registrationDate
-    identities {
-      id
-      status
-      fingerprint
-    }
     createdDate
   }
 }
@@ -1615,7 +1706,7 @@ export const PersonsDocument = gql`
  * __usePersonsQuery__
  *
  * To run a query within a React component, call `usePersonsQuery` and pass it any options that fit your needs.
- * When your component renders, `usePersonsQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `usePersonsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
@@ -1643,11 +1734,6 @@ export const ParticipantAddedDocument = gql`
     id
     name
     msp
-    identities {
-      id
-      status
-      fingerprint
-    }
   }
 }
     `;
@@ -1656,7 +1742,7 @@ export const ParticipantAddedDocument = gql`
  * __useParticipantAddedSubscription__
  *
  * To run a query within a React component, call `useParticipantAddedSubscription` and pass it any options that fit your needs.
- * When your component renders, `useParticipantAddedSubscription` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `useParticipantAddedSubscription` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
@@ -1693,11 +1779,6 @@ export const PersonAddedDocument = gql`
       id
       name
       msp
-      identities {
-        id
-        status
-        fingerprint
-      }
     }
   }
 }
@@ -1707,7 +1788,7 @@ export const PersonAddedDocument = gql`
  * __usePersonAddedSubscription__
  *
  * To run a query within a React component, call `usePersonAddedSubscription` and pass it any options that fit your needs.
- * When your component renders, `usePersonAddedSubscription` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `usePersonAddedSubscription` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
@@ -1733,7 +1814,7 @@ export const PersonLoggedDocument = gql`
  * __usePersonLoggedSubscription__
  *
  * To run a query within a React component, call `usePersonLoggedSubscription` and pass it any options that fit your needs.
- * When your component renders, `usePersonLoggedSubscription` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `usePersonLoggedSubscription` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;

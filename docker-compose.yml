@@ -1,0 +1,53 @@
+version: '3.4'
+
+networks:
+  hurley_dev_net:
+
+services:
+
+  solidarychain-server-graphql:
+    # this works if docker-compose up is launched in api folder
+    # build: .
+    # outside, using context
+    # build:
+    #   dockerfile: Dockerfile
+    #   context: ./packages/server-graphql
+    # using image to force images to have implicit name, else compose prefix it with folder name ex ls-api_
+    image: solidarychain/solidarychain-server-graphql
+    # using hub image
+    # image: solidarychain/solidarychain-server-graphql:1.0.0
+    hostname: solidarychain-server-graphql
+    domainname: solidarychain/solidarychain-server-graphql
+    container_name: solidarychain-server-graphql
+    # depends_on:
+    #   - koakh-simplified-api-mongodb
+    # links:
+    #   - koakh-simplified-api-mongodb:mongodb
+    restart: unless-stopped
+    networks:
+      - hurley_dev_net
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      # - /home/mario/hyperledger-fabric-network/.hfc-org1:/root/hyperledger-fabric-network/.hfc-org1
+      # - /home/mario/hyperledger-fabric-network/artifacts:/root/hyperledger-fabric-network/artifacts
+      # - /home/mario/hyperledger-fabric-network/network-profiles:/root/hyperledger-fabric-network/network-profiles
+      # - /home/mario/hyperledger-fabric-network/peerOrganizations:/root/hyperledger-fabric-network/peerOrganizations
+      # to fix
+      # - /home/mario/hyperledger-fabric-network:/usr/src/app/hyperledger-fabric-network
+      - /home/mario/hyperledger-fabric-network:/home/mario/hyperledger-fabric-network
+      # network config
+      # - ./chaincode.config.docker.json:/usr/src/app/chaincode.config.json
+      # - ./org1.transaction.config.docker.json:/usr/src/app/org1.transaction.config.json
+      # config
+      - ./packages/server-graphql/prod.env:/usr/src/app/packages/server-graphql/.env
+      - ./packages/server-graphql/config/:/usr/src/app/packages/server-graphql/config
+    ports:
+      - 443:3443
+      # enable debug inside container
+      # - 9229:9229
+    # env:
+    #   - "HTTPS_SERVER_PORT=443"
+    env_file:
+      - packages/server-graphql/prod.env
+    # wip: use production version: required config
+    command: "npm run --prefix packages/server-graphql start"
