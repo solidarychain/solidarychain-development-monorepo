@@ -7,18 +7,25 @@ export class Participant extends ConvectorModel<Participant> {
   @Required()
   public readonly type = c.CONVECTOR_MODEL_PATH_PARTICIPANT;
 
-  @Required()
+  // TODO 2 to let it pass in participant_createWithParameters
+  // @Required()
   @Validate(yup.string())
   public code: string;
 
-  @Required()
+  // TODO 2 to let it pass in participant_createWithParameters
+  // @Required()
   @Validate(yup.string())
   public name: string;
 
-  @Validate(yup.string().matches(c.REGEX_EMAIL, c.YUP_MESSAGE_INVALID_EMAIL))
+  // TODO 2 to let it pass in participant_createWithParameters
+  // @Required()
+  // @Validate(yup.string().matches(c.REGEX_EMAIL, c.YUP_MESSAGE_INVALID_EMAIL))
+  @Validate(yup.string())
   public email: string;
 
-  @Validate(yup.array().of(yup.string()))
+  // TODO 3 to let it pass in participant_createWithParameters
+  // @Validate(yup.array().of(yup.string()))
+  @Validate(yup.array().of(yup.string().nullable()))
   public ambassadors: string[];
 
   // TODO to let it pass in participant_createWithParameters
@@ -41,7 +48,8 @@ export class Participant extends ConvectorModel<Participant> {
   @Validate(yup.object().nullable())
   public metaDataInternal: any;
 
-  @Required()
+  // TODO 2 to let it pass in participant_createWithParameters
+  // @Required()
   @Validate(yup.number())
   public createdDate: number;
 

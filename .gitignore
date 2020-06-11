@@ -13,3 +13,5 @@ packages/server-graphql/config/solidarychain.com
 prod.env
 hurley-network-topology/
 .deleted-from-root/
+chaincode-solidary-network-chaincode.tgz
+sncc.pak
