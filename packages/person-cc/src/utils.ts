@@ -52,7 +52,7 @@ export const checkIfSenderIsGovernment = async (gov: Participant, sender: string
 
   if (sender !== govActiveIdentity.fingerprint) {
     // TODO
-    // throw new Error(`Just the government - ID=gov - can create people - requesting organization was sender:[${this.sender}]==[${govActiveIdentity.fingerprint}]`);
-    // throw new Error('Just the government (participant with id gov) can create people');
+    // throw new Error(`FUCK-MAN-Just the government - ID=gov - can create people - requesting organization was sender:[${this.sender}]==[${govActiveIdentity.fingerprint}]`);
+    throw new Error('Just the government (participant with id gov) can create people');
   }
 }

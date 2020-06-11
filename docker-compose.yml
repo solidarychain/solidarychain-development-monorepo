@@ -39,7 +39,7 @@ services:
       # - ./chaincode.config.docker.json:/usr/src/app/chaincode.config.json
       # - ./org1.transaction.config.docker.json:/usr/src/app/org1.transaction.config.json
       # config
-      - ./packages/server-graphql/prod.env:/usr/src/app/packages/server-graphql/.env
+      - ./packages/server-graphql/docker.env:/usr/src/app/packages/server-graphql/.env
       - ./packages/server-graphql/config/:/usr/src/app/packages/server-graphql/config
     ports:
       - 443:3443
@@ -48,6 +48,6 @@ services:
     # env:
     #   - "HTTPS_SERVER_PORT=443"
     env_file:
-      - packages/server-graphql/prod.env
+      - packages/server-graphql/docker.env
     # wip: use production version: required config
     command: "npm run --prefix packages/server-graphql start"

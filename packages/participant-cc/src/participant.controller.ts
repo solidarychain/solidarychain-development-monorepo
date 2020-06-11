@@ -30,7 +30,7 @@ export class ParticipantController extends ConvectorController {
       gov = await Participant.getOne(c.UUID_GOV_ID);
       if (!!gov && !gov.id) {
         // throw new Error('There is no participant with that identity');
-        throw new Error('There is no go participant');
+        throw new Error('There is no gov participant');
       }
     }
 

@@ -110,11 +110,21 @@
 		]
 	},
 	{
-		"path": "/media/mario/Storage/Documents/Development/@Solidary.Network/solidarynetwork-development-monorepo/packages/server-graphql/src/auth/auth.resolver.ts",
+		"path": "$ROOTPATH$/packages/server-graphql/src/auth/auth.resolver.ts",
 		"bookmarks": [
 			{
 				"line": 42,
 				"column": 0,
+				"label": ""
+			}
+		]
+	},
+	{
+		"path": "$ROOTPATH$/packages/person-cc/src/utils.ts",
+		"bookmarks": [
+			{
+				"line": 55,
+				"column": 10,
 				"label": ""
 			}
 		]
