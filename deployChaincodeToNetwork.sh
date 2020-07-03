@@ -51,7 +51,7 @@ press_any_key() {
 # ibm auction network
 # VERSION="1.10"
 # production network
-VERSION="1.0"
+VERSION="1.2"
 # 1 build with hurley, 0 only when we want to skip restart hurley network to build the chaincode, with 0 we dont reBuild chaincode, good for just deploy to networks
 BUILD_WITH_HURLEY=1
 
