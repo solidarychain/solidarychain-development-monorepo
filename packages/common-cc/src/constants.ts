@@ -22,8 +22,27 @@ const CONVECTOR_MODEL_PATH_TRANSACTION_NAME: string = 'Transaction';
 
 // note if change Participant, Person or Cause don't forget to change hard coded string in EntityType ./types.ts to
 
-// uuid
-const UUID_GOV_ID: string = 'c8ca045c-9d1b-407f-b9ae-31711758f2d0';
+// participant
+const GOV_UUID: string = 'c8ca045c-9d1b-407f-b9ae-31711758f2d0';
+const GOV_CODE: String = 'gov';
+const GOV_NAME: String = 'Big Government';
+const NAB_UUID: string = 'b130558c-b910-4e82-b92b-caa199a047c1';
+const NAB_CODE: string = 'nab';
+const NAB_NAME: string = 'National Bank';
+// person
+const DEFAULT_PASSWORD: string = '12345678';
+const JOHN_UUID: string = '4ea88521-031b-4279-9165-9c10e1839001';
+const JOHN_FIRST_NAME: string = 'John';
+const JOHN_LAST_NAME: string = 'Doe';
+const JOHN_USER_NAME: string = 'johndoe';
+const JOHN_EMAIL: string = `${JOHN_USER_NAME}@mail.com`;
+const JOHN_FISCAL_NUMBER: string = '182692124';
+const JANE_UUID: string = '4ea88521-031b-4279-9165-9c10e1838010';
+const JANE_FIRST_NAME: string = 'Jane';
+const JANE_LAST_NAME: string = 'Doe';
+const JANE_USER_NAME: string = 'janedoe';
+const JANE_EMAIL: string = `${JANE_USER_NAME}@mail.com`;
+const JANE_FISCAL_NUMBER: string = '582692178';
 
 // yup messages
 const YUP_MESSAGE_INTEGER: string = 'Should be a integer number.';
@@ -60,9 +79,27 @@ export const appConstants = {
 	CONVECTOR_MODEL_PATH_PERSON_NAME,
 	CONVECTOR_MODEL_PATH_CAUSE_NAME,
 	CONVECTOR_MODEL_PATH_ASSET_NAME,
-	CONVECTOR_MODEL_PATH_TRANSACTION_NAME,	
-	// uuid
-	UUID_GOV_ID,
+	CONVECTOR_MODEL_PATH_TRANSACTION_NAME,
+	// seed
+	GOV_UUID,
+	GOV_CODE,
+	GOV_NAME,
+	NAB_UUID,
+	NAB_CODE,
+	NAB_NAME,
+	DEFAULT_PASSWORD,
+	JOHN_UUID,
+	JOHN_FIRST_NAME,
+	JOHN_LAST_NAME,
+	JOHN_USER_NAME,
+	JOHN_EMAIL,
+	JOHN_FISCAL_NUMBER,
+	JANE_UUID,
+	JANE_FIRST_NAME,
+	JANE_LAST_NAME,
+	JANE_USER_NAME,
+	JANE_EMAIL,
+	JANE_FISCAL_NUMBER,
 	// yup messages
 	YUP_MESSAGE_INTEGER,
 	YUP_MESSAGE_USERNAME_TO_SHORT,
@@ -76,7 +113,7 @@ export const appConstants = {
 	REGEX_EMAIL,
 	REGEX_UUID_V4,
 	REGEX_PASSWORD,
-	REGEX_LOCATION, 
+	REGEX_LOCATION,
 	// exception error messages
 	EXCEPTION_ERROR_NO_COMPLEX_QUERY,
 };

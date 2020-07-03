@@ -1,4 +1,4 @@
-import { appConstants as c, checkValidModelIds, removeOwnerFromAmbassadorsArray } from '@solidary-network/common-cc';
+import { appConstants as c, checkValidModelIds, removeOwnerFromAmbassadorsArray, ChaincodeEvent } from '@solidary-network/common-cc';
 import { Participant, getParticipantByIdentity } from '@solidary-network/participant-cc';
 import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
@@ -53,7 +53,13 @@ export class AssetController extends ConvectorController<ChaincodeTx> {
     delete asset.owner.type;
     delete asset.loggedPersonId;
 
+    // save asset
     await asset.save();
+
+    // Emit the Event
+    this.tx.stub.generateUUID;
+    // Emit the Event
+    await this.tx.stub.setEvent(ChaincodeEvent.AssetCreatedEvent, asset);
   }
 
   @Invokable()
@@ -74,7 +80,10 @@ export class AssetController extends ConvectorController<ChaincodeTx> {
     existing.metaData = asset.metaData;
     existing.metaDataInternal = asset.metaDataInternal;
 
+    // save asset
     await existing.save();
+    // Emit the Event
+    await this.tx.stub.setEvent(ChaincodeEvent.AssetUpdatedEvent, asset);
   }
 
   /**
@@ -101,7 +110,7 @@ export class AssetController extends ConvectorController<ChaincodeTx> {
     }
     return existing[0];
   }
-  
+
   @Invokable()
   public async getAll(): Promise<FlatConvectorModel<Asset>[]> {
     return (await Asset.getAll(c.CONVECTOR_MODEL_PATH_ASSET)).map(asset => asset.toJSON() as any);

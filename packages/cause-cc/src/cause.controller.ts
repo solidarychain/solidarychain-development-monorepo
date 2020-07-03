@@ -1,4 +1,4 @@
-import { appConstants as c, checkValidModelIds, GenericBalance, Goods } from '@solidary-network/common-cc';
+import { appConstants as c, checkValidModelIds, GenericBalance, Goods, ChaincodeEvent } from '@solidary-network/common-cc';
 import { getParticipantByIdentity, Participant } from '@solidary-network/participant-cc';
 import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
@@ -56,7 +56,10 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
     delete cause.input.type;
     delete cause.loggedPersonId;
 
+    // save cause
     await cause.save();
+    // Emit the Event
+    await this.tx.stub.setEvent(ChaincodeEvent.CauseCreatedEvent, cause);
   }
 
   @Invokable()
@@ -78,7 +81,10 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
     existing.metaData = cause.metaData;
     existing.metaDataInternal = cause.metaDataInternal;
 
+    // save cause
     await existing.save();
+    // Emit the Event
+    await this.tx.stub.setEvent(ChaincodeEvent.CauseUpdatedEvent, cause);
   }
 
   /**

@@ -34,7 +34,7 @@ $ npx hurl --version
 
 1. to change chaincode while debug, use `dist/**/*.js` file versions
 2. if change are made in `chaincode-solidary-network-chaincode/**/*.ts` source code while debugging, don't forget to apply the same changes on `packages/**/*.ts`
-3. if have prpblems with debug, remove chaincode dir, I lost a few hours to figure out that the problem is in a sort of error, check error 
+3. if have prpblems with debug, remove chaincode dir, I lost a few hours to figure out that the problem is in a sort of error, check error
 
 ## MODE1: Start in debug chaincode
 
@@ -137,7 +137,7 @@ $ VERSION=1.0
 $ SEARCH_CONTAINER="dev-peer0.org1.hurley.lab-${CHAINCODE_NAME}-${VERSION}"
 $ docker logs $(docker container ls | grep ${SEARCH_CONTAINER} | awk '{print $1}' | head -n 1) -f
 # one liner  612  VERSION=2.1
-$ VERSION=1.4 && SEARCH_CONTAINER="dev-peer0.org1.hurley.lab-${CHAINCODE_NAME}-${VERSION}" && docker logs $(docker container ls | grep ${SEARCH_CONTAINER} | awk '{print $1}' | head -n 1) -f
+$ VERSION=1.0 && SEARCH_CONTAINER="dev-peer0.org1.hurley.lab-${CHAINCODE_NAME}-${VERSION}" && docker logs $(docker container ls | grep ${SEARCH_CONTAINER} | awk '{print $1}' | head -n 1) -f
 ```
 
 ## Problems and Solutions

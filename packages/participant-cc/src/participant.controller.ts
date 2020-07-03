@@ -1,4 +1,4 @@
-import { appConstants as c, checkValidModelIds, GenericBalance, Goods, x509Identities } from '@solidary-network/common-cc';
+import { appConstants as c, checkValidModelIds, GenericBalance, Goods, x509Identities, ChaincodeEvent } from '@solidary-network/common-cc';
 import { BaseStorage, Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ClientIdentity } from 'fabric-shim';
 import * as yup from 'yup';
@@ -24,10 +24,10 @@ export class ParticipantController extends ConvectorController {
   ) {
     // get participant if not gov, in case of gov it won't exists yet and will be without participant
     let gov: Participant;
-    if (id !== c.UUID_GOV_ID) {
+    if (id !== c.GOV_UUID) {
       // deprecated now always use gov to create participants
       // participant = await getParticipantByIdentity(this.sender);
-      gov = await Participant.getOne(c.UUID_GOV_ID);
+      gov = await Participant.getOne(c.GOV_UUID);
       if (!!gov && !gov.id) {
         // throw new Error('There is no participant with that identity');
         throw new Error('There is no gov participant');
@@ -62,7 +62,11 @@ export class ParticipantController extends ConvectorController {
     if (gov) {
       newParticipant.participant = gov;
     }
+
+    // save participant
     await newParticipant.save();
+    // Emit the Event
+    await this.tx.stub.setEvent(ChaincodeEvent.ParticipantCreatedEvent, newParticipant);
   }
 
   @Invokable()
@@ -75,10 +79,10 @@ export class ParticipantController extends ConvectorController {
   ) {
     // get participant if not gov, in case of gov it won't exists yet and will be without participant
     let gov: Participant;
-    if (participant.id !== c.UUID_GOV_ID) {
+    if (participant.id !== c.GOV_UUID) {
       // deprecated now always use gov to create participants
       // participant = await getParticipantByIdentity(this.sender);
-      gov = await Participant.getOne(c.UUID_GOV_ID);
+      gov = await Participant.getOne(c.GOV_UUID);
       if (!!gov && !gov.id) {
         // throw new Error('There is no participant with that identity');
         throw new Error('There is no gov participant');
@@ -117,7 +121,11 @@ export class ParticipantController extends ConvectorController {
     if (gov) {
       participant.participant = gov;
     }
+
+    // save participant
     await participant.save();
+    // Emit the Event
+    await this.tx.stub.setEvent(ChaincodeEvent.ParticipantCreatedEvent, participant);
   }
 
   @Invokable()
@@ -150,7 +158,10 @@ export class ParticipantController extends ConvectorController {
     existing.metaData = participant.metaData;
     existing.metaDataInternal = participant.metaDataInternal;
 
+    // save participant
     await existing.save();
+    // Emit the Event
+    await this.tx.stub.setEvent(ChaincodeEvent.ParticipantUpdatedEvent, participant);
   }
 
   // TODO: this works when we know how to create a new identity fingerprint
@@ -196,7 +207,10 @@ export class ParticipantController extends ConvectorController {
       status: true
     });
 
+    // save participant
     await existing.save();
+    // Emit the Event
+    await this.tx.stub.setEvent(ChaincodeEvent.ParticipantChangeIdentityEvent, existing);
   }
 
   /**
@@ -282,4 +296,31 @@ export class ParticipantController extends ConvectorController {
     return resultSet;
   }
 
+  // wip: unstable, and only creates first entity and have the problem 'Just the government (participant with id gov) can create people'
+  // @Invokable()
+  // public async instantiate() {
+  //   // mock data
+  //   const mockData = [
+  //     { id: c.GOV_UUID, code: c.GOV_CODE, name: c.GOV_NAME },
+  //     { id: c.NAB_UUID, code: c.NAB_CODE, name: c.NAB_NAME },
+  //   ];
+  //   await Promise.all(
+  //     mockData.map(async (participant: Participant) => {
+  //       let newParticipant = new Participant(participant.id);
+  //       newParticipant.code = participant.code;
+  //       newParticipant.name = participant.name;
+  //       newParticipant.msp = this.fullIdentity.getMSPID();
+  //       newParticipant.identities = [{
+  //         fingerprint: this.sender,
+  //         status: true
+  //       }];
+  //       newParticipant.createdDate = new Date().getTime();
+  //       newParticipant.fundsBalance = new GenericBalance();
+  //       newParticipant.volunteeringHoursBalance = new GenericBalance();
+  //       newParticipant.goodsStock = new Array<Goods>()
+  //       // require await ele Error: PUT_STATE failed: transaction ID: ...: no ledger context
+  //       await newParticipant.save();
+  //     })
+  //   );
+  // }  
 }

@@ -1,6 +1,6 @@
 import { Asset } from '@solidary-network/asset-cc';
 import { Cause } from '@solidary-network/cause-cc';
-import { appConstants as c, EntityType } from '@solidary-network/common-cc';
+import { appConstants as c, ChaincodeEvent, EntityType } from '@solidary-network/common-cc';
 import { getParticipantByIdentity, Participant } from '@solidary-network/participant-cc';
 import { Person } from '@solidary-network/person-cc';
 import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
@@ -17,7 +17,6 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     @Param(Transaction)
     transaction: Transaction,
   ) {
-    debugger;
     // use '' to prevent undefined when empty
     let debugMessage: string = '';
 
@@ -151,6 +150,7 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
         // delete the old ambassadors, else we leave old ones, new owner must nominate new ambassadors
         asset.ambassadors = [];
         // save asset
+        // TODO: add event
         await asset.save();
       }
     }
@@ -191,10 +191,11 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
       (transaction.output.entity as Participant | Person | Cause).fundsBalance.credit += transaction.quantity;
       (transaction.output.entity as Participant | Person | Cause).fundsBalance.balance += transaction.quantity;
       // save models
+      // TODO: add event
       await (transaction.input.entity as Participant | Person | Cause).save();
       await (transaction.output.entity as Participant | Person | Cause).save();
     }
-    
+
     // mode: TransactionType.TransferVolunteeringHours
 
     else if (transaction.transactionType === TransactionType.TransferVolunteeringHours && transaction.resourceType === ResourceType.VolunteeringHours) {
@@ -205,12 +206,13 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
       (transaction.output.entity as Participant | Person | Cause).volunteeringHoursBalance.credit += transaction.quantity;
       (transaction.output.entity as Participant | Person | Cause).volunteeringHoursBalance.balance += transaction.quantity;
       // save models
+      // TODO: add event
       await (transaction.input.entity as Participant | Person | Cause).save();
       await (transaction.output.entity as Participant | Person | Cause).save();
     }
-    
+
     // mode: Not Detected Transaction Type or Wrong Combination ex TRANSFER_VOLUNTEERING_HOURS with FUNDS
-    
+
     else {
       throw new Error(`Invalid transaction type combination, you must supply a valid combination ex TransactionType:[${TransactionType.TransferFunds}] with ResourceType: [${ResourceType.Funds}]`);
     }
@@ -227,8 +229,11 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     delete transaction.loggedPersonId;
     // add date in epoch unix time
     transaction.createdDate = new Date().getTime();
+
     // save transaction
     await transaction.save();
+    // Emit the Event
+    await this.tx.stub.setEvent(ChaincodeEvent.TransactionCreatedEvent, transaction);
   }
 
   // @Invokable()
@@ -258,7 +263,10 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     // update fields
     existing.metaDataInternal = transaction.metaDataInternal;
 
+    // save transaction
     await existing.save();
+    // Emit the Event
+    await this.tx.stub.setEvent(ChaincodeEvent.TransactionUpdatedEvent, transaction);
   }
 
   /**

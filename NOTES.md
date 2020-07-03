@@ -67,23 +67,24 @@
   - [Implement UsersService with ledger Persons/Users authentication](#implement-usersservice-with-ledger-personsusers-authentication)
   - [Clean up and solve problem of `@babel/.highlight.DELETE@latest` when use lerna bootstrap](#clean-up-and-solve-problem-of-babelhighlightdeletelatest-when-use-lerna-bootstrap)
   - [Solve custom nestjs packages dependencies](#solve-custom-nestjs-packages-dependencies)
-  - [Solve { Error: transaction returned with failure: {"name":"Error","status":500}](#solve--error-transaction-returned-with-failure-%22name%22%22error%22%22status%22500)
+  - [Solve { Error: transaction returned with failure: {"name":"Error","status":500}](#solve--error-transaction-returned-with-failure-nameerrorstatus500)
   - [Solve problem Cannot find module 'typescript/bin/tsc'](#solve-problem-cannot-find-module-typescriptbintsc)
   - [Problem tests/participant.spec.ts(30,11): error TS1005: ':' expected](#problem-testsparticipantspects3011-error-ts1005--expected)
   - [Add new transaction-cc module to chaincode](#add-new-transaction-cc-module-to-chaincode)
     - [add to graphql server](#add-to-graphql-server)
     - [Add new package to other files](#add-new-package-to-other-files)
   - [GraphQL ComplexQuery problem: How to send arbitrayGraphQL and ComplexQuery and the big sort problem](#graphql-complexquery-problem-how-to-send-arbitraygraphql-and-complexquery-and-the-big-sort-problem)
-  - [Participant changeIdentity / require "chaincodeAdmin" with `attrs."admin": "true"`](#participant-changeidentity--require-%22chaincodeadmin%22-with-attrs%22admin%22-%22true%22)
+  - [Participant changeIdentity / require "chaincodeAdmin" with `attrs."admin": "true"`](#participant-changeidentity--require-chaincodeadmin-with-attrsadmin-true)
   - [Debug restartEnv.sh : chaincode works in debug bug not with restartEnv.sh](#debug-restartenvsh--chaincode-works-in-debug-bug-not-with-restartenvsh)
   - [Hurley and fix Globall install](#hurley-and-fix-globall-install)
   - [Lerna Fix problem of install dependencies](#lerna-fix-problem-of-install-dependencies)
   - [After Update to new Packages we have Conversion of type 'FlatConvectorModel<Asset>[]' to type 'Asset[]' may be a mistake because neither type sufficiently overlaps with the other](#after-update-to-new-packages-we-have-conversion-of-type-flatconvectormodelasset-to-type-asset-may-be-a-mistake-because-neither-type-sufficiently-overlaps-with-the-other)
   - [Class-validator](#class-validator)
   - [Problem on create person can't find participant fingerprint? comes from `this.sender`](#problem-on-create-person-cant-find-participant-fingerprint-comes-from-thissender)
-  - [Problem again with "Cant find a participant with that fingerprint"](#problem-again-with-%22cant-find-a-participant-with-that-fingerprint%22)
+  - [Problem again with "Cant find a participant with that fingerprint"](#problem-again-with-cant-find-a-participant-with-that-fingerprint)
   - [Problem `(node:32043) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'curve' of undefined`](#problem-node32043-unhandledpromiserejectionwarning-typeerror-cannot-read-property-curve-of-undefined)
   - [Error: Failed to load gRPC binary module because it was not installed for the current system](#error-failed-to-load-grpc-binary-module-because-it-was-not-installed-for-the-current-system)
+    - [require await ele Error: PUT_STATE failed: transaction ID: ...: no ledger context](#require-await-ele-error-put_state-failed-transaction-id--no-ledger-context)
 
 This is a simple NestJs starter, based on above links, I only extended it with a few things like **swagger api**, **https**, **jwt**, and other stuff, thanks m8s
 
@@ -199,8 +200,8 @@ lerna
 
 ```shell
 # add package to package
-$ ADD_PACKAGE=@solidary-network/asset-cc
-$ TO_PACKAGE=@solidary-network/transaction-cc
+$ ADD_PACKAGE=@solidary-network/common-cc
+$ TO_PACKAGE=@solidary-network/participant-cc
 $ npx lerna add ${ADD_PACKAGE} --scope ${TO_PACKAGE}
 
 # $ ADD_PACKAGE=@solidary-network/common-cc
@@ -218,7 +219,7 @@ $ npx lerna add ${ADD_PACKAGE} --scope ${TO_PACKAGE}
 @solidary-network/server-graphql: src/participant/participant.service.ts(23,75): error TS2339: Property 'get' does not exist on type 'ConvectorControllerClient<ConvectorController<any>>'.
 @solidary-network/server-graphql: src/participant/participant.service.ts(35,105): error TS2339: Property 'getAll' does not exist on type 'ConvectorControllerClient<ConvectorController<any>>'.
 @solidary-network/server-graphql: 20:58:05 - Found 4 errors. Watching for file changes.
-# fix build cc's and start server
+# fix build cc's and start server, USED TO WHEN package can find other package like can't find @solidary-network/common-cc or can't find a new type added to package like ChaincodeEvent
 $ npx lerna run build --scope @solidary-network/person-cc --stream
 $ npx lerna run build --scope @solidary-network/participant-cc --stream
 $ npx lerna run start:debug --scope @solidary-network/server-graphql --stream
@@ -3115,3 +3116,7 @@ Original error: Cannot find module '/usr/local/lib/node_modules/@worldsibu/hurle
 $ cd /usr/local/lib/node_modules/@worldsibu/hurley/node_modules/
 $ npm rebuild
 ```
+
+### require await ele Error: PUT_STATE failed: transaction ID: ...: no ledger context
+
+In my case, it occurred because the result from my smartcontract was returned faster than a promise resolved. If it's also a case for you, add a missing await somewhere.

@@ -1,59 +1,7 @@
-# TODO
-# person personAddAttribute
-# updates:
-#   partcipant:
-#   person:
-#   cause:
-#   asset:
-
-# vars
-CHAINCODE_NAME=solidary-network-chaincode
-# model type
-CONVECTOR_MODEL_PATH_PREFIX=network.solidary.convector
-CONVECTOR_MODEL_PATH_PARTICIPANT=${CONVECTOR_MODEL_PATH_PREFIX}.participant
-CONVECTOR_MODEL_PATH_PERSON=${CONVECTOR_MODEL_PATH_PREFIX}.person
-CONVECTOR_MODEL_PATH_CAUSE=${CONVECTOR_MODEL_PATH_PREFIX}.cause
-CONVECTOR_MODEL_PATH_ASSET=${CONVECTOR_MODEL_PATH_PREFIX}.asset
-CONVECTOR_MODEL_PATH_TRANSACTION=${CONVECTOR_MODEL_PATH_PREFIX}.transaction
-CONVECTOR_MODEL_PATH_GOODS=${CONVECTOR_MODEL_PATH_PREFIX}.goods
-# Participants
-GOV_ID=c8ca045c-9d1b-407f-b9ae-31711758f2d0
-GOV_CODE=gov
-MIT_ID=61868772-4afd-4f94-af6a-8c87cf450f8e
-MIT_CODE=mit
-NABA_ID=b130558c-b910-4e82-b92b-caa199a047c1
-NABA_CODE=nab
-BADB_ID=f8596b03-492d-4d46-b54e-c4a70a037aa5
-BADB_CODE=bad
-GODB_ID=0fcc878a-6900-49d9-9a29-dffd9b8dae3b
-GODB_CODE=gba
-POPB_ID=0fcc878a-6900-49d9-9a29-dffd9b8dae3c
-POPB_CODE=pop
-# Persons
-JOHN_ID=4ea88521-031b-4279-9165-9c10e1839001
-JANE_ID=4ea88521-031b-4279-9165-9c10e1838010
-MINI_ID=4ea88521-031b-4279-9165-9c10e1839053
-# Causes
-CAUSE_001=acef70e5-cd25-4533-8392-9fa57e43cf11
-CAUSE_002=acef70e5-cd25-4533-8392-9fa57e43cf12
-CAUSE_003=acef70e5-cd25-4533-8392-9fa57e43cf69
-# Assets
-ASSET_001_ID=acef70e5-cd25-4533-8392-1fa57e430001
-ASSET_002_ID=acef70e5-cd25-4533-8392-1fa57e430002
-# Transactions
-TRANSACTION_001_ID=acef70e5-cd25-4533-8392-9fa57e43cf32
-# Misc
-TAGS="[\"red\", \"blue\"]"
-LOCATION=40.1890144,-8.5171909
-METADATA="{\"key\":\"value\"}"
-METADATA_INTERNAL="{\"key\":\"internal value\"}"
-# amabassadors
-AMBASSADORS="[\"${JOHN_ID}\", \"${JANE_ID}\"]"
-# roles
-ROLE_USER="USER"
-ROLE_GOV="GOV"
-ROLE_ADMIN="ADMIN"
-ROLES="[\"${ROLE_USER}\",\"${ROLE_GOV}\",\"${ROLE_ADMIN}\"]"
+# load .env
+set -a
+. seed.env
+set +a
 
 # commands
 # npx hurl invoke ${CHAINCODE_NAME} participant_getAll
@@ -67,8 +15,8 @@ ROLES="[\"${ROLE_USER}\",\"${ROLE_GOV}\",\"${ROLE_ADMIN}\"]"
 # invoke with user `admin` uses `gov`
 # invoke without specify user and org default to: user1 in org org1...
 
-      # # gov: this is the first participant, must be created without user -u admin
-      # echo "Creating participant: Big Government"
+# # gov: this is the first participant, must be created without user -u admin
+# echo "Creating participant: Big Government"
 ID=${GOV_ID}
 CODE=${GOV_CODE}
 NAME="Big Government"

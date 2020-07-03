@@ -7,29 +7,19 @@ export class Participant extends ConvectorModel<Participant> {
   @Required()
   public readonly type = c.CONVECTOR_MODEL_PATH_PARTICIPANT;
 
-  // TODO 2 to let it pass in participant_createWithParameters
-  // @Required()
   @Validate(yup.string())
   public code: string;
 
-  // TODO 2 to let it pass in participant_createWithParameters
-  // @Required()
   @Validate(yup.string())
   public name: string;
 
-  // TODO 2 to let it pass in participant_createWithParameters
-  // @Required()
   // @Validate(yup.string().matches(c.REGEX_EMAIL, c.YUP_MESSAGE_INVALID_EMAIL))
   @Validate(yup.string())
   public email: string;
 
-  // TODO 3 to let it pass in participant_createWithParameters
-  // @Validate(yup.array().of(yup.string()))
   @Validate(yup.array().of(yup.string().nullable()))
   public ambassadors: string[];
 
-  // TODO to let it pass in participant_createWithParameters
-  // @Required()
   @Validate(yup.string())
   public msp: string;
 
@@ -37,8 +27,6 @@ export class Participant extends ConvectorModel<Participant> {
   @Validate(Participant.schema())
   public participant: FlatConvectorModel<Participant>;
 
-  // TODO to let it pass in participant_createWithParameters
-  // @Required()
   @Validate(yup.array(x509Identities.schema()))
   public identities: Array<FlatConvectorModel<x509Identities>>;
 
@@ -48,8 +36,6 @@ export class Participant extends ConvectorModel<Participant> {
   @Validate(yup.object().nullable())
   public metaDataInternal: any;
 
-  // TODO 2 to let it pass in participant_createWithParameters
-  // @Required()
   @Validate(yup.number())
   public createdDate: number;
 
@@ -61,18 +47,12 @@ export class Participant extends ConvectorModel<Participant> {
   @Validate(yup.string())
   public loggedPersonId?: string;
 
-  // TODO to let it pass in participant_createWithParameters
-  // @Required()
   @Validate(GenericBalance.schema())
   public fundsBalance: GenericBalance;
   
-  // TODO to let it pass in participant_createWithParameters
-  // @Required()
   @Validate(GenericBalance.schema())
   public volunteeringHoursBalance: GenericBalance;
 
-  // TODO to let it pass in participant_createWithParameters
-  // @Required()
   @Validate(yup.array(Goods.schema()))
   public goodsStock: Array<FlatConvectorModel<Goods>>;
 

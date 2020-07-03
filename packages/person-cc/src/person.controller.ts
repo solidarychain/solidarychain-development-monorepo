@@ -1,4 +1,4 @@
-import { appConstants as c, GenericBalance, Goods, newUuid, newPassword } from '@solidary-network/common-cc';
+import { appConstants as c, GenericBalance, Goods, newUuid, newPassword, ChaincodeEvent } from '@solidary-network/common-cc';
 import { getParticipantByIdentity, Participant } from '@solidary-network/participant-cc';
 import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
@@ -14,15 +14,8 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     @Param(Person)
     person: Person
   ) {
-    // TODO: remove after test checkIfSenderIsGovernment
-    // get host participant from fingerprint
-    // const participant: Participant = await getParticipantByIdentity(this.sender);
-    // if (!!participant && !participant.id) {
-    //   throw new Error('There is no participant with that identity');
-    // }
-
     // check if sender is government
-    let gov: Participant = await Participant.getOne(c.UUID_GOV_ID);
+    let gov: Participant = await Participant.getOne(c.GOV_UUID);
     await checkIfSenderIsGovernment(gov, this.sender);
 
     // check unique fields
@@ -35,21 +28,6 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     await checkUniqueField('beneficiaryNumber', person.beneficiaryNumber, false);
     await checkUniqueField('documentNumber', person.documentNumber, false);
     await checkUniqueField('pan', person.pan, false);
-
-    // TODO: remove after test checkIfSenderIsGovernment
-    // let gov = await Participant.getOne(c.UUID_GOV_ID);
-    // if (!gov || !gov.identities) {
-    //   throw new Error('No government identity has been registered yet');
-    // }
-    // const govActiveIdentity = gov.identities.find(identity => identity.status === true);
-
-    // if (!govActiveIdentity) {
-    //   throw new Error('No active identity found for participant');
-    // }
-    // if (this.sender !== govActiveIdentity.fingerprint) {
-    //   // throw new Error(`Just the government - ID=gov - can create people - requesting organization was ${this.sender}`);
-    //   throw new Error('Just the government (participant with id gov) can create people');
-    // }
 
     // add person
     person.participant = gov;
@@ -75,6 +53,8 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
 
     // save person
     await person.save();
+    // Emit the ContractEvent - passing the whole Commodity Object as the Payload.
+    await this.tx.stub.setEvent(ChaincodeEvent.PersonCreatedEvent, person);
   }
 
   @Invokable()
@@ -82,9 +62,8 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     @Param(Person)
     person: Person,
   ) {
-    debugger;
     // check if sender is government
-    let gov: Participant = await Participant.getOne(c.UUID_GOV_ID);
+    let gov: Participant = await Participant.getOne(c.GOV_UUID);
     await checkIfSenderIsGovernment(gov, this.sender);
 
     // Retrieve to see if exists
@@ -98,7 +77,10 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     existing.roles = person.roles;
     existing.metaDataInternal = person.metaDataInternal;
 
+    // save person
     await existing.save();
+    // Emit the Event
+    await this.tx.stub.setEvent(ChaincodeEvent.PersonUpdatedEvent, person);
   }
 
   /**
@@ -110,8 +92,6 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     @Param(Person)
     person: Person,
   ) {
-    debugger;
-
     // Retrieve to see if exists
     let existing = await Person.getById(person.id);
 
@@ -122,7 +102,10 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     // update fields
     existing.password = hashPassword(person.password);
 
+    // save person
     await existing.save();
+    // Emit the Event
+    await this.tx.stub.setEvent(ChaincodeEvent.PersonUpdatePasswordEvent, person);
   }
 
   @Invokable()
@@ -130,9 +113,8 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     @Param(Person)
     person: Person,
   ) {
-    debugger;
     // check if sender is government
-    let gov: Participant = await Participant.getOne(c.UUID_GOV_ID);
+    let gov: Participant = await Participant.getOne(c.GOV_UUID);
     await checkIfSenderIsGovernment(gov, this.sender);
 
     // Retrieve to see if exists
@@ -145,7 +127,10 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     // update fields
     existing.roles = person.roles;
 
+    // save person
     await existing.save();
+    // Emit the Event
+    await this.tx.stub.setEvent(ChaincodeEvent.PersonUpdateRolesEvent, person);
   }
 
   /**
@@ -157,8 +142,6 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     @Param(Person)
     person: Person,
   ) {
-    debugger;
-
     // Retrieve to see if exists
     let existing = await Person.getById(person.id);
 
@@ -182,7 +165,10 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     existing.profile = person.profile;
     existing.metaData = person.metaData;
 
+    // save person
     await existing.save();
+    // Emit the Event
+    await this.tx.stub.setEvent(ChaincodeEvent.PersonUpdateProfileEvent, person);
   }
 
   @Invokable()
@@ -190,9 +176,8 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     @Param(Person)
     person: Person,
   ) {
-    debugger;
     // check if sender is government
-    let gov: Participant = await Participant.getOne(c.UUID_GOV_ID);
+    let gov: Participant = await Participant.getOne(c.GOV_UUID);
     await checkIfSenderIsGovernment(gov, this.sender);
 
     // Retrieve to see if exists
@@ -251,12 +236,13 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     upsertPerson.emittingEntity = person.emittingEntity;
     upsertPerson.requestLocation = person.requestLocation;
     upsertPerson.otherInformation = person.otherInformation;
-
     // clean non useful props, are required only receive id and entityType
     delete upsertPerson.loggedPersonId;
 
     // save person
     await upsertPerson.save();
+    // Emit the Event
+    await this.tx.stub.setEvent(ChaincodeEvent.PersonUpsertCitizenCardEvent, person);
   }
 
   @Invokable()
@@ -266,7 +252,6 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     @Param(PersonAttribute.schema())
     attribute: PersonAttribute
   ) {
-    debugger;
     // Check if the "stated" participant as certifier of the attribute is actually the one making the request
     let participant = await Participant.getOne(attribute.certifierID);
 
@@ -312,7 +297,11 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     } else {
       person.attributes.push(attribute);
     }
+    
+    // save person
     await person.save();
+    // Emit the Event
+    await this.tx.stub.setEvent(ChaincodeEvent.PersonAddAttributeEvent, person);
   }
 
   // @Invokable()
@@ -452,4 +441,38 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     const resultSet: Person | Person[] = await Person.query(Person, complexQuery);
     return resultSet;
   }
+
+  // wip: unstable, and only creates first entity
+  // @Invokable()
+  // public async instantiate() {
+  //   debugger;
+  //   let gov: Participant = await Participant.getOne(c.GOV_UUID);
+  //   // mock data
+  //   const mockData = [
+  //     { id: c.JOHN_UUID, firstname: c.JOHN_FIRST_NAME, lastname: c.JOHN_LAST_NAME, username: c.JOHN_USER_NAME, password: c.DEFAULT_PASSWORD, fiscalNumber: c.JOHN_FISCAL_NUMBER },
+  //     { id: c.JANE_UUID, firstname: c.JANE_FIRST_NAME, lastname: c.JANE_LAST_NAME, username: c.JANE_USER_NAME, password: c.DEFAULT_PASSWORD, fiscalNumber: c.JANE_FISCAL_NUMBER },
+  //   ];
+  //   await Promise.all(
+  //     mockData.map(async (person: Person) => {
+  //       let newPerson = new Person(person.id);
+  //       newPerson.firstname = person.firstname;
+  //       newPerson.lastname = person.lastname;
+  //       newPerson.username = person.username;
+  //       newPerson.fiscalNumber = person.fiscalNumber;
+  //       newPerson.participant = gov;
+  //       newPerson.identities = [{
+  //         fingerprint: this.sender,
+  //         status: true
+  //       }];
+  //       newPerson.password = hashPassword(person.password);
+  //       newPerson.registrationDate = new Date().getTime();
+  //       newPerson.createdDate = new Date().getTime();
+  //       newPerson.fundsBalance = new GenericBalance();
+  //       newPerson.volunteeringHoursBalance = new GenericBalance();
+  //       newPerson.goodsStock = new Array<Goods>()
+  //       // require await ele Error: PUT_STATE failed: transaction ID: ...: no ledger context
+  //       await newPerson.save();
+  //     })
+  //   );
+  // }
 }
