@@ -4,7 +4,7 @@
     ".src/": true,
     ".bak/": true,
     // "**/dist/": true,
-    "**/node_modules/": true,
+    // "**/node_modules/": true,
     // The following will hide the js and map files in the editor
     // "**/*.js": true,
     "**/*.map": true
@@ -48,7 +48,7 @@
     "personid",
     "prestart",
     "relogin",
-    "solidarynetwork",
+    "solidarychain",
     "upsert",
     "uuid's",
     "uuidv",

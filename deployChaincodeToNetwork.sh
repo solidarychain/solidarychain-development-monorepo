@@ -134,7 +134,7 @@ do
   press_any_key
 done
 
-# from NOTES-P2-EXT-TUT.md > Install/Instantiate TypeScript/Javascript Convector ChainCode / SolidaryNetwork
+# from NOTES-P2-EXT-TUT.md > Install/Instantiate TypeScript/Javascript Convector ChainCode / SolidaryChain
 
 # instantiate|upgrade chaincode on peer0Org1 in channelall with policy....only after all nodes are registered, and with chaincode installed
 echo "${DEPLOY_CC_ACTION} ${CHAINCODE_NAME} ${VERSION} in peer0Org1"

@@ -637,9 +637,9 @@ UPDATE: requires node v10.12.0 to prevent bellow error
 
 ```shell
 $ pkg:react:gen-graphql:watch
-@solidary-network/frontend-react: > @solidary-network/frontend-react@0.1.0 gen:graphql:watch /media/mario/Storage/Documents/Development/@Solidary.Network/solidarynetwork-development-monorepo/packages/frontend-react
+@solidary-network/frontend-react: > @solidary-network/frontend-react@0.1.0 gen:graphql:watch /media/mario/Storage/Documents/Development/@Solidary.Network/solidarychain-development-monorepo/packages/frontend-react
 @solidary-network/frontend-react: > NODE_TLS_REJECT_UNAUTHORIZED=0 graphql-codegen --watch
-@solidary-network/frontend-react: /media/mario/Storage/Documents/Development/@Solidary.Network/solidarynetwork-development-monorepo/node_modules/@graphql-toolkit/core/index.cjs.js:74
+@solidary-network/frontend-react: /media/mario/Storage/Documents/Development/@Solidary.Network/solidarychain-development-monorepo/node_modules/@graphql-toolkit/core/index.cjs.js:74
 ```
 
 ## Configure react Router

@@ -279,9 +279,9 @@ Error: Failed to load gRPC binary module because it was not installed for the cu
 Expected directory: node-v64-linux-x64-glibc
 Found: [node-v59-linux-x64-glibc]
 This problem can often be fixed by running "npm rebuild" on the current system
-Original error: Cannot find module '/media/mario/Storage/Documents/Development/@Solidary.Network/solidarynetwork-development-monorepo/chaincode-solidary-network-chaincode/node_modules/fabric-shim/node_modules/grpc/src/node/extension_binary/node-v64-linux-x64-glibc/grpc_node.node'
+Original error: Cannot find module '/media/mario/Storage/Documents/Development/@Solidary.Network/solidarychain-development-monorepo/chaincode-solidary-network-chaincode/node_modules/fabric-shim/node_modules/grpc/src/node/extension_binary/node-v64-linux-x64-glibc/grpc_node.node'
 
-$ cd /media/mario/Storage/Documents/Development/@Solidary.Network/solidarynetwork-development-monorepo/chaincode-solidary-network-chaincode/node_modules/fabric-shim/
+$ cd /media/mario/Storage/Documents/Development/@Solidary.Network/solidarychain-development-monorepo/chaincode-solidary-network-chaincode/node_modules/fabric-shim/
 $ npm rebuild
 
 fixs it? YES move to fixes
@@ -338,7 +338,7 @@ remove
 			}
 		},
 from
-/media/mario/Storage/Documents/Development/@Solidary.Network/solidarynetwork-development-monorepo/package-lock.json
+/media/mario/Storage/Documents/Development/@Solidary.Network/solidarychain-development-monorepo/package-lock.json
 
 and to finish
 
@@ -352,7 +352,7 @@ fixed
 
 npm run cc:start:debug -- ${CHAINCODE_NAME}
 
-Original error: Cannot find module '/media/mario/Storage/Documents/Development/@Solidary.Network/solidarynetwork-development-monorepo/chaincode-solidary-network-chaincode/node_modules/fabric-shim/node_modules/grpc/src/node/extension_binary/node-v57-linux-x64-glibc/grpc_node.node'
+Original error: Cannot find module '/media/mario/Storage/Documents/Development/@Solidary.Network/solidarychain-development-monorepo/chaincode-solidary-network-chaincode/node_modules/fabric-shim/node_modules/grpc/src/node/extension_binary/node-v57-linux-x64-glibc/grpc_node.node'
 
 npm rebuild
 
@@ -367,7 +367,7 @@ Found config in package [ { name: '@solidary-network/common-cc',
 
 $ npm run env:restart
 
-> @solidary-network/lerna-monorepo@0.1.0 env:restart /tmp/sn/solidarynetwork-development-monorepo
+> @solidary-network/lerna-monorepo@0.1.0 env:restart /tmp/sn/solidarychain-development-monorepo
 > hurl new
 
 /usr/local/lib/node_modules/@worldsibu/hurley/node_modules/grpc/src/grpc_extension.js:55
