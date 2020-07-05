@@ -1,12 +1,12 @@
 {
-  "name": "@solidary-network/lerna-monorepo",
+  "name": "@solidary-chain/lerna-monorepo",
   "version": "0.1.0",
   "description": "Bootstrap project for Chaincodes attributesDb",
   "files": [
     "dist/*"
   ],
   "scripts": {
-    "start": "npm run env:restart && npm run cc:start -- solidary-network-chaincode",
+    "start": "npm run env:restart && npm run cc:start -- solidary-chain-chaincode",
     "seed": "./seed.sh",
     "install": "npm-run-all -s lerna:install",
     "build": "node ./update-paths.js",
@@ -17,12 +17,12 @@
     "cc:upgrade": "f() { npm run cc:package -- $1 org1; hurl upgrade $1 node $2  -P ./chaincode-$1; }; f",
     "cc:start:debug": "f() { rm ./chaincode-$1 -r; npm run cc:package -- $1 org1; npm run cc:install:debug $1; }; f",
     "===================PACKAGES===================": "====================================================================",
-    "pkg:graphql:build": "npx lerna run build --scope @solidary-network/server-graphql --stream",
-    "pkg:graphql:debug": "npx lerna run start:debug --scope @solidary-network/server-graphql --stream",
-    "pkg:graphql:debug:network": "npx lerna run start:debug:network --scope @solidary-network/server-graphql --stream",
-    "pkg:graphql:dev": "npx lerna run start:dev --scope @solidary-network/server-graphql --stream",
-    "pkg:react:start": "npx lerna run start --scope @solidary-network/frontend-react --stream",
-    "pkg:react:gen-graphql:watch": "npx lerna run gen:graphql:watch --scope @solidary-network/frontend-react --stream",
+    "pkg:graphql:build": "npx lerna run build --scope @solidary-chain/server-graphql --stream",
+    "pkg:graphql:debug": "npx lerna run start:debug --scope @solidary-chain/server-graphql --stream",
+    "pkg:graphql:debug:network": "npx lerna run start:debug:network --scope @solidary-chain/server-graphql --stream",
+    "pkg:graphql:dev": "npx lerna run start:dev --scope @solidary-chain/server-graphql --stream",
+    "pkg:react:start": "npx lerna run start --scope @solidary-chain/frontend-react --stream",
+    "pkg:react:gen-graphql:watch": "npx lerna run gen:graphql:watch --scope @solidary-chain/frontend-react --stream",
     "pkg:graphql:docker:build": "docker build -t solidarychain/solidarychain-server-graphql -f packages/server-graphql/Dockerfile .",
     "===================INTERNALS===================": "===================NO NEED TO CALL THEM DIRECTLY===================",
     "lerna:install": "lerna bootstrap",

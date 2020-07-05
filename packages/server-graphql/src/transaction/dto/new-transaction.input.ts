@@ -1,4 +1,4 @@
-import { Entity, ResourceType, TransactionType } from '@solidary-network/transaction-cc';
+import { Entity, ResourceType, TransactionType } from '@solidary-chain/transaction-cc';
 import { IsDefined, IsNumber, IsOptional, IsUUID } from 'class-validator';
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, InputType } from 'type-graphql';

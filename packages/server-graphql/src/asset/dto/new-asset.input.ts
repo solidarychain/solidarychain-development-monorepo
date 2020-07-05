@@ -1,5 +1,5 @@
-import { AssetType } from '@solidary-network/asset-cc';
-import { Entity } from '@solidary-network/transaction-cc';
+import { AssetType } from '@solidary-chain/asset-cc';
+import { Entity } from '@solidary-chain/transaction-cc';
 import { IsDefined, IsOptional, IsUUID } from 'class-validator';
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, InputType } from 'type-graphql';

@@ -1,5 +1,5 @@
-import { appConstants as c, GenericBalance, Goods, newUuid, newPassword, ChaincodeEvent } from '@solidary-network/common-cc';
-import { getParticipantByIdentity, Participant } from '@solidary-network/participant-cc';
+import { appConstants as c, GenericBalance, Goods, newUuid, newPassword, ChaincodeEvent } from '@solidary-chain/common-cc';
+import { getParticipantByIdentity, Participant } from '@solidary-chain/participant-cc';
 import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
 import * as yup from 'yup';

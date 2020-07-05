@@ -1,7 +1,7 @@
-import { Cause } from '@solidary-network/cause-cc';
-import { appConstants as c, EntityType } from '@solidary-network/common-cc';
-import { Participant } from '@solidary-network/participant-cc';
-import { Person } from '@solidary-network/person-cc';
+import { Cause } from '@solidary-chain/cause-cc';
+import { appConstants as c, EntityType } from '@solidary-chain/common-cc';
+import { Participant } from '@solidary-chain/participant-cc';
+import { Person } from '@solidary-chain/person-cc';
 import { Asset } from './asset.model';
 
 // interface Entity and getEntity() function duplicated with asset, cause and transaction, to prevent circular dependencies, 

@@ -33,7 +33,7 @@ $ npx hurl --version
 ## Important Notes
 
 1. to change chaincode while debug, use `dist/**/*.js` file versions
-2. if change are made in `chaincode-solidary-network-chaincode/**/*.ts` source code while debugging, don't forget to apply the same changes on `packages/**/*.ts`
+2. if change are made in `chaincode-solidary-chain-chaincode/**/*.ts` source code while debugging, don't forget to apply the same changes on `packages/**/*.ts`
 3. if have prpblems with debug, remove chaincode dir, I lost a few hours to figure out that the problem is in a sort of error, check error
 
 ## MODE1: Start in debug chaincode
@@ -52,12 +52,12 @@ $ npm run env:restart
 
 ```shell
 # start define CHAINCODE_NAME
-$ CHAINCODE_NAME=solidary-network-chaincode
+$ CHAINCODE_NAME=solidary-chain-chaincode
 # launch chaincode debug, NOTE this command must be run inside Vscode to attach debugger (side note it will build all packages)
 $ npm run cc:start:debug -- ${CHAINCODE_NAME}
 ```
 
-> NOTE: `dev-peer0.org2.hurley.lab-solidary-network-chaincode-1.x` container, won't appear with below command, like it does when we deploy chaincode without `cc:start:debug`
+> NOTE: `dev-peer0.org2.hurley.lab-solidary-chain-chaincode-1.x` container, won't appear with below command, like it does when we deploy chaincode without `cc:start:debug`
 
 ```shell
 $ watch "docker container ls --format "{{.Names}}" | grep \"${CHAINCODE_NAME}\""
@@ -73,10 +73,10 @@ Instantiating Chaincode at org1 for channel ch1
 It may take a few minutes depending on the chaincode dependencies
 2020-02-02 17:39:35.708 WET [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
 2020-02-02 17:39:35.708 WET [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
-Error: could not assemble transaction, err proposal response was not successful, error code 500, msg chaincode with name 'solidary-network-chaincode' already exists
+Error: could not assemble transaction, err proposal response was not successful, error code 500, msg chaincode with name 'solidary-chain-chaincode' already exists
 ```
 
-> ignore error `Error: could not assemble transaction, err proposal response was not successful, error code 500, msg chaincode with name 'solidary-network-chaincode' already exists`, sometimes it gives that error because we forget to define variable with `CHAINCODE_NAME=solidary-network-chaincode`
+> ignore error `Error: could not assemble transaction, err proposal response was not successful, error code 500, msg chaincode with name 'solidary-chain-chaincode' already exists`, sometimes it gives that error because we forget to define variable with `CHAINCODE_NAME=solidary-chain-chaincode`
 
 when work appears
 
@@ -101,7 +101,7 @@ $ ./seed.sh
 
 ### 6. Debug breakpoints
 
-add some breakpoints on `chaincode-solidary-network-chaincode/packages/@solidary-network/transaction-cc/src` or `chaincode-solidary-network-chaincode/packages/@solidary-network/transaction-cc/dist/src` and have fun
+add some breakpoints on `chaincode-solidary-chain-chaincode/packages/@solidary-chain/transaction-cc/src` or `chaincode-solidary-chain-chaincode/packages/@solidary-chain/transaction-cc/dist/src` and have fun
 
 ### 7. Edit and deploy chaincode again
 
@@ -109,13 +109,13 @@ after edit code changes, stop current debug with ctrl+c and re-launch chaincode 
 
 ```shell
 # start define CHAINCODE_NAME
-$ CHAINCODE_NAME=solidary-network-chaincode
+$ CHAINCODE_NAME=solidary-chain-chaincode
 $ npm run cc:start:debug -- ${CHAINCODE_NAME}
 # require to restart graphql server
 $ npx lerna run start:debug
 ```
 
-or edit files in `chaincode-solidary-network-chaincode/packages/@solidary-network/${PACKAGE}-cc/src/*.ts`
+or edit files in `chaincode-solidary-chain-chaincode/packages/@solidary-chain/${PACKAGE}-cc/src/*.ts`
 
 ## MODE2 WIP: Debug with normal restartEnv.sh after some updates debug with `cc:start:debug` and chaincode version
 
@@ -128,7 +128,7 @@ $ npm run cc:start:debug -- ${CHAINCODE_NAME} 1.1
 ## MODE3: View logs/ open terminal in normal update-chaincode.sh mode
 
 ```shell
-$ CHAINCODE_NAME=solidary-network-chaincode
+$ CHAINCODE_NAME=solidary-chain-chaincode
 # view chaincode containers
 $ VERSION=1.0
 $ watch "docker container ls --format "{{.Names}}" | grep \"${CHAINCODE_NAME}-${VERSION}\""
@@ -151,7 +151,7 @@ $ VERSION=1.0 && SEARCH_CONTAINER="dev-peer0.org1.hurley.lab-${CHAINCODE_NAME}-$
 FIXED Debug Problem : Many Hours to try to figure out the problem, the debug was
 
 1. checkout from git repo, and it works!
-2. next remove the `chaincode-solidary-network-chaincode` and try, and it works, the proof is somehow a sort of problem in `chaincode-solidary-network-chaincode`, to prevent this is better to clean and rebuild `chaincode-solidary-network-chaincode` on `cc:start:debug` script
+2. next remove the `chaincode-solidary-chain-chaincode` and try, and it works, the proof is somehow a sort of problem in `chaincode-solidary-chain-chaincode`, to prevent this is better to clean and rebuild `chaincode-solidary-chain-chaincode` on `cc:start:debug` script
 
 the future fix to prevent this annoying error add `rm ./chaincode-$1 -r` to script `cc:start:debug` to always clean up folder
 

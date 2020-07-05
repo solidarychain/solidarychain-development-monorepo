@@ -29,7 +29,7 @@ A minimal React Hooks typescript frontend, with **JWT Auth** using **hyperledger
 
 3. this project must have a running server-graphql [README.me](../server-graphql/README.md)
 
-> tip: use `npx lerna run start:prod --scope @solidary-network/server-graphql --stream`
+> tip: use `npx lerna run start:prod --scope @solidary-chain/server-graphql --stream`
 
 ## Configure environment variables
 
@@ -94,19 +94,19 @@ CORS_ORIGIN_REACT_FRONTEND=https://192.168.1.133:3000
 
 ```shell
 # generate graphql types/ every time we change .graphql files, or first time after cloned the project
-$ npx lerna run gen:graphql --scope @solidary-network/frontend-react
+$ npx lerna run gen:graphql --scope @solidary-chain/frontend-react
 
 # run react frontend
-$ npx lerna run start --scope @solidary-network/frontend-react --stream
+$ npx lerna run start --scope @solidary-chain/frontend-react --stream
 # output
-@solidary-network/frontend-react: Starting the development server...
-@solidary-network/frontend-react: Files successfully emitted, waiting for typecheck results...
-@solidary-network/frontend-react: Compiled successfully!
-@solidary-network/frontend-react: You can now view @solidary-network/frontend-react in the browser.
-@solidary-network/frontend-react:   Local:            https://localhost:3000/
-@solidary-network/frontend-react:   On Your Network:  https://192.168.1.133:3000/
-@solidary-network/frontend-react: Note that the development build is not optimized.
-@solidary-network/frontend-react: To create a production build, use npm run build.
+@solidary-chain/frontend-react: Starting the development server...
+@solidary-chain/frontend-react: Files successfully emitted, waiting for typecheck results...
+@solidary-chain/frontend-react: Compiled successfully!
+@solidary-chain/frontend-react: You can now view @solidary-chain/frontend-react in the browser.
+@solidary-chain/frontend-react:   Local:            https://localhost:3000/
+@solidary-chain/frontend-react:   On Your Network:  https://192.168.1.133:3000/
+@solidary-chain/frontend-react: Note that the development build is not optimized.
+@solidary-chain/frontend-react: To create a production build, use npm run build.
 ```
 
 ## Now play with Frontend

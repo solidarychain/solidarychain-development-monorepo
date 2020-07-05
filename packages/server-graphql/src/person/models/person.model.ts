@@ -1,5 +1,5 @@
 // tslint:disable: max-classes-per-file
-import { UserRoles } from '@solidary-network/common-cc';
+import { UserRoles } from '@solidary-chain/common-cc';
 import { IsDate, IsDefined, IsNumber, MaxLength, Validate } from 'class-validator';
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, ID, ObjectType } from 'type-graphql';

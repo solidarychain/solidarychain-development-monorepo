@@ -1,6 +1,6 @@
-# READ ME: @solidary-network : starters
+# READ ME: @solidary-chain : starters
 
-- [READ ME: @solidary-network : starters](#read-me-convector-sample--starters)
+- [READ ME: @solidary-chain : starters](#read-me-convector-sample--starters)
   - [Description](#description)
   - [Collaborate to the Convector Suite projects](#collaborate-to-the-convector-suite-projects)
   - [Advice Read Links](#advice-read-links)
@@ -203,8 +203,8 @@ $ lerna -v
 ### Install lerna packages dependencies
 
 ```shell
-# first build -cc library: this is required on fresh clones before lerna bootstrap, to prevent the below error#1 Cannot find module '@solidary-network/common-cc'
-$ npx lerna run build --scope @solidary-network/common-cc --stream
+# first build -cc library: this is required on fresh clones before lerna bootstrap, to prevent the below error#1 Cannot find module '@solidary-chain/common-cc'
+$ npx lerna run build --scope @solidary-chain/common-cc --stream
 # install dependencies, this will trigger lerna bootstrap
 $ npm i
 ```
@@ -212,8 +212,8 @@ $ npm i
 #### error#1
 
 ```shell
-src/participant.controller.ts:1:35 - error TS2307: Cannot find module '@solidary-network/common-cc'.
-1 import { appConstants as c } from '@solidary-network/common-cc';
+src/participant.controller.ts:1:35 - error TS2307: Cannot find module '@solidary-chain/common-cc'.
+1 import { appConstants as c } from '@solidary-chain/common-cc';
 ```
 
 ### Start hurley hyperledger network
@@ -245,8 +245,8 @@ $ docker container ls --format "table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Ports
 CONTAINER ID        NAMES                                  STATUS              PORTS
 
 # chaincode containers from org1 and org2
-a3354d1b9019        dev-peer0.org2.hurley.lab-solidary-network-1.0   Up 3 minutes        
-d59a8cc0ef61        dev-peer0.org1.hurley.lab-solidary-network-1.0   Up 5 minutes        
+a3354d1b9019        dev-peer0.org2.hurley.lab-solidary-chain-1.0   Up 3 minutes        
+d59a8cc0ef61        dev-peer0.org1.hurley.lab-solidary-chain-1.0   Up 5 minutes        
 
 # all the other peer, orderer, ca and couch containers
 1dfc5a1b2c0a        peer0.org2.hurley.lab                  Up 7 minutes        0.0.0.0:7151->7051/tcp, 0.0.0.0:7152->7052/tcp, 0.0.0.0:7153->7053/tcp
@@ -302,7 +302,7 @@ with a `common.controller.ts`, `constants.ts`, `enums.ts` and `env.ts`
 
 ```shell
 # start server-graphql with
-$ npx lerna run start:dev --scope @solidary-network/server-graphql --stream
+$ npx lerna run start:dev --scope @solidary-chain/server-graphql --stream
 ```
 
 > Note: for more info about project check [README.md](packages/server-graphql/README.md)

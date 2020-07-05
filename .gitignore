@@ -6,12 +6,12 @@
 .vscode/chrome
 dist/
 chaincode-person/
-chaincode-solidary-network-chaincode
+chaincode-solidary-chain-chaincode
 packages/server-graphql/config/koakh.com
 packages/server-graphql/config/solidarychain.com
 .env
 prod.env
 hurley-network-topology/
 .deleted-from-root/
-chaincode-solidary-network-chaincode.tgz
-sncc.pak
+chaincode-solidary-chain-chaincode.tgz
+*.pak

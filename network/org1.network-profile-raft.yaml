@@ -6,9 +6,9 @@ version: "1.0"
 client:
   organization: Org1MSP
   credentialStore:
-    path: /home/mario/Development/@Solidary.Network/solidarychain-development-monorepo/network/generated/wallets/.hfc-org1
+    path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/generated/wallets/.hfc-org1
     cryptoStore:
-      path: /home/mario/Development/@Solidary.Network/solidarychain-development-monorepo/network/generated/wallets/.hfc-org1
+      path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/generated/wallets/.hfc-org1
 
 channels:
   channelall:
@@ -86,9 +86,9 @@ organizations:
     certificateAuthorities:
       - ca.org1.example.com
     adminPrivateKey:
-      path: /home/mario/Development/@Solidary.Network/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore
+      path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore
     signedCert:
-      path: /home/mario/Development/@Solidary.Network/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts
+      path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts
   # org2
   Org2MSP:
     mspid: Org2MSP
@@ -98,9 +98,9 @@ organizations:
     certificateAuthorities:
       - ca.org2.example.com
     adminPrivateKey:
-      path: /home/mario/Development/@Solidary.Network/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/keystore
+      path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/keystore
     signedCert:
-      path: /home/mario/Development/@Solidary.Network/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/signcerts
+      path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/signcerts
   # org3
   Org3MSP:
     mspid: Org3MSP
@@ -110,9 +110,9 @@ organizations:
     certificateAuthorities:
       - ca.org3.example.com
     adminPrivateKey:
-      path: /home/mario/Development/@Solidary.Network/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org3.example.com/users/Admin@org3.example.com/msp/keystore
+      path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org3.example.com/users/Admin@org3.example.com/msp/keystore
     signedCert:
-      path: /home/mario/Development/@Solidary.Network/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org3.example.com/users/Admin@org3.example.com/msp/signcerts
+      path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org3.example.com/users/Admin@org3.example.com/msp/signcerts
   # org4
   Org4MSP:
     mspid: Org4MSP
@@ -122,9 +122,9 @@ organizations:
     certificateAuthorities:
       - ca.org4.example.com
     adminPrivateKey:
-      path: /home/mario/Development/@Solidary.Network/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org4.example.com/users/Admin@org4.example.com/msp/keystore
+      path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org4.example.com/users/Admin@org4.example.com/msp/keystore
     signedCert:
-      path: /home/mario/Development/@Solidary.Network/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org4.example.com/users/Admin@org4.example.com/msp/signcerts
+      path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org4.example.com/users/Admin@org4.example.com/msp/signcerts
   # org5
   Org5MSP:
     mspid: Org5MSP
@@ -134,9 +134,9 @@ organizations:
     certificateAuthorities:
       - ca.org5.example.com
     adminPrivateKey:
-      path: /home/mario/Development/@Solidary.Network/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org5.example.com/users/Admin@org5.example.com/msp/keystore
+      path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org5.example.com/users/Admin@org5.example.com/msp/keystore
     signedCert:
-      path: /home/mario/Development/@Solidary.Network/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org5.example.com/users/Admin@org5.example.com/msp/signcerts
+      path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org5.example.com/users/Admin@org5.example.com/msp/signcerts
       
 orderers:
   orderer1.example.com:
@@ -145,7 +145,7 @@ orderers:
       ssl-target-name-override: orderer1.example.com
       grpc-max-send-message-length: -1
     tlsCACerts:
-      path: /home/mario/Development/@Solidary.Network/solidarychain-development-monorepo/network/crypto-config/ordererOrganizations/example.com/orderers/orderer1.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+      path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/crypto-config/ordererOrganizations/example.com/orderers/orderer1.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
   # added to try to fix raft error: [Channel.js]: Error: 14 UNAVAILABLE: TCP Read failed      
   # orderer2.example.com:
   #   url: grpcs://orderer2.example.com:7050
@@ -153,28 +153,28 @@ orderers:
   #     ssl-target-name-override: orderer2.example.com
   #     grpc-max-send-message-length: -1
   #   tlsCACerts:
-  #     path: /home/mario/Development/@Solidary.Network/solidarychain-development-monorepo/network/crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+  #     path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
   # orderer3.example.com:
   #   url: grpcs://orderer3.example.com:7050
   #   grpcOptions:
   #     ssl-target-name-override: orderer3.example.com
   #     grpc-max-send-message-length: -1
   #   tlsCACerts:
-  #     path: /home/mario/Development/@Solidary.Network/solidarychain-development-monorepo/network/crypto-config/ordererOrganizations/example.com/orderers/orderer3.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+  #     path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/crypto-config/ordererOrganizations/example.com/orderers/orderer3.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
   # orderer4.example.com:
   #   url: grpcs://orderer4.example.com:7050
   #   grpcOptions:
   #     ssl-target-name-override: orderer4.example.com
   #     grpc-max-send-message-length: -1
   #   tlsCACerts:
-  #     path: /home/mario/Development/@Solidary.Network/solidarychain-development-monorepo/network/crypto-config/ordererOrganizations/example.com/orderers/orderer4.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+  #     path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/crypto-config/ordererOrganizations/example.com/orderers/orderer4.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
   # orderer5.example.com:
   #   url: grpcs://orderer5.example.com:7050
   #   grpcOptions:
   #     ssl-target-name-override: orderer5.example.com
   #     grpc-max-send-message-length: -1
   #   tlsCACerts:
-  #     path: /home/mario/Development/@Solidary.Network/solidarychain-development-monorepo/network/crypto-config/ordererOrganizations/example.com/orderers/orderer5.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+  #     path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/crypto-config/ordererOrganizations/example.com/orderers/orderer5.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
 
 peers:
   # org1
@@ -185,7 +185,7 @@ peers:
       ssl-target-name-override: peer0.org1.example.com
       grpc.keepalive_time_ms: 600000
     tlsCACerts:
-      path: /home/mario/Development/@Solidary.Network/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org1.example.com/msp/tlscacerts/tlsca.org1.example.com-cert.pem
+      path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org1.example.com/msp/tlscacerts/tlsca.org1.example.com-cert.pem
   peer1.org1.example.com:
     url: grpcs://peer1.org1.example.com:8051
     eventUrl: grpcs://peer1.org1.example.com:7052
@@ -193,7 +193,7 @@ peers:
       ssl-target-name-override: peer1.org1.example.com
       grpc.keepalive_time_ms: 600000
     tlsCACerts:
-      path: /home/mario/Development/@Solidary.Network/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org1.example.com/msp/tlscacerts/tlsca.org1.example.com-cert.pem
+      path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org1.example.com/msp/tlscacerts/tlsca.org1.example.com-cert.pem
   # org2
   peer0.org2.example.com:
     url: grpcs://peer0.org2.example.com:7051
@@ -202,7 +202,7 @@ peers:
       ssl-target-name-override: peer0.org2.example.com
       grpc.keepalive_time_ms: 600000
     tlsCACerts:
-      path: /home/mario/Development/@Solidary.Network/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org2.example.com/msp/tlscacerts/tlsca.org2.example.com-cert.pem
+      path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org2.example.com/msp/tlscacerts/tlsca.org2.example.com-cert.pem
   peer1.org2.example.com:
     url: grpcs://peer1.org2.example.com:8051
     eventUrl: grpcs://peer1.org2.example.com:7052
@@ -210,7 +210,7 @@ peers:
       ssl-target-name-override: peer1.org2.example.com
       grpc.keepalive_time_ms: 600000
     tlsCACerts:
-      path: /home/mario/Development/@Solidary.Network/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org2.example.com/msp/tlscacerts/tlsca.org2.example.com-cert.pem
+      path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org2.example.com/msp/tlscacerts/tlsca.org2.example.com-cert.pem
   # org3
   peer0.org3.example.com:
     url: grpcs://peer0.org3.example.com:7051
@@ -219,7 +219,7 @@ peers:
       ssl-target-name-override: peer0.org3.example.com
       grpc.keepalive_time_ms: 600000
     tlsCACerts:
-      path: /home/mario/Development/@Solidary.Network/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org3.example.com/msp/tlscacerts/tlsca.org3.example.com-cert.pem
+      path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org3.example.com/msp/tlscacerts/tlsca.org3.example.com-cert.pem
   peer1.org3.example.com:
     url: grpcs://peer1.org3.example.com:8051
     eventUrl: grpcs://peer1.org3.example.com:7052
@@ -227,7 +227,7 @@ peers:
       ssl-target-name-override: peer1.org3.example.com
       grpc.keepalive_time_ms: 600000
     tlsCACerts:
-      path: /home/mario/Development/@Solidary.Network/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org3.example.com/msp/tlscacerts/tlsca.org3.example.com-cert.pem
+      path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org3.example.com/msp/tlscacerts/tlsca.org3.example.com-cert.pem
   # org4
   peer0.org4.example.com:
     url: grpcs://peer0.org4.example.com:7051
@@ -236,7 +236,7 @@ peers:
       ssl-target-name-override: peer0.org4.example.com
       grpc.keepalive_time_ms: 600000
     tlsCACerts:
-      path: /home/mario/Development/@Solidary.Network/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org4.example.com/msp/tlscacerts/tlsca.org4.example.com-cert.pem
+      path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org4.example.com/msp/tlscacerts/tlsca.org4.example.com-cert.pem
   peer1.org4.example.com:
     url: grpcs://peer1.org4.example.com:8051
     eventUrl: grpcs://peer1.org4.example.com:7052
@@ -244,7 +244,7 @@ peers:
       ssl-target-name-override: peer1.org4.example.com
       grpc.keepalive_time_ms: 600000
     tlsCACerts:
-      path: /home/mario/Development/@Solidary.Network/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org4.example.com/msp/tlscacerts/tlsca.org4.example.com-cert.pem
+      path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org4.example.com/msp/tlscacerts/tlsca.org4.example.com-cert.pem
   # org5
   peer0.org5.example.com:
     url: grpcs://peer0.org5.example.com:7051
@@ -253,7 +253,7 @@ peers:
       ssl-target-name-override: peer0.org5.example.com
       grpc.keepalive_time_ms: 600000
     tlsCACerts:
-      path: /home/mario/Development/@Solidary.Network/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org5.example.com/msp/tlscacerts/tlsca.org5.example.com-cert.pem
+      path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org5.example.com/msp/tlscacerts/tlsca.org5.example.com-cert.pem
   peer1.org5.example.com:
     url: grpcs://peer1.org5.example.com:8051
     eventUrl: grpcs://peer1.org5.example.com:7052
@@ -261,7 +261,7 @@ peers:
       ssl-target-name-override: peer1.org5.example.com
       grpc.keepalive_time_ms: 600000
     tlsCACerts:
-      path: /home/mario/Development/@Solidary.Network/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org5.example.com/msp/tlscacerts/tlsca.org5.example.com-cert.pem
+      path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org5.example.com/msp/tlscacerts/tlsca.org5.example.com-cert.pem
 
 certificateAuthorities:
   # org1
@@ -270,7 +270,7 @@ certificateAuthorities:
     httpOptions:
       verify: false
     tlsCACerts:
-      path: /home/mario/Development/@Solidary.Network/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem
+      path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem
     registrar:
       - enrollId: admin
         enrollSecret: adminpw
@@ -281,7 +281,7 @@ certificateAuthorities:
     httpOptions:
       verify: false
     tlsCACerts:
-      path: /home/mario/Development/@Solidary.Network/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org2.example.com/ca/ca.org2.example.com-cert.pem
+      path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org2.example.com/ca/ca.org2.example.com-cert.pem
     registrar:
       - enrollId: admin
         enrollSecret: adminpw
@@ -292,7 +292,7 @@ certificateAuthorities:
     httpOptions:
       verify: false
     tlsCACerts:
-      path: /home/mario/Development/@Solidary.Network/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org3.example.com/ca/ca.org3.example.com-cert.pem
+      path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org3.example.com/ca/ca.org3.example.com-cert.pem
     registrar:
       - enrollId: admin
         enrollSecret: adminpw
@@ -303,7 +303,7 @@ certificateAuthorities:
     httpOptions:
       verify: false
     tlsCACerts:
-      path: /home/mario/Development/@Solidary.Network/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org4.example.com/ca/ca.org4.example.com-cert.pem
+      path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org4.example.com/ca/ca.org4.example.com-cert.pem
     registrar:
       - enrollId: admin
         enrollSecret: adminpw
@@ -314,7 +314,7 @@ certificateAuthorities:
     httpOptions:
       verify: false
     tlsCACerts:
-      path: /home/mario/Development/@Solidary.Network/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org5.example.com/ca/ca.org5.example.com-cert.pem
+      path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org5.example.com/ca/ca.org5.example.com-cert.pem
     registrar:
       - enrollId: admin
         enrollSecret: adminpw

@@ -1,5 +1,5 @@
 import { Optional } from '@nestjs/common';
-import { Entity } from '@solidary-network/transaction-cc';
+import { Entity } from '@solidary-chain/transaction-cc';
 import { IsDefined, Validate } from 'class-validator';
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, ID, ObjectType } from 'type-graphql';

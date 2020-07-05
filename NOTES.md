@@ -59,8 +59,8 @@
   - [Change/Extend Person model to have authorization credentials](#changeextend-person-model-to-have-authorization-credentials)
   - [Renew and Deploy new upgraded ChainCode after chaincode model Changes](#renew-and-deploy-new-upgraded-chaincode-after-chaincode-model-changes)
   - [Start to encrypt passwords with BCrypt](#start-to-encrypt-passwords-with-bcrypt)
-  - [Create common Package to share stuff `@solidary-network/common-cc`](#create-common-package-to-share-stuff-solidary-networkcommon-cc)
-    - [Create lerna common package `@solidary-network/common-cc`](#create-lerna-common-package-solidary-networkcommon-cc)
+  - [Create common Package to share stuff `@solidary-chain/common-cc`](#create-common-package-to-share-stuff-solidary-chaincommon-cc)
+    - [Create lerna common package `@solidary-chain/common-cc`](#create-lerna-common-package-solidary-chaincommon-cc)
     - [Use common package inside ChainCode](#use-common-package-inside-chaincode)
     - [Use scripts to copy other files to chaincode](#use-scripts-to-copy-other-files-to-chaincode)
     - [Clean Up](#clean-up)
@@ -85,6 +85,7 @@
   - [Problem `(node:32043) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'curve' of undefined`](#problem-node32043-unhandledpromiserejectionwarning-typeerror-cannot-read-property-curve-of-undefined)
   - [Error: Failed to load gRPC binary module because it was not installed for the current system](#error-failed-to-load-grpc-binary-module-because-it-was-not-installed-for-the-current-system)
     - [require await ele Error: PUT_STATE failed: transaction ID: ...: no ledger context](#require-await-ele-error-put_state-failed-transaction-id--no-ledger-context)
+  - [Problem: Jest error TS1005: ';' expected.](#problem-jest-error-ts1005--expected)
 
 This is a simple NestJs starter, based on above links, I only extended it with a few things like **swagger api**, **https**, **jwt**, and other stuff, thanks m8s
 
@@ -111,7 +112,7 @@ This is a simple NestJs starter, based on above links, I only extended it with a
 
 ```shell
 # start define CHAINCODE_NAME
-$ CHAINCODE_NAME=solidary-network-chaincode
+$ CHAINCODE_NAME=solidary-chain-chaincode
 
 # run test
 $ npm test
@@ -123,14 +124,14 @@ $ npm run env:restart
 # deploy smart contract (this smart contract have person and participant packages deployed in one unified chaincode)
 $ npm run cc:start -- ${CHAINCODE_NAME}
 
-# every change on @solidary-network/common-cc, must be builded to be used in dependent packages
-$ npx lerna run build --scope @solidary-network/common-cc --stream
+# every change on @solidary-chain/common-cc, must be builded to be used in dependent packages
+$ npx lerna run build --scope @solidary-chain/common-cc --stream
 # build person-cc or participant-cc (before upgrade person chaincode, seems strange we have to do that, because we see lerna building all packages in mono repo, but it is a fact that if we not do that it deploys the cc with same code...., causing some problems to get it)
-$ npx lerna run build --scope @solidary-network/participant-cc --stream
-$ npx lerna run build --scope @solidary-network/person-cc --stream
-$ npx lerna run build --scope @solidary-network/cause-cc --stream
-$ npx lerna run build --scope @solidary-network/asset-cc --stream
-$ npx lerna run build --scope @solidary-network/transaction-cc --stream
+$ npx lerna run build --scope @solidary-chain/participant-cc --stream
+$ npx lerna run build --scope @solidary-chain/person-cc --stream
+$ npx lerna run build --scope @solidary-chain/cause-cc --stream
+$ npx lerna run build --scope @solidary-chain/asset-cc --stream
+$ npx lerna run build --scope @solidary-chain/transaction-cc --stream
 
 # upgrade smart contract
 $ VERSION=1.1
@@ -172,22 +173,22 @@ $ ./views/install.sh
 # TRICK: to debug always use hurl, it is possible to debug chainCode and graphql at same time, using both auto attached debuggers
 # TRICK: in case of not stop on breakpoint use debugger; and put breakPoint on start of function is on start of `create`
 # TRICK: we can put some breakpoint into .ts it works too after stop in .js
-# TRICK: if change something on .ts while debug don't forget to build chaincode with 'npx lerna run build --scope @solidary-network/person-cc --stream' and deploy, and restart debug again
-# TRICK: don't forget that breakpoint to work must be inside the chaincode-${CHAINCODE_NAME}/packages/@solidary-network/person-cc/src/person.controller.ts folder that is generated on chaincode builds, and not the default packages/person-cc/src/person.controller.ts
+# TRICK: if change something on .ts while debug don't forget to build chaincode with 'npx lerna run build --scope @solidary-chain/person-cc --stream' and deploy, and restart debug again
+# TRICK: don't forget that breakpoint to work must be inside the chaincode-${CHAINCODE_NAME}/packages/@solidary-chain/person-cc/src/person.controller.ts folder that is generated on chaincode builds, and not the default packages/person-cc/src/person.controller.ts
 $ npm run cc:start:debug -- ${CHAINCODE_NAME}
 # if error occur use target debug version, recommend to always use current version, or if we are in version 1.3, use pass 1.4 to deploy and debug a new chaincode, and watch
 $ npm run cc:start:debug -- ${CHAINCODE_NAME} 1.1
-# TRICK: Error: could not assemble transaction, err proposal response was not successful, error code 500, msg chaincode with name 'solidary-network-chaincode' already exists
+# TRICK: Error: could not assemble transaction, err proposal response was not successful, error code 500, msg chaincode with name 'solidary-chain-chaincode' already exists
 
 # run dev server
-$ npx lerna run start:dev --scope @solidary-network/server-graphql --stream
+$ npx lerna run start:dev --scope @solidary-chain/server-graphql --stream
 # run debug server
-$ npx lerna run start:debug --scope @solidary-network/server-graphql --stream
+$ npx lerna run start:debug --scope @solidary-chain/server-graphql --stream
 
 # debug/view logs container ${CHAINCODE_NAME}-1.0, ${CHAINCODE_NAME}-1.1...
 $ docker container ls | grep ${CHAINCODE_NAME} | awk '{print $1" : "$2}'
-f544509eec58 : dev-peer0.org2.hurley.lab-solidary-network-chaincode-1.0-351b0bef3757230f476dec587f92b0d6ec2d60224e983cc32119aafec151bcdd
-32ebfd14677d : dev-peer0.org1.hurley.lab-solidary-network-chaincode-1.0-327a0dd6d92274526a6230611433ce88bc56a5602b3f6036cd5f739662e1d1f5
+f544509eec58 : dev-peer0.org2.hurley.lab-solidary-chain-chaincode-1.0-351b0bef3757230f476dec587f92b0d6ec2d60224e983cc32119aafec151bcdd
+32ebfd14677d : dev-peer0.org1.hurley.lab-solidary-chain-chaincode-1.0-327a0dd6d92274526a6230611433ce88bc56a5602b3f6036cd5f739662e1d1f5
 # or
 $ docker container ls --format "{{.ID}}\t{{.Image}}"
 # with chaincode version
@@ -200,13 +201,13 @@ lerna
 
 ```shell
 # add package to package
-$ ADD_PACKAGE=@solidary-network/common-cc
-$ TO_PACKAGE=@solidary-network/participant-cc
+$ ADD_PACKAGE=@solidary-chain/common-cc
+$ TO_PACKAGE=@solidary-chain/participant-cc
 $ npx lerna add ${ADD_PACKAGE} --scope ${TO_PACKAGE}
 
-# $ ADD_PACKAGE=@solidary-network/common-cc
+# $ ADD_PACKAGE=@solidary-chain/common-cc
 $ ADD_PACKAGE=@worldsibu/convector-adapter-fabric@1.3.8
-$ TO_PACKAGE=@solidary-network/server-graphql
+$ TO_PACKAGE=@solidary-chain/server-graphql
 $ npx lerna add ${ADD_PACKAGE} --scope ${TO_PACKAGE}
 ```
 
@@ -214,15 +215,15 @@ $ npx lerna add ${ADD_PACKAGE} --scope ${TO_PACKAGE}
 
 ```shell
 # when running server, when we build chaincode, we must stop and start server
-@solidary-network/server-graphql: src/convector.ts(35,50): error TS2339: Property 'get' does not exist on type 'ConvectorControllerClient<ConvectorController<any>>'.
-@solidary-network/server-graphql: src/participant/participant.service.ts(13,42): error TS2339: Property 'register' does not exist on type 'ConvectorControllerClient<ConvectorController<any>>'.
-@solidary-network/server-graphql: src/participant/participant.service.ts(23,75): error TS2339: Property 'get' does not exist on type 'ConvectorControllerClient<ConvectorController<any>>'.
-@solidary-network/server-graphql: src/participant/participant.service.ts(35,105): error TS2339: Property 'getAll' does not exist on type 'ConvectorControllerClient<ConvectorController<any>>'.
-@solidary-network/server-graphql: 20:58:05 - Found 4 errors. Watching for file changes.
-# fix build cc's and start server, USED TO WHEN package can find other package like can't find @solidary-network/common-cc or can't find a new type added to package like ChaincodeEvent
-$ npx lerna run build --scope @solidary-network/person-cc --stream
-$ npx lerna run build --scope @solidary-network/participant-cc --stream
-$ npx lerna run start:debug --scope @solidary-network/server-graphql --stream
+@solidary-chain/server-graphql: src/convector.ts(35,50): error TS2339: Property 'get' does not exist on type 'ConvectorControllerClient<ConvectorController<any>>'.
+@solidary-chain/server-graphql: src/participant/participant.service.ts(13,42): error TS2339: Property 'register' does not exist on type 'ConvectorControllerClient<ConvectorController<any>>'.
+@solidary-chain/server-graphql: src/participant/participant.service.ts(23,75): error TS2339: Property 'get' does not exist on type 'ConvectorControllerClient<ConvectorController<any>>'.
+@solidary-chain/server-graphql: src/participant/participant.service.ts(35,105): error TS2339: Property 'getAll' does not exist on type 'ConvectorControllerClient<ConvectorController<any>>'.
+@solidary-chain/server-graphql: 20:58:05 - Found 4 errors. Watching for file changes.
+# fix build cc's and start server, USED TO WHEN package can find other package like can't find @solidary-chain/common-cc or can't find a new type added to package like ChaincodeEvent
+$ npx lerna run build --scope @solidary-chain/person-cc --stream
+$ npx lerna run build --scope @solidary-chain/participant-cc --stream
+$ npx lerna run start:debug --scope @solidary-chain/server-graphql --stream
 ```
 
 ## Uris and Endpoints
@@ -238,7 +239,7 @@ $ npx lerna run start:debug --scope @solidary-network/server-graphql --stream
 ```json
 {
   "selector": {
-    "type": "network.solidary.convector.participant",
+    "type": "com.chain.solidary.model.participant",
     "identities": {
       "$elemMatch": {
         "fingerprint": "C8:B1:6A:5D:67:77:44:99:C6:3F:59:7C:1D:A5:F1:29:40:AE:5B:C9",
@@ -252,7 +253,7 @@ $ npx lerna run start:debug --scope @solidary-network/server-graphql --stream
 ```json
 {
   "selector": {
-    "type": "network.solidary.convector.person",
+    "type": "com.chain.solidary.model.person",
     "attributes": {
       "$elemMatch": {
         "id": "born-year",
@@ -268,7 +269,7 @@ $ npx lerna run start:debug --scope @solidary-network/server-graphql --stream
 ```json
 {
   "selector": {
-    "type": "network.solidary.convector.person",
+    "type": "com.chain.solidary.model.person",
     "username": "282692124",
     "participant": {
       "id": "gov"
@@ -288,7 +289,7 @@ if have problems after install packages with `lerna add` and with chaincodes, ex
 and have error not found chaincode package on npm registry like `'participant-cc@^0.1.0' is not in the npm registry`, just rebuild chaincode, and next `lerna bootstrap`
 
 ```shell
-$ npx lerna run build --scope @solidary-network/participant-cc
+$ npx lerna run build --scope @solidary-chain/participant-cc
 lerna success run Ran npm script 'build' in 1 package in 3.2s:
 lerna success - participant-cc
 $ npx lerna bootstrap
@@ -372,13 +373,13 @@ v8.16.0
 
 6. Move to the package folder run `cd packages && nest new server && cd ..`. This is going to scaffold a NestJS project for you.
 
-7. Install `env-cmd` with lerna for handle environmental variables `npx lerna add env-cmd --dev --scope @solidary-network/server-rest --no-bootstrap`
+7. Install `env-cmd` with lerna for handle environmental variables `npx lerna add env-cmd --dev --scope @solidary-chain/server-rest --no-bootstrap`
 
 8. Install the smart contract packages that are going to be consumed by NestJS
 
 ```shell
-$ npx lerna add participant-cc --scope @solidary-network/server-rest --no-bootstrap
-$ npx lerna add person-cc --scope @solidary-network/server-rest --no-bootstrap
+$ npx lerna add participant-cc --scope @solidary-chain/server-rest --no-bootstrap
+$ npx lerna add person-cc --scope @solidary-chain/server-rest --no-bootstrap
 ```
 
 > To avoid typing conflicts add the `skipLibCheck` flag in the `root` and `server` `tsconfig` files.
@@ -519,7 +520,7 @@ $ npm run cc:start -- ${CHAINCODE_NAME}
 Instantiated Chaincode at org1
 
 # start your web server
-$ npx lerna run start:dev --scope @solidary-network/server-rest --stream
+$ npx lerna run start:dev --scope @solidary-chain/server-rest --stream
 
 # seed some participants, in first invoke wait some seconds more
 $ npx hurl invoke ${CHAINCODE_NAME} participant_register gov "Big Government" -u admin
@@ -528,10 +529,10 @@ $ npx hurl invoke ${CHAINCODE_NAME} participant_register naba "National Bank" -u
 
 # test endpoints
 $ curl http://localhost:3000/participant/gov
-{"_id":"gov","_identities":[{"fingerprint":"81:C9:69:95:9E:12:BE:5A:98:DE:10:3B:4A:8B:80:03:9F:3E:33:E6","status":true}],"_msp":"org1MSP","_name":"Big Government","_type":"network.solidary.convector.participant"}
+{"_id":"gov","_identities":[{"fingerprint":"81:C9:69:95:9E:12:BE:5A:98:DE:10:3B:4A:8B:80:03:9F:3E:33:E6","status":true}],"_msp":"org1MSP","_name":"Big Government","_type":"com.chain.solidary.model.participant"}
 
 $ curl http://localhost:3000/participant/mit
-{"_id":"mit","_identities":[{"fingerprint":"6F:8E:B9:AF:1E:32:E7:9F:53:8D:28:07:79:0F:9D:39:D1:62:08:45","status":true}],"_msp":"org1MSP","_name":"MIT","_type":"network.solidary.convector.participant"}
+{"_id":"mit","_identities":[{"fingerprint":"6F:8E:B9:AF:1E:32:E7:9F:53:8D:28:07:79:0F:9D:39:D1:62:08:45","status":true}],"_msp":"org1MSP","_name":"MIT","_type":"com.chain.solidary.model.participant"}
 
 # run a few transactions
 
@@ -541,7 +542,7 @@ $ curl -H "Content-Type: application/json" --request POST --data '{ "id":"1-0020
 
 # Add a new attribute
 $ curl -H "Content-Type: application/json" --request POST --data '{ "attributeId":"birth-year", "content": 1993 }' http://localhost:3000/person/1-00200-2222-1/add-attribute
-{"id":"1-00200-2222-1","type":"io.worldsibu.person","name":"John Doe","attributes":[{"certifierID":"gov","content":1993,"id":"birth-year","issuedDate":1565561317567,"type":"network.solidary.convector.attribute"}]}
+{"id":"1-00200-2222-1","type":"io.worldsibu.person","name":"John Doe","attributes":[{"certifierID":"gov","content":1993,"id":"birth-year","issuedDate":1565561317567,"type":"com.chain.solidary.model.attribute"}]}
 
 # orderer logs
 2019-08-11 21:54:02.746 UTC [comm.grpc.server] 1 -> INFO 015 streaming call completed {"grpc.start_time": "2019-08-11T21:54:02.738Z", "grpc.service": "orderer.AtomicBroadcast", "grpc.method": "Broadcast", "grpc.peer_address": "172.23.0.1:45590", "grpc.code": "OK", "grpc.call_duration": "8.294983ms"}
@@ -726,11 +727,11 @@ beforeEach(async () => {
 
 ```shell
 # install the required packages
-$ npx lerna add @nestjs/swagger --scope @solidary-network/server-rest --no-bootstrap
-$ npx lerna add swagger-ui-express --scope @solidary-network/server-rest --no-bootstrap
+$ npx lerna add @nestjs/swagger --scope @solidary-chain/server-rest --no-bootstrap
+$ npx lerna add swagger-ui-express --scope @solidary-chain/server-rest --no-bootstrap
 # required for models
-$ npx lerna add class-validator --scope @solidary-network/server-rest --no-bootstrap
-$ npx lerna add class-transformer --scope @solidary-network/server-rest --no-bootstrap
+$ npx lerna add class-validator --scope @solidary-chain/server-rest --no-bootstrap
+$ npx lerna add class-transformer --scope @solidary-chain/server-rest --no-bootstrap
 $ npx lerna bootstrap
 ```
 
@@ -797,7 +798,7 @@ export class AppController {
 
 ```shell
 # boot server and test api docs
-$ npx lerna run start:dev --scope @solidary-network/server-rest --stream
+$ npx lerna run start:dev --scope @solidary-chain/server-rest --stream
 ```
 
 open your browser and navigate to <http://localhost:3000/api/>
@@ -959,7 +960,7 @@ ex
 
 ```shell
 # install dependencies required to use ExpressAdapter
-$ npx lerna add @nestjs/platform-express --scope @solidary-network/server-rest --no-bootstrap
+$ npx lerna add @nestjs/platform-express --scope @solidary-chain/server-rest --no-bootstrap
 ```
 
 > use let's encrypt certificates, or self-signed, here we use self-signed for a fictitious domain `convector.sample.com`
@@ -1062,7 +1063,7 @@ async function bootstrap() {
 
 ```shell
 # launch server
-$ npx lerna run start:debug --scope @solidary-network/server-rest --stream
+$ npx lerna run start:debug --scope @solidary-chain/server-rest --stream
 ```
 
 now test http to https redirect, and https
@@ -1088,10 +1089,10 @@ use passport strategy called passport-local that implements a username/password 
 
 ```shell
 # install the required packages
-$ npx lerna add @nestjs/passport --scope @solidary-network/server-rest --no-bootstrap
-$ npx lerna add passport --scope @solidary-network/server-rest --no-bootstrap
-$ npx lerna add passport-local --scope @solidary-network/server-rest --no-bootstrap
-$ npx lerna add @types/passport-local  --scope @solidary-network/server-rest --dev --no-bootstrap
+$ npx lerna add @nestjs/passport --scope @solidary-chain/server-rest --no-bootstrap
+$ npx lerna add passport --scope @solidary-chain/server-rest --no-bootstrap
+$ npx lerna add passport-local --scope @solidary-chain/server-rest --no-bootstrap
+$ npx lerna add @types/passport-local  --scope @solidary-chain/server-rest --dev --no-bootstrap
 $ npx lerna bootstrap
 ```
 
@@ -1307,9 +1308,9 @@ $ curl -k -X POST https://localhost:3443/api/login -d '{ "username": "john", "pa
 
 ```shell
 # install the required packages
-$ npx lerna add @nestjs/jwt --scope @solidary-network/server-rest --no-bootstrap
-$ npx lerna add passport-jwt --scope @solidary-network/server-rest --no-bootstrap
-$ npx lerna add @types/passport-jwt  --scope @solidary-network/server-rest --no-bootstrap --dev
+$ npx lerna add @nestjs/jwt --scope @solidary-chain/server-rest --no-bootstrap
+$ npx lerna add passport-jwt --scope @solidary-chain/server-rest --no-bootstrap
+$ npx lerna add @types/passport-jwt  --scope @solidary-chain/server-rest --no-bootstrap --dev
 $ npx lerna bootstrap
 ```
 
@@ -1673,7 +1674,7 @@ start change person chaincode, adding a few property fields and replace `name` t
 
 export class Person extends ConvectorModel<Person> {
   @Required()
-  public readonly type = 'network.solidary.convector.person';
+  public readonly type = 'com.chain.solidary.model.person';
 
   @Required()
   @Validate(yup.string())
@@ -1840,7 +1841,7 @@ everything seems working has expected, now we will test chaincode from server re
 
 ```shell
 # boot rest server
-$ npx lerna run start:debug --scope @solidary-network/server-rest --stream
+$ npx lerna run start:debug --scope @solidary-chain/server-rest --stream
 # login to get fresh accessToken and assign it to env variable with same name $accessToken (require jq installed)
 $ $( curl -k -X POST https://localhost:3443/api/login -d '{ "username": "john", "password": "changeme"}' -H 'Content-Type: application/json' | jq -r 'keys[] as $k | "export \($k)=\(.[$k])"' )
 # copy accessToken to clipboard to use in swagger or ignore and use curl with $accessToken (required xclip installed)
@@ -1877,10 +1878,10 @@ server: }
 
 ```shell
 # install required dependencies
-$ npx lerna add bcrypt --scope @solidary-network/person-cc --no-bootstrap
-$ npx lerna add @types/bcrypt --scope @solidary-network/person-cc --no-bootstrap
-$ npx lerna add bcrypt --scope @solidary-network/server-rest --no-bootstrap
-$ npx lerna add @types/bcrypt --scope @solidary-network/server-rest --no-bootstrap
+$ npx lerna add bcrypt --scope @solidary-chain/person-cc --no-bootstrap
+$ npx lerna add @types/bcrypt --scope @solidary-chain/person-cc --no-bootstrap
+$ npx lerna add bcrypt --scope @solidary-chain/server-rest --no-bootstrap
+$ npx lerna add @types/bcrypt --scope @solidary-chain/server-rest --no-bootstrap
 $ npx lerna bootstrap
 ```
 
@@ -1899,8 +1900,8 @@ export const hashPassword = (password: string): string => {
 ```shell
 # upgrade smart contract
 $ npm run cc:upgrade -- ${CHAINCODE_NAME} 1.1
-Installed Chaincode solidary-network-chaincode version 1.1  at org2
-Upgrading Chaincode solidary-network-chaincode version 1.1 at org1 for channel ch1
+Installed Chaincode solidary-chain-chaincode version 1.1  at org2
+Upgrading Chaincode solidary-chain-chaincode version 1.1 at org1 for channel ch1
 It may take a few minutes depending on the chaincode dependencies
 Upgraded Chaincode at org1
 # create another user
@@ -1923,7 +1924,7 @@ $ npx hurl invoke ${CHAINCODE_NAME} person_get 1-100-105
 }
 ```
 
-## Create common Package to share stuff `@solidary-network/common-cc`
+## Create common Package to share stuff `@solidary-chain/common-cc`
 
 > this post belongs to a github project that have a `nest.js` server, but currently is not created, when I have the link I update this post
 
@@ -1931,7 +1932,7 @@ $ npx hurl invoke ${CHAINCODE_NAME} person_get 1-100-105
 
 first we start to create a lerna package for typescript, by hand
 
-### Create lerna common package `@solidary-network/common-cc`
+### Create lerna common package `@solidary-chain/common-cc`
 
 `packages/common/tsconfig.json`
 
@@ -1952,7 +1953,7 @@ first we start to create a lerna package for typescript, by hand
 
 ```json
 {
-  "name": "@solidary-network/common-cc",
+  "name": "@solidary-chain/common-cc",
   "version": "0.1.0",
   "main": "dist/src/index",
   "types": "dist/src/index",
@@ -1984,7 +1985,7 @@ export * from './constants';
 
 ```typescript
 // convector model
-const CONVECTOR_MODEL_PATH_PREFIX: string = 'network.solidary.convector.convector';
+const CONVECTOR_MODEL_PATH_PREFIX: string = 'com.chain.solidary.model.convector';
 const CONVECTOR_MODEL_PATH_PARTICIPANT: string = `${CONVECTOR_MODEL_PATH_PREFIX}.participant`;
 const CONVECTOR_MODEL_PATH_PERSON: string = `${CONVECTOR_MODEL_PATH_PREFIX}.person`;
 const CONVECTOR_MODEL_PATH_ATTRIBUTE: string = `${CONVECTOR_MODEL_PATH_PREFIX}.attribute`;
@@ -2002,7 +2003,7 @@ now add the common package to all packages in monorepo
 
 ```shell
 # add to all packages (without scope)
-$ npx lerna add @solidary-network/common-cc@0.1.0
+$ npx lerna add @solidary-chain/common-cc@0.1.0
 # to prevent some problems always use same version has in local package
 # clean and bootstrap
 $ npx lerna clean -y && npx lerna bootstrap
@@ -2012,20 +2013,20 @@ optional can use `--scope` to add only to desired packages
 
 ```shell
 # add to all packages (with scope)
-$ npx lerna add @solidary-network/common-cc@0.1.0 --scope @solidary-network/server-rest --no-bootstrap
-$ npx lerna add @solidary-network/common-cc@0.1.0 --scope @solidary-network/participant-cc --no-bootstrap
-$ npx lerna add @solidary-network/common-cc@0.1.0 --scope @solidary-network/person-cc --no-bootstrap
+$ npx lerna add @solidary-chain/common-cc@0.1.0 --scope @solidary-chain/server-rest --no-bootstrap
+$ npx lerna add @solidary-chain/common-cc@0.1.0 --scope @solidary-chain/participant-cc --no-bootstrap
+$ npx lerna add @solidary-chain/common-cc@0.1.0 --scope @solidary-chain/person-cc --no-bootstrap
 # clean and bootstrap
 $ npx lerna clean -y && npx lerna bootstrap --hoist
 ```
 
-now test `@solidary-network/common-cc` in server, add this lines to top of `packages/server-rest/src/app.ts`
+now test `@solidary-chain/common-cc` in server, add this lines to top of `packages/server-rest/src/app.ts`
 to confirm that everything is working has expected
 
 > Note: if don't have a server, skip this step right to **Use common package inside ChainCode** section
 
 ```typescript
-import { appConstants as c } from '@solidary-network/common-cc';
+import { appConstants as c } from '@solidary-chain/common-cc';
 debugger;
 Logger.log(JSON.stringify(c, undefined, 2));
 ```
@@ -2033,7 +2034,7 @@ Logger.log(JSON.stringify(c, undefined, 2));
 now launch server with debugger, and inspect `c` object or view log result
 
 ```shell
-$ npx lerna run start:debug --scope @solidary-network/server-rest --stream
+$ npx lerna run start:debug --scope @solidary-chain/server-rest --stream
 ```
 
 if outputs appConstants we are ready to go, and common package works has expected
@@ -2041,13 +2042,13 @@ if outputs appConstants we are ready to go, and common package works has expecte
 ### Use common package inside ChainCode
 
 To use common package inside chaincode, is very tricky, and I lost a few hours to get it work, thanks to Walter and Diego from WorldSibu I get it.
-The problem is that currently, in convector there is no easy way to use packages, that are not controllers, for this to work we must create a fake controller in `@solidary-network/common-cc` to put it to work
+The problem is that currently, in convector there is no easy way to use packages, that are not controllers, for this to work we must create a fake controller in `@solidary-chain/common-cc` to put it to work
 
-first install required controller dependency in our `@solidary-network/common-cc`, this is required ut use `{ Controller, Invokable }`
+first install required controller dependency in our `@solidary-chain/common-cc`, this is required ut use `{ Controller, Invokable }`
 
 ```shell
 # install dependency
-$ npx lerna add @worldsibu/convector-core --scope @solidary-network/common-cc
+$ npx lerna add @worldsibu/convector-core --scope @solidary-chain/common-cc
 ```
 
 next we must create a fake controller in `packages/common/src/common.controller.ts`
@@ -2071,7 +2072,7 @@ export * from './constants';
 export * from './common.controller';
 ```
 
-after that we must change `chaincode.config.json` to add the fake controller, this is a hell of a hack, we use a fake controller to force the `@solidary-network/common-cc` to be copied inside `chaincode-person` dir, without this, the `@solidary-network/common-cc` is not copied and we have a broken chain code when we try deploy it with `cc:start` or `cc:upgrade` it always show the annoying error `npm ERR! 404 Not Found: @solidary-network/common-cc@0.1.0`
+after that we must change `chaincode.config.json` to add the fake controller, this is a hell of a hack, we use a fake controller to force the `@solidary-chain/common-cc` to be copied inside `chaincode-person` dir, without this, the `@solidary-chain/common-cc` is not copied and we have a broken chain code when we try deploy it with `cc:start` or `cc:upgrade` it always show the annoying error `npm ERR! 404 Not Found: @solidary-chain/common-cc@0.1.0`
 
 first change `chaincode.config.json`
 
@@ -2097,7 +2098,7 @@ ok let's change `chaincode.config.json` and add another controller above `person
   },
   // BO : ADD THIS
   {
-    "name": "@solidary-network/common-cc",
+    "name": "@solidary-chain/common-cc",
     "version": "file:./packages/common",
     "controller": "CommonController"
   }
@@ -2107,12 +2108,12 @@ ok let's change `chaincode.config.json` and add another controller above `person
 
 > Note: this is another clever tricky part, the `name` is the **package name**, like the one we use in imports, `version` is the **path location** inside of our build `chaincode-person`
 
-before build chaincode we must change our models to use the new common constants from `@solidary-network/common-cc` ex `c.CONVECTOR_MODEL_PATH_X509IDENTITY`, currently this common package only use simple constants, to keep it simple, the point is created common logic for all the packages, rest-server, front-end, packages-cc, cli-tools, etc
+before build chaincode we must change our models to use the new common constants from `@solidary-chain/common-cc` ex `c.CONVECTOR_MODEL_PATH_X509IDENTITY`, currently this common package only use simple constants, to keep it simple, the point is created common logic for all the packages, rest-server, front-end, packages-cc, cli-tools, etc
 
 `packages/participant-cc/src/participant.model.ts`
 
 ```typescript
-import { appConstants as c } from '@solidary-network/common-cc';
+import { appConstants as c } from '@solidary-chain/common-cc';
 ...
 export class x509Identities extends ConvectorModel<x509Identities>{
   @ReadOnly()
@@ -2127,7 +2128,7 @@ export class Participant extends ConvectorModel<Participant> {
 `packages/person-cc/src/person.model.ts`
 
 ```typescript
-import { appConstants as c } from '@solidary-network/common-cc';
+import { appConstants as c } from '@solidary-chain/common-cc';
 ...
 export class Attribute extends ConvectorModel<Attribute>{
   @ReadOnly()
@@ -2137,11 +2138,11 @@ export class Attribute extends ConvectorModel<Attribute>{
 export class Person extends ConvectorModel<Person> {
   @ReadOnly()
   @Required()
-  public readonly type = 'network.solidary.convector.person';
+  public readonly type = 'com.chain.solidary.model.person';
   ...
 ```
 
-now we can `cc:package` the chaincode `chaincode-person`, this will package the chaincode with our `@solidary-network/common-cc` inside it with packages `person-cc` and `participant-cc` using our `@solidary-network/common-cc` constants
+now we can `cc:package` the chaincode `chaincode-person`, this will package the chaincode with our `@solidary-chain/common-cc` inside it with packages `person-cc` and `participant-cc` using our `@solidary-chain/common-cc` constants
 
 ```shell
 # first remove chaincode (optional)
@@ -2159,7 +2160,7 @@ chaincode-person/packages/participant-cc
 chaincode-person/packages/person-cc
 ```
 
-another good practice is check if inside `chaincode-person` folder, in file `chaincode-person/package.json`, if our `@solidary-network/common-cc` was added to `dependencies`, in above json block we can see `cc:package` script add line `"@solidary-network/common-cc": "file:./package/@solidary-network/common-cc"`, this is created based on our changes in `chaincode.config.json` remember, when we add the fake controller
+another good practice is check if inside `chaincode-person` folder, in file `chaincode-person/package.json`, if our `@solidary-chain/common-cc` was added to `dependencies`, in above json block we can see `cc:package` script add line `"@solidary-chain/common-cc": "file:./package/@solidary-chain/common-cc"`, this is created based on our changes in `chaincode.config.json` remember, when we add the fake controller
 
 ```json
 "dependencies": {
@@ -2171,7 +2172,7 @@ another good practice is check if inside `chaincode-person` folder, in file `cha
   "participant-cc": "file:./packages/participant-cc",
   "person-cc": "file:./packages/person-cc",
   // BO: magic line here
-  "@solidary-network/common-cc": "file:./packages/@solidary-network/common-cc"
+  "@solidary-chain/common-cc": "file:./packages/@solidary-chain/common-cc"
   // EO: magic line here
 },
 ```
@@ -2196,9 +2197,9 @@ $ npx hurl invoke ${CHAINCODE_NAME} person_create "{ \"id\": \"1-100-103\", \"fi
 $ npx hurl invoke ${CHAINCODE_NAME} person_getAll
 ```
 
-done, everything is working has expected and we have a `@solidary-network/common-cc` package implemented.
+done, everything is working has expected and we have a `@solidary-chain/common-cc` package implemented.
 
-if we check couchdb `1-100-103` person, we can check that is using type `"type": "network.solidary.convector.person"` that comes from our constants in our `@solidary-network/common-cc`, proving that it gets its value from `@solidary-network/common-cc`, believe me, if it won't wont find `@solidary-network/common-cc` it crash.....simple
+if we check couchdb `1-100-103` person, we can check that is using type `"type": "com.chain.solidary.model.person"` that comes from our constants in our `@solidary-chain/common-cc`, proving that it gets its value from `@solidary-chain/common-cc`, believe me, if it won't wont find `@solidary-chain/common-cc` it crash.....simple
 
 for future changes in chaincode, upgrade it with above command
 
@@ -2211,7 +2212,7 @@ we are done........
 
 ### Use scripts to copy other files to chaincode
 
-another thing that I tried to hack before find the solution, is using `npm scripts` but it won't work because we need the modified `chaincode-person/package.json` with `"@solidary-network/common-cc": "file:./packages/@solidary-network/common-cc"` in the `dependencies`, but I try it......
+another thing that I tried to hack before find the solution, is using `npm scripts` but it won't work because we need the modified `chaincode-person/package.json` with `"@solidary-chain/common-cc": "file:./packages/@solidary-chain/common-cc"` in the `dependencies`, but I try it......
 
 leave it here, maybe can be useful for other kind of stuff, like copy other type of stuff
 
@@ -2221,11 +2222,11 @@ leave it here, maybe can be useful for other kind of stuff, like copy other type
     ...
     "cc:package": "f() { npm run lerna:build; chaincode-manager --update --config ./$2.$1.config.json --output ./chaincode-$1 package; npm run copy:indexes -- $1; npm run copy:package:common -- $1; }; f",
     ...
-    "copy:package:common": "f () { mkdir -p ./chaincode-$1/node_modules/@solidary-network/; cp -r ./packages/common/ ./chaincode-$1/node_modules/@solidary-network/; }; f"
+    "copy:package:common": "f () { mkdir -p ./chaincode-$1/node_modules/@solidary-chain/; cp -r ./packages/common/ ./chaincode-$1/node_modules/@solidary-chain/; }; f"
     ...
 ```
 
-> note for `npm run copy:package:common -- $1;` in `"cc:package"`, and `cp -r ./packages/common/ ./chaincode-$1/node_modules/@solidary-network/; };` in `"copy:package:common"`, it works, but won't modify `chaincode-person/package.json` with lines
+> note for `npm run copy:package:common -- $1;` in `"cc:package"`, and `cp -r ./packages/common/ ./chaincode-$1/node_modules/@solidary-chain/; };` in `"copy:package:common"`, it works, but won't modify `chaincode-person/package.json` with lines
 
 ```json
 "dependencies": {
@@ -2237,7 +2238,7 @@ leave it here, maybe can be useful for other kind of stuff, like copy other type
   "participant-cc": "file:./packages/participant-cc",
   "person-cc": "file:./packages/person-cc",
   // BO: magic line here
-  "@solidary-network/common-cc": "file:./packages/@solidary-network/common-cc"
+  "@solidary-chain/common-cc": "file:./packages/@solidary-chain/common-cc"
   // EO: magic line here
 }
 ```
@@ -2298,7 +2299,7 @@ next add `getParticipantByIdentity` function to utils, useful to get current par
 `packages/person-cc/src/utils.ts`
 
 ```typescript
-import { appConstants as c } from '@solidary-network/common-cc';
+import { appConstants as c } from '@solidary-chain/common-cc';
 ...
 import { Participant } from 'participant-cc';
 ...
@@ -2327,7 +2328,7 @@ next we move to `PersonController` to extend `create` method with new `participa
 `packages/person-cc/src/person.controller.ts`
 
 ```typescript
-import { appConstants as c } from '@solidary-network/common-cc';
+import { appConstants as c } from '@solidary-chain/common-cc';
 ...
 import { getParticipantByIdentity, hashPassword } from './utils';
 
@@ -2512,9 +2513,9 @@ $ npx lerna bootstrap
 ## Solve custom nestjs packages dependencies
 
 ```shell
-$ npx lerna add ./packages-nestjs/@koakh/nestjs-auth-quick-config --scope @solidary-network/server-graphql
+$ npx lerna add ./packages-nestjs/@koakh/nestjs-auth-quick-config --scope @solidary-chain/server-graphql
 lerna notice cli v3.16.4
-lerna info filter [ '@solidary-network/server-graphql' ]
+lerna info filter [ '@solidary-chain/server-graphql' ]
 lerna ERR! TypeError: Invalid comparator: /media/mario/Storage/Development/BlockChain/Convector/@koakh/nestjs-easyconfig
 lerna ERR!     at Comparator.parse (/media/mario/Storage/Development/BlockChain/Convector/
 ```
@@ -2537,11 +2538,11 @@ $ npx hurl invoke ${CHAINCODE_NAME} participant_register gov "Big Government" -u
 [hurley] - No peer ran tx successfully!
 undefined
 { Error: transaction returned with failure: {"name":"Error","status":500}
-    at self._endorserClient.processProposal (/media/mario/Storage/Development/@Solidary.Network/network/node_modules/fabric-client/lib/Peer.js:140:36)
-    at Object.onReceiveStatus (/media/mario/Storage/Development/@Solidary.Network/network/node_modules/fabric-client/node_modules/grpc/src/client_interceptors.js:1207:9)
-    at InterceptingListener._callNext (/media/mario/Storage/Development/@Solidary.Network/network/node_modules/fabric-client/node_modules/grpc/src/client_interceptors.js:568:42)
-    at InterceptingListener.onReceiveStatus (/media/mario/Storage/Development/@Solidary.Network/network/node_modules/fabric-client/node_modules/grpc/src/client_interceptors.js:618:8)
-    at callback (/media/mario/Storage/Development/@Solidary.Network/network/node_modules/fabric-client/node_modules/grpc/src/client_interceptors.js:845:24)
+    at self._endorserClient.processProposal (/media/mario/Storage/Development/@SolidaryChain/network/node_modules/fabric-client/lib/Peer.js:140:36)
+    at Object.onReceiveStatus (/media/mario/Storage/Development/@SolidaryChain/network/node_modules/fabric-client/node_modules/grpc/src/client_interceptors.js:1207:9)
+    at InterceptingListener._callNext (/media/mario/Storage/Development/@SolidaryChain/network/node_modules/fabric-client/node_modules/grpc/src/client_interceptors.js:568:42)
+    at InterceptingListener.onReceiveStatus (/media/mario/Storage/Development/@SolidaryChain/network/node_modules/fabric-client/node_modules/grpc/src/client_interceptors.js:618:8)
+    at callback (/media/mario/Storage/Development/@SolidaryChain/network/node_modules/fabric-client/node_modules/grpc/src/client_interceptors.js:845:24)
   status: 500,
   payload: <Buffer >,
   peer: 
@@ -2564,13 +2565,13 @@ undefined
 enter container to check if chaincode is deployed
 
 ```shell
-$ CHAINCODE_NAME=solidary-network-chaincode
+$ CHAINCODE_NAME=solidary-chain-chaincode
 $ VERSION=1.1
 $ CONTAINER=dev-peer0.org1.hurley.lab-${CHAINCODE_NAME}-${VERSION}
 # enter in container
 $ docker exec -it ${CONTAINER} sh
 # location of chaincode inside container ${CONTAINER}
-$ ls -la /usr/local/src/packages/@solidary-network
+$ ls -la /usr/local/src/packages/@solidary-chain
 drwxr-xr-x 5 root root 4096 Feb  1 19:38 cause-cc
 drwxr-xr-x 5 root root 4096 Feb  1 19:38 common
 drwxr-xr-x 5 root root 4096 Feb  1 19:38 participant-cc
@@ -2597,19 +2598,19 @@ public output: Entity;
 ## Solve problem Cannot find module 'typescript/bin/tsc'
 
 ```shell
-$ npx lerna run build --scope @solidary-network/server-graphql --stream
+$ npx lerna run build --scope @solidary-chain/server-graphql --stream
 with start:dev gives only Cannot find module 'typescript/bin/tsc'
 ```
 
-above error appens because of a missing package, to debug launch `lerna run start --scope @solidary-network/server-graphql` and start to figure what package is missing
+above error appens because of a missing package, to debug launch `lerna run start --scope @solidary-chain/server-graphql` and start to figure what package is missing
 
 ```shell
-$ lerna run start --scope @solidary-network/server-graphql
+$ lerna run start --scope @solidary-chain/server-graphql
 uncaughtException: Cannot find module 'passport-jwt'
 Error: Cannot find module 'passport-jwt'
 # install missing packages
-$ npx lerna add passport-jwt --scope @solidary-network/server-graphql
-$ npx lerna add env-cmd -D --scope @solidary-network/server-graphql
+$ npx lerna add passport-jwt --scope @solidary-chain/server-graphql
+$ npx lerna add env-cmd -D --scope @solidary-chain/server-graphql
 ```
 
 another problem is can't launch scripts that are using tsc-watch, ex `start:dev` and `start:debug` the problem is the missing `tsc-watch`
@@ -2618,7 +2619,7 @@ another problem is can't launch scripts that are using tsc-watch, ex `start:dev`
 $ tsc-watch -p tsconfig.build.json
 Cannot find module 'typescript/bin/tsc'
 # install it and the problem is fixed
-$ npx lerna add tsc-watch -D --scope @solidary-network/server-graphql
+$ npx lerna add tsc-watch -D --scope @solidary-chain/server-graphql
 ```
 
 we can clean all, and bootstrap to chek if all packages are in `package.json files` with
@@ -2643,9 +2644,9 @@ tests/participant.spec.ts(33,34): error TS1005: ',' expected.
 
 ```shell
 # fix build below packages and launch lerna bootstrap ignoring above errors, everything works
-$ npx lerna run build --scope @solidary-network/common-cc --stream
-$ npx lerna run build --scope @solidary-network/person-cc --stream
-$ npx lerna run build --scope @solidary-network/participant-cc --stream
+$ npx lerna run build --scope @solidary-chain/common-cc --stream
+$ npx lerna run build --scope @solidary-chain/person-cc --stream
+$ npx lerna run build --scope @solidary-chain/participant-cc --stream
 ```
 
 ## Add new transaction-cc module to chaincode
@@ -2663,7 +2664,7 @@ CREATE org1.transaction.config.json (823 bytes)
 CREATE org2.transaction.config.json (823 bytes)
 ```
 
-edit `packages/transaction-cc/package.json` and change `"name": "transaction-cc"` to `"name": "@solidary-network/transaction-cc"`
+edit `packages/transaction-cc/package.json` and change `"name": "transaction-cc"` to `"name": "@solidary-chain/transaction-cc"`
 
 ```shell
 $ code packages/asset-cc/package.json
@@ -2677,7 +2678,7 @@ $ code chaincode.config.json
 
 ```json
 {
-  "name": "@solidary-network/transaction-cc",
+  "name": "@solidary-chain/transaction-cc",
   "version": "file:./packages/transaction-cc",
   "controller": "TransactionController"
 },
@@ -2686,13 +2687,13 @@ $ code chaincode.config.json
 ```shell
 MODULE=transaction
 # try to build it with
-$ npx lerna run build --scope @solidary-network/${MODULE}-cc
+$ npx lerna run build --scope @solidary-chain/${MODULE}-cc
 # add dependencies
-$ npx lerna add @solidary-network/common-cc --scope @solidary-network/${MODULE}-cc
-$ npx lerna add @solidary-network/person-cc --scope @solidary-network/${MODULE}-cc
-$ npx lerna add @solidary-network/participant-cc --scope @solidary-network/${MODULE}-cc
+$ npx lerna add @solidary-chain/common-cc --scope @solidary-chain/${MODULE}-cc
+$ npx lerna add @solidary-chain/person-cc --scope @solidary-chain/${MODULE}-cc
+$ npx lerna add @solidary-chain/participant-cc --scope @solidary-chain/${MODULE}-cc
 # third party
-$ npx lerna add yup@^0.28.1 --scope @solidary-network/${MODULE}-cc
+$ npx lerna add yup@^0.28.1 --scope @solidary-chain/${MODULE}-cc
 ```
 
 add model to `packages/common-cc/src/constants.ts`
@@ -2707,7 +2708,7 @@ export const appConstants = {
 
 ```shell
 # rebuild common package
-$ npx lerna run build --scope @solidary-network/common-cc
+$ npx lerna run build --scope @solidary-chain/common-cc
 ```
 
 change `packages/transaction-cc/src/transaction.model.ts`
@@ -2730,7 +2731,7 @@ copy, from other peoject and update it to `Transaction` model
 
 ```shell
 # add the chaincode package to graphql package
-$ npx lerna add @solidary-network/${MODULE}-cc --scope @solidary-network/server-graphql
+$ npx lerna add @solidary-chain/${MODULE}-cc --scope @solidary-chain/server-graphql
 ```
 
 add Controlers `packages/server-graphql/src/convector.ts`
@@ -2740,7 +2741,7 @@ $ code packages/server-graphql/src/convector.ts
 ```
 
 ```typescript
-import { TransactionController } from '@solidary-network/transaction-cc';
+import { TransactionController } from '@solidary-chain/transaction-cc';
 ...
 export const TransactionControllerBackEnd = ClientFactory(TransactionController, adapter);
 ```
@@ -2770,7 +2771,7 @@ Property 'register' does not exist on type 'ConvectorControllerClient<Transactio
 
 ```shell
 # rebuild again before upgrade chaincode
-$ npx lerna run build --scope @solidary-network/transaction-cc
+$ npx lerna run build --scope @solidary-chain/transaction-cc
 ```
 
 ### Add new package to other files
@@ -2798,8 +2799,8 @@ couchdb.peer0.org2.hurley.lab, 4369/tcp, 9100/tcp, 0.0.0.0:5184->5984/tcp
 couchdb.peer0.org1.hurley.lab, 4369/tcp, 9100/tcp, 0.0.0.0:5084->5984/tcp
 ```
 
-- [http://localhost:5084/_utils/#database/ch1_solidary-network-chaincode/_index](http://localhost:5184/_utils/#database/ch1_solidary-network-chaincode/_index)
-- [http://localhost:5184/_utils/#database/ch1_solidary-network-chaincode/_index](http://localhost:5184/_utils/#database/ch1_solidary-network-chaincode/_index)
+- [http://localhost:5084/_utils/#database/ch1_solidary-chain-chaincode/_index](http://localhost:5184/_utils/#database/ch1_solidary-chain-chaincode/_index)
+- [http://localhost:5184/_utils/#database/ch1_solidary-chain-chaincode/_index](http://localhost:5184/_utils/#database/ch1_solidary-chain-chaincode/_index)
 
 create index on both containers/couchdb
 
@@ -2807,7 +2808,7 @@ create index on both containers/couchdb
 $ ORG_PORT=5084
 # ORG_PORT=5184
 $ curl --request POST \
-  --url http://localhost:${ORG_PORT}/ch1_solidary-network-chaincode//_index \
+  --url http://localhost:${ORG_PORT}/ch1_solidary-chain-chaincode//_index \
   --header 'content-type: application/json' \
   --data '{
    "index": {
@@ -2870,7 +2871,7 @@ this script is **very very useful** to create the `chaincodeAdmin` that has the 
 
 ```shell
 # first the env variables
-$ CHAINCODE_NAME=solidary-network-chaincode
+$ CHAINCODE_NAME=solidary-chain-chaincode
 
 # register a special user with an attribute Admin
 $ node ./packages/administrative/registerIdentitiesManager.js
@@ -2930,11 +2931,11 @@ $ npx hurl invoke ${CHAINCODE_NAME} participant_register gov "Big Government" -u
 [hurley] - No peer ran tx successfully!
 undefined
 { Error: transaction returned with failure: {"name":"Error","status":500}
-    at self._endorserClient.processProposal (/media/mario/Storage/Development/@Solidary.Network/network/node_modules/fabric-client/lib/Peer.js:140:36)
-    at Object.onReceiveStatus (/media/mario/Storage/Development/@Solidary.Network/network/node_modules/fabric-client/node_modules/grpc/src/client_interceptors.js:1207:9)
-    at InterceptingListener._callNext (/media/mario/Storage/Development/@Solidary.Network/network/node_modules/fabric-client/node_modules/grpc/src/client_interceptors.js:568:42)
-    at InterceptingListener.onReceiveStatus (/media/mario/Storage/Development/@Solidary.Network/network/node_modules/fabric-client/node_modules/grpc/src/client_interceptors.js:618:8)
-    at callback (/media/mario/Storage/Development/@Solidary.Network/network/node_modules/fabric-client/node_modules/grpc/src/client_interceptors.js:845:24)
+    at self._endorserClient.processProposal (/media/mario/Storage/Development/@SolidaryChain/network/node_modules/fabric-client/lib/Peer.js:140:36)
+    at Object.onReceiveStatus (/media/mario/Storage/Development/@SolidaryChain/network/node_modules/fabric-client/node_modules/grpc/src/client_interceptors.js:1207:9)
+    at InterceptingListener._callNext (/media/mario/Storage/Development/@SolidaryChain/network/node_modules/fabric-client/node_modules/grpc/src/client_interceptors.js:568:42)
+    at InterceptingListener.onReceiveStatus (/media/mario/Storage/Development/@SolidaryChain/network/node_modules/fabric-client/node_modules/grpc/src/client_interceptors.js:618:8)
+    at callback (/media/mario/Storage/Development/@SolidaryChain/network/node_modules/fabric-client/node_modules/grpc/src/client_interceptors.js:845:24)
   status: 500,
   payload: <Buffer >,
   peer: 
@@ -3012,7 +3013,7 @@ $ npx hurl new
 ...
 [hurley] - You can find the network topology (ports, names) here: /home/mario/hyperledger-fabric-network/docker-compose.yaml
 # deploy chaincode
-$ npm run cc:start -- solidary-network-chaincode
+$ npm run cc:start -- solidary-chain-chaincode
 ...
 Instantiated Chaincode at org1
 ```
@@ -3103,6 +3104,8 @@ restarted network, and fails create cause, but after a while it start to work, u
 
 ## Error: Failed to load gRPC binary module because it was not installed for the current system
 
+> TIP: this occurs when we are not used same node version, the best way to solve this is usign `node 8.16.0`
+
 ```
 Error: Failed to load gRPC binary module because it was not installed for the current system
 Expected directory: node-v57-linux-x64-glibc
@@ -3120,3 +3123,32 @@ $ npm rebuild
 ### require await ele Error: PUT_STATE failed: transaction ID: ...: no ledger context
 
 In my case, it occurred because the result from my smartcontract was returned faster than a promise resolved. If it's also a case for you, add a missing await somewhere.
+
+## Problem: Jest error TS1005: ';' expected.
+
+```shell
+$ npm i
+../../node_modules/jest-diff/build/diffLines.d.ts:8:34 - error TS1005: ';' expected.
+8 import type { DiffOptions } from './types';
+fix :https://github.com/facebook/jest/issues/9703
+$ tsc -v
+Version 3.4.5
+It looks like you need typescript > 3.8.0
+$ npx tsc --version
+Version 3.8.3
+```
+
+remove
+
+```json
+"@types/jest-diff": {
+  "version": "24.3.0",
+  "resolved": "https://registry.npmjs.org/@types/jest-diff/-/jest-diff-24.3.0.tgz",
+  "integrity": "sha512-vx1CRDeDUwQ0Pc7v+hS61O1ETA81kD04IMEC0hS1kPyVtHDdZrokAvpF7MT9VI/fVSzicelUZNCepDvhRV1PeA==",
+  "requires": {
+    "jest-diff": "*"
+  }
+},
+```
+
+from solidarychain-development-monorepo/package-lock.json and to finish with `npm i `

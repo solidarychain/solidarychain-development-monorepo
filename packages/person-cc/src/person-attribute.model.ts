@@ -1,4 +1,4 @@
-import { appConstants as c } from '@solidary-network/common-cc';
+import { appConstants as c } from '@solidary-chain/common-cc';
 import { ConvectorModel, Default, ReadOnly, Required, Validate } from '@worldsibu/convector-core';
 import * as yup from 'yup';
 

@@ -1,8 +1,8 @@
-import { Asset } from '@solidary-network/asset-cc';
-import { Cause } from '@solidary-network/cause-cc';
-import { appConstants as c, ChaincodeEvent, EntityType } from '@solidary-network/common-cc';
-import { getParticipantByIdentity, Participant } from '@solidary-network/participant-cc';
-import { Person } from '@solidary-network/person-cc';
+import { Asset } from '@solidary-chain/asset-cc';
+import { Cause } from '@solidary-chain/cause-cc';
+import { appConstants as c, ChaincodeEvent, EntityType } from '@solidary-chain/common-cc';
+import { getParticipantByIdentity, Participant } from '@solidary-chain/participant-cc';
+import { Person } from '@solidary-chain/person-cc';
 import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
 import * as yup from 'yup';

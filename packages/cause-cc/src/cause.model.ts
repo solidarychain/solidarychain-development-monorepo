@@ -1,9 +1,9 @@
-import { appConstants as c, entitySchema, GenericBalance, Goods } from '@solidary-network/common-cc';
+import { appConstants as c, entitySchema, GenericBalance, Goods } from '@solidary-chain/common-cc';
 import { ConvectorModel, FlatConvectorModel, ReadOnly, Required, Validate } from '@worldsibu/convector-core';
 import * as yup from 'yup';
-import { x509Identities } from '@solidary-network/common-cc';
+import { x509Identities } from '@solidary-chain/common-cc';
 import { Entity } from './types';
-import { Participant } from '@solidary-network/participant-cc';
+import { Participant } from '@solidary-chain/participant-cc';
 
 export class Cause extends ConvectorModel<Cause> {
   @ReadOnly()

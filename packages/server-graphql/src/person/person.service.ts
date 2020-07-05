@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
-import { Person as PersonConvectorModel, PersonAttribute as AttributeConvectorModel } from '@solidary-network/person-cc';
+import { Person as PersonConvectorModel, PersonAttribute as AttributeConvectorModel } from '@solidary-chain/person-cc';
 import { FlatConvectorModel } from '@worldsibu/convector-core';
 import { generate } from 'generate-password';
 import { v4 as uuid } from 'uuid';

@@ -1,7 +1,7 @@
-import { Person } from '@solidary-network/person-cc';
-import { Participant } from '@solidary-network/participant-cc';
+import { Person } from '@solidary-chain/person-cc';
+import { Participant } from '@solidary-chain/participant-cc';
 import { FlatConvectorModel } from '@worldsibu/convector-core';
-import { EntityType } from '@solidary-network/common-cc';
+import { EntityType } from '@solidary-chain/common-cc';
 import { Cause } from './cause.model';
 
 // interface Entity and getEntity() function duplicated with asset, cause and transaction, to prevent circular dependencies, 

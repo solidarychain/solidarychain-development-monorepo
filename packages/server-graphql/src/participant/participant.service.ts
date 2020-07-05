@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Participant as ParticipantConvectorModel } from '@solidary-network/participant-cc';
+import { Participant as ParticipantConvectorModel } from '@solidary-chain/participant-cc';
 import { FlatConvectorModel } from '@worldsibu/convector-core-model';
 import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
 import { ParticipantControllerBackEnd } from '../convector';

@@ -19,7 +19,7 @@ packages/**/node_modules
 .convector
 assets
 build
-chaincode-solidary-network-chaincode
+chaincode-solidary-chain-chaincode
 packages/server-graphql/.gitignore
 packages/server-graphql/assets
 packages/server-graphql/config

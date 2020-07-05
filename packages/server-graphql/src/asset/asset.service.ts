@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Asset as AssetConvectorModel } from '@solidary-network/asset-cc';
+import { Asset as AssetConvectorModel } from '@solidary-chain/asset-cc';
 import { FlatConvectorModel } from '@worldsibu/convector-core-model';
 import { v4 as uuid } from 'uuid';
 import { AssetControllerBackEnd } from '../convector';

@@ -1,5 +1,5 @@
-import { appConstants as c, entitySchema, x509Identities } from '@solidary-network/common-cc';
-import { Participant } from '@solidary-network/participant-cc';
+import { appConstants as c, entitySchema, x509Identities } from '@solidary-chain/common-cc';
+import { Participant } from '@solidary-chain/participant-cc';
 import { ConvectorModel, FlatConvectorModel, ReadOnly, Required, Validate } from '@worldsibu/convector-core';
 import * as yup from 'yup';
 import { AssetType } from './enums';

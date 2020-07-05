@@ -1,6 +1,6 @@
 echo "Installing template views and indexs"
 
-CHAINCODE_NAME=solidary-network-chaincode
+CHAINCODE_NAME=solidary-chain-chaincode
 COUCHDB=$(dirname "$0")
 DB_PATH="ch1_${CHAINCODE_NAME}"
 COUCH_URL_ORG1="http://localhost:5084"
@@ -15,7 +15,7 @@ COUCH_URL_ORG2="http://localhost:5184"
 
 # indexes
 # https://docs.couchdb.org/en/3.0.0/api/database/find.html#db-index
-# Request URL: http://localhost:5184/ch1_solidary-network-chaincode/_index
+# Request URL: http://localhost:5184/ch1_solidary-chain-chaincode/_index
 # Request Method: POST
 
 INDEXES="${COUCHDB}/indexes/*.json"

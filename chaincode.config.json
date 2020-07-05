@@ -9,32 +9,32 @@
   "//**INSIDE-DOCKER**//networkProfile": "/config/network-profiles/org1.network-profile.inside-docker.yaml",
   "controllers": [
     {
-      "name": "@solidary-network/common-cc",
+      "name": "@solidary-chain/common-cc",
       "version": "file:./packages/common-cc",
       "controller": "CommonController"
     },
     {
-      "name": "@solidary-network/person-cc",
+      "name": "@solidary-chain/person-cc",
       "version": "file:./packages/person-cc",
       "controller": "PersonController"
     },
     {
-      "name": "@solidary-network/participant-cc",
+      "name": "@solidary-chain/participant-cc",
       "version": "file:./packages/participant-cc",
       "controller": "ParticipantController"
     },
     {
-      "name": "@solidary-network/transaction-cc",
+      "name": "@solidary-chain/transaction-cc",
       "version": "file:./packages/transaction-cc",
       "controller": "TransactionController"
     },
     {
-      "name": "@solidary-network/cause-cc",
+      "name": "@solidary-chain/cause-cc",
       "version": "file:./packages/cause-cc",
       "controller": "CauseController"
     },
     {
-      "name": "@solidary-network/asset-cc",
+      "name": "@solidary-chain/asset-cc",
       "version": "file:./packages/asset-cc",
       "controller": "AssetController"
     }

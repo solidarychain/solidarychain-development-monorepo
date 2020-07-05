@@ -5,7 +5,7 @@ import { EntityType } from './enums';
 export const entitySchema = yup.object().shape({
   // sent inputs
   // TODO: Don't enable above validation, else we have error on input chaincode validation, not on save model
-  // {"name":"Error","status":500,"message":"Error for field 'input' with val '{\"entity\":{\"id\":\"gov\",\"type\":\"network.solidary.convector.participant\",\"name\":\"Big Government\",\"msp\":\"org1MSP\",\"identities\":[{\"fingerprint\":\"80:B8:43:ED:00:3E:1E:C4:ED:F8:11:70:B9:2B:F1:02:0C:C3:8C:F5\",\"status\":true}]}}' id is a required field"}
+  // {"name":"Error","status":500,"message":"Error for field 'input' with val '{\"entity\":{\"id\":\"gov\",\"type\":\"com.chain.solidary.model.participant\",\"name\":\"Big Government\",\"msp\":\"org1MSP\",\"identities\":[{\"fingerprint\":\"80:B8:43:ED:00:3E:1E:C4:ED:F8:11:70:B9:2B:F1:02:0C:C3:8C:F5\",\"status\":true}]}}' id is a required field"}
   // id: yup
   //   .string().min(3)
   //   .required(),

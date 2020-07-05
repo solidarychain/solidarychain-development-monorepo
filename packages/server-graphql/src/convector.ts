@@ -1,9 +1,9 @@
 import { Logger } from '@nestjs/common';
-import { AssetController } from '@solidary-network/asset-cc';
-import { CauseController } from '@solidary-network/cause-cc';
-import { Participant, ParticipantController } from '@solidary-network/participant-cc';
-import { PersonController } from '@solidary-network/person-cc';
-import { TransactionController } from '@solidary-network/transaction-cc';
+import { AssetController } from '@solidary-chain/asset-cc';
+import { CauseController } from '@solidary-chain/cause-cc';
+import { Participant, ParticipantController } from '@solidary-chain/participant-cc';
+import { PersonController } from '@solidary-chain/person-cc';
+import { TransactionController } from '@solidary-chain/transaction-cc';
 import { FabricControllerAdapter } from '@worldsibu/convector-adapter-fabric';
 import { ClientFactory } from '@worldsibu/convector-core';
 import * as fs from 'fs';

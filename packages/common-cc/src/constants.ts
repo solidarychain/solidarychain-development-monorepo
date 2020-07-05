@@ -1,8 +1,8 @@
 // Warn if changes model names, don't forget to change views ex
-// "map": "function(doc) {if (doc.type.toUpperCase() === 'network.solidary.convector.person'...
+// "map": "function(doc) {if (doc.type.toUpperCase() === 'com.chain.solidary.model.person'...
 
 // convector models
-const CONVECTOR_MODEL_PATH_PREFIX: string = 'network.solidary.convector';
+const CONVECTOR_MODEL_PATH_PREFIX: string = 'com.chain.solidary.model';
 const CONVECTOR_MODEL_PATH_PARTICIPANT: string = `${CONVECTOR_MODEL_PATH_PREFIX}.participant`;
 const CONVECTOR_MODEL_PATH_PERSON: string = `${CONVECTOR_MODEL_PATH_PREFIX}.person`;
 const CONVECTOR_MODEL_PATH_CAUSE: string = `${CONVECTOR_MODEL_PATH_PREFIX}.cause`;

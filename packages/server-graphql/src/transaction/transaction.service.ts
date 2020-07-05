@@ -1,12 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Transaction as TransactionConvectorModel } from '@solidary-network/transaction-cc';
+import { Transaction as TransactionConvectorModel } from '@solidary-chain/transaction-cc';
 import { FlatConvectorModel } from '@worldsibu/convector-core-model';
 import { v4 as uuid } from 'uuid';
 import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
 import { TransactionControllerBackEnd } from '../convector';
 import { NewTransactionInput, GoodsInput } from './dto';
 import { Transaction } from './models';
-import { GoodsInput as GoodsInputConvectorModel } from '@solidary-network/common-cc';
+import { GoodsInput as GoodsInputConvectorModel } from '@solidary-chain/common-cc';
 
 @Injectable()
 export class TransactionService {

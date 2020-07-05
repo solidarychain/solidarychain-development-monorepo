@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Cause as CauseConvectorModel } from '@solidary-network/cause-cc';
+import { Cause as CauseConvectorModel } from '@solidary-chain/cause-cc';
 import { FlatConvectorModel } from '@worldsibu/convector-core-model';
 import { v4 as uuid } from 'uuid';
 import { CauseControllerBackEnd } from '../convector';

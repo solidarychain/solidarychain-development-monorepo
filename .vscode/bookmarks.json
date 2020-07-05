@@ -60,7 +60,7 @@
 		]
 	},
 	{
-		"path": "$ROOTPATH$/chaincode-solidary-network-chaincode/node_modules/@worldsibu/convector-core-model/dist/src/convector-model.js",
+		"path": "$ROOTPATH$/chaincode-solidary-chain-chaincode/node_modules/@worldsibu/convector-core-model/dist/src/convector-model.js",
 		"bookmarks": [
 			{
 				"line": 36,

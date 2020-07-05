@@ -16,11 +16,18 @@ PROJECT_DIR=5node2channel
 # crypto materials
 rm -rf ${TARGET_PATH}/crypto-config
 rm -rf ${TARGET_PATH}/generated
-scp -r ${DEPLOY_IP}:/srv/docker/hyperledger-fabric-extra_hosts-5orgs/fabric-samples/${PROJECT_DIR}/crypto-config ${TARGET_PATH}
-scp -r ${DEPLOY_IP}:/srv/docker/hyperledger-fabric-extra_hosts-5orgs/fabric-samples/${PROJECT_DIR}/wallet/fabcar/javascript/generated ${TARGET_PATH}
+# old scp method when ue use orderer1 192.168.1.61, and we need to bring files form it, now we have it in local filesyste in /home/mario/Development/@SolidaryChain/solidarychain-production-network/fabric-samples/5node2channel
+# scp -r ${DEPLOY_IP}:/srv/docker/hyperledger-fabric-extra_hosts-5orgs/fabric-samples/${PROJECT_DIR}/crypto-config ${TARGET_PATH}
+# scp -r ${DEPLOY_IP}:/srv/docker/hyperledger-fabric-extra_hosts-5orgs/fabric-samples/${PROJECT_DIR}/wallet/fabcar/javascript/generated ${TARGET_PATH}
+# form local filesystem
+cp -r ../solidarychain-production-network/fabric-samples/${PROJECT_DIR}/crypto-config ${TARGET_PATH}
+cp -r ../solidarychain-production-network/fabric-samples/${PROJECT_DIR}/wallet/fabcar/javascript/generated ${TARGET_PATH}
+
 # network-profile: raft
 if [ ${PROJECT_DIR} = "5node2channel" ]; then
-  scp -r ${DEPLOY_IP}:/srv/docker/hyperledger-fabric-extra_hosts-5orgs/fabric-samples/${PROJECT_DIR}/server-graphql/${NETWORK_PROFILE_FILE} ${TARGET_PATH}
+  # old scp method when ue use orderer1 192.168.1.61, and we need to bring files form it, now we have it in local filesyste in /home/mario/Development/@SolidaryChain/solidarychain-production-network/fabric-samples/5node2channel
+  # scp -r ${DEPLOY_IP}:/srv/docker/hyperledger-fabric-extra_hosts-5orgs/fabric-samples/${PROJECT_DIR}/server-graphql/${NETWORK_PROFILE_FILE} ${TARGET_PATH}
+  cp ../solidarychain-production-network/fabric-samples/${PROJECT_DIR}/server-graphql/${NETWORK_PROFILE_FILE} ${TARGET_PATH}
 fi
 
 # replace paths

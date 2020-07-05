@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import { currencyCodesISO4217 } from '@solidary-network/common-cc';
+import { currencyCodesISO4217 } from '@solidary-chain/common-cc';
 import { TransactionType, ResourceType } from './enums';
 
 export const transactionTypeSchema = yup

@@ -7,7 +7,7 @@ import * as chai from 'chai';
 import { expect } from 'chai';
 import 'mocha';
 import * as chaiAsPromised from 'chai-as-promised';
-import { ParticipantController, Participant } from '@solidary-network/participant-cc';
+import { ParticipantController, Participant } from '@solidary-chain/participant-cc';
 
 import { Person, PersonController, Attribute } from '../src';
 

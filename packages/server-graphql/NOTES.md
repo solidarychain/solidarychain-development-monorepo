@@ -15,7 +15,7 @@
   - [Awesome Link: Support AuthGuard](#awesome-link-support-authguard)
   - [Problem with `return super.canActivate(new ExecutionContextHost([req]))`](#problem-with-return-supercanactivatenew-executioncontexthostreq)
   - [@CurrentUser() decorator, to get @CurrentUser() in graphql endpoints like in personProfile](#currentuser-decorator-to-get-currentuser-in-graphql-endpoints-like-in-personprofile)
-  - [GraphQL Playground: ERR_INSECURE_RESPONSE](#graphql-playground-errinsecureresponse)
+  - [GraphQL Playground: ERR_INSECURE_RESPONSE](#graphql-playground-err_insecure_response)
   - [GraphQL Playground: Server cannot be reached](#graphql-playground-server-cannot-be-reached)
   - [Getting headers in GraphQL](#getting-headers-in-graphql)
   - [Cookie Parser](#cookie-parser)
@@ -31,43 +31,43 @@
   - [Manage Chaincode to GraphQL Error messages](#manage-chaincode-to-graphql-error-messages)
   - [TS5055: Cannot write file](#ts5055-cannot-write-file)
   - [A circular dependency has been detected](#a-circular-dependency-has-been-detected)
-  - [re-install all packages dependencies in case of "cannot find module 'typescript/bin/tsc'"](#re-install-all-packages-dependencies-in-case-of-%22cannot-find-module-typescriptbintsc%22)
+  - [re-install all packages dependencies in case of "cannot find module 'typescript/bin/tsc'"](#re-install-all-packages-dependencies-in-case-of-cannot-find-module-typescriptbintsc)
   - [TypeError: httpAdapter.getType is not a function](#typeerror-httpadaptergettype-is-not-a-function)
   - [Cannot determine GraphQL input type](#cannot-determine-graphql-input-type)
     - [Input types](#input-types)
 
 ## Start
 
-DONt forget to build common package `@solidary-network/common-cc`, if something change, but first restart server
+DONt forget to build common package `@solidary-chain/common-cc`, if something change, but first restart server
 
 ```shell
-# build common library: this is required on fresh clones before lerna bootstrap else `Cannot find module '@solidary-network/common-cc'`
-$ npx lerna run build --scope @solidary-network/common-cc --stream
+# build common library: this is required on fresh clones before lerna bootstrap else `Cannot find module '@solidary-chain/common-cc'`
+$ npx lerna run build --scope @solidary-chain/common-cc --stream
 ```
 
 ```shell
 # start debug (inside vscode)
-$ npx lerna run start:debug --scope @solidary-network/server-graphql --stream
+$ npx lerna run start:debug --scope @solidary-chain/server-graphql --stream
 # start dev
-$ npx lerna run start:dev --scope @solidary-network/server-graphql --stream
+$ npx lerna run start:dev --scope @solidary-chain/server-graphql --stream
 ```
 
 - [GraphQL Playground](http://localhost:3000/graphql)
 
 ```shell
 # generate graphql types for frontend
-$ npx lerna run gen:graphql --scope @solidary-network/frontend-react
+$ npx lerna run gen:graphql --scope @solidary-chain/frontend-react
 ```
 
 ```shell
 # add dependencies
-$ npx lerna add participant-cc --scope @solidary-network/server-graphql
-$ npx lerna add person-cc --scope @solidary-network/server-graphql
-$ npx lerna add common --scope @solidary-network/server-graphql
+$ npx lerna add participant-cc --scope @solidary-chain/server-graphql
+$ npx lerna add person-cc --scope @solidary-chain/server-graphql
+$ npx lerna add common --scope @solidary-chain/server-graphql
 ```
 
 ```shell
-# in case of errors like Cannot find module '@solidary-network/common-cc'.
+# in case of errors like Cannot find module '@solidary-chain/common-cc'.
 $ npx lerna clean
 $ npx lerna bootstrap
 ```
@@ -102,7 +102,7 @@ all input types required to have names `@Args('getByAttributeInput') argument`, 
 
 ```shell
 # install graphql-type-json
-$ npx lerna add graphql-type-json --scope @solidary-network/server-graphql
+$ npx lerna add graphql-type-json --scope @solidary-chain/server-graphql
 ```
 
 to use `any` in graphql we must implement a custom scalar type or use the [graphql-type-json](https://github.com/taion/graphql-type-json) package
@@ -160,7 +160,7 @@ without `.nullable()` we get
 
 ```
 500,"message":"Error for field 'attributes' with val '[{\"certifierID\":\"gov\",\"content\":\"1993\",\"id\":\"birth-year\",\"phase2\":\"2013\",\"phase3\":\"2013\"},\"id\":\"reborn5-year\",\"issuedDate\":1554239270,
-\"type\":\"network.solidary.convector.attribute\"}]' [0].content must be a `object` type, but the final value was: `null` (cast from the value `\"1993\"`).\n If \"null\" is intended as an empty value be sure to mark the schema as `.nullable()`"}]. Sending ERROR message back to peer  
+\"type\":\"com.chain.solidary.model.attribute\"}]' [0].content must be a `object` type, but the final value was: `null` (cast from the value `\"1993\"`).\n If \"null\" is intended as an empty value be sure to mark the schema as `.nullable()`"}]. Sending ERROR message back to peer  
 ```
 
 ## Problem with RichQueries with Object
@@ -182,7 +182,7 @@ return await Person.query(Person, {
 in docker logs we can view that value is content is sent has a string and not a object ex `"content":"{\"data\":\"1971\"}"`
 
 ```json
-{"selector":{"type":"network.solidary.convector.person","attributes":{"$elemMatch":{"id":"born-year","content":"{\"data\":\"1971\"}"}}}}
+{"selector":{"type":"com.chain.solidary.model.person","attributes":{"$elemMatch":{"id":"born-year","content":"{\"data\":\"1971\"}"}}}}
 ```
 
 > read the SO post, link on top of notes
@@ -191,14 +191,14 @@ in docker logs we can view that value is content is sent has a string and not a 
 
 ```shell
 # install the required packages
-$ npx lerna add @nestjs/passport --scope @solidary-network/server-graphql --no-bootstrap
-$ npx lerna add @nestjs/jwt --scope @solidary-network/server-graphql --no-bootstrap
-$ npx lerna add passport --scope @solidary-network/server-graphql --no-bootstrap
-$ npx lerna add passport-local --scope @solidary-network/server-graphql --no-bootstrap
-$ npx lerna add bcrypt --scope @solidary-network/server-graphql --no-bootstrap
+$ npx lerna add @nestjs/passport --scope @solidary-chain/server-graphql --no-bootstrap
+$ npx lerna add @nestjs/jwt --scope @solidary-chain/server-graphql --no-bootstrap
+$ npx lerna add passport --scope @solidary-chain/server-graphql --no-bootstrap
+$ npx lerna add passport-local --scope @solidary-chain/server-graphql --no-bootstrap
+$ npx lerna add bcrypt --scope @solidary-chain/server-graphql --no-bootstrap
 # dev
-$ npx lerna add @types/passport-local --scope @solidary-network/server-graphql --dev --no-bootstrap
-$ npx lerna add @types/passport-jwt --save-dev --scope @solidary-network/server-graphql --dev --no-bootstrap
+$ npx lerna add @types/passport-local --scope @solidary-chain/server-graphql --dev --no-bootstrap
+$ npx lerna add @types/passport-jwt --save-dev --scope @solidary-chain/server-graphql --dev --no-bootstrap
 # bootstrap
 $ npx lerna bootstrap
 ```
@@ -214,11 +214,11 @@ $ nest g service users
 ## Problem: Nest can't resolve dependencies of the GqlLocalAuthGuard
 
 ```
-@solidary-network/server-graphql: [Nest] 14138   - 2019-09-15 21:21:30   [ExceptionHandler] Nest can't resolve dependencies of the GqlLocalAuthGuard (?). Please make sure that the argument at index [0] is available in the PersonModule context. +4ms
+@solidary-chain/server-graphql: [Nest] 14138   - 2019-09-15 21:21:30   [ExceptionHandler] Nest can't resolve dependencies of the GqlLocalAuthGuard (?). Please make sure that the argument at index [0] is available in the PersonModule context. +4ms
 
-@solidary-network/server-graphql: [Nest] 15907   - 2019-09-15 21:25:25   [ExceptionHandler] Nest can't resolve dependencies of the GqlLocalAuthGuard (?). Please make sure that the argument at index [0] is available in the GqlLocalAuthGuard context. +234ms
+@solidary-chain/server-graphql: [Nest] 15907   - 2019-09-15 21:25:25   [ExceptionHandler] Nest can't resolve dependencies of the GqlLocalAuthGuard (?). Please make sure that the argument at index [0] is available in the GqlLocalAuthGuard context. +234ms
 
-@solidary-network/server-graphql: [Nest] 6421   - 2019-09-15 22:22:27   [ExceptionHandler] Nest can't resolve dependencies of the PersonService (?). Please make sure that the argument at index [0] is available in the PersonModule context. +69ms
+@solidary-chain/server-graphql: [Nest] 6421   - 2019-09-15 22:22:27   [ExceptionHandler] Nest can't resolve dependencies of the PersonService (?). Please make sure that the argument at index [0] is available in the PersonModule context. +69ms
 ```
 
 this occurs because **we are imports services**, **never imports services**, **when we import module we already have access to all exported providers(services etc) from module**
@@ -366,7 +366,7 @@ $ curl -k --request POST \
 
 ```shell
 # add cookie parser
-$ npx lerna add @nest-middlewares/cookie-parser --scope @solidary-network/server-graphql
+$ npx lerna add @nest-middlewares/cookie-parser --scope @solidary-chain/server-graphql
 ```
 
 ```typescript
@@ -399,10 +399,10 @@ $ curl -k -v -X POST \
 
 ```shell
 # install deps
-$ npx lerna add apollo-link-token-refresh --scope @solidary-network/frontend-react --no-bootstrap
-$ npx lerna add jwt-decode --scope @solidary-network/frontend-react --no-bootstrap
+$ npx lerna add apollo-link-token-refresh --scope @solidary-chain/frontend-react --no-bootstrap
+$ npx lerna add jwt-decode --scope @solidary-chain/frontend-react --no-bootstrap
 # types
-$ npx lerna add @types/jwt-decode --scope @solidary-network/frontend-react --dev --no-bootstrap
+$ npx lerna add @types/jwt-decode --scope @solidary-chain/frontend-react --dev --no-bootstrap
 # bootstrap
 $ npx lerna bootstrap
 ```
@@ -586,8 +586,8 @@ we get customized error from chaincode
 ## TS5055: Cannot write file
 
 ```shell
-@solidary-network/server-graphql: 20:16:08 - File change detected. Starting incremental compilation...
-@solidary-network/server-graphql: error TS5055: Cannot write file '/media/mario/Storage/Development/@Solidary.Network/network/packages/server-graphql/dist_/common/dto/get-by-complex-query.input.d.ts' because it would overwrite input file.
+@solidary-chain/server-graphql: 20:16:08 - File change detected. Starting incremental compilation...
+@solidary-chain/server-graphql: error TS5055: Cannot write file '/media/mario/Storage/Development/@SolidaryChain/network/packages/server-graphql/dist_/common/dto/get-by-complex-query.input.d.ts' because it would overwrite input file.
 ```
 
 find by `'dist/` some file is import a `dist` file ex `packages/server-graphql/src/person/person.service.ts`
@@ -632,7 +632,7 @@ $ npm i
 ```shell
 $ npm run pkg:graphql:debug
 nest.js : TypeError: httpAdapter.getType is not a function
-npx lerna bootstrap --scope @solidary-network/server-graphql
+npx lerna bootstrap --scope @solidary-chain/server-graphql
 ```
 
 - [Update your @nestjs/platform-express to the latest version](https://github.com/nestjs/swagger/issues/434)

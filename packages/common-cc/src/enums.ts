@@ -4,9 +4,9 @@ export enum UserRoles {
 }
 
 export enum EntityType {
-  Participant = 'network.solidary.convector.participant',
-  Person = 'network.solidary.convector.person',
-  Cause = 'network.solidary.convector.cause',
+  Participant = 'com.chain.solidary.model.participant',
+  Person = 'com.chain.solidary.model.person',
+  Cause = 'com.chain.solidary.model.cause',
 }
 
 export enum ChaincodeEvent {

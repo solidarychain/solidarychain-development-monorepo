@@ -4,14 +4,14 @@
 
 DEPLOYMENT_PATH=/srv/docker/hyperledger-fabric-extra_hosts-5orgs/fabric-samples/5node2channel/deployment
 CHAINCODE_DEPLOYMENT_PATH=/src/github.com/hyperledger/fabric/peer
-ABSOLUTE_PATH=/opt/gopath/src/github.com/chaincode/chaincode-solidary-network-chaincode
-# CHAINCODE=chaincode-solidary-network-chaincode
-ORDERER_IP=192.168.1.61
-PEER0_ORG1_IP=192.168.1.64
-PEER0_ORG2_IP=192.168.1.65
-PEER0_ORG3_IP=192.168.1.66
-PEER0_ORG4_IP=192.168.1.62
-PEER0_ORG5_IP=192.168.1.63
+ABSOLUTE_PATH=/opt/gopath/src/github.com/chaincode/chaincode-solidary-chain-chaincode
+# CHAINCODE=chaincode-solidary-chain-chaincode
+# ORDERER_IP=192.168.1.61
+PEER0_ORG1_IP=192.168.1.61
+PEER0_ORG2_IP=192.168.1.62
+PEER0_ORG3_IP=192.168.1.63
+PEER0_ORG4_IP=192.168.1.64
+PEER0_ORG5_IP=192.168.1.65
 PEER0_ORG1_ID=1
 PEER0_ORG2_ID=2
 PEER0_ORG3_ID=3
@@ -20,8 +20,8 @@ PEER0_ORG5_ID=5
 PEER_CHAINCODE_PATH=/srv/docker/hyperledger-fabric-extra_hosts-5orgs/fabric-samples/chaincode
 # deploy install/upgrade chaincode
 CHANNEL_ALL=channelall
-CHAINCODE_NAME=sncc
-CHAINCODE_CONVECTOR=solidary-network-chaincode
+CHAINCODE_NAME=sccc
+CHAINCODE_CONVECTOR=solidary-chain-chaincode
 CHAINCODE_LANG=node
 POLICY_CHANNEL_ALL="'Org1MSP.member', 'Org2MSP.member','Org3MSP.member','Org4MSP.member','Org5MSP.member'"
 # POLICY_CHANNEL_ALL="'Org1MSP.peer', 'Org2MSP.peer','Org3MSP.peer','Org4MSP.peer','Org5MSP.peer'"
@@ -51,7 +51,7 @@ press_any_key() {
 # ibm auction network
 # VERSION="1.10"
 # production network
-VERSION="1.2"
+VERSION="1.1"
 # 1 build with hurley, 0 only when we want to skip restart hurley network to build the chaincode, with 0 we dont reBuild chaincode, good for just deploy to networks
 BUILD_WITH_HURLEY=1
 
@@ -76,17 +76,17 @@ fi
 if [ "${VERSION}" == "1.0" ]; then
   BUILD_CC_ACTION="start"
   DEPLOY_CC_ACTION="instantiate"
-  # require restart env to prevent "Error: could not assemble transaction, err proposal response was not successful, error code 500, msg chaincode with name 'solidary-network-chaincode' already exists"
+  # require restart env to prevent "Error: could not assemble transaction, err proposal response was not successful, error code 500, msg chaincode with name 'solidary-chain-chaincode' already exists"
   if [ ${BUILD_WITH_HURLEY} -eq 1 ]; then
     npm run env:restart
-    npx lerna run build --scope @solidary-network/common-cc --stream
+    npx lerna run build --scope @solidary-chain/common-cc --stream
     npm run cc:${BUILD_CC_ACTION} -- ${CHAINCODE_CONVECTOR}
   fi
 else
   BUILD_CC_ACTION="upgrade"
   DEPLOY_CC_ACTION="upgrade"
   if [ ${BUILD_WITH_HURLEY} -eq 1 ]; then
-    npx lerna run build --scope @solidary-network/common-cc --stream
+    npx lerna run build --scope @solidary-chain/common-cc --stream
     npm run cc:${BUILD_CC_ACTION} -- ${CHAINCODE_CONVECTOR} ${VERSION}  
   fi
 fi
@@ -111,10 +111,11 @@ do
       press_any_key
     fi
 
-    # copy to package to orderer deployment path /used only was backup
-    echo "copy ${CHAINCODE_NAME}.pak to orderer deployment path"
-    press_any_key
-    scp ${CHAINCODE_NAME}.pak ${ORDERER_IP}:${DEPLOYMENT_PATH}
+    # removed when we removed orderer has source of network files
+    # copy package to orderer deployment path /used only was backup
+    # echo "copy ${CHAINCODE_NAME}.pak to orderer deployment path"
+    # press_any_key
+    # scp ${CHAINCODE_NAME}.pak ${ORDERER_IP}:${DEPLOYMENT_PATH}
   fi
 
   echo "copy ${CHAINCODE_NAME}.pak to peer0Org${peer} deployment path"

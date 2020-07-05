@@ -6,8 +6,8 @@ $ git clone https://github.com/solidarychain/solidarychain-development-monorepo.
 $ cd solidarychain-development-monorepo
 # install dependencies, this will trigger lerna bootstrap
 $ npm i
-# after npm error "Cannot find module '@solidary-network/common-cc'"
-$ npx lerna run build --scope @solidary-network/common-cc --stream
+# after npm error "Cannot find module '@solidary-chain/common-cc'"
+$ npx lerna run build --scope @solidary-chain/common-cc --stream
 # restart Network
 $ ./restartEnv.sh
 ```

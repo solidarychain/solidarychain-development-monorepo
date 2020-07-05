@@ -11,9 +11,8 @@
   - [Setup VSCode Debug](#setup-vscode-debug)
   - [Clean up and start working on App](#clean-up-and-start-working-on-app)
   - [Add Apollo](#add-apollo)
-    - [Fix apollo react ERR_CERT_AUTHORITY_INVALID](#fix-apollo-react-errcertauthorityinvalid)
+    - [Fix apollo react ERR_CERT_AUTHORITY_INVALID](#fix-apollo-react-err_cert_authority_invalid)
     - [Fix Received status code 400 on Login](#fix-received-status-code-400-on-login)
-    - [Add/Configure CORS](#addconfigure-cors)
     - [Add Cors Origin to express and apollo server](#add-cors-origin-to-express-and-apollo-server)
   - [Install GraphQL CodeGen](#install-graphql-codegen)
     - [init project](#init-project)
@@ -57,11 +56,11 @@
 
 ```shell
 # run server
-$ npx lerna run start:debug --scope @solidary-network/server-graphql --stream
+$ npx lerna run start:debug --scope @solidary-chain/server-graphql --stream
 # run frontend
-$ npx lerna run start --scope @solidary-network/frontend-react --stream
+$ npx lerna run start --scope @solidary-chain/frontend-react --stream
 # gen graphql, require graphql server running, and graphql-codegen/cli installed, config in codegen.yml
-$ npx lerna run gen:graphql --scope @solidary-network/frontend-react --stream
+$ npx lerna run gen:graphql --scope @solidary-chain/frontend-react --stream
 ```
 
 ## Bootstrap App
@@ -77,7 +76,7 @@ $ npx create-react-app frontend-react --typescript
 $ code packages/frontend-react/package.json
 ```
 
-change `"name": "frontend-react"` to `"name": "@solidary-network/frontend-react"`
+change `"name": "frontend-react"` to `"name": "@solidary-chain/frontend-react"`
 and `"private": true` to `"private": false`, or remove it from `package.json` else it won't appear in `npx lerna list`, and we must use `npx lerna list -a`
 
 - [@lerna/import](https://github.com/lerna/lerna/tree/master/commands/import)
@@ -86,9 +85,9 @@ and `"private": true` to `"private": false`, or remove it from `package.json` el
 # not clean and hosting all project dependencies
 $ npx lerna clean -y && npx lerna bootstrap --hoist
 # fix build cc and start server (Property 'get' does not exist on type....). require to rebuild -cc packages
-$ npx lerna run build --scope @solidary-network/participant-cc --stream
+$ npx lerna run build --scope @solidary-chain/participant-cc --stream
 # test react app
-$ npx lerna run start --scope @solidary-network/frontend-react --stream
+$ npx lerna run start --scope @solidary-chain/frontend-react --stream
 ```
 
 ## Fix Jest 24.9.0
@@ -155,7 +154,7 @@ add 3 configs, one for chrome and 2 for `browser-preview` extension
 
 ```shell
 # boot app with a breakpoint and press F5 and done
-$ npx lerna run start --scope @solidary-network/frontend-react --stream
+$ npx lerna run start --scope @solidary-chain/frontend-react --stream
 ```
 
 now add `.vscode/chrome` to `.gitignore` to ignore chrome local cache
@@ -210,13 +209,13 @@ export default App;
 
 ```shell
 # add apollo
-$ npx lerna add apollo-boost --scope @solidary-network/frontend-react --no-bootstrap
-$ npx lerna add @apollo/react-hooks --scope @solidary-network/frontend-react --no-bootstrap
-$ npx lerna add graphql --scope @solidary-network/frontend-react --no-bootstrap
-$ npx lerna add graphql --scope @solidary-network/frontend-react --no-bootstrap
+$ npx lerna add apollo-boost --scope @solidary-chain/frontend-react --no-bootstrap
+$ npx lerna add @apollo/react-hooks --scope @solidary-chain/frontend-react --no-bootstrap
+$ npx lerna add graphql --scope @solidary-chain/frontend-react --no-bootstrap
+$ npx lerna add graphql --scope @solidary-chain/frontend-react --no-bootstrap
 # extra: required for Authorization: Bearer   
-$ npx lerna add apollo-link-context --scope @solidary-network/frontend-react --no-bootstrap
-$ npx lerna add @types/graphql --scope @solidary-network/frontend-react --no-bootstrap --dev
+$ npx lerna add apollo-link-context --scope @solidary-chain/frontend-react --no-bootstrap
+$ npx lerna add @types/graphql --scope @solidary-chain/frontend-react --no-bootstrap --dev
 $ npx lerna bootstrap
 ```
 
@@ -391,7 +390,7 @@ add to `packages/server-graphql/.env`
 
 ```conf
 # required to define when we don't use default origin http://localhost:3000
-# CORS_ORIGIN_REACT_FRONTEND=https://app.solidary.network
+# CORS_ORIGIN_REACT_FRONTEND=https://app.solidarychain.com
 ```
 
 add `corsOriginReactFrontend`  to `packages/server-graphql/src/env.ts`
@@ -443,7 +442,7 @@ now it work without issues
 
 ```shell
 # add graphql-codegen dependency to lerna mono repo
-$ npx lerna add @graphql-codegen/cli --scope @solidary-network/frontend-react --no-bootstrap --dev
+$ npx lerna add @graphql-codegen/cli --scope @solidary-chain/frontend-react --no-bootstrap --dev
 # help
 $ npx graphql-codegen --help
 # install deps
@@ -542,7 +541,7 @@ $ npm run gen:graphql
 now test with lerna script
 
 ```shell
-$ npx lerna run gen:graphql --scope @solidary-network/frontend-react
+$ npx lerna run gen:graphql --scope @solidary-chain/frontend-react
 ```
 
 it works move on
@@ -592,7 +591,7 @@ now we some good stuff hooks use functions like `useParticipantByIdQuery` and `u
 > UPDATED: 2020-01-14 20:12:59, after sometime without using codegen, now it gives below error
 
 ```shell
-$ npx lerna run gen:graphql --scope @solidary-network/frontend-react --stream
+$ npx lerna run gen:graphql --scope @solidary-chain/frontend-react --stream
 Invalid regular expression: /\$\{(?<name>[A-Z0-9_]+)(\:((?<value>[^\:]+)|(\"(?<customValue>[^\"]+)\")))?\}/: Invalid group
 ```
 
@@ -606,29 +605,29 @@ after a some debug found that is the parameter `--config codegen.yml` that is ca
 ```
 
 ```shell
-$ npx lerna run gen:graphql --scope @solidary-network/frontend-react --stream
-@solidary-network/frontend-react: > @solidary-network/frontend-react@0.1.0 gen:graphql /media/mario/Storage/Development/@Solidary.Network/network/packages/frontend-react
-@solidary-network/frontend-react: > NODE_TLS_REJECT_UNAUTHORIZED=0 graphql-codegen
-@solidary-network/frontend-react: [20:10:05] Parse configuration [started]
-@solidary-network/frontend-react: [20:10:05] Parse configuration [completed]
-@solidary-network/frontend-react: [20:10:05] Generate outputs [started]
-@solidary-network/frontend-react: [20:10:05] Generate src/generated/graphql.tsx [started]
-@solidary-network/frontend-react: [20:10:05] Generate ./graphql.schema.json [started]
-@solidary-network/frontend-react: [20:10:05] Load GraphQL schemas [started]
-@solidary-network/frontend-react: [20:10:05] Load GraphQL schemas [started]
-@solidary-network/frontend-react: [20:10:05] Load GraphQL schemas [completed]
-@solidary-network/frontend-react: [20:10:05] Load GraphQL documents [started]
-@solidary-network/frontend-react: [20:10:05] Load GraphQL schemas [completed]
-@solidary-network/frontend-react: [20:10:05] Load GraphQL documents [started]
-@solidary-network/frontend-react: [20:10:05] Load GraphQL documents [completed]
-@solidary-network/frontend-react: [20:10:05] Generate [started]
-@solidary-network/frontend-react: [20:10:05] Generate [completed]
-@solidary-network/frontend-react: [20:10:05] Generate src/generated/graphql.tsx [completed]
-@solidary-network/frontend-react: [20:10:05] Load GraphQL documents [completed]
-@solidary-network/frontend-react: [20:10:05] Generate [started]
-@solidary-network/frontend-react: [20:10:05] Generate [completed]
-@solidary-network/frontend-react: [20:10:05] Generate ./graphql.schema.json [completed]
-@solidary-network/frontend-react: [20:10:05] Generate outputs [completed
+$ npx lerna run gen:graphql --scope @solidary-chain/frontend-react --stream
+@solidary-chain/frontend-react: > @solidary-chain/frontend-react@0.1.0 gen:graphql /media/mario/Storage/Development/@SolidaryChain/network/packages/frontend-react
+@solidary-chain/frontend-react: > NODE_TLS_REJECT_UNAUTHORIZED=0 graphql-codegen
+@solidary-chain/frontend-react: [20:10:05] Parse configuration [started]
+@solidary-chain/frontend-react: [20:10:05] Parse configuration [completed]
+@solidary-chain/frontend-react: [20:10:05] Generate outputs [started]
+@solidary-chain/frontend-react: [20:10:05] Generate src/generated/graphql.tsx [started]
+@solidary-chain/frontend-react: [20:10:05] Generate ./graphql.schema.json [started]
+@solidary-chain/frontend-react: [20:10:05] Load GraphQL schemas [started]
+@solidary-chain/frontend-react: [20:10:05] Load GraphQL schemas [started]
+@solidary-chain/frontend-react: [20:10:05] Load GraphQL schemas [completed]
+@solidary-chain/frontend-react: [20:10:05] Load GraphQL documents [started]
+@solidary-chain/frontend-react: [20:10:05] Load GraphQL schemas [completed]
+@solidary-chain/frontend-react: [20:10:05] Load GraphQL documents [started]
+@solidary-chain/frontend-react: [20:10:05] Load GraphQL documents [completed]
+@solidary-chain/frontend-react: [20:10:05] Generate [started]
+@solidary-chain/frontend-react: [20:10:05] Generate [completed]
+@solidary-chain/frontend-react: [20:10:05] Generate src/generated/graphql.tsx [completed]
+@solidary-chain/frontend-react: [20:10:05] Load GraphQL documents [completed]
+@solidary-chain/frontend-react: [20:10:05] Generate [started]
+@solidary-chain/frontend-react: [20:10:05] Generate [completed]
+@solidary-chain/frontend-react: [20:10:05] Generate ./graphql.schema.json [completed]
+@solidary-chain/frontend-react: [20:10:05] Generate outputs [completed
 ```
 
 ### Error #2
@@ -637,17 +636,17 @@ UPDATE: requires node v10.12.0 to prevent bellow error
 
 ```shell
 $ pkg:react:gen-graphql:watch
-@solidary-network/frontend-react: > @solidary-network/frontend-react@0.1.0 gen:graphql:watch /media/mario/Storage/Documents/Development/@Solidary.Network/solidarychain-development-monorepo/packages/frontend-react
-@solidary-network/frontend-react: > NODE_TLS_REJECT_UNAUTHORIZED=0 graphql-codegen --watch
-@solidary-network/frontend-react: /media/mario/Storage/Documents/Development/@Solidary.Network/solidarychain-development-monorepo/node_modules/@graphql-toolkit/core/index.cjs.js:74
+@solidary-chain/frontend-react: > @solidary-chain/frontend-react@0.1.0 gen:graphql:watch /media/mario/Storage/Documents/Development/@SolidaryChain/solidarychain-development-monorepo/packages/frontend-react
+@solidary-chain/frontend-react: > NODE_TLS_REJECT_UNAUTHORIZED=0 graphql-codegen --watch
+@solidary-chain/frontend-react: /media/mario/Storage/Documents/Development/@SolidaryChain/solidarychain-development-monorepo/node_modules/@graphql-toolkit/core/index.cjs.js:74
 ```
 
 ## Configure react Router
 
 ```shell
 # add apollo
-$ npx lerna add react-router-dom --scope @solidary-network/frontend-react --no-bootstrap
-$ npx lerna add @types/react-router-dom --scope @solidary-network/frontend-react --no-bootstrap --dev
+$ npx lerna add react-router-dom --scope @solidary-chain/frontend-react --no-bootstrap
+$ npx lerna add @types/react-router-dom --scope @solidary-chain/frontend-react --no-bootstrap --dev
 $ npx lerna bootstrap
 ```
 
@@ -667,8 +666,8 @@ on try to `await client!.resetStore();`
 
 ```shell
 # add js-cookie
-$ npx lerna add js-cookie --scope @solidary-network/frontend-react --no-bootstrap
-$ npx lerna add @types/js-cookie --scope @solidary-network/frontend-react --no-bootstrap --dev
+$ npx lerna add js-cookie --scope @solidary-chain/frontend-react --no-bootstrap
+$ npx lerna add @types/js-cookie --scope @solidary-chain/frontend-react --no-bootstrap --dev
 $ npx lerna bootstrap
 ```
 
@@ -681,8 +680,8 @@ $ npx lerna bootstrap
 ![fix missing property](assets/images/040.png)
 
 ```shell
-solidary-network/frontend-react:   Types of parameters 'e' and 'value' are incompatible.
-@solidary-network/frontend-react:     Type '{ __typename?: "Person"; } & Pick<Person, "id" | "username" | "email" | "roles" | "mobilePhone" | "postal" | "city" | "region" | "geoLocation" | "timezone" | "personalInfo" | ... 26 more ... | "registrationDate"> & { ...; }' is missing the following properties from type 'Person': identities, createdDate  TS2345
+solidary-chain/frontend-react:   Types of parameters 'e' and 'value' are incompatible.
+@solidary-chain/frontend-react:     Type '{ __typename?: "Person"; } & Pick<Person, "id" | "username" | "email" | "roles" | "mobilePhone" | "postal" | "city" | "region" | "geoLocation" | "timezone" | "personalInfo" | ... 26 more ... | "registrationDate"> & { ...; }' is missing the following properties from type 'Person': identities, createdDate  TS2345
 ```
 
 ...fuck after an hour struggling, it seems that it's because fields are required in offended querie `PersonsQuery` in `packages/frontend-react/src/graphql/query/persons.graphql`, even after I add it, and generate with `npm run pkg:graphql:debug`, this is because it gives the next error for participant and seems the same error, but is not, is other

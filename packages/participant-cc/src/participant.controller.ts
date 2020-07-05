@@ -1,4 +1,4 @@
-import { appConstants as c, checkValidModelIds, GenericBalance, Goods, x509Identities, ChaincodeEvent } from '@solidary-network/common-cc';
+import { appConstants as c, checkValidModelIds, GenericBalance, Goods, x509Identities, ChaincodeEvent } from '@solidary-chain/common-cc';
 import { BaseStorage, Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ClientIdentity } from 'fabric-shim';
 import * as yup from 'yup';

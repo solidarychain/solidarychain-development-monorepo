@@ -1,5 +1,5 @@
-import { appConstants as c, UserRoles, x509Identities, GenericBalance, Goods } from '@solidary-network/common-cc';
-import { Participant } from '@solidary-network/participant-cc';
+import { appConstants as c, UserRoles, x509Identities, GenericBalance, Goods } from '@solidary-chain/common-cc';
+import { Participant } from '@solidary-chain/participant-cc';
 import { ConvectorModel, Default, FlatConvectorModel, ReadOnly, Required, Validate } from '@worldsibu/convector-core';
 import * as yup from 'yup';
 import { PersonAttribute } from './person-attribute.model';
