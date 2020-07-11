@@ -1,0 +1,69 @@
+version: '3.4'
+
+networks:
+  fabric:
+
+services:
+  solidarychain-server-graphql:
+    image: solidarychain/solidarychain-server-graphql
+    hostname: solidarychain-server-graphql
+    domainname: solidarychain/solidarychain-server-graphql
+    container_name: solidarychain-server-graphql
+    restart: unless-stopped
+    networks:
+      - fabric
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./config:/usr/src/app/packages/server-graphql/config
+      - ./network.env:/usr/src/app/packages/server-graphql/.env
+      - ../crypto-config:/usr/src/app/packages/server-graphql/crypto-config
+      - ./wallets/.hfc-org1:/usr/src/app/packages/server-graphql/.hfc-org1
+      - ./org1.network-profile-raft.yaml:/usr/src/app/packages/server-graphql/org1.network-profile-raft.yaml
+    ports:
+      - 443:443
+    # env_file:
+    #   - packages/server-graphql/network.env
+    extra_hosts:
+      # was 
+      # "orderer.example.com:192.168.1.61"
+      - "orderer1.example.com:192.168.1.61"
+      # added to try to fix raft error: [Channel.js]: Error: 14 UNAVAILABLE: TCP Read failed      
+      # - "orderer2.example.com:192.168.1.62"
+      # - "orderer3.example.com:192.168.1.63"
+      # - "orderer4.example.com:192.168.1.64"
+      # - "orderer5.example.com:192.168.1.65"
+      # org1
+      - "ca.org1.example.com:192.168.1.61"
+      - "peer0.org1.example.com:192.168.1.61"
+      - "peer1.org1.example.com:192.168.1.61"
+      # org2
+      - "ca.org2.example.com:192.168.1.62"
+      - "peer0.org2.example.com:192.168.1.62"
+      - "peer1.org2.example.com:192.168.1.62"
+      # org3
+      - "ca.org3.example.com:192.168.1.63"
+      - "peer0.org3.example.com:192.168.1.63"
+      - "peer1.org3.example.com:192.168.1.63"
+      # org4
+      - "ca.org4.example.com:192.168.1.64"
+      - "peer0.org4.example.com:192.168.1.64"
+      - "peer1.org4.example.com:192.168.1.64"
+      # org5
+      - "ca.org5.example.com:192.168.1.65"
+      - "peer0.org5.example.com:192.168.1.65"
+      - "peer1.org5.example.com:192.168.1.65"
+    # environment: 
+    #   - "HTTPS_SERVER_PORT=443"
+    #   - "HTTPS_KEY_FILE=config/solidarychain.com/privkey.pem"
+    #   - "HTTPS_CERT_FILE=config/solidarychain.com/fullchain.pem"
+    #   - "CORS_ORIGIN_REACT_FRONTEND=https://solidarychain.com"
+    #   - "ACCESS_TOKEN_JWT_SECRET=fTr31i7mCDZ2wD081rRFNVN4SYIvbhMmXOmfYb1n5LlsrFjciVGqAVeiONHteHga"
+    #   - "REFRESH_TOKEN_JWT_SECRET=3MrWB9D2AxPFzs9SE8Lpv6kSzXv8nbwyzlTzI4zGalEUa3wYnLM86GxMkLo9IJsm"
+    #   - "ACCESS_TOKEN_EXPIRES_IN=60m"
+    #   - "REFRESH_TOKEN_EXPIRES_IN=7d"
+    #   - "REFRESH_TOKEN_SKIP_INCREMENT_VERSION=false"
+    #   - "IDENTITY_ORG=org1"
+    #   - "KEY_STORE=/home/mario/hyperledger-fabric-network/.hfc-org1"
+    #   - "NETWORK_PROFILE=/home/mario/hyperledger-fabric-network/network-profiles/org1.network-profile.yaml"
+    # TODO fix this in build image
+    command: "npm run --prefix packages/server-graphql start:container"

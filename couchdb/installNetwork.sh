@@ -1,5 +1,3 @@
-echo "installing template views and indexes"
-
 # load .env
 set -a
 . ./network/.env
@@ -7,6 +5,7 @@ set +a
 
 COUCHDB=$(dirname "$0")
 DB_PATH="${CHANNEL_ALL}_${CHAINCODE_NAME}"
+echo "installing template views and indexes on DB_PATH:${DB_PATH}"
 
 INDEXES="${COUCHDB}/indexes/*.json"
 for i in ${INDEXES}

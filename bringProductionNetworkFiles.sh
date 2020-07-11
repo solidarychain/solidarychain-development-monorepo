@@ -22,6 +22,7 @@ rm -rf ${TARGET_PATH}/generated
 # form local filesystem
 cp -r ../solidarychain-production-network/fabric-samples/${PROJECT_DIR}/crypto-config ${TARGET_PATH}
 cp -r ../solidarychain-production-network/fabric-samples/${PROJECT_DIR}/wallet/fabcar/javascript/generated ${TARGET_PATH}
+cp -r ../solidarychain-production-network/fabric-samples/${PROJECT_DIR}/server-graphql/docker-compose-server-graphql.yml ${TARGET_PATH}
 
 # network-profile: raft
 if [ ${PROJECT_DIR} = "5node2channel" ]; then
