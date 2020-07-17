@@ -75,6 +75,7 @@
     - [Add new package to other files](#add-new-package-to-other-files)
   - [GraphQL ComplexQuery problem: How to send arbitrayGraphQL and ComplexQuery and the big sort problem](#graphql-complexquery-problem-how-to-send-arbitraygraphql-and-complexquery-and-the-big-sort-problem)
   - [Participant changeIdentity / require "chaincodeAdmin" with `attrs."admin": "true"`](#participant-changeidentity--require-chaincodeadmin-with-attrsadmin-true)
+    - [Debug Fingerprints](#debug-fingerprints)
   - [Debug restartEnv.sh : chaincode works in debug bug not with restartEnv.sh](#debug-restartenvsh--chaincode-works-in-debug-bug-not-with-restartenvsh)
   - [Hurley and fix Globall install](#hurley-and-fix-globall-install)
   - [Lerna Fix problem of install dependencies](#lerna-fix-problem-of-install-dependencies)
@@ -82,6 +83,7 @@
   - [Class-validator](#class-validator)
   - [Problem on create person can't find participant fingerprint? comes from `this.sender`](#problem-on-create-person-cant-find-participant-fingerprint-comes-from-thissender)
   - [Problem again with "Cant find a participant with that fingerprint"](#problem-again-with-cant-find-a-participant-with-that-fingerprint)
+  - [WIP UNSOLVED: Problem on create person can't find participant fingerprint? comes from `this.sender`](#wip-unsolved-problem-on-create-person-cant-find-participant-fingerprint-comes-from-thissender)
   - [Problem `(node:32043) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'curve' of undefined`](#problem-node32043-unhandledpromiserejectionwarning-typeerror-cannot-read-property-curve-of-undefined)
   - [Error: Failed to load gRPC binary module because it was not installed for the current system](#error-failed-to-load-grpc-binary-module-because-it-was-not-installed-for-the-current-system)
     - [require await ele Error: PUT_STATE failed: transaction ID: ...: no ledger context](#require-await-ele-error-put_state-failed-transaction-id--no-ledger-context)
@@ -1985,7 +1987,7 @@ export * from './constants';
 
 ```typescript
 // convector model
-const CONVECTOR_MODEL_PATH_PREFIX: string = 'com.chain.solidary.model.convector';
+const CONVECTOR_MODEL_PATH_PREFIX: string = 'com.chain.solidary.model';
 const CONVECTOR_MODEL_PATH_PARTICIPANT: string = `${CONVECTOR_MODEL_PATH_PREFIX}.participant`;
 const CONVECTOR_MODEL_PATH_PERSON: string = `${CONVECTOR_MODEL_PATH_PREFIX}.person`;
 const CONVECTOR_MODEL_PATH_ATTRIBUTE: string = `${CONVECTOR_MODEL_PATH_PREFIX}.attribute`;
@@ -2914,7 +2916,57 @@ JSON.stringify(this.fullIdentity.attrs, null, 2)
   "hf.EnrollmentID": "chaincodeAdmin",
   "hf.Type": "client"
 }"
+```
 
+### Debug Fingerprints
+
+script to extract fingerprint from wallet, and compare it with couchdb etc
+
+final scripts are in 
+
+- `@SolidaryChain/solidarychain-production-network/fabric-samples/5node2channel/wallet/fabcar/javascript/getFingerprint.sh`
+- `@SolidaryChain/solidarychain-production-network/fabric-samples/5node2channel/wallet/fabcar/javascript/changeParticipantFingerprint.js`
+
+```shell
+...
+$ ${BASE_CMD} -c "{ \"Args\" : [\"participant_createWithParameters\", \"${GOV_ID}\", \"${GOV_CODE}\", \"${GOV_NAME}\" ] }"
+$ ${BASE_CMD} -c "{ \"Args\" : [\"participant_get\", \"${GOV_ID}\" ] }"
+fingerprint\":\"C1:93:E5:55:A8:1C:30:FD:16:50:98:A9:07:57:26:F7:1E:07:E4:83
+
+...
+$ ${BASE_CMD} -c "{ \"Args\" : [\"person_create\", \"${PAYLOAD}\" ] }"
+$ ${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${ID}\" ] }"
+fingerprint\":\"C1:93:E5:55:A8:1C:30:FD:16:50:98:A9:07:57:26:F7:1E:07:E4:83
+
+couchdb of gov fingerprint
+"fingerprint": "C1:93:E5:55:A8:1C:30:FD:16:50:98:A9:07:57:26:F7:1E:07:E4:83",
+
+# admin wallet fingerprint, extract with below node command
+$ USER=admin
+$ FILE_PATH=/srv/docker/hyperledger-fabric-extra_hosts-5orgs/fabric-samples/5node2channel/wallet/fabcar/javascript/generated/wallets/.hfc-org1/${USER}
+$ FINGERPRINT=$(node -e "console.log(JSON.parse(require('fs').readFileSync('${FILE_PATH}', 'utf8')).enrollment.identity.certificate)" | openssl x509 -fingerprint -noout | cut -d '=' -f2 ;)
+# wallet has other fingerprint
+$ echo $FINGERPRINT 
+10:0A:75:F5:65:EB:3B:A4:0F:F7:35:32:D2:47:40:D2:70:7F:B3:2D
+# from graphql and wallet have the same fingerprint
+10:0A:75:F5:65:EB:3B:A4:0F:F7:35:32:D2:47:40:D2:70:7F:B3:2D
+
+we have 3 diferent fingerprints ???
+```
+
+after we change gov fingerprint we have
+
+```json
+"identities": [
+  {
+    "fingerprint": "C1:93:E5:55:A8:1C:30:FD:16:50:98:A9:07:57:26:F7:1E:07:E4:83",
+    "status": false
+  },
+  {
+    "fingerprint": "43:30:E3:83:E9:98:49:6D:D9:AD:70:64:A8:E4:4F:83:0A:B1:4C:05",
+    "status": true
+  }
+],
 ```
 
 ## Debug restartEnv.sh : chaincode works in debug bug not with restartEnv.sh
@@ -3090,6 +3142,26 @@ UPDATE: check working version of Participant.create notes
 `{\"name\":\"Error\",\"status\":500,\"message\":\"Cant find a participant with that fingerprint\"}`
 
 restarted network, and fails create cause, but after a while it start to work, under inpection, for now it works with all models
+
+## WIP UNSOLVED: Problem on create person can't find participant fingerprint? comes from `this.sender`
+
+now seems that only in `person.controller` this is `undefined`? and in production network
+
+```shell
+"error": "Cannot read property 'sender' of undefined"
+```
+
+hello when we use hurley, it have a participant with identity `gov` used for ex to create persons in examples
+in my production network I have the same convector chainCode, 
+I seed some data with `CA_FILE` like bellow command
+```
+GOV_ID="c8ca045c-9d1b-407f-b9ae-31711758f2d0"
+GOV_CODE="gov"
+GOV_NAME="Big Government"
+docker exec cli peer chaincode invoke -C ${CHANNEL_ALL} -n ${CHAINCODE_NAME} --tls --cafile ${CA_FILE}" -c "{ \"Args\" : [\"participant_createWithParameters\", \"${GOV_ID}\", \"${GOV_CODE}\", \"${GOV_NAME}\" ] }"
+```
+and it creates the gov participant with `gov` is and fingerprint `FINGERPRINT HERE`
+I generate a wallet and use node sdk to create some invokes, but what happens is that when I invoke something it used other fingerprint than used with `peer chaincode invoke`, the question is how can I generate a identity user wallet to match the `gov participant id gov`
 
 ## Problem `(node:32043) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'curve' of undefined`
 

@@ -6,9 +6,14 @@ version: "1.0"
 client:
   organization: Org1MSP
   credentialStore:
-    path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/generated/wallets/.hfc-org1
+    # using admin
+    # path: /media/mario/Storage/Documents/Development/@SolidaryChain/solidarychain-production-network/fabric-samples/5node2channel/wallet/fabcar/javascript/generated/wallets/.hfc-org1
+    # using gov wallet: this must match packages/server-graphql/network.env and network/org1.network-profile-raft.yaml
+    path: /home/mario/Development/@SolidaryChain/solidarychain-production-network/fabric-samples/5node2channel/wallet/fabcar/javascript/wallets/gov
     cryptoStore:
-      path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/generated/wallets/.hfc-org1
+      # this must match packages/server-graphql/network.env and network/org1.network-profile-raft.yaml
+      # using gov wallet: this must match packages/server-graphql/network.env and network/org1.network-profile-raft.yaml
+      path: /home/mario/Development/@SolidaryChain/solidarychain-production-network/fabric-samples/5node2channel/wallet/fabcar/javascript/wallets/gov
 
 channels:
   channelall:
@@ -32,9 +37,9 @@ organizations:
     certificateAuthorities:
       - ca.org1.example.com
     adminPrivateKey:
-      path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore
+      path: /home/mario/Development/@SolidaryChain/solidarychain-production-network/fabric-samples/5node2channel/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore
     signedCert:
-      path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts
+      path: /home/mario/Development/@SolidaryChain/solidarychain-production-network/fabric-samples/5node2channel/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts
       
 orderers:
   orderer1.example.com:
@@ -43,7 +48,7 @@ orderers:
       ssl-target-name-override: orderer1.example.com
       grpc-max-send-message-length: -1
     tlsCACerts:
-      path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/crypto-config/ordererOrganizations/example.com/orderers/orderer1.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+      path: /home/mario/Development/@SolidaryChain/solidarychain-production-network/fabric-samples/5node2channel/crypto-config/ordererOrganizations/example.com/orderers/orderer1.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
 
 peers:
   # org1
@@ -54,7 +59,7 @@ peers:
       ssl-target-name-override: peer0.org1.example.com
       grpc.keepalive_time_ms: 600000
     tlsCACerts:
-      path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org1.example.com/msp/tlscacerts/tlsca.org1.example.com-cert.pem
+      path: /home/mario/Development/@SolidaryChain/solidarychain-production-network/fabric-samples/5node2channel/crypto-config/peerOrganizations/org1.example.com/msp/tlscacerts/tlsca.org1.example.com-cert.pem
 
 certificateAuthorities:
   # org1
@@ -63,7 +68,7 @@ certificateAuthorities:
     httpOptions:
       verify: false
     tlsCACerts:
-      path: /home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/network/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem
+      path: /home/mario/Development/@SolidaryChain/solidarychain-production-network/fabric-samples/5node2channel/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem
     registrar:
       - enrollId: admin
         enrollSecret: adminpw

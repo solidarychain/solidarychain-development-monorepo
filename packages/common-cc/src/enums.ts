@@ -1,4 +1,10 @@
-export enum UserRoles {
+/**
+ * ChaincodeEvent enum must be insync with 
+ * solidarychain-development-graphdb-events/src/network/network.enums.ts
+ * solidarychain-development-monorepo/packages/common-cc/src/enums.ts
+ */
+
+ export enum UserRoles {
   User = 'USER',
   Admin = 'ADMIN'
 }
@@ -10,6 +16,7 @@ export enum EntityType {
 }
 
 export enum ChaincodeEvent {
+  // Asset
   AssetCreatedEvent = "AssetCreatedEvent",
   AssetUpdatedEvent = "AssetUpdatedEvent",
   CauseCreatedEvent = "CauseCreatedEvent",

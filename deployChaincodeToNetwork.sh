@@ -39,11 +39,11 @@ GOV_NAME="Big Government"
 
 # press any key function
 press_any_key() {
-  read -n 1 -s -r -p "Press any key to continue";printf "\\n"
-  :;
-  # SEC=2
-  # echo "sleeping for ${SEC}sec..."
-  # sleep ${SEC}
+  # read -n 1 -s -r -p "Press any key to continue";printf "\\n"
+  # :;
+  SEC=2
+  echo "sleeping for ${SEC}sec..."
+  sleep ${SEC}
 }
 
 # STARTER version 1.0 (occurs on cc:start)

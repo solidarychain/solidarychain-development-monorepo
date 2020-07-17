@@ -34,4 +34,4 @@ COPY \
 COPY lerna.json .
 RUN lerna bootstrap
 
-CMD [ "npm", "--prefix", "packages/server-graphql", "run", "start:container" ]
+CMD [ "npm", "run", "--prefix", "packages/server-graphql", "start:container" ]

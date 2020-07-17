@@ -32,7 +32,7 @@ export class PersonService {
       return await this.findOneById(newId);
     } catch (error) {
       // extract error message
-      const errorMessage: string = (error.responses && error.responses[1].error.message) ? error.responses[1].error.message : error;
+      const errorMessage: string = (error.responses && error.responses[0].error.message) ? error.responses[0].error.message : error;
       // override default 'throw errorMessage;' with a customized version
       throw new HttpException({ status: HttpStatus.CONFLICT, error: errorMessage }, HttpStatus.CONFLICT);
     }
