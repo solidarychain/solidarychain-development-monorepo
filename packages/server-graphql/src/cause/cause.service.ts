@@ -3,7 +3,7 @@ import { Cause as CauseConvectorModel } from '@solidary-chain/cause-cc';
 import { FlatConvectorModel } from '@worldsibu/convector-core-model';
 import { v4 as uuid } from 'uuid';
 import { CauseControllerBackEnd } from '../convector';
-import { NewCauseInput } from './dto';
+import { NewCauseInput, UpdateCauseInput } from './dto';
 import { Cause } from './models';
 import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
 
@@ -24,6 +24,19 @@ export class CauseService {
       });
       await CauseControllerBackEnd.create(causeToCreate);
       return this.findOneById(newId);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async update(data: UpdateCauseInput): Promise<Cause> {
+    try {
+      // compose ConvectorModel from UpdateInput
+      const causeToUpdate: CauseConvectorModel = new CauseConvectorModel({
+        ...data
+      });
+      await CauseControllerBackEnd.update(causeToUpdate);
+      return this.findOneById(data.id);
     } catch (error) {
       throw error;
     }

@@ -33,7 +33,7 @@
 		"path": "$ROOTPATH$/packages/server-graphql/src/person/person.resolver.ts",
 		"bookmarks": [
 			{
-				"line": 78,
+				"line": 79,
 				"column": 2,
 				"label": ""
 			}
@@ -118,7 +118,7 @@
 		"path": "$ROOTPATH$/packages/server-graphql/src/auth/auth.resolver.ts",
 		"bookmarks": [
 			{
-				"line": 42,
+				"line": 43,
 				"column": 0,
 				"label": ""
 			}

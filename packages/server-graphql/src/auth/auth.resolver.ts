@@ -9,6 +9,7 @@ import { GqlContext } from '../types';
 import { UsersService } from '../users/users.service';
 import { Person } from '../person/models/person.model';
 import { PersonLoginResponse } from './models';
+import { SubscriptionEvent } from '../common/types';
 
 const pubSub = new PubSub();
 
@@ -26,7 +27,7 @@ export class AuthResolver {
     @Context() { res, payload }: GqlContext,
   ): Promise<PersonLoginResponse> {
     // publish personLogged subscription
-    pubSub.publish('personLogged', { personLogged: loginPersonData.username });
+    pubSub.publish(SubscriptionEvent.personLogged, { [SubscriptionEvent.personLogged]: loginPersonData.username });
     // get person
     const person: Person = await this.usersService.findOneByUsername(loginPersonData.username);
     // accessToken: add some person data to it, like id and roles

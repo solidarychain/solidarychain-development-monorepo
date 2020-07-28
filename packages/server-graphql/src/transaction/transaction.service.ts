@@ -4,7 +4,7 @@ import { FlatConvectorModel } from '@worldsibu/convector-core-model';
 import { v4 as uuid } from 'uuid';
 import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
 import { TransactionControllerBackEnd } from '../convector';
-import { NewTransactionInput, GoodsInput } from './dto';
+import { NewTransactionInput, GoodsInput, UpdateTransactionInput } from './dto';
 import { Transaction } from './models';
 import { GoodsInput as GoodsInputConvectorModel } from '@solidary-chain/common-cc';
 
@@ -33,6 +33,19 @@ export class TransactionService {
       });
       await TransactionControllerBackEnd.create(transactionToCreate);
       return this.findOneById(newId);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async update(data: UpdateTransactionInput): Promise<Transaction> {
+    try {
+      // compose ConvectorModel from UpdateInput
+      const transactionToUpdate: TransactionConvectorModel = new TransactionConvectorModel({
+        ...data
+      });
+      await TransactionControllerBackEnd.update(transactionToUpdate);
+      return this.findOneById(data.id);
     } catch (error) {
       throw error;
     }

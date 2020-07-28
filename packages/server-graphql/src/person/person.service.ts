@@ -5,7 +5,7 @@ import { generate } from 'generate-password';
 import { v4 as uuid } from 'uuid';
 import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
 import { PersonControllerBackEnd } from '../convector';
-import { AddPersonAttributeInput, GetByAttributeInput, NewPersonInput } from './dto';
+import { AddPersonAttributeInput, GetByAttributeInput, NewPersonInput, UpdatePersonInput } from './dto';
 import { Person } from './models';
 
 @Injectable()
@@ -35,6 +35,19 @@ export class PersonService {
       const errorMessage: string = (error.responses && error.responses[0].error.message) ? error.responses[0].error.message : error;
       // override default 'throw errorMessage;' with a customized version
       throw new HttpException({ status: HttpStatus.CONFLICT, error: errorMessage }, HttpStatus.CONFLICT);
+    }
+  }
+
+  async update(data: UpdatePersonInput): Promise<Person> {
+    try {
+      // compose ConvectorModel from UpdateInput
+      const personToUpdate: PersonConvectorModel = new PersonConvectorModel({
+        ...data
+      });
+      await PersonControllerBackEnd.update(personToUpdate);
+      return this.findOneById(data.id);
+    } catch (error) {
+      throw error;
     }
   }
 

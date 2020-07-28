@@ -1,13 +1,14 @@
 import { NotFoundException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'apollo-server-express';
-import { NewAssetInput } from './dto';
+import { NewAssetInput, UpdateAssetInput } from './dto';
 import { Asset } from './models';
 import { AssetService } from './asset.service';
 import { GqlAuthGuard } from '../auth/guards';
 import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
 import { CurrentUser } from '../common/decorators';
 import CurrentUserPayload from '../common/types/current-user-payload';
+import { SubscriptionEvent } from '../common/types';
 
 const pubSub = new PubSub();
 
@@ -51,12 +52,27 @@ export class AssetResolver {
     newAssetData.loggedPersonId = user.userId;
     const asset = await this.assetService.create(newAssetData);
     // fire subscription
-    pubSub.publish('assetAdded', { assetAdded: asset });
+    pubSub.publish(SubscriptionEvent.assetAdded, { [SubscriptionEvent.assetAdded]: asset });
+    return asset;
+  }
+
+  @Mutation(returns => Asset)
+  async assetUpdate(
+    @Args('updateAssetData') updateAssetData: UpdateAssetInput,
+  ): Promise<Asset> {
+    const asset = await this.assetService.update(updateAssetData);
+    // fire subscription
+    pubSub.publish(SubscriptionEvent.assetAdded, { [SubscriptionEvent.assetAdded]: asset });
     return asset;
   }
 
   @Subscription(returns => Asset)
   assetAdded() {
-    return pubSub.asyncIterator('assetAdded');
+    return pubSub.asyncIterator(SubscriptionEvent.assetAdded);
+  }
+
+  @Subscription(returns => Asset)
+  assetUpdated() {
+    return pubSub.asyncIterator(SubscriptionEvent.assetUpdated);
   }
 }

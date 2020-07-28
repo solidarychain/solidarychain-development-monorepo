@@ -4,10 +4,11 @@ import { PubSub } from 'apollo-server-express';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
 import { CurrentUser } from '../common/decorators';
 import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
-import { AddPersonAttributeInput, GetByAttributeInput, NewPersonInput } from './dto';
+import { AddPersonAttributeInput, GetByAttributeInput, NewPersonInput, UpdatePersonInput } from './dto';
 import { Person } from './models';
 import { PersonService } from './person.service';
 import CurrentUserPayload from '../common/types/current-user-payload';
+import { SubscriptionEvent } from '../common/types';
 
 const pubSub = new PubSub();
 
@@ -91,7 +92,7 @@ export class PersonResolver {
     @Args('newPersonData') newPersonData: NewPersonInput,
   ): Promise<Person> {
     const person = await this.personService.create(newPersonData);
-    pubSub.publish('personAdded', { personAdded: person });
+    pubSub.publish(SubscriptionEvent.personAdded, { [SubscriptionEvent.personAdded]: person });
     return person;
   }
 
@@ -105,9 +106,25 @@ export class PersonResolver {
     return person;
   }
 
+  @Mutation(returns => Person)
+  async personUpdate(
+    @Args('updatePersonData') updatePersonData: UpdatePersonInput,
+  ): Promise<Person> {
+    const person = await this.personService.update(updatePersonData);
+    // fire subscription
+    pubSub.publish(SubscriptionEvent.personUpdated, { [SubscriptionEvent.personUpdated]: person });
+    return person;
+  }
+
   @UseGuards(GqlAuthGuard)
   @Subscription(returns => Person)
   personAdded() {
-    return pubSub.asyncIterator('personAdded');
+    return pubSub.asyncIterator(SubscriptionEvent.personAdded);
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Subscription(returns => Person)
+  personUpdated() {
+    return pubSub.asyncIterator(SubscriptionEvent.personUpdated);
   }
 }

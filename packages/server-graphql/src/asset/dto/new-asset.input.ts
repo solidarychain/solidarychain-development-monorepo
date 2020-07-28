@@ -1,10 +1,9 @@
+import { Optional } from '@nestjs/common';
 import { AssetType } from '@solidary-chain/asset-cc';
 import { Entity } from '@solidary-chain/transaction-cc';
 import { IsDefined, IsOptional, IsUUID } from 'class-validator';
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, InputType } from 'type-graphql';
-import { EntityResult } from '../../common/models';
-import { Optional } from '@nestjs/common';
 
 @InputType()
 export class NewAssetInput {

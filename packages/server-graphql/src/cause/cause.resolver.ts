@@ -6,8 +6,9 @@ import { CurrentUser } from '../common/decorators';
 import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
 import CurrentUserPayload from '../common/types/current-user-payload';
 import { CauseService } from './cause.service';
-import { NewCauseInput } from './dto';
+import { NewCauseInput, UpdateCauseInput } from './dto';
 import { Cause } from './models';
+import { SubscriptionEvent } from '../common/types';
 
 const pubSub = new PubSub();
 
@@ -59,12 +60,27 @@ export class CauseResolver {
     newCauseData.loggedPersonId = user.userId;
     const cause = await this.causeService.create(newCauseData);
     // fire subscription
-    pubSub.publish('causeAdded', { causeAdded: cause });
+    pubSub.publish(SubscriptionEvent.causeAdded, { [SubscriptionEvent.causeAdded]: cause });
+    return cause;
+  }
+
+  @Mutation(returns => Cause)
+  async causeUpdate(
+    @Args('updateCauseData') updateCauseData: UpdateCauseInput,
+  ): Promise<Cause> {
+    const cause = await this.causeService.update(updateCauseData);
+    // fire subscription
+    pubSub.publish(SubscriptionEvent.causeAdded, { [SubscriptionEvent.causeAdded]: cause });
     return cause;
   }
 
   @Subscription(returns => Cause)
   causeAdded() {
-    return pubSub.asyncIterator('causeAdded');
+    return pubSub.asyncIterator(SubscriptionEvent.causeAdded);
+  }
+
+  @Subscription(returns => Cause)
+  causeUpdated() {
+    return pubSub.asyncIterator(SubscriptionEvent.causeUpdated);
   }
 }

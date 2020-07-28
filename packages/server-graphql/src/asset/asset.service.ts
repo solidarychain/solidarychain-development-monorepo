@@ -3,7 +3,7 @@ import { Asset as AssetConvectorModel } from '@solidary-chain/asset-cc';
 import { FlatConvectorModel } from '@worldsibu/convector-core-model';
 import { v4 as uuid } from 'uuid';
 import { AssetControllerBackEnd } from '../convector';
-import { NewAssetInput } from './dto';
+import { NewAssetInput, UpdateAssetInput } from './dto';
 import { Asset } from './models';
 import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
 
@@ -21,6 +21,19 @@ export class AssetService {
       });
       await AssetControllerBackEnd.create(assetToCreate);
       return this.findOneById(newId);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async update(data: UpdateAssetInput): Promise<Asset> {
+    try {
+      // compose ConvectorModel from UpdateInput
+      const assetToUpdate: AssetConvectorModel = new AssetConvectorModel({
+        ...data
+      });
+      await AssetControllerBackEnd.update(assetToUpdate);
+      return this.findOneById(data.id);
     } catch (error) {
       throw error;
     }

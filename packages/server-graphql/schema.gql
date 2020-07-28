@@ -132,11 +132,16 @@ type Mutation {
   personLogout: Boolean!
   revokeUserRefreshTokens(username: String!): Boolean!
   causeNew(newCauseData: NewCauseInput!): Cause!
+  causeUpdate(updateCauseData: UpdateCauseInput!): Cause!
   participantNew(newParticipantData: NewParticipantInput!): Participant!
+  participantUpdate(updateParticipantData: UpdateParticipantInput!): Participant!
   personRegister(newPersonData: NewPersonInput!): Person!
   personAddAttribute(addPersonAttributeData: AddPersonAttributeInput!, personId: String!): Person!
+  personUpdate(updatePersonData: UpdatePersonInput!): Person!
   transactionNew(newTransactionData: NewTransactionInput!): Transaction!
+  transactionUpdate(updateTransactionData: UpdateTransactionInput!): Transaction!
   assetNew(newAssetData: NewAssetInput!): Asset!
+  assetUpdate(updateAssetData: UpdateAssetInput!): Asset!
 }
 
 input NewAssetInput {
@@ -333,10 +338,15 @@ type Query {
 type Subscription {
   personLogged: String!
   causeAdded: Cause!
+  causeUpdated: Cause!
   participantAdded: Participant!
+  participantUpdated: Participant!
   personAdded: Person!
+  personUpdated: Person!
   transactionAdded: Transaction!
+  transactionUpdated: Transaction!
   assetAdded: Asset!
+  assetUpdated: Asset!
 }
 
 type Transaction {
@@ -356,6 +366,42 @@ type Transaction {
   createdByPersonId: String
   assetId: String
   goods: [Goods!]
+}
+
+input UpdateAssetInput {
+  id: String!
+  ambassadors: [String!]
+  tags: [String!]
+  metaData: JSONObject
+  metaDataInternal: JSONObject
+}
+
+input UpdateCauseInput {
+  id: String!
+  email: String
+  ambassadors: [String!]
+  tags: [String!]
+  metaData: JSONObject
+  metaDataInternal: JSONObject
+}
+
+input UpdateParticipantInput {
+  id: String!
+  email: String
+  ambassadors: [String!]
+  metaData: JSONObject
+  metaDataInternal: JSONObject
+}
+
+input UpdatePersonInput {
+  id: String!
+  roles: [String!] = "USER"
+  metaDataInternal: JSONObject
+}
+
+input UpdateTransactionInput {
+  id: String!
+  metaDataInternal: JSONObject
 }
 
 type x509Identities {

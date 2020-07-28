@@ -3,11 +3,12 @@ import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'apollo-server-express';
 import { GqlAuthGuard } from '../auth/guards';
 import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
-import { NewTransactionInput } from './dto';
+import { NewTransactionInput, UpdateTransactionInput } from './dto';
 import { Transaction } from './models';
 import { TransactionService } from './transaction.service';
 import { CurrentUser } from '../common/decorators';
 import CurrentUserPayload from '../common/types/current-user-payload';
+import { SubscriptionEvent } from '../common/types';
 
 const pubSub = new PubSub();
 
@@ -51,12 +52,27 @@ export class TransactionResolver {
     newTransactionData.loggedPersonId = user.userId;
     const transaction = await this.transactionService.create(newTransactionData);
     // fire subscription
-    pubSub.publish('transactionAdded', { transactionAdded: transaction });
+    pubSub.publish(SubscriptionEvent.transactionAdded, { [SubscriptionEvent.transactionAdded]: transaction });
+    return transaction;
+  }
+
+  @Mutation(returns => Transaction)
+  async transactionUpdate(
+    @Args('updateTransactionData') updateTransactionData: UpdateTransactionInput,
+  ): Promise<Transaction> {
+    const transaction = await this.transactionService.update(updateTransactionData);
+    // fire subscription
+    pubSub.publish(SubscriptionEvent.transactionUpdated, { [SubscriptionEvent.transactionUpdated]: transaction });
     return transaction;
   }
 
   @Subscription(returns => Transaction)
   transactionAdded() {
-    return pubSub.asyncIterator('transactionAdded');
+    return pubSub.asyncIterator(SubscriptionEvent.transactionAdded);
+  }
+
+  @Subscription(returns => Transaction)
+  transactionUpdated() {
+    return pubSub.asyncIterator(SubscriptionEvent.transactionUpdated);
   }
 }
