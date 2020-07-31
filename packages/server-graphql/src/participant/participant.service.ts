@@ -3,7 +3,7 @@ import { Participant as ParticipantConvectorModel } from '@solidary-chain/partic
 import { FlatConvectorModel } from '@worldsibu/convector-core-model';
 import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
 import { ParticipantControllerBackEnd } from '../convector';
-import { NewParticipantInput, UpdateParticipantInput } from './dto';
+import { NewParticipantInput, UpdateParticipantInput, ChangeParticipantIdentityData } from './dto';
 import { Participant } from './models/participant.model';
 import { v4 as uuid } from 'uuid';
 
@@ -36,6 +36,15 @@ export class ParticipantService {
         ...data
       });
       await ParticipantControllerBackEnd.update(participantToUpdate);
+      return this.findOneById(data.id);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async changeIdentity(data: ChangeParticipantIdentityData): Promise<Participant> {
+    try {
+      await ParticipantControllerBackEnd.changeIdentity(data.id, data.newIdentity);
       return this.findOneById(data.id);
     } catch (error) {
       throw error;

@@ -61,6 +61,11 @@ type Cause {
   goodsStock: [Goods!]
 }
 
+input ChangeParticipantIdentityData {
+  id: String!
+  newIdentity: String!
+}
+
 """Date custom scalar type"""
 scalar Date
 
@@ -135,9 +140,13 @@ type Mutation {
   causeUpdate(updateCauseData: UpdateCauseInput!): Cause!
   participantNew(newParticipantData: NewParticipantInput!): Participant!
   participantUpdate(updateParticipantData: UpdateParticipantInput!): Participant!
+  participantChangeIdentity(changeParticipantIdentityData: ChangeParticipantIdentityData!): Participant!
   personRegister(newPersonData: NewPersonInput!): Person!
   personAddAttribute(addPersonAttributeData: AddPersonAttributeInput!, personId: String!): Person!
   personUpdate(updatePersonData: UpdatePersonInput!): Person!
+  personUpdatePassword(updatePersonPasswordData: UpdatePersonPasswordInput!): Person!
+  personUpdateProfile(updatePersonProfileData: UpdatePersonProfileInput!): Person!
+  personUpsertCitizenCard(upsertCitizenCardData: UpsertCitizenCardInput!): Person!
   transactionNew(newTransactionData: NewTransactionInput!): Transaction!
   transactionUpdate(updateTransactionData: UpdateTransactionInput!): Transaction!
   assetNew(newAssetData: NewAssetInput!): Asset!
@@ -341,8 +350,13 @@ type Subscription {
   causeUpdated: Cause!
   participantAdded: Participant!
   participantUpdated: Participant!
+  participantIdentityChanged: Participant!
   personAdded: Person!
+  personAttributeAdded: Person!
   personUpdated: Person!
+  personPasswordUpdated: Person!
+  personProfileUpdated: Person!
+  personCitizenCardUpserted: Person!
   transactionAdded: Transaction!
   transactionUpdated: Transaction!
   assetAdded: Asset!
@@ -399,9 +413,55 @@ input UpdatePersonInput {
   metaDataInternal: JSONObject
 }
 
+input UpdatePersonPasswordInput {
+  id: String!
+  password: String
+}
+
+input UpdatePersonProfileInput {
+  id: String!
+  email: String
+  mobilePhone: String
+  postal: String
+  city: String
+  region: String
+  geoLocation: String
+  timezone: String
+  personalInfo: String
+  metaData: JSONObject
+}
+
 input UpdateTransactionInput {
   id: String!
   metaDataInternal: JSONObject
+}
+
+input UpsertCitizenCardInput {
+  id: String
+  firstname: String!
+  lastname: String!
+  gender: String!
+  height: Float!
+  fatherFirstname: String!
+  fatherLastname: String!
+  motherFirstname: String!
+  motherLastname: String!
+  birthDate: Date!
+  nationality: String!
+  country: String!
+  documentNumber: String!
+  documentType: String!
+  cardVersion: String!
+  emissionDate: Date!
+  expirationDate: Date!
+  emittingEntity: String!
+  identityNumber: String!
+  fiscalNumber: String!
+  socialSecurityNumber: String!
+  beneficiaryNumber: String!
+  pan: String!
+  requestLocation: String
+  otherInformation: String
 }
 
 type x509Identities {

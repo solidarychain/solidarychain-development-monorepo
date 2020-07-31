@@ -11,47 +11,47 @@ export class NewAssetInput {
   @Field({ nullable: true })
   @IsOptional()
   @IsUUID()
-  public id: string;
+  id: string;
 
   // above is equal dto/new-x.input.ts and models/x.model.ts
   // minus participant, identities and createdDate
 
   @Field()
   @IsDefined()
-  public name: string;
+  name: string;
 
   @Field()
   @IsDefined()
-  public assetType: AssetType;
+  assetType: AssetType;
 
   @Field(type => [String], { nullable: true })
   @Optional()
-  public ambassadors: string[];
+  ambassadors: string[];
 
   // WARN different from model, must be a GraphQLJSONObject in input and EntityResult in model
   @Field(type => GraphQLJSONObject)
   @IsDefined()
-  public owner?: Entity;
+  owner?: Entity;
 
   @Field({ nullable: true })
   @IsOptional()
   @IsDefined()
-  public location: string;
+  location: string;
 
   @Field(type => [String], { nullable: true })
   @IsOptional()
-  public tags: string[];
+  tags: string[];
 
   @Field(type => GraphQLJSONObject, { nullable: true })
   @IsOptional()
-  public metaData: any;
+  metaData: any;
 
   @Field(type => GraphQLJSONObject, { nullable: true })
   @IsOptional()
-  public metaDataInternal: any;
+  metaDataInternal: any;
 
   // this is used to pass loggedIn userId to fabric
   @Field({ nullable: true })
   @IsOptional()
-  public loggedPersonId: string;
+  loggedPersonId: string;
 }

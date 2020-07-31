@@ -8,47 +8,47 @@ import * as yup from 'yup';
 @ObjectType()
 export class Goods {
   @Field(type => ID)
-  public id: string;
+  id: string;
 
   // above is equal dto/new-x.input.ts and models/x.model.ts
   // minus balance, createdDate, createdByPersonId...
 
   @Field()
-  public code: string;
+  code: string;
 
   @Field({ nullable: true })
   @Optional()
-  public barCode: string;
+  barCode: string;
 
   @Field()
-  public name: string;
+  name: string;
 
   @Field({ nullable: true })
   @Optional()
-  public description: string;
+  description: string;
 
   @Field(type => String, { nullable: true })
   @Optional()
-  public tags: string[];
+  tags: string[];
 
   @Field(type => GenericBalance)
   @IsDefined()
-  public balance?: GenericBalance;
+  balance?: GenericBalance;
 
   @Field(type => GraphQLJSONObject, { nullable: true })
   @Optional()
-  public metaData: any;
+  metaData: any;
 
   @Field(type => GraphQLJSONObject, { nullable: true })
   @Optional()
-  public metaDataInternal: any;
+  metaDataInternal: any;
 
   @Field()
   @IsDefined()
   @Validate(yup.number)
-  public createdDate: number;
+  createdDate: number;
 
   @Field()
   @IsDefined()
-  public createdByPersonId: string;
+  createdByPersonId: string;
 }

@@ -9,17 +9,17 @@ export class Attribute {
   id: string;
 
   @Field(type => GraphQLJSONObject, { nullable: true })
-  public content?: any;
+  content?: any;
 
   @Field({ nullable: true })
-  public issuedDate?: number;
+  issuedDate?: number;
 
   @Field({ nullable: true })
-  public expiresDate?: Date;
+  expiresDate?: Date;
 
   @Field({ nullable: true })
-  public expired?: boolean;
+  expired?: boolean;
 
   @Field({ nullable: true })
-  public certifierID?: string;
+  certifierID?: string;
 }

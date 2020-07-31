@@ -5,7 +5,7 @@ import { generate } from 'generate-password';
 import { v4 as uuid } from 'uuid';
 import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
 import { PersonControllerBackEnd } from '../convector';
-import { AddPersonAttributeInput, GetByAttributeInput, NewPersonInput, UpdatePersonInput } from './dto';
+import { AddPersonAttributeInput, GetByAttributeInput, NewPersonInput, UpdatePersonInput, UpdatePersonPasswordInput, UpdatePersonProfileInput, UpsertCitizenCardInput } from './dto';
 import { Person } from './models';
 
 @Injectable()
@@ -29,7 +29,7 @@ export class PersonService {
         expirationDate: ((data.expirationDate as unknown) as number),
       });
       await PersonControllerBackEnd.create(personToCreate);
-      return await this.findOneById(newId);
+      return this.findOneById(newId);
     } catch (error) {
       // extract error message
       const errorMessage: string = (error.responses && error.responses[0].error.message) ? error.responses[0].error.message : error;
@@ -51,6 +51,54 @@ export class PersonService {
     }
   }
 
+  async updatePassword(data: UpdatePersonPasswordInput): Promise<Person> {
+    try {
+      // compose ConvectorModel from Input
+      const personToUpdate: PersonConvectorModel = new PersonConvectorModel({
+        ...data
+      });
+      await PersonControllerBackEnd.updatePassword(personToUpdate);
+      return this.findOneById(data.id);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async updateProfile(data: UpdatePersonProfileInput): Promise<Person> {
+    try {
+      // compose ConvectorModel from Input
+      const personToUpdate: PersonConvectorModel = new PersonConvectorModel({
+        ...data
+      });
+      await PersonControllerBackEnd.updateProfile(personToUpdate);
+      return this.findOneById(data.id);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async upsertCitizenCard(data: UpsertCitizenCardInput): Promise<Person> {
+    try {
+      // require to use or generate new id
+      const newId: string =  (data.id) ? data.id : uuid();
+      // compose ConvectorModel from NewInput
+      const personToUpsert: PersonConvectorModel = new PersonConvectorModel({
+        ...data,
+        // require to inject values
+        id: newId,
+        // convert Date to epoch unix time to be stored in convector person model
+        birthDate: ((data.birthDate as unknown) as number),
+        emissionDate: ((data.emissionDate as unknown) as number),
+        expirationDate: ((data.expirationDate as unknown) as number),
+      });
+      await PersonControllerBackEnd.upsertCitizenCard(personToUpsert);
+      // we don't know the id, can be newId in case of a new record, or existing id, thats the reason why we use fiscalNumber
+      return this.findOneByFiscalnumber(data.fiscalNumber);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async addAttribute(personId: string, addPersonAttributeInput: AddPersonAttributeInput): Promise<Person> {
     try {
       const attributeConvectorModel: AttributeConvectorModel = new AttributeConvectorModel(
@@ -60,7 +108,7 @@ export class PersonService {
       // don't have a @Validate annotation, read comments on Attribute person-cc
       // attributeConvectorModel.content = addPersonAttributeInput.content;
       await PersonControllerBackEnd.addAttribute(personId, attributeConvectorModel);
-      return await this.findOneById(personId);
+      return this.findOneById(personId);
     } catch (error) {
       throw error;
     }

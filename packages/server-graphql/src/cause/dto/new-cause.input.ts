@@ -10,58 +10,58 @@ export class NewCauseInput {
   @Field({ nullable: true })
   @IsOptional()
   @IsUUID()
-  public id: string;
+  id: string;
 
   // above is equal dto/new-x.input.ts and models/x.model.ts
   // minus startDate, endDate, participant, identities and createdDate
 
   @Field()
   @IsDefined()
-  public name: string;
+  name: string;
 
   @Field({ nullable: true })
-  public email?: string;
+  email?: string;
 
   @Field(type => [String], { nullable: true })
   @Optional()
-  public ambassadors: string[];
+  ambassadors: string[];
 
   @Field(type => Date, { nullable: true })
   @IsDefined()
   // @IsDate() don't enable on new-x-input's
   @IsOptional()
-  public startDate?: Date;
+  startDate?: Date;
 
   @Field(type => Date, { nullable: true })
   @IsDefined()
   // @IsDate() don't enable on new-x-input's
   @IsOptional()
-  public endDate?: Date;
+  endDate?: Date;
 
   @Field({ nullable: true })
   @IsOptional()
   @IsDefined()
-  public location: string;
+  location: string;
 
   @Field(type => [String], { nullable: true })
   @Optional()
-  public tags: string[];
+  tags: string[];
 
   @Field(type => GraphQLJSONObject, { nullable: true })
   @Optional()
-  public metaData: any;
+  metaData: any;
 
   @Field(type => GraphQLJSONObject, { nullable: true })
   @Optional()
-  public metaDataInternal: any;
+  metaDataInternal: any;
 
   // this is used to pass loggedIn userId to fabric
   @Field({ nullable: true })
   @IsOptional()
-  public loggedPersonId: string;
+  loggedPersonId: string;
 
   // WARN different from model, must be a GraphQLJSONObject in input and EntityResult in model
   @Field(type => GraphQLJSONObject)
   @IsDefined()
-  public input?: Entity;
+  input?: Entity;
 }

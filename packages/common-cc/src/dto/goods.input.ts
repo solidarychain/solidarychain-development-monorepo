@@ -4,32 +4,32 @@ import * as yup from 'yup';
 export class GoodsInput  {
   @Required()
   @Validate(yup.string())
-  public id: string;
+  id: string;
 
   @Required()
   @Validate(yup.string())
-  public code: string;
+  code: string;
 
   @Validate(yup.string())
-  public barCode: string;
+  barCode: string;
 
   @Required()
   @Validate(yup.string())
-  public name: string;
+  name: string;
 
   @Validate(yup.string())
-  public description: string;
+  description: string;
 
   @Required()
   @Validate(yup.number())
-  public quantity?: number;
+  quantity?: number;
 
   @Validate(yup.array().of(yup.string()))
-  public tags: string[];
+  tags: string[];
 
   @Validate(yup.object().nullable())
-  public metaData: any;
+  metaData: any;
 
   @Validate(yup.object().nullable())
-  public metaDataInternal: any;
+  metaDataInternal: any;
 }

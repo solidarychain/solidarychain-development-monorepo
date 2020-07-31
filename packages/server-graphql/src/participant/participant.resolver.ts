@@ -3,7 +3,7 @@ import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'apollo-server-express';
 import { GqlAuthGuard } from '../auth/guards';
 import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
-import { NewParticipantInput, UpdateParticipantInput } from './dto';
+import { NewParticipantInput, UpdateParticipantInput, ChangeParticipantIdentityData as ChangeParticipantIdentityInput } from './dto';
 import { Participant } from './models/participant.model';
 import { ParticipantService } from './participant.service';
 import { CurrentUser } from '../common/decorators';
@@ -78,6 +78,17 @@ export class ParticipantResolver {
     return participant;
   }
 
+  @Mutation(returns => Participant)
+  async participantChangeIdentity(
+    @Args('changeParticipantIdentityData') changeParticipantIdentityData: ChangeParticipantIdentityInput,
+  ): Promise<Participant> {
+    debugger;
+    const participant = await this.participantService.changeIdentity(changeParticipantIdentityData);
+    // fire subscription
+    pubSub.publish(SubscriptionEvent.participantIdentityChanged, { [SubscriptionEvent.participantIdentityChanged]: participant });
+    return participant;
+  }
+  
   @Subscription(returns => Participant)
   participantAdded() {
     return pubSub.asyncIterator(SubscriptionEvent.participantAdded);
@@ -86,5 +97,10 @@ export class ParticipantResolver {
   @Subscription(returns => Participant)
   participantUpdated() {
     return pubSub.asyncIterator(SubscriptionEvent.participantUpdated);
+  }
+
+  @Subscription(returns => Participant)
+  participantIdentityChanged() {
+    return pubSub.asyncIterator(SubscriptionEvent.participantIdentityChanged);
   }
 }

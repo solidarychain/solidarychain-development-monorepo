@@ -6,8 +6,13 @@ export enum SubscriptionEvent {
   causeUpdated = 'causeUpdated',
   participantAdded = 'participantAdded',
   participantUpdated = 'participantUpdated',
+  participantIdentityChanged = 'participantIdentityChanged',
   personAdded = 'personAdded',
   personUpdated = 'personUpdated',
+  personPasswordUpdated = 'personPasswordUpdated',
+  personProfileUpdated = 'personProfileUpdated',
+  personCitizenCardUpserted = 'personCitizenCardUpserted',
+  personAttributeAdded = 'personAttributeAdded',
   transactionAdded = 'transactionAdded',
   transactionUpdated = 'transactionUpdated',
 }

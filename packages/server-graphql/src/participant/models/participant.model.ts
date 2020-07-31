@@ -10,56 +10,56 @@ import { Goods } from '../../common/models';
 export class Participant {
   @Field(type => ID)
   @IsDefined()
-  public id: string;
+  id: string;
 
   @Field()
-  public code: string;
+  code: string;
 
   @Field()
-  public name: string;
+  name: string;
 
   @Field({ nullable: true })
-  public email?: string;
+  email?: string;
 
   @Field(type => [String], { nullable: true })
   @Optional()
-  public ambassadors: string[];
+  ambassadors: string[];
 
   @Field()
-  public msp: string;
+  msp: string;
 
   @Field({nullable: true})
   @IsDefined()
-  public participant: Participant;
+  participant: Participant;
 
   @Field(type => GraphQLJSONObject, { nullable: true })
-  public metaData: any;
+  metaData: any;
 
   @Field(type => GraphQLJSONObject, { nullable: true })
-  public metaDataInternal: any;
+  metaDataInternal: any;
 
   // hide it from graphql stuff, this way we won't expose fingerprints
   // @Field(type => [x509Identities])
   // @IsDefined()
-  // public identities: x509Identities[];
+  // identities: x509Identities[];
 
   @Field()
   @IsDefined()
   @Validate(yup.number)
-  public createdDate: number;
+  createdDate: number;
 
   @Field({ nullable: true })
   @IsDefined()
-  public createdByPersonId: string;
+  createdByPersonId: string;
 
   @Field(type => GenericBalance)
   @IsDefined()
-  public fundsBalance: GenericBalance;
+  fundsBalance: GenericBalance;
 
   @Field(type => GenericBalance)
   @IsDefined()
-  public volunteeringHoursBalance: GenericBalance;
+  volunteeringHoursBalance: GenericBalance;
 
   @Field(type => [Goods], { nullable: true })
-  public goodsStock?: Goods[];
+  goodsStock?: Goods[];
 }

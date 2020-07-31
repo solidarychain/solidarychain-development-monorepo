@@ -10,25 +10,25 @@ import { Field, ID, ObjectType } from 'type-graphql';
 @ObjectType()
 class Entity {
   @Field(type => ID)
-  public id: string;
+  id: string;
 
   @Field()
   @IsDefined()
-  public type: string;
+  type: string;
 
   @Field()
   @IsDefined()
-  public createdDate: number;
+  createdDate: number;
 
   // hide it from graphql stuff, this way we won't expose fingerprints
   // @IsDefined()
   // @Field(type => [x509Identities])
-  // public identities: x509Identities[];
+  // identities: x509Identities[];
 }
 
 // tslint:disable-next-line: max-classes-per-file
 @ObjectType()
 export class EntityResult {
   @Field()
-  public entity: Entity;
+  entity: Entity;
 }

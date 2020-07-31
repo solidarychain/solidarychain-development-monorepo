@@ -9,7 +9,7 @@ export class NewParticipantInput {
   @Field({ nullable: true })
   @IsOptional()
   @IsUUID()
-  public id: string;
+  id: string;
 
   @Field()
   @IsDefined()
@@ -22,22 +22,22 @@ export class NewParticipantInput {
   name: string;
 
   @Field({ nullable: true })
-  public email?: string;
+  email?: string;
 
   @Field(type => [String], { nullable: true })
   @Optional()
-  public ambassadors: string[];
+  ambassadors: string[];
 
   @Field(type => GraphQLJSONObject, { nullable: true })
   @IsOptional()
-  public metaData: any;
+  metaData: any;
 
   @Field(type => GraphQLJSONObject, { nullable: true })
   @IsOptional()
-  public metaDataInternal: any;
+  metaDataInternal: any;
 
   // this is used to pass loggedIn userId to fabric
   @Field({ nullable: true })
   @IsOptional()
-  public loggedPersonId: string;
+  loggedPersonId: string;
 }

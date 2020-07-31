@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# before deploy if we need to build the chaincode we must have a running hurley network
+
 # TODO: clean up this file its a command mess
 
 DEPLOYMENT_PATH=/srv/docker/hyperledger-fabric-extra_hosts-5orgs/fabric-samples/5node2channel/deployment
@@ -51,7 +53,8 @@ press_any_key() {
 # ibm auction network
 # VERSION="1.10"
 # production network
-VERSION="1.0"
+# get current production netwrok instantiated chaincode `ssh -t 192.168.1.61 "docker exec cli peer chaincode list -C channelall --instantiated" | grep solidary-chain-chaincode`
+VERSION="1.5"
 # 1 build with hurley, 0 only when we want to skip restart hurley network to build the chaincode, with 0 we dont reBuild chaincode, good for just deploy to networks
 BUILD_WITH_HURLEY=1
 

@@ -8,35 +8,35 @@ export class GoodsInput {
   // if not supplied by user, mutation auto-generate one for us
   @Field(type => ID, { nullable: true })
   @IsOptional()
-  public id: string;
+  id: string;
 
   @Field()
-  public code: string;
+  code: string;
 
   @Field({ nullable: true })
   @Optional()
-  public barCode: string;
+  barCode: string;
 
   @Field()
-  public name: string;
+  name: string;
 
   @Field({ nullable: true })
   @Optional()
-  public description: string;
+  description: string;
 
   @Field()
   @IsNumber()
-  public quantity?: number;
+  quantity?: number;
 
   @Field(type => String, { nullable: true })
   @Optional()
-  public tags: string[];
+  tags: string[];
 
   @Field(type => GraphQLJSONObject, { nullable: true })
   @Optional()
-  public metaData: any;
+  metaData: any;
 
   @Field(type => GraphQLJSONObject, { nullable: true })
   @Optional()
-  public metaDataInternal: any;
+  metaDataInternal: any;
 }

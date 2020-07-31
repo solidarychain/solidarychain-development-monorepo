@@ -4,7 +4,7 @@ import { PubSub } from 'apollo-server-express';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
 import { CurrentUser } from '../common/decorators';
 import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
-import { AddPersonAttributeInput, GetByAttributeInput, NewPersonInput, UpdatePersonInput } from './dto';
+import { AddPersonAttributeInput, GetByAttributeInput, NewPersonInput, UpdatePersonInput, UpdatePersonPasswordInput, UpdatePersonProfileInput, UpsertCitizenCardInput } from './dto';
 import { Person } from './models';
 import { PersonService } from './person.service';
 import CurrentUserPayload from '../common/types/current-user-payload';
@@ -116,6 +116,36 @@ export class PersonResolver {
     return person;
   }
 
+  @Mutation(returns => Person)
+  async personUpdatePassword(
+    @Args('updatePersonPasswordData') updatePersonPasswordData: UpdatePersonPasswordInput,
+  ): Promise<Person> {
+    const person = await this.personService.updatePassword(updatePersonPasswordData);
+    // fire subscription
+    pubSub.publish(SubscriptionEvent.personPasswordUpdated, { [SubscriptionEvent.personPasswordUpdated]: person });
+    return person;
+  }
+
+  @Mutation(returns => Person)
+  async personUpdateProfile(
+    @Args('updatePersonProfileData') updatePersonProfileData: UpdatePersonProfileInput,
+  ): Promise<Person> {
+    const person = await this.personService.updateProfile(updatePersonProfileData);
+    // fire subscription
+    pubSub.publish(SubscriptionEvent.personProfileUpdated, { [SubscriptionEvent.personProfileUpdated]: person });
+    return person;
+  }
+
+  @Mutation(returns => Person)
+  async personUpsertCitizenCard(
+    @Args('upsertCitizenCardData') upsertCitizenCardData: UpsertCitizenCardInput,
+  ): Promise<Person> {
+    const person = await this.personService.upsertCitizenCard(upsertCitizenCardData);
+    // fire subscription
+    pubSub.publish(SubscriptionEvent.personCitizenCardUpserted, { [SubscriptionEvent.personCitizenCardUpserted]: person });
+    return person;
+  }
+
   @UseGuards(GqlAuthGuard)
   @Subscription(returns => Person)
   personAdded() {
@@ -124,7 +154,31 @@ export class PersonResolver {
 
   @UseGuards(GqlAuthGuard)
   @Subscription(returns => Person)
+  personAttributeAdded() {
+    return pubSub.asyncIterator(SubscriptionEvent.personAttributeAdded);
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Subscription(returns => Person)
   personUpdated() {
     return pubSub.asyncIterator(SubscriptionEvent.personUpdated);
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Subscription(returns => Person)
+  personPasswordUpdated() {
+    return pubSub.asyncIterator(SubscriptionEvent.personPasswordUpdated);
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Subscription(returns => Person)
+  personProfileUpdated() {
+    return pubSub.asyncIterator(SubscriptionEvent.personProfileUpdated);
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Subscription(returns => Person)
+  personCitizenCardUpserted() {
+    return pubSub.asyncIterator(SubscriptionEvent.personCitizenCardUpserted);
   }
 }

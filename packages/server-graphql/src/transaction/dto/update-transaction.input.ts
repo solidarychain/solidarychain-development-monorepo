@@ -6,9 +6,9 @@ import { Field, InputType } from 'type-graphql';
 export class UpdateTransactionInput {
   @Field()
   @IsUUID()
-  public id: string;
+  id: string;
 
   @Field(type => GraphQLJSONObject, { nullable: true })
   @IsOptional()
-  public metaDataInternal: any;
+  metaDataInternal: any;
 }

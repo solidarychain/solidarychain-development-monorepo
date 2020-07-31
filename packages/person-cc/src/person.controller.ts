@@ -1,5 +1,5 @@
-import { appConstants as c, GenericBalance, Goods, newUuid, newPassword, ChaincodeEvent } from '@solidary-chain/common-cc';
-import { getParticipantByIdentity, Participant } from '@solidary-chain/participant-cc';
+import { appConstants as c, ChaincodeEvent, GenericBalance, Goods, newPassword, newUuid } from '@solidary-chain/common-cc';
+import { Participant } from '@solidary-chain/participant-cc';
 import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
 import * as yup from 'yup';
@@ -183,8 +183,13 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     // Retrieve to see if exists
     let upsertPerson: Person;
     let getPerson: Person | Person[] = await Person.getByField('fiscalNumber', person.fiscalNumber);
+    // store currentPersonId to use in excludeId for new or existing id, required to checkUniqueField
+    let currentPersonId;
     if (!getPerson || (getPerson && (getPerson as Person[]).length < 1)) {
-      upsertPerson = new Person(newUuid());
+      // upsertPerson = new Person(newUuid());
+      // get id from sent graphql id
+      currentPersonId = person.id;
+      upsertPerson = new Person(person.id);
       upsertPerson.username = person.username || person.fiscalNumber;
       upsertPerson.password = hashPassword(newPassword(10));
       upsertPerson.participant = gov;
@@ -201,19 +206,24 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
       upsertPerson.goodsStock = new Array<Goods>()
     } else {
       upsertPerson = getPerson[0];
+      currentPersonId = getPerson[0].id;
+      // prevent fiscalNumber from change, assing old value to model, in this case even if we change fiscalNumber in upsert it never changes, but even if we hack fiscalNumber it fails in other unique fields after
+      upsertPerson.fiscalNumber = getPerson[0].fiscalNumber;
     }
 
     // check unique fields, always check for inserts and updates
-    await checkUniqueField('documentNumber', person.documentNumber, true, person.id);
-    await checkUniqueField('identityNumber', person.identityNumber, true, person.id);
-    await checkUniqueField('socialSecurityNumber', person.socialSecurityNumber, true, person.id);
-    await checkUniqueField('beneficiaryNumber', person.beneficiaryNumber, true, person.id);
-    await checkUniqueField('pan', person.pan, true, person.id);
+    await checkUniqueField('fiscalNumber', person.documentNumber, true, currentPersonId);
+    await checkUniqueField('documentNumber', person.documentNumber, true, currentPersonId);
+    await checkUniqueField('identityNumber', person.identityNumber, true, currentPersonId);
+    await checkUniqueField('socialSecurityNumber', person.socialSecurityNumber, true, currentPersonId);
+    await checkUniqueField('beneficiaryNumber', person.beneficiaryNumber, true, currentPersonId);
+    await checkUniqueField('pan', person.pan, true, currentPersonId);
 
     // unique
+    upsertPerson.id = currentPersonId;
+    upsertPerson.fiscalNumber = person.fiscalNumber;
     upsertPerson.documentNumber = person.documentNumber;
     upsertPerson.identityNumber = person.identityNumber;
-    upsertPerson.fiscalNumber = person.fiscalNumber;
     upsertPerson.socialSecurityNumber = person.socialSecurityNumber;
     upsertPerson.beneficiaryNumber = person.beneficiaryNumber;
     upsertPerson.pan = person.pan;
@@ -297,7 +307,7 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     } else {
       person.attributes.push(attribute);
     }
-    
+
     // save person
     await person.save();
     // Emit the Event

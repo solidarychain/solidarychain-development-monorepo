@@ -7,24 +7,24 @@ import { Field, InputType } from 'type-graphql';
 export class UpdateCauseInput {
   @Field()
   @IsUUID()
-  public id: string;
+  id: string;
   
   @Field({ nullable: true })
-  public email?: string;
+  email?: string;
 
   @Field(type => [String], { nullable: true })
   @Optional()
-  public ambassadors: string[];
+  ambassadors: string[];
 
   @Field(type => [String], { nullable: true })
   @IsOptional()
-  public tags: string[];
+  tags: string[];
 
   @Field(type => GraphQLJSONObject, { nullable: true })
   @IsOptional()
-  public metaData: any;
+  metaData: any;
 
   @Field(type => GraphQLJSONObject, { nullable: true })
   @IsOptional()
-  public metaDataInternal: any;
+  metaDataInternal: any;
 }

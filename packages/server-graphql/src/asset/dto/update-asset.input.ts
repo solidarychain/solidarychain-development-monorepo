@@ -7,21 +7,21 @@ import { Field, InputType } from 'type-graphql';
 export class UpdateAssetInput {
   @Field()
   @IsUUID()
-  public id: string;
+  id: string;
 
   @Field(type => [String], { nullable: true })
   @Optional()
-  public ambassadors: string[];
+  ambassadors: string[];
 
   @Field(type => [String], { nullable: true })
   @IsOptional()
-  public tags: string[];
+  tags: string[];
 
   @Field(type => GraphQLJSONObject, { nullable: true })
   @IsOptional()
-  public metaData: any;
+  metaData: any;
 
   @Field(type => GraphQLJSONObject, { nullable: true })
   @IsOptional()
-  public metaDataInternal: any;
+  metaDataInternal: any;
 }

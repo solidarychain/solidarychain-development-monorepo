@@ -10,66 +10,66 @@ export class NewTransactionInput {
   @IsUUID()
   @Field({ nullable: true })
   @IsOptional()
-  public id: string;
+  id: string;
 
   // above is equal dto/new-x.input.ts and models/x.model.ts
   // minus input and output type, and new-x-input don't have participant, identities and createdDate
 
   @Field()
   @IsDefined()
-  public transactionType: TransactionType;
+  transactionType: TransactionType;
 
   @Field()
   @IsDefined()
-  public resourceType: ResourceType;
+  resourceType: ResourceType;
 
   // WARN different from model, must be a GraphQLJSONObject in input and EntityResult in model
   @Field(type => GraphQLJSONObject)
   @IsDefined()
-  public input?: Entity;
+  input?: Entity;
 
   // WARN different from model, must be a GraphQLJSONObject in input and EntityResult in model
   @Field(type => GraphQLJSONObject)
   @IsDefined()
-  public output?: Entity;
+  output?: Entity;
 
   @Field({ nullable: true })
   @IsNumber()
   @IsOptional()
-  public quantity?: number;
+  quantity?: number;
 
   @Field({ nullable: true })
   @IsOptional()
-  public currency: string;
+  currency: string;
 
   @Field({ nullable: true })
   @IsOptional()
-  public location: string;
+  location: string;
 
   @Field(type => [String], { nullable: true })
   @IsOptional()
-  public tags?: string[];
+  tags?: string[];
 
   @Field(type => GraphQLJSONObject, { nullable: true })
   @IsOptional()
-  public metaData: any;
+  metaData: any;
 
   @Field(type => GraphQLJSONObject, { nullable: true })
   @IsOptional()
-  public metaDataInternal: any;
+  metaDataInternal: any;
 
   // this is used to pass loggedIn userId to fabric
   @Field({ nullable: true })
   @IsOptional()
-  public loggedPersonId: string;
+  loggedPersonId: string;
 
   // optional: transfer assets
 
   @Field({ nullable: true })
   @IsOptional()
-  public assetId: string;
+  assetId: string;
 
   // optional: transfer goods, use goods here to be more intuitive for graphql users
   @Field(type => [GoodsInput], { nullable: true })
-  public goods?: GoodsInput[];
+  goods?: GoodsInput[];
 }

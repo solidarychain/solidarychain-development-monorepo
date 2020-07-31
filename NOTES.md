@@ -280,6 +280,20 @@ $ npx lerna run start:debug --scope @solidary-chain/server-graphql --stream
 }
 ```
 
+checkUniqueField, ignoring current id
+
+```json
+{
+  "selector": {
+    "type": "com.chain.solidary.model.person",
+    "fiscalNumber": "182692002",
+    "_id": {
+      "$ne": "ead03d85-a3e7-40dc-bb7e-2074d442c6a2"
+    }
+  }
+}
+```
+
 ### Endpoints
 
 - <http://localhost:3000/participant/>
