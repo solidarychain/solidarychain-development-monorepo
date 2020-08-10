@@ -59,7 +59,6 @@ export class CauseResolver {
     // inject username into newCauseData
     newCauseData.loggedPersonId = user.userId;
     const cause = await this.causeService.create(newCauseData);
-    // fire subscription
     pubSub.publish(SubscriptionEvent.causeAdded, { [SubscriptionEvent.causeAdded]: cause });
     return cause;
   }
@@ -69,8 +68,7 @@ export class CauseResolver {
     @Args('updateCauseData') updateCauseData: UpdateCauseInput,
   ): Promise<Cause> {
     const cause = await this.causeService.update(updateCauseData);
-    // fire subscription
-    pubSub.publish(SubscriptionEvent.causeAdded, { [SubscriptionEvent.causeAdded]: cause });
+    pubSub.publish(SubscriptionEvent.causeUpdated, { [SubscriptionEvent.causeUpdated]: cause });
     return cause;
   }
 

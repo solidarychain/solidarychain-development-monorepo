@@ -54,7 +54,10 @@ press_any_key() {
 # VERSION="1.10"
 # production network
 # get current production netwrok instantiated chaincode `ssh -t 192.168.1.61 "docker exec cli peer chaincode list -C channelall --instantiated" | grep solidary-chain-chaincode`
-VERSION="1.5"
+# get chaincode peer id `docker ps --filter "name=net-peer0.org1.example.com-solidary-chain-chaincode-1.7" -q`
+# enter container `docker exec -it $(docker ps --filter "name=net-peer0.org1.example.com-solidary-chain-chaincode-1.8" -q) bash`
+# log container `docker container logs -f net-peer0.org1.example.com-solidary-chain-chaincode-1.8`
+VERSION="1.9"
 # 1 build with hurley, 0 only when we want to skip restart hurley network to build the chaincode, with 0 we dont reBuild chaincode, good for just deploy to networks
 BUILD_WITH_HURLEY=1
 

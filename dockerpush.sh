@@ -17,7 +17,7 @@ else
   echo push : [${DOCKER_IMAGE_PATH}:latest]
   docker tag ${DOCKER_IMAGE_PATH} ${DOCKER_IMAGE_PATH}:latest
   docker push ${DOCKER_IMAGE_PATH}:latest
-  read -n 1 -s -r -p "Press any key to continue";printf "\n"
+  # read -n 1 -s -r -p "Press any key to continue";printf "\n"
   echo push : [${DOCKER_IMAGE_PATH}:${DOCKER_IMAGE_VERSION}]
   docker tag ${DOCKER_IMAGE_PATH} ${DOCKER_IMAGE_PATH}:${DOCKER_IMAGE_VERSION}
   docker push ${DOCKER_IMAGE_PATH}:${DOCKER_IMAGE_VERSION}

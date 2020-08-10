@@ -51,7 +51,6 @@ export class AssetResolver {
     // inject username into newAssetData
     newAssetData.loggedPersonId = user.userId;
     const asset = await this.assetService.create(newAssetData);
-    // fire subscription
     pubSub.publish(SubscriptionEvent.assetAdded, { [SubscriptionEvent.assetAdded]: asset });
     return asset;
   }
@@ -61,8 +60,7 @@ export class AssetResolver {
     @Args('updateAssetData') updateAssetData: UpdateAssetInput,
   ): Promise<Asset> {
     const asset = await this.assetService.update(updateAssetData);
-    // fire subscription
-    pubSub.publish(SubscriptionEvent.assetAdded, { [SubscriptionEvent.assetAdded]: asset });
+    pubSub.publish(SubscriptionEvent.assetUpdated, { [SubscriptionEvent.assetUpdated]: asset });
     return asset;
   }
 

@@ -51,7 +51,6 @@ export class TransactionResolver {
     // inject username into newTransactionData
     newTransactionData.loggedPersonId = user.userId;
     const transaction = await this.transactionService.create(newTransactionData);
-    // fire subscription
     pubSub.publish(SubscriptionEvent.transactionAdded, { [SubscriptionEvent.transactionAdded]: transaction });
     return transaction;
   }
@@ -61,7 +60,6 @@ export class TransactionResolver {
     @Args('updateTransactionData') updateTransactionData: UpdateTransactionInput,
   ): Promise<Transaction> {
     const transaction = await this.transactionService.update(updateTransactionData);
-    // fire subscription
     pubSub.publish(SubscriptionEvent.transactionUpdated, { [SubscriptionEvent.transactionUpdated]: transaction });
     return transaction;
   }

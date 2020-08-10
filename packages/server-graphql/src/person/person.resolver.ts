@@ -34,6 +34,7 @@ export class PersonResolver {
     return this.personService.findByAttribute(getByAttributeInput, personsArgs);
   }
 
+  @UseGuards(GqlAuthGuard)
   @Query(returns => [Person])
   personComplexQuery(
     @Args('getByComplexQueryInput') getByComplexQueryInput: GetByComplexQueryInput,
@@ -102,46 +103,47 @@ export class PersonResolver {
     @Args('personId') personId: string,
     @Args('addPersonAttributeData') addPersonAttributeData: AddPersonAttributeInput,
   ): Promise<Person> {
-    const person = await this.personService.addAttribute(personId, addPersonAttributeData);
+    const person = await this.personService.addAttribute(personId, addPersonAttributeData);  
+    pubSub.publish(SubscriptionEvent.personAttributeAdded, { [SubscriptionEvent.personAttributeAdded]: person });
     return person;
   }
 
+  @UseGuards(GqlAuthGuard)
   @Mutation(returns => Person)
   async personUpdate(
     @Args('updatePersonData') updatePersonData: UpdatePersonInput,
   ): Promise<Person> {
     const person = await this.personService.update(updatePersonData);
-    // fire subscription
     pubSub.publish(SubscriptionEvent.personUpdated, { [SubscriptionEvent.personUpdated]: person });
     return person;
   }
 
+  @UseGuards(GqlAuthGuard)
   @Mutation(returns => Person)
   async personUpdatePassword(
     @Args('updatePersonPasswordData') updatePersonPasswordData: UpdatePersonPasswordInput,
   ): Promise<Person> {
     const person = await this.personService.updatePassword(updatePersonPasswordData);
-    // fire subscription
     pubSub.publish(SubscriptionEvent.personPasswordUpdated, { [SubscriptionEvent.personPasswordUpdated]: person });
     return person;
   }
 
+  @UseGuards(GqlAuthGuard)
   @Mutation(returns => Person)
   async personUpdateProfile(
     @Args('updatePersonProfileData') updatePersonProfileData: UpdatePersonProfileInput,
   ): Promise<Person> {
     const person = await this.personService.updateProfile(updatePersonProfileData);
-    // fire subscription
     pubSub.publish(SubscriptionEvent.personProfileUpdated, { [SubscriptionEvent.personProfileUpdated]: person });
     return person;
   }
 
+  @UseGuards(GqlAuthGuard)
   @Mutation(returns => Person)
   async personUpsertCitizenCard(
     @Args('upsertCitizenCardData') upsertCitizenCardData: UpsertCitizenCardInput,
   ): Promise<Person> {
     const person = await this.personService.upsertCitizenCard(upsertCitizenCardData);
-    // fire subscription
     pubSub.publish(SubscriptionEvent.personCitizenCardUpserted, { [SubscriptionEvent.personCitizenCardUpserted]: person });
     return person;
   }

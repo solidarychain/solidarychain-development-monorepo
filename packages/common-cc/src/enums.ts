@@ -36,5 +36,4 @@ export enum ChaincodeEvent {
   // Transaction
   TransactionCreatedEvent = "TransactionCreatedEvent",
   TransactionUpdatedEvent = "TransactionUpdatedEvent",
-  TransactionAssetChangeOwnerEvent = 'TransactionAssetChangeOwnerEvent',
 }

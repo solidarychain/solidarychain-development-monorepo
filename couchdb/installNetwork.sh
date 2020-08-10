@@ -1,9 +1,15 @@
 # load .env
 set -a
-. ./network/.env
+source ../solidarychain-production-network/fabric-samples/5node2channel/.env
 set +a
 
+CHAINCODE_NAME=solidary-chain-chaincode
 COUCHDB=$(dirname "$0")
+COUCHDB_PROTOCOL=http
+COUCHDB_PEER_PORTS=( 5984 6984 )
+COUCHDB_USER=admin
+COUCHDB_PASS=admin
+
 DB_PATH="${CHANNEL_ALL}_${CHAINCODE_NAME}"
 echo "installing template views and indexes on DB_PATH:${DB_PATH}"
 

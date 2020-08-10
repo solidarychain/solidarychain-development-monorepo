@@ -63,7 +63,6 @@ export class ParticipantResolver {
     // inject username into newTransactionData
     newParticipantData.loggedPersonId = user.userId;
     const participant = await this.participantService.create(newParticipantData);
-    // fire subscription
     pubSub.publish(SubscriptionEvent.participantAdded, { [SubscriptionEvent.participantAdded]: participant });
     return participant;
   }
@@ -73,7 +72,6 @@ export class ParticipantResolver {
     @Args('updateParticipantData') updateParticipantData: UpdateParticipantInput,
   ): Promise<Participant> {
     const participant = await this.participantService.update(updateParticipantData);
-    // fire subscription
     pubSub.publish(SubscriptionEvent.participantUpdated, { [SubscriptionEvent.participantUpdated]: participant });
     return participant;
   }
@@ -84,7 +82,6 @@ export class ParticipantResolver {
   ): Promise<Participant> {
     debugger;
     const participant = await this.participantService.changeIdentity(changeParticipantIdentityData);
-    // fire subscription
     pubSub.publish(SubscriptionEvent.participantIdentityChanged, { [SubscriptionEvent.participantIdentityChanged]: participant });
     return participant;
   }
