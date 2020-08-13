@@ -10,7 +10,6 @@ import { Routes } from './Routes';
 interface Props { }
 
 export const App: React.FC<Props> = () => {
-  debugger;
   // context state hook
   const [state, dispatch] = useStateValue();
   // state hook

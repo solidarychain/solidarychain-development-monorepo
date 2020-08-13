@@ -310,8 +310,7 @@ mutation causeUpdate($updateCauseData: UpdateCauseInput!) {
 			"grey",
 			"pink",
 			"blue",
-      "white",
-      "purple"
+      "white"
 		],
 		"metaData": {
 			"key": "valueUpdated"
@@ -523,7 +522,7 @@ mutation personUpsertCitizenCard($upsertCitizenCardData: UpsertCitizenCardInput!
 		"expirationDate": "1970-01-01T17:13:05.472Z",
 		"emittingEntity": "República Portuguesa",
 		"requestLocation": "CRCiv. Figueira da Foz.",
-		"otherInformation": "some random info joe, working with upsert"
+		"otherInformation": "some random info joe"
 	}
 }
 

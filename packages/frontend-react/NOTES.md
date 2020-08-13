@@ -1,6 +1,7 @@
 # NOTES : Warning : Internal notes, subject to errors and typos
 
 - [NOTES : Warning : Internal notes, subject to errors and typos](#notes--warning--internal-notes-subject-to-errors-and-typos)
+  - [TLDR](#tldr)
   - [Links](#links)
     - [React Apollo](#react-apollo)
     - [GraphQL CodeGen](#graphql-codegen)
@@ -28,6 +29,12 @@
   - [When we change cc models like adding new props to model...missing the following properties from type  'Person': identities, createdDate](#when-we-change-cc-models-like-adding-new-props-to-modelmissing-the-following-properties-from-type-person-identities-createddate)
   - [Error: GraphQL error: [object Object]](#error-graphql-error-object-object)
   - [React router Property 'message' does not exist on type '{}'.  TS2339](#react-router-property-message-does-not-exist-on-type--ts2339)
+
+## TLDR
+
+1. run frontend with `npm run pkg:react:start`
+2. check server `CORS_ORIGIN_REACT_FRONTEND`, if `CORS_ORIGIN_REACT_FRONTEND=https://app.solidarychain.com:3000` use same uri in browser, else we have CORS problems
+3. test login
 
 ## Links
 
@@ -390,7 +397,7 @@ add to `packages/server-graphql/.env`
 
 ```conf
 # required to define when we don't use default origin http://localhost:3000
-# CORS_ORIGIN_REACT_FRONTEND=https://app.solidarychain.com
+# CORS_ORIGIN_REACT_FRONTEND=https://app.solidarychain.com:3000
 ```
 
 add `corsOriginReactFrontend`  to `packages/server-graphql/src/env.ts`
