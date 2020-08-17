@@ -4,6 +4,8 @@
   - [TLDR](#tldr)
   - [Links](#links)
     - [React Apollo](#react-apollo)
+    - [React Apollo / Migration Project](#react-apollo--migration-project)
+    - [Fix1: Type 'ApolloLink' is not assignable to type 'ApolloLink | RequestHandler'. Type 'ApolloLink' is missing the following properties from type 'ApolloLink': onError, setOnError](#fix1-type-apollolink-is-not-assignable-to-type-apollolink--requesthandler-type-apollolink-is-missing-the-following-properties-from-type-apollolink-onerror-setonerror)
     - [GraphQL CodeGen](#graphql-codegen)
     - [Ben Awad](#ben-awad)
   - [Quick Commands](#quick-commands)
@@ -45,6 +47,21 @@
 - [Apollo: Authentication](https://www.apollographql.com/docs/react/networking/authentication/)
 - [Apollo client query error: “Network error: Failed to fetch” How to troubleshoot?](https://stackoverflow.com/questions/49394718/apollo-client-query-error-network-error-failed-to-fetch-how-to-troubleshoot)
 - [Apollo Client, now with React Hooks](https://blog.apollographql.com/apollo-client-now-with-react-hooks-676d116eeae2)
+
+### React Apollo / Migration Project
+
+- [Migrating to Apollo Client 3.0](https://www.apollographql.com/docs/react/migrating/apollo-client-3-migration/)
+
+### Fix1: Type 'ApolloLink' is not assignable to type 'ApolloLink | RequestHandler'. Type 'ApolloLink' is missing the following properties from type 'ApolloLink': onError, setOnError
+
+- [Type 'ApolloLink' is not assignable to type 'ApolloLink'](https://github.com/apollographql/apollo-client/issues/6011)
+
+> The solution for me was to use the links included in @apollo/client instead of the @apollo/link-* packages. See the part about links in the migration docs for more [information](https://www.apollographql.com/docs/react/migrating/apollo-client-3-migration/#apollo-link-)
+
+```typescript
+// import { onError } from 'apollo-link-error';
+import { onError } from '@apollo/link-error';
+```
 
 ### GraphQL CodeGen
 

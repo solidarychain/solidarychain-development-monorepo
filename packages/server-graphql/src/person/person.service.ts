@@ -114,35 +114,35 @@ export class PersonService {
     }
   }
 
-  async findAll(personArgs: PaginationArgs): Promise<Person[]> {
+  async findAll(paginationArgs: PaginationArgs): Promise<Person[]> {
     // get convector model
     const flatConvectorModel: Array<FlatConvectorModel<PersonConvectorModel[]>> = await PersonControllerBackEnd.getAll();
     // convert flat convector model to convector model
     const convectorModel: PersonConvectorModel[] = flatConvectorModel.map((e: PersonConvectorModel) => new PersonConvectorModel(e));
     // call common find method
-    const model: Person[] = await this.findBy(convectorModel, personArgs) as Person[];
+    const model: Person[] = await this.findBy(convectorModel, paginationArgs) as Person[];
     // return model
     return model;
   }
 
-  async findByAttribute({ id, content }: GetByAttributeInput, personArgs: PaginationArgs): Promise<Person | Person[]> {
+  async findByAttribute({ id, content }: GetByAttributeInput, paginationArgs: PaginationArgs): Promise<Person | Person[]> {
     // get fabric model with _props
     const fabricModel: PersonConvectorModel[] = await PersonControllerBackEnd.getByAttribute(id, content) as PersonConvectorModel[];
     // convert fabric model to convector model (remove _props)
     const convectorModel: PersonConvectorModel[] = fabricModel.map((e: PersonConvectorModel) => new PersonConvectorModel(e));
     // call common find method
-    const model: Person[] = await this.findBy(convectorModel, personArgs) as Person[];
+    const model: Person[] = await this.findBy(convectorModel, paginationArgs) as Person[];
     // return model
     return model;
   }
 
-  async findComplexQuery(getByComplexQueryInput: GetByComplexQueryInput, personArgs: PaginationArgs): Promise<Person | Person[]> {
+  async findComplexQuery(getByComplexQueryInput: GetByComplexQueryInput, paginationArgs: PaginationArgs): Promise<Person | Person[]> {
     // get fabric model with _props
     const fabricModel: Array<FlatConvectorModel<PersonConvectorModel>> = await PersonControllerBackEnd.getComplexQuery(getByComplexQueryInput) as PersonConvectorModel[];
     // convert fabric model to convector model (remove _props)
     const convectorModel: PersonConvectorModel[] = fabricModel.map((e: PersonConvectorModel) => new PersonConvectorModel(e));
     // call common find method
-    const model: Person[] = await this.findBy(convectorModel, personArgs) as Person[];
+    const model: Person[] = await this.findBy(convectorModel, paginationArgs) as Person[];
     // return model
     return model;
   }
@@ -182,7 +182,7 @@ export class PersonService {
   /**
    * shared findBy method
    */
-  async findBy(convectorModel: PersonConvectorModel | PersonConvectorModel[], personArgs: PaginationArgs): Promise<Person | Person[]> {
+  async findBy(convectorModel: PersonConvectorModel | PersonConvectorModel[], paginationArgs: PaginationArgs): Promise<Person | Person[]> {
     try {
       // working in array mode
       if (Array.isArray(convectorModel)) {
@@ -196,8 +196,8 @@ export class PersonService {
           }
         });
         // require to map fabric model to graphql Person[]
-        return (personArgs)
-          ? convectorModel.splice(personArgs.skip, personArgs.take) as unknown as Person[]
+        return (paginationArgs)
+          ? convectorModel.splice(paginationArgs.skip, paginationArgs.take) as unknown as Person[]
           : convectorModel as unknown as Person[];
       } else {
         // only convert attributes if have attributes array

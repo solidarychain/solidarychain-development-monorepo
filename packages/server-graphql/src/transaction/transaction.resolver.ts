@@ -19,17 +19,17 @@ export class TransactionResolver {
 
   @Query(returns => [Transaction])
   transactions(
-    @Args() transactionsArgs: PaginationArgs,
+    @Args() paginationArgs: PaginationArgs,
   ): Promise<Transaction[]> {
-    return this.transactionService.findAll(transactionsArgs);
+    return this.transactionService.findAll(paginationArgs);
   }
 
   @Query(returns => [Transaction])
   transactionComplexQuery(
     @Args('getByComplexQueryInput') getByComplexQueryInput: GetByComplexQueryInput,
-    @Args() transactionsArgs: PaginationArgs,
+    @Args() paginationArgs: PaginationArgs,
   ): Promise<Transaction | Transaction[]> {
-    return this.transactionService.findComplexQuery(getByComplexQueryInput, transactionsArgs);
+    return this.transactionService.findComplexQuery(getByComplexQueryInput, paginationArgs);
   }
 
   @Query(returns => Transaction)

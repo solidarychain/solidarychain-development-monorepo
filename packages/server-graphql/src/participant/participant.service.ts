@@ -64,13 +64,13 @@ export class ParticipantService {
     }
   }
 
-  async findComplexQuery(getByComplexQueryInput: GetByComplexQueryInput, participantArgs: PaginationArgs): Promise<Participant | Participant[]> {
+  async findComplexQuery(getByComplexQueryInput: GetByComplexQueryInput, paginationArgs: PaginationArgs): Promise<Participant | Participant[]> {
     // get fabric model with _props
     const fabricModel: Array<FlatConvectorModel<ParticipantConvectorModel>> = await ParticipantControllerBackEnd.getComplexQuery(getByComplexQueryInput) as ParticipantConvectorModel[];
     // convert fabric model to convector model (remove _props)
     const convectorModel: ParticipantConvectorModel[] = fabricModel.map((e: ParticipantConvectorModel) => new ParticipantConvectorModel(e));
     // call common find method
-    const model: Participant[] = await this.findBy(convectorModel, participantArgs) as Participant[];
+    const model: Participant[] = await this.findBy(convectorModel, paginationArgs) as Participant[];
     // return model
     return model;
   }

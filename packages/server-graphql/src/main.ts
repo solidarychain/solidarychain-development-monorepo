@@ -10,8 +10,7 @@ async function bootstrap() {
     ApplicationModule, {
     httpsOptions,
     logger: ['error', 'warn'],
-  },
-  );
+  });
   // rest server cors, before any middleware,
   // warn cors for graphql is configured in ApplicationModule
   app.enableCors({

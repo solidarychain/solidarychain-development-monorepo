@@ -5,7 +5,7 @@ export const paginateArray = (data: any, skip: number, take: number) => {
 };
 
 /**
- * map object keys to lowercase
+ * map object keys to lowercase, used for ex to convert header keys to lowercase
  * @param obj
  */
 export const mapKeysToLowerCase = (obj: object) => {

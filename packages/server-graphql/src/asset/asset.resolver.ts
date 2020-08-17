@@ -19,17 +19,17 @@ export class AssetResolver {
 
   @Query(returns => [Asset])
   assets(
-    @Args() assetsArgs: PaginationArgs,
+    @Args() paginationArgs: PaginationArgs,
   ): Promise<Asset[]> {
-    return this.assetService.findAll(assetsArgs);
+    return this.assetService.findAll(paginationArgs);
   }
 
   @Query(returns => [Asset])
   assetComplexQuery(
     @Args('getByComplexQueryInput') getByComplexQueryInput: GetByComplexQueryInput,
-    @Args() assetsArgs: PaginationArgs,
+    @Args() paginationArgs: PaginationArgs,
   ): Promise<Asset | Asset[]> {
-    return this.assetService.findComplexQuery(getByComplexQueryInput, assetsArgs);
+    return this.assetService.findComplexQuery(getByComplexQueryInput, paginationArgs);
   }
 
   @Query(returns => Asset)

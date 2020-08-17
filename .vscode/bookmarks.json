@@ -43,7 +43,7 @@
 		"path": "$ROOTPATH$/packages/frontend-react/src/index.tsx",
 		"bookmarks": [
 			{
-				"line": 110,
+				"line": 108,
 				"column": 11,
 				"label": ""
 			}
@@ -108,7 +108,7 @@
 		"path": "$ROOTPATH$/packages/frontend-react/NOTES.md",
 		"bookmarks": [
 			{
-				"line": 264,
+				"line": 281,
 				"column": 0,
 				"label": ""
 			}
@@ -118,7 +118,7 @@
 		"path": "$ROOTPATH$/packages/server-graphql/src/auth/auth.resolver.ts",
 		"bookmarks": [
 			{
-				"line": 43,
+				"line": 42,
 				"column": 0,
 				"label": ""
 			}

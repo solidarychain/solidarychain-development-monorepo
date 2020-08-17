@@ -20,27 +20,27 @@ export class PersonResolver {
   @UseGuards(GqlAuthGuard)
   @Query(returns => [Person])
   async persons(
-    @Args() personsArgs: PaginationArgs,
+    @Args() paginationArgs: PaginationArgs,
   ): Promise<Person[]> {
-    return this.personService.findAll(personsArgs);
+    return this.personService.findAll(paginationArgs);
   }
 
   @UseGuards(GqlAuthGuard)
   @Query(returns => [Person])
   async personByAttribute(
     @Args('getByAttributeInput') getByAttributeInput: GetByAttributeInput,
-    @Args() personsArgs: PaginationArgs,
+    @Args() paginationArgs: PaginationArgs,
   ): Promise<Person | Person[]> {
-    return this.personService.findByAttribute(getByAttributeInput, personsArgs);
+    return this.personService.findByAttribute(getByAttributeInput, paginationArgs);
   }
 
   @UseGuards(GqlAuthGuard)
   @Query(returns => [Person])
   personComplexQuery(
     @Args('getByComplexQueryInput') getByComplexQueryInput: GetByComplexQueryInput,
-    @Args() personsArgs: PaginationArgs,
+    @Args() paginationArgs: PaginationArgs,
   ): Promise<Person | Person[]> {
-    return this.personService.findComplexQuery(getByComplexQueryInput, personsArgs);
+    return this.personService.findComplexQuery(getByComplexQueryInput, paginationArgs);
   }
 
   @UseGuards(GqlAuthGuard)
