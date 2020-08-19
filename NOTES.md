@@ -2960,7 +2960,7 @@ $ USER=admin
 $ FILE_PATH=/srv/docker/hyperledger-fabric-extra_hosts-5orgs/fabric-samples/5node2channel/wallet/fabcar/javascript/generated/wallets/.hfc-org1/${USER}
 $ FINGERPRINT=$(node -e "console.log(JSON.parse(require('fs').readFileSync('${FILE_PATH}', 'utf8')).enrollment.identity.certificate)" | openssl x509 -fingerprint -noout | cut -d '=' -f2 ;)
 # wallet has other fingerprint
-$ echo $FINGERPRINT 
+$ echo ${FINGERPRINT}
 10:0A:75:F5:65:EB:3B:A4:0F:F7:35:32:D2:47:40:D2:70:7F:B3:2D
 # from graphql and wallet have the same fingerprint
 10:0A:75:F5:65:EB:3B:A4:0F:F7:35:32:D2:47:40:D2:70:7F:B3:2D
@@ -2982,6 +2982,8 @@ after we change gov fingerprint we have
   }
 ],
 ```
+
+now admin 
 
 ## Debug restartEnv.sh : chaincode works in debug bug not with restartEnv.sh
 
