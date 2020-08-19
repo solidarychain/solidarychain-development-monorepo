@@ -57,7 +57,7 @@ press_any_key() {
 # get chaincode peer id `docker ps --filter "name=net-peer0.org1.example.com-solidary-chain-chaincode-1.7" -q`
 # enter container `docker exec -it $(docker ps --filter "name=net-peer0.org1.example.com-solidary-chain-chaincode-1.8" -q) bash`
 # log container `docker container logs -f net-peer0.org1.example.com-solidary-chain-chaincode-1.8`
-VERSION="1.9"
+VERSION="1.0"
 # 1 build with hurley, 0 only when we want to skip restart hurley network to build the chaincode, with 0 we dont reBuild chaincode, good for just deploy to networks
 BUILD_WITH_HURLEY=1
 
@@ -168,8 +168,9 @@ if [ "${VERSION}" == "1.0" ]; then
   echo "install couchdb views and indexes..."
   ./couchdb/installNetwork.sh
 
-  echo "bring Production Network Files"
-  ./bringProductionNetworkFiles.sh
+  # not used after we move network files to repo
+  # echo "bring Production Network Files"
+  # ./bringProductionNetworkFiles.sh
 
   echo "seed ledger with data..."
   scp seed.env ${PEER0_ORG1_IP}:/tmp

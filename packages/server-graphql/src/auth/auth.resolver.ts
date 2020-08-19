@@ -3,12 +3,11 @@ import { Args, Mutation, Resolver, Subscription, Context } from '@nestjs/graphql
 import { PubSub } from 'apollo-server-express';
 import { AuthService } from './auth.service';
 import { LoginPersonInput } from '../person/dto';
-import { AccessToken } from './models';
+import { AccessToken, PersonLoginResponse } from './models';
 import { GqlLocalAuthGuard } from './guards';
 import { GqlContext } from '../types';
 import { UsersService } from '../users/users.service';
 import { Person } from '../person/models/person.model';
-import { PersonLoginResponse } from './models';
 import { SubscriptionEvent } from '../common/types';
 
 const pubSub = new PubSub();
@@ -69,6 +68,6 @@ export class AuthResolver {
 
   @Subscription(returns => String)
   personLogged() {
-    return pubSub.asyncIterator('personLogged');
+    return pubSub.asyncIterator(SubscriptionEvent.personLogged);
   }
 }

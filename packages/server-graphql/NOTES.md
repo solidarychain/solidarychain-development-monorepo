@@ -415,6 +415,7 @@ $ npx lerna bootstrap
 - [Authorization middleware do not work with @Subscription()](https://github.com/nestjs/graphql/issues/82)
 - [nestjs/graphql:Support AuthGuard](https://github.com/nestjs/graphql/issues/48)
 - [A WebSocket client + server for GraphQL subscriptions](https://github.com/apollographql/subscriptions-transport-ws)
+
 - [Document how authentication guards for GraphQL Subscriptions work](https://github.com/nestjs/docs.nestjs.com/issues/394)
 
 > posted my solution to above link

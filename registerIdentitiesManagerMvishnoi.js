@@ -50,7 +50,7 @@ Fabric_Client.newDefaultKeyValueStore({
         console.log('Successfully loaded admin from persistence');
         admin_user = user_from_store;
     } else {
-        throw new Error('Failed to get admin.... run enrollAdmin.js');
+        throw new Error('Failed to get admin.... run enrollAdmin.js first');
     }
 
     // at this point we should have the admin user

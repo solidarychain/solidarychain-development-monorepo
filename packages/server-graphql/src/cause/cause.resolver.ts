@@ -19,25 +19,25 @@ export class CauseResolver {
 
   @Query(returns => [Cause])
   causes(
-    @Args() causesArgs: PaginationArgs,
+    @Args() paginationArgs: PaginationArgs,
   ): Promise<Cause[]> {
-    return this.causeService.findAll(causesArgs);
+    return this.causeService.findAll(paginationArgs);
   }
 
   @Query(returns => [Cause])
   causeOngoing(
     @Args('date') date: number,
-    @Args() causesArgs: PaginationArgs,
+    @Args() paginationArgs: PaginationArgs,
   ): Promise<Cause | Cause[]> {
-    return this.causeService.findOngoing(date, causesArgs);
+    return this.causeService.findOngoing(date, paginationArgs);
   }
 
   @Query(returns => [Cause])
   causeComplexQuery(
     @Args('getByComplexQueryInput') getByComplexQueryInput: GetByComplexQueryInput,
-    @Args() causesArgs: PaginationArgs,
+    @Args() paginationArgs: PaginationArgs,
   ): Promise<Cause | Cause[]> {
-    return this.causeService.findComplexQuery(getByComplexQueryInput, causesArgs);
+    return this.causeService.findComplexQuery(getByComplexQueryInput, paginationArgs);
   }
 
   @Query(returns => Cause)

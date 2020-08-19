@@ -20,11 +20,12 @@ export enum ActionType {
 
 // reducer types
 export enum Themes {
-  GREEN = 'GREEN',
-  BLUE = 'BLUE',
-  RED = 'RED',
-  BLACK = 'BLACK',
-  WHITE = 'WHITE',
+  GREEN = 'Green',
+  BLUE = 'Blue',
+  RED = 'Red',
+  BLACK = 'Black',
+  WHITE = 'White',
+  PINK = 'Pink',
 }
 
 export default (state: any, action: any) => {

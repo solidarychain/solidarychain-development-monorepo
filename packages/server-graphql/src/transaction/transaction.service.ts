@@ -64,13 +64,13 @@ export class TransactionService {
     }
   }
 
-  async findComplexQuery(getByComplexQueryInput: GetByComplexQueryInput, transactionArgs: PaginationArgs): Promise<Transaction | Transaction[]> {
+  async findComplexQuery(getByComplexQueryInput: GetByComplexQueryInput, paginationArgs: PaginationArgs): Promise<Transaction | Transaction[]> {
     // get fabric model with _props
     const fabricModel: Array<FlatConvectorModel<TransactionConvectorModel>> = await TransactionControllerBackEnd.getComplexQuery(getByComplexQueryInput) as TransactionConvectorModel[];
     // convert fabric model to convector model (remove _props)
     const convectorModel: TransactionConvectorModel[] = fabricModel.map((e: TransactionConvectorModel) => new TransactionConvectorModel(e));
     // call common find method
-    const model: Transaction[] = await this.findBy(convectorModel, transactionArgs) as Transaction[];
+    const model: Transaction[] = await this.findBy(convectorModel, paginationArgs) as Transaction[];
     // return model
     return model;
   }
@@ -88,13 +88,13 @@ export class TransactionService {
   /**
    * shared findBy method
    */
-  async findBy(convectorModel: TransactionConvectorModel | TransactionConvectorModel[], transactionArgs: PaginationArgs): Promise<Transaction | Transaction[]> {
+  async findBy(convectorModel: TransactionConvectorModel | TransactionConvectorModel[], paginationArgs: PaginationArgs): Promise<Transaction | Transaction[]> {
     try {
       // working in array mode
       if (Array.isArray(convectorModel)) {
         // require to map fabric model to graphql Transaction[]
-        return (transactionArgs)
-          ? convectorModel.splice(transactionArgs.skip, transactionArgs.take) as unknown as Transaction[]
+        return (paginationArgs)
+          ? convectorModel.splice(paginationArgs.skip, paginationArgs.take) as unknown as Transaction[]
           : convectorModel as unknown as Transaction[];
       } else {
         // only convert attributes if have attributes array

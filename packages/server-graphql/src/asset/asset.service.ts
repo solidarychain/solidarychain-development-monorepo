@@ -52,13 +52,13 @@ export class AssetService {
     }
   }
 
-  async findComplexQuery(getByComplexQueryInput: GetByComplexQueryInput, assetArgs: PaginationArgs): Promise<Asset | Asset[]> {
+  async findComplexQuery(getByComplexQueryInput: GetByComplexQueryInput, paginationArgs: PaginationArgs): Promise<Asset | Asset[]> {
     // get fabric model with _props
     const fabricModel: Array<FlatConvectorModel<AssetConvectorModel>> = await AssetControllerBackEnd.getComplexQuery(getByComplexQueryInput) as AssetConvectorModel[];
     // convert fabric model to convector model (remove _props)
     const convectorModel: AssetConvectorModel[] = fabricModel.map((e: AssetConvectorModel) => new AssetConvectorModel(e));
     // call common find method
-    const model: Asset[] = await this.findBy(convectorModel, assetArgs) as Asset[];
+    const model: Asset[] = await this.findBy(convectorModel, paginationArgs) as Asset[];
     // return model
     return model;
   }
@@ -76,13 +76,13 @@ export class AssetService {
   /**
    * shared findBy method
    */
-  async findBy(convectorModel: AssetConvectorModel | AssetConvectorModel[], assetArgs: PaginationArgs): Promise<Asset | Asset[]> {
+  async findBy(convectorModel: AssetConvectorModel | AssetConvectorModel[], paginationArgs: PaginationArgs): Promise<Asset | Asset[]> {
     try {
       // working in array mode
       if (Array.isArray(convectorModel)) {
         // require to map fabric model to graphql Asset[]
-        return (assetArgs)
-          ? convectorModel.splice(assetArgs.skip, assetArgs.take) as unknown as Asset[]
+        return (paginationArgs)
+          ? convectorModel.splice(paginationArgs.skip, paginationArgs.take) as unknown as Asset[]
           : convectorModel as unknown as Asset[];
       } else {
         // only convert attributes if have attributes array

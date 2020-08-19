@@ -19,17 +19,17 @@ export class ParticipantResolver {
 
   @Query(returns => [Participant])
   participants(
-    @Args() participantsArgs: PaginationArgs,
+    @Args() paginationArgs: PaginationArgs,
   ): Promise<Participant[]> {
-    return this.participantService.findAll(participantsArgs);
+    return this.participantService.findAll(paginationArgs);
   }
 
   @Query(returns => [Participant])
   participantComplexQuery(
     @Args('getByComplexQueryInput') getByComplexQueryInput: GetByComplexQueryInput,
-    @Args() participantsArgs: PaginationArgs,
+    @Args() paginationArgs: PaginationArgs,
   ): Promise<Participant | Participant[]> {
-    return this.participantService.findComplexQuery(getByComplexQueryInput, participantsArgs);
+    return this.participantService.findComplexQuery(getByComplexQueryInput, paginationArgs);
   }
 
   @Query(returns => Participant)

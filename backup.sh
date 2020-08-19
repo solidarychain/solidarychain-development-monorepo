@@ -8,7 +8,7 @@ mkdir $DIR -p
 
 touch .bak/$FILE_EXCLUDE
 touch .vscode/chrome/${FILE_EXCLUDE}
-touch node_modules/${FILE_EXCLUDE}
+# touch node_modules/${FILE_EXCLUDE}
 touch packages/common-cc/node_modules/${FILE_EXCLUDE}
 touch packages/participant-cc/node_modules/${FILE_EXCLUDE}
 touch packages/person-cc/node_modules/${FILE_EXCLUDE}

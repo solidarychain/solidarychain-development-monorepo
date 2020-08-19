@@ -23,7 +23,7 @@
 				"label": ""
 			},
 			{
-				"line": 3018,
+				"line": 3020,
 				"column": 28,
 				"label": ""
 			}
@@ -43,7 +43,7 @@
 		"path": "$ROOTPATH$/packages/frontend-react/src/index.tsx",
 		"bookmarks": [
 			{
-				"line": 110,
+				"line": 108,
 				"column": 11,
 				"label": ""
 			}
@@ -108,7 +108,7 @@
 		"path": "$ROOTPATH$/packages/frontend-react/NOTES.md",
 		"bookmarks": [
 			{
-				"line": 264,
+				"line": 281,
 				"column": 0,
 				"label": ""
 			}

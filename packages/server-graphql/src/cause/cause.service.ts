@@ -55,24 +55,24 @@ export class CauseService {
     }
   }
 
-  async findOngoing(date: number, causeArgs: PaginationArgs): Promise<Cause | Cause[]> {
+  async findOngoing(date: number, paginationArgs: PaginationArgs): Promise<Cause | Cause[]> {
     // get fabric model with _props
     const fabricModel: Array<FlatConvectorModel<CauseConvectorModel>> = await CauseControllerBackEnd.getOngoing(date) as CauseConvectorModel[];
     // convert fabric model to convector model (remove _props)
     const convectorModel: CauseConvectorModel[] = fabricModel.map((e: CauseConvectorModel) => new CauseConvectorModel(e));
     // call common find method
-    const model: Cause[] = await this.findBy(convectorModel, causeArgs) as Cause[];
+    const model: Cause[] = await this.findBy(convectorModel, paginationArgs) as Cause[];
     // return model
     return model;
   }
 
-  async findComplexQuery(getByComplexQueryInput: GetByComplexQueryInput, causeArgs: PaginationArgs): Promise<Cause | Cause[]> {
+  async findComplexQuery(getByComplexQueryInput: GetByComplexQueryInput, paginationArgs: PaginationArgs): Promise<Cause | Cause[]> {
     // get fabric model with _props
     const fabricModel: Array<FlatConvectorModel<CauseConvectorModel>> = await CauseControllerBackEnd.getComplexQuery(getByComplexQueryInput) as CauseConvectorModel[];
     // convert fabric model to convector model (remove _props)
     const convectorModel: CauseConvectorModel[] = fabricModel.map((e: CauseConvectorModel) => new CauseConvectorModel(e));
     // call common find method
-    const model: Cause[] = await this.findBy(convectorModel, causeArgs) as Cause[];
+    const model: Cause[] = await this.findBy(convectorModel, paginationArgs) as Cause[];
     // return model
     return model;
   }
@@ -90,13 +90,13 @@ export class CauseService {
   /**
    * shared findBy method
    */
-  async findBy(convectorModel: CauseConvectorModel | CauseConvectorModel[], causeArgs: PaginationArgs): Promise<Cause | Cause[]> {
+  async findBy(convectorModel: CauseConvectorModel | CauseConvectorModel[], paginationArgs: PaginationArgs): Promise<Cause | Cause[]> {
     try {
       // working in array mode
       if (Array.isArray(convectorModel)) {
         // require to map fabric model to graphql Cause[]
-        return (causeArgs)
-          ? convectorModel.splice(causeArgs.skip, causeArgs.take) as unknown as Cause[]
+        return (paginationArgs)
+          ? convectorModel.splice(paginationArgs.skip, paginationArgs.take) as unknown as Cause[]
           : convectorModel as unknown as Cause[];
       } else {
         // only convert attributes if have attributes array
