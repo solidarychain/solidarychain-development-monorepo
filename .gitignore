@@ -15,3 +15,5 @@ hurley-network-topology/
 .deleted-from-root/
 chaincode-solidary-chain-chaincode.tgz
 *.pak
+packages/server-graphql/network.env
+.deleted/

@@ -50,6 +50,11 @@ press_any_key() {
   # sleep ${SEC}
 }
 
+if [ $(node -v) != "v8.16.0" ]; then
+  echo "error! to prevent problems, use node v8.16.0"
+  exit 0
+fi
+
 # STARTER version 1.0 (occurs on cc:start)
 # following UPDATE versions (occure on cc:upgrade)
 # ibm auction network

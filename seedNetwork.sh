@@ -116,7 +116,7 @@ ${SLEEP}
 
 # add atributes has org1 / admin
 echo "adding attribute 'birth-year' to johndoe as the Big Government identity"
-PAYLOAD='{\"id\": \"birth-year\", \"certifierID\": \"'${GOV_ID}'\", \"content\": \"1993\", \"issuedDate\": \"1554239270\" }'
+PAYLOAD='{\"id\": \"birth-year\", \"certifierID\": \"'${GOV_ID}'\", \"content\": { \"data\": \"1951\", \"work\": \"true\" }, \"issuedDate\": \"1554239270\" }'
 ${BASE_CMD} -c "{ \"Args\" : [\"person_addAttribute\", \"${JOHN_ID}\", \"${PAYLOAD}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${JOHN_ID}\" ] }"
 ${SLEEP}
@@ -167,7 +167,7 @@ ID=${CAUSE_003}
 CAUSE_NAME="Cause003"
 INPUT_TYPE=${CONVECTOR_MODEL_PATH_PARTICIPANT}
 INPUT_ID=${MIT_ID}
-PAYLOAD='{\"id\":\"'${ID}'\",\"name\":\"'${NAME}'\",\"input\":{\"id\":\"'${INPUT_ID}'\",\"type\":\"'${INPUT_TYPE}'\"}}'
+PAYLOAD='{\"id\":\"'${ID}'\",\"name\":\"'${CAUSE_NAME}'\",\"input\":{\"id\":\"'${INPUT_ID}'\",\"type\":\"'${INPUT_TYPE}'\"}}'
 echo "create cause ${CAUSE_NAME}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"cause_create\", \"${PAYLOAD}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"cause_get\", \"${ID}\" ] }"
@@ -409,31 +409,6 @@ ${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\" ] }"
 ${SLEEP}
 
-# TODO: add INDEXES to complex filters all _id, all type, 
-
-# TOOD: complex filters
-
-# TODO: today its seems that when we create participants it will using wallets of org, org2 etc
-# see : https://gitlab.koakh.com/koakh/node-nestjs-hyperledger-convector-starter/blob/master/seed.sh
-
-# TODO: IT WORKS if we create person with -u admin and send graphql request with certifierID id gov, 
-# in this case "certifierID": "{{ participantIdGov }}" 
-
-# TODO used to change attribute : must be created with admin user
-# BF:DB:60:71:98:D2:73:D7:BF:67:A4:1F:D6:BB:15:41:5C:29:6B:68 !== 93:AB:69:90:70:9E:63:32:05:C0:CC:49:8B:A9:A6:55:DA:BC:75:9A
-# if (this.sender !== participantActiveIdentity.fingerprint) {
-#   throw new Error(`Requester identity cannot sign with the current certificate ${this.sender}. This means that the user requesting the tx and the user set in the param certifierId do not match`);
-# }
-# id:"c8ca045c-9d1b-407f-b9ae-31711758f2d0"
-# code:"gov"
-# fingerprint:"3B:BA:99:47:DD:68:90:A4:DA:01:34:93:B0:74:C0:91:F4:30:0D:5B"
-
-# Must be executed by user admin else it belongs to other participant.id/MIT_ID and NOT GOV_ID? - `-u admin`
-# npx hurl invoke ${CHAINCODE_NAME} person_get ${ID} -u admin
-# npx hurl invoke ${CHAINCODE_NAME} person_getByUsername ${USER_NAME} -u admin
-# npx hurl invoke ${CHAINCODE_NAME} person_getByFiscalnumber ${FISCAL_NUMBER} -u admin
-
-# TODO
 # update participant gov: all updateable fields, require to be user 'chaincodeAdmin' with 'admin' attribute
 AMBASSADORS_UPDATE='[\"'${MINI_ID}'\"]'
 EMAIL_UPDATE="gov-updated@.mail.com"
@@ -475,7 +450,7 @@ ${SLEEP}
 # person update mini: required admin user (acting has Gov)
 PAYLOAD='{\"id\":\"'${MINI_ID}'\",\"roles\":'${ROLES}',\"metaDataInternal\":'${METADATA_INTERNAL_UPDATE}'}'
 echo "update person ${MINI_ID}..."
-${BASE_CMD} -c "{ \"Args\" : [\"person_update\", \"${MINI_ID}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"person_update\", \"${PAYLOAD}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${MINI_ID}\" ] }"
 ${SLEEP}
 
@@ -511,6 +486,8 @@ ${BASE_CMD} -c "{ \"Args\" : [\"person_upsertCitizenCard\", \"${PAYLOAD}\" ] }"
 ${SLEEP}
 
 # person_upsertCitizenCard: new person : non existing user: required admin user (acting has Gov)
+# require to use id here to send to chainCode, Model com.chain.solidary.model.person is missing the 'id' property
+ID=bedbbbff-7dfc-4009-94bc-05d214a67757
 DOCUMENT_NUMBER="09119461 1 ZZ3"
 IDENTITY_NUMBER="091124620"
 FISCAL_NUMBER="181192152"
@@ -535,8 +512,8 @@ EXPIRATION_DATE=${DATE}
 EMITTING_ENTITY="República Portuguesa"
 REQUEST_LOCATION="CRCiv. Figueira da Foz"
 OTHER_INFORMATION="Other info...."
-PAYLOAD='{\"documentNumber\": \"'${DOCUMENT_NUMBER}'\",\"identityNumber\": \"'${IDENTITY_NUMBER}'\",\"fiscalNumber\": \"'${FISCAL_NUMBER}'\",\"socialSecurityNumber\": \"'${SOCIAL_SECURITY_NUMBER}'\",\"beneficiaryNumber\": \"'${BENEFICIARY_NUMBER}'\",\"pan\": \"'${PAN}'\",\"firstname\": \"'${FIRSTNAME}'\",\"lastname\": \"'${LASTNAME}'\",\"gender\": \"'${GENDER}'\",\"height\": \"'${HEIGHT}'\",\"fatherFirstname\": \"'${FATHER_FIRSTNAME}'\",\"fatherLastname\": \"'${FATHER_LASTNAME}'\",\"motherFirstname\": \"'${MOTHER_FIRSTNAME}'\",\"motherLastname\": \"'${MOTHER_LASTNAME}'\",\"birthDate\": \"'${BIRTH_DATE}'\",\"nationality\": \"'${NATIONALITY}'\",\"country\": \"'${COUNTRY}'\",\"documentType\": \"'${DOCUMENT_TYPE}'\",\"cardVersion\": \"'${CARD_VERSION}'\",\"emissionDate\": \"'${EMISSION_DATE}'\",\"expirationDate\": \"'${EXPIRATION_DATE}'\",\"emittingEntity\": \"'${EMITTING_ENTITY}'\",\"requestLocation\": \"'${REQUEST_LOCATION}'\",\"otherInformation\": \"'${OTHER_INFORMATION}'\"}'
-echo "upsertCitizenCard person ${MINI_ID}..."
+PAYLOAD='{\"id\":\"'${ID}'\",\"documentNumber\": \"'${DOCUMENT_NUMBER}'\",\"identityNumber\": \"'${IDENTITY_NUMBER}'\",\"fiscalNumber\": \"'${FISCAL_NUMBER}'\",\"socialSecurityNumber\": \"'${SOCIAL_SECURITY_NUMBER}'\",\"beneficiaryNumber\": \"'${BENEFICIARY_NUMBER}'\",\"pan\": \"'${PAN}'\",\"firstname\": \"'${FIRSTNAME}'\",\"lastname\": \"'${LASTNAME}'\",\"gender\": \"'${GENDER}'\",\"height\": \"'${HEIGHT}'\",\"fatherFirstname\": \"'${FATHER_FIRSTNAME}'\",\"fatherLastname\": \"'${FATHER_LASTNAME}'\",\"motherFirstname\": \"'${MOTHER_FIRSTNAME}'\",\"motherLastname\": \"'${MOTHER_LASTNAME}'\",\"birthDate\": \"'${BIRTH_DATE}'\",\"nationality\": \"'${NATIONALITY}'\",\"country\": \"'${COUNTRY}'\",\"documentType\": \"'${DOCUMENT_TYPE}'\",\"cardVersion\": \"'${CARD_VERSION}'\",\"emissionDate\": \"'${EMISSION_DATE}'\",\"expirationDate\": \"'${EXPIRATION_DATE}'\",\"emittingEntity\": \"'${EMITTING_ENTITY}'\",\"requestLocation\": \"'${REQUEST_LOCATION}'\",\"otherInformation\": \"'${OTHER_INFORMATION}'\"}'
+echo "upsertCitizenCard new person..."
 ${BASE_CMD} -c "{ \"Args\" : [\"person_upsertCitizenCard\", \"${PAYLOAD}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"person_getByFiscalnumber\", \"${FISCAL_NUMBER}\" ] }"
 ${SLEEP}
@@ -566,7 +543,8 @@ ${BASE_CMD} -c "{ \"Args\" : [\"person_updatePassword\", \"${PAYLOAD}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${MINI_ID}\" ] }"
 ${SLEEP}
 
-exit
+exit 0
+
 # complex filters
 
 # persisted "createdDate": "1582410746061", "name":"Big Government"
