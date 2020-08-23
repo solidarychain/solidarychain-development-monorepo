@@ -4,6 +4,7 @@
       "username"
     ]
   },
-  "name": "username-json-index",
+  "ddoc": "indexUsernameDoc",
+  "name": "indexUsername",
   "type": "json"
 }

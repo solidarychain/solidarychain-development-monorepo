@@ -4,6 +4,7 @@
       "quantity"
     ]
   },
-  "name": "quantity-json-index",
+  "ddoc": "indexQuantityDoc",
+  "name": "indexQuantity",
   "type": "json"
 }

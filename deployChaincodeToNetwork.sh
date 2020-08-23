@@ -2,7 +2,7 @@
 
 # before deploy if we need to build the chaincode we must have a running hurley network
 
-# TODO: clean up this file its a command mess
+# TODO: clean up this file
 
 DEPLOYMENT_PATH=/srv/docker/hyperledger-fabric-extra_hosts-5orgs/fabric-samples/5node2channel/deployment
 CHAINCODE_DEPLOYMENT_PATH=/src/github.com/hyperledger/fabric/peer
@@ -38,14 +38,16 @@ TGZ_PATH=chaincode-${CHAINCODE_CONVECTOR}
 GOV_ID=c8ca045c-9d1b-407f-b9ae-31711758f2d0
 GOV_CODE=gov
 GOV_NAME="Big Government"
+# seed script
+SCRIPT_SEED=seedNetworkMinimal.sh
 
 # press any key function
 press_any_key() {
-  # read -n 1 -s -r -p "Press any key to continue";printf "\\n"
-  # :;
-  SEC=2
-  echo "sleeping for ${SEC}sec..."
-  sleep ${SEC}
+  read -n 1 -s -r -p "Press any key to continue";printf "\\n"
+  :;
+  # SEC=2
+  # echo "sleeping for ${SEC}sec..."
+  # sleep ${SEC}
 }
 
 # STARTER version 1.0 (occurs on cc:start)
@@ -53,7 +55,7 @@ press_any_key() {
 # ibm auction network
 # VERSION="1.10"
 # production network
-# get current production netwrok instantiated chaincode `ssh -t 192.168.1.61 "docker exec cli peer chaincode list -C channelall --instantiated" | grep solidary-chain-chaincode`
+# get current production network instantiated chaincode `ssh -t 192.168.1.61 "docker exec cli peer chaincode list -C channelall --instantiated" | grep solidary-chain-chaincode`
 # get chaincode peer id `docker ps --filter "name=net-peer0.org1.example.com-solidary-chain-chaincode-1.7" -q`
 # enter container `docker exec -it $(docker ps --filter "name=net-peer0.org1.example.com-solidary-chain-chaincode-1.8" -q) bash`
 # log container `docker container logs -f net-peer0.org1.example.com-solidary-chain-chaincode-1.8`
@@ -172,11 +174,11 @@ if [ "${VERSION}" == "1.0" ]; then
   # echo "bring Production Network Files"
   # ./bringProductionNetworkFiles.sh
 
-  echo "seed ledger with data..."
+  echo "seed ledger data using ${SCRIPT_SEED} script..."
   scp seed.env ${PEER0_ORG1_IP}:/tmp
-  scp seedNetwork.sh ${PEER0_ORG1_IP}:/tmp
-  ssh -t ${PEER0_ORG1_IP} sudo chmod a+x /tmp/seedNetwork.sh
-  ssh -t ${PEER0_ORG1_IP} 'cd /tmp; ./seedNetwork.sh'
+  scp ${SCRIPT_SEED} ${PEER0_ORG1_IP}:/tmp
+  ssh -t ${PEER0_ORG1_IP} sudo chmod a+x /tmp/${SCRIPT_SEED}
+  ssh -t ${PEER0_ORG1_IP} "cd /tmp; ./${SCRIPT_SEED}"
 fi
 
 # TODO: participant_createWithParameters participant_create don't work via ssh

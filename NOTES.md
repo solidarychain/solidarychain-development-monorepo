@@ -76,6 +76,7 @@
   - [GraphQL ComplexQuery problem: How to send arbitrayGraphQL and ComplexQuery and the big sort problem](#graphql-complexquery-problem-how-to-send-arbitraygraphql-and-complexquery-and-the-big-sort-problem)
   - [Participant changeIdentity / require "chaincodeAdmin" with `attrs."admin": "true"`](#participant-changeidentity--require-chaincodeadmin-with-attrsadmin-true)
     - [Debug Fingerprints](#debug-fingerprints)
+  - [Change Gov participant FingerPrint (Notes from TLDR.md production network)](#change-gov-participant-fingerprint-notes-from-tldrmd-production-network)
   - [Debug restartEnv.sh : chaincode works in debug bug not with restartEnv.sh](#debug-restartenvsh--chaincode-works-in-debug-bug-not-with-restartenvsh)
   - [Hurley and fix Globall install](#hurley-and-fix-globall-install)
   - [Lerna Fix problem of install dependencies](#lerna-fix-problem-of-install-dependencies)
@@ -2936,7 +2937,7 @@ JSON.stringify(this.fullIdentity.attrs, null, 2)
 
 script to extract fingerprint from wallet, and compare it with couchdb etc
 
-final scripts are in 
+final scripts are in:
 
 - `@SolidaryChain/solidarychain-production-network/fabric-samples/5node2channel/wallet/fabcar/javascript/getFingerprint.sh`
 - `@SolidaryChain/solidarychain-production-network/fabric-samples/5node2channel/wallet/fabcar/javascript/changeParticipantFingerprint.js`
@@ -2983,7 +2984,75 @@ after we change gov fingerprint we have
 ],
 ```
 
-now admin 
+## Change Gov participant FingerPrint (Notes from TLDR.md production network)
+
+> NOTES: above are some notes only we now use `fabric-samples/5node2channel/update-fingerprints.sh` after deploy chaincode, view `fabric-samples/5node2channel/TLDR.md`
+
+used files
+
+- `@SolidaryChain/solidarychain-production-network/fabric-samples/5node2channel/wallet/fabcar/javascript/getFingerprint.sh`
+- `@SolidaryChain/solidarychain-production-network/fabric-samples/5node2channel/wallet/fabcar/javascript/changeParticipantFingerprint.js`
+- `/home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/packages/server-graphql/network.env`
+
+create `gov` user and this is the one that we need to change fingerprint, the user that is used in graphql connection profile with `IDENTITY=gov`
+
+- `@SolidaryChain/solidarychain-production-network/fabric-samples/5node2channel/wallet/fabcar/javascript/getFingerprint.sh`
+- `@SolidaryChain/solidarychain-production-network/fabric-samples/5node2channel/wallet/fabcar/javascript/changeParticipantFingerprint.js`
+
+- `/home/mario/Development/@SolidaryChain/solidarychain-development-monorepo/packages/server-graphql/network.env`
+
+```shell
+IDENTITY=gov
+KEY_STORE=/home/mario/Development/@SolidaryChain/solidarychain-production-network/fabric-samples/5node2channel/wallet/fabcar/javascript/wallets/gov
+```
+
+> NOTES: gov user is created in `./generate-wallets-and-connection-file.sh`, we only need to change its FingerPrint after deployChaincodeToNetwork
+
+```shell
+# generate gov user
+$ cd ${FABRIC_SAMPLES}/5node2channel/wallet/fabcar/javascript
+$ node registerUser.js gov
+registerUser "gov"
+Wallet path: /srv/docker/hyperledger-fabric-extra_hosts-5orgs/fabric-samples/5node2channel/wallet/fabcar/javascript/wallets
+Successfully registered and enrolled admin user "gov" and imported it into the wallet
+# confirm wallets
+$ tree wallets
+# get gov wallet fingerprint
+$ FINGERPRINT=$(./getFingerprint.sh wallets/gov/gov)
+$ echo ${FINGERPRINT}
+59:F5:DF:50:8B:5B:C6:27:25:92:C7:CC:9F:F9:E1:D9:33:83:AE:89
+# check existing gov identity
+$ curl -s --user admin:admin  http://${PEER0_ORG1_IP}:5984/channelall_solidary-chain-chaincode/${GOV_ID} | jq ".identities"
+[
+  {
+    "fingerprint": "72:EA:CA:9B:A1:BD:A6:1A:26:4C:9D:90:EF:58:8E:D9:B0:01:17:34",
+    "status": true
+  }
+]
+
+# change gov fingerprint
+$ node changeParticipantFingerprint.js ${GOV_ID} ${FINGERPRINT}
+Wallet path: /srv/docker/hyperledger-fabric-extra_hosts-5orgs/fabric-samples/5node2channel/wallet/fabcar/javascript/wallets
+createTransaction result {
+  "type": "Buffer",
+# check existing gov identity
+$ curl -s --user admin:admin  http://${PEER0_ORG1_IP}:5984/channelall_solidary-chain-chaincode/${GOV_ID} | jq ".identities"
+[
+  {
+    "fingerprint": "72:EA:CA:9B:A1:BD:A6:1A:26:4C:9D:90:EF:58:8E:D9:B0:01:17:34",
+    "status": false
+  },
+  {
+    "fingerprint": "59:F5:DF:50:8B:5B:C6:27:25:92:C7:CC:9F:F9:E1:D9:33:83:AE:89",
+    "status": true
+  }
+]
+```
+
+```shell
+IDENTITY=gov
+KEY_STORE=/home/mario/Development/@SolidaryChain/solidarychain-production-network/fabric-samples/5node2channel/wallet/fabcar/javascript/wallets/gov
+```
 
 ## Debug restartEnv.sh : chaincode works in debug bug not with restartEnv.sh
 
@@ -3188,7 +3257,7 @@ I generate a wallet and use node sdk to create some invokes, but what happens is
 3. Tear down the network (stop and remove all the running containers )
 4. Again Register and enroll users in the network.
 
-> NOTES: just restart netowork, and move on
+> NOTES: just restart network, and move on
 
 ## Error: Failed to load gRPC binary module because it was not installed for the current system
 

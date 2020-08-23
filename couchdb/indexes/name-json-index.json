@@ -4,6 +4,7 @@
       "name"
     ]
   },
-  "name": "name-json-index",
+  "ddoc": "indexNameDoc",
+  "name": "indexName",
   "type": "json"
 }
