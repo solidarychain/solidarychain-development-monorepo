@@ -33,7 +33,7 @@ export const Header: React.FC<Props> = () => {
   return (
     <header>
       <div style={headerLinksNavStyle}>
-        <Link to='/'>home</Link> : <Link to='/profile'>profile</Link> : <Link to='/state'>state</Link>
+        <Link to='/'>home</Link> : <Link to='/profile'>profile</Link> : <Link to='/transactions'>transactions</Link> : <Link to='/state'>state</Link>
       </div>
       {body}
       <div>

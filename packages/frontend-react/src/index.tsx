@@ -1,9 +1,7 @@
-import { ApolloProvider } from '@apollo/react-hooks';
-import { InMemoryCache } from 'apollo-cache-inmemory';
-import { ApolloClient } from 'apollo-client';
-import { ApolloLink, Observable } from 'apollo-link';
-import { onError } from 'apollo-link-error';
-import { HttpLink } from 'apollo-link-http';
+import { ApolloClient, ApolloProvider, HttpLink, ApolloLink, Observable } from '@apollo/client';
+import { InMemoryCache } from '@apollo/client/cache';
+// import { onError } from 'apollo-link-error';
+import { onError } from '@apollo/link-error';
 import { TokenRefreshLink } from 'apollo-link-token-refresh';
 import https from 'https';
 import jwtDecode from 'jwt-decode';

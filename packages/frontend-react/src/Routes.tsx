@@ -1,8 +1,7 @@
 import React, { Fragment } from 'react';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import { Header } from './components/Header';
-import { Home, Login, Register } from './pages';
-import { Profile } from './pages/Profile';
+import { Home, Login, Profile, Register, Transactions } from './pages';
 import State from './pages/State';
 
 interface Props {
@@ -18,6 +17,7 @@ export const Routes: React.FC<Props> = ({ logged }: Props) => {
       <Fragment>
         <Route exact path='/' component={Home} />
         <Route exact path='/profile' component={Profile} />
+        <Route exact path='/transactions' component={Transactions} />
         <Route exact path='/state' component={State} />
       </Fragment>
     )
