@@ -25,10 +25,14 @@ const DEFAULT_LOGIN_CREDENTIALS = {
   username: 'johndoe',
   password: '12345678',
 };
+const COOKIES = {
+  jid: 'jid',
+};
 
 export const appConstants = {
   KEYWORDS,
   MESSAGES,
   REGISTER_DEFAULT_USER,
   DEFAULT_LOGIN_CREDENTIALS,
+  COOKIES,
 };
