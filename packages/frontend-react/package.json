@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "scripts": {
     "start": "react-scripts start",
-    "start:remote": "react-scripts start --inspect=127.0.0.1:9222",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

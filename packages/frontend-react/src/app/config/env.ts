@@ -6,6 +6,8 @@ export type EnvConfig = {
   restServerHttpUri: string;
   apolloFetchPolicy: any;
   apolloRejectUnauthorized: boolean;
+  reactAppApolloShowGraphqlErrors: boolean;
+  reactAppApolloShowNetworkError: boolean;
 }
 
 export const envVariables: EnvConfig = {
@@ -18,6 +20,8 @@ export const envVariables: EnvConfig = {
   restServerHttpUri: `${process.env.REACT_APP_GRAPHQL_SERVER_HTTP_PROTOCOL}://${process.env.REACT_APP_GRAPHQL_SERVER_URI}` || 'https://localhost:443',
   apolloFetchPolicy: process.env.REACT_APP_APOLLO_FETCH_POLICY || 'cache-first',
   apolloRejectUnauthorized: (process.env.REACT_APP_APOLLO_REJECT_UNAUTHORIZED === 'true') ? true : false || false,
+  reactAppApolloShowGraphqlErrors: (process.env.REACT_APP_APOLLO_SHOW_GRAPHQL_ERRORS === 'true') ? true : false || false,
+  reactAppApolloShowNetworkError: (process.env.REACT_APP_APOLLO_SHOW_NETWORK_ERROR === 'true') ? true : false || false,
   // TODO: remove
   // old config before apollo.client.ts
   // restServerUri: process.env.REACT_APP_REST_SERVER_URI || 'https://localhost:443',

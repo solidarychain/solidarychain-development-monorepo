@@ -23,9 +23,9 @@ export const App: React.FC<Props> = () => {
     // require credentials to send jid cookie from browser
     fetch(`${e.restServerHttpUri}/refresh-token`, {
       method: 'POST',
-      credentials: 'include'
+      credentials: 'include',
     })
-      // hooks don't support async/await
+      // hooks don't support async/await, to bypass we can use .then
       .then(async res => {
         // but here we can use it to await for json() Promise
         const data = await res.json();
@@ -36,7 +36,9 @@ export const App: React.FC<Props> = () => {
         // fire profile hook
         if (!profileCalled) profileQuery();
       })
-      .catch(error => console.error(error));
+      .catch((error) => {
+        console.error(error);
+      });
     return () => {
       // cleanup stuff
     };

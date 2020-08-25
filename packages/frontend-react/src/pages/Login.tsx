@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import { Fragment } from 'react';
 import { RouteComponentProps } from 'react-router';
 import { ActionType, useStateValue } from '../app/state';
@@ -11,16 +11,12 @@ import { MessageType } from '../types';
 
 // use RouteComponentProps to get history props from Route
 export const Login: React.FC<RouteComponentProps> = ({ history, location }) => {
-	// get hook
+	// get hooks
 	const [, dispatch] = useStateValue();
-
-	const defaults = {
-		username: 'johndoe',
-		password: '12345678',
-	};
+	const [loginDisabled, setLoginDisabled] = useState(false)
 	// hooks: state
-	const [username, setUsername] = React.useState(defaults.username)
-	const [password, setPassword] = React.useState(defaults.password);
+	const [username, setUsername] = React.useState(c.DEFAULT_LOGIN_CREDENTIALS.username);
+	const [password, setPassword] = React.useState(c.DEFAULT_LOGIN_CREDENTIALS.password);
 
 	// hooks: apollo
 	const [personLoginMutation, { loading, error }] = usePersonLoginMutation();
@@ -35,6 +31,8 @@ export const Login: React.FC<RouteComponentProps> = ({ history, location }) => {
 	const onSubmitFormHandler = async (e: any) => {
 		try {
 			e.preventDefault();
+			// disable button
+			setLoginDisabled(true);
 			const loginPersonData: LoginPersonInput = {
 				username, password
 			};
@@ -88,9 +86,9 @@ export const Login: React.FC<RouteComponentProps> = ({ history, location }) => {
 
 	return (
 		<Fragment>
-      <div style={headerLinksNavStyle}>
-        <Link to='/register'>register</Link>
-      </div>
+			<div style={headerLinksNavStyle}>
+				<Link to='/register'>register</Link>
+			</div>
 			<h2>Login</h2>
 			<form onSubmit={(e) => onSubmitFormHandler(e)}>
 				{/* username */}
@@ -111,7 +109,7 @@ export const Login: React.FC<RouteComponentProps> = ({ history, location }) => {
 						onChange={(e) => onChangePasswordHandler(e)} />
 				</div>
 				{/* submit */}
-				<button type='submit'>login</button>
+				<button disabled={loginDisabled} type='submit'>login</button>
 			</form>
 			{(location.state && (location.state as any).message) && <ShowMessage type={MessageType.SUCCESS} message={(location.state as any).message} />}
 			{error && <ShowMessage type={MessageType.ERROR} message={c.MESSAGES.ERROR.LOGIN_FAILED} />}

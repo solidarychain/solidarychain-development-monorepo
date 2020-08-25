@@ -1,14 +1,17 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useStateValue, ActionType } from '../app/state';
 import { setAccessToken, headerLinksNavStyle } from '../app';
 import { usePersonLogoutMutation } from '../generated/graphql';
+import { Loading } from '../components';
 
 interface Props { }
 
 export const Header: React.FC<Props> = () => {
   // get hook
   const [state, dispatch] = useStateValue();
+  const [logoutDisabled, setLogoutDisabled] = useState(false);
+
   // debug helper
   // const stateOutput = <pre>{JSON.stringify(state, undefined, 2)}</pre>;
 
@@ -39,21 +42,29 @@ export const Header: React.FC<Props> = () => {
       <div>
         {/* {!loading && data && data.personProfile ? (} */}
         {state.user.logged ? (
-          <button onClick={async () => {
+          <button disabled={logoutDisabled} onClick={async () => {
+            // disable button
+            setLogoutDisabled(true);
             // fire logoutMutation
             await logout();
-            // clean inMemory accessToken
-            setAccessToken('');
             // clear/reset apollo cache store
-            await client!.resetStore()
+            // to prevent problems resetStore, like in the past don't use asyn/await, and use .then
+            // with setAccessToken and dispatch inisde
+            client.resetStore()
+              .then((value) => {
+                // clean inMemory accessToken
+                setAccessToken('');
+                // dispatch logout
+                dispatch({ type: ActionType.LOGOUT_USER });
+              })
               .catch(error => {
-                console.error(error)
+                console.error(error);
               });
-            // dispatch logout
-            dispatch({ type: ActionType.LOGOUT_USER });
           }
           }>logout</button>
         ) : null}
+        {/* show loading when we logout */}
+        {logoutDisabled && <Loading />}
       </div>
     </header>
   );

@@ -54,7 +54,7 @@ const refreshLink = new TokenRefreshLink({
   // },
   handleError: err => {
     // full control over handling token fetch Error
-    console.warn('Your refresh token is invalid. Try to relogin');
+    console.warn('Your refresh token is invalid. Try to re-login');
     console.error(err);
     // your custom action here
     // user.logout();
@@ -143,10 +143,10 @@ const client = new ApolloClient({
     refreshLink,
     // normal apolloLink stuff
     onError(({ graphQLErrors, networkError }) => {
-      if (graphQLErrors) {
+      if (graphQLErrors && e.reactAppApolloShowGraphqlErrors) {
         console.error(graphQLErrors);
       }
-      if (networkError) {
+      if (networkError && e.reactAppApolloShowNetworkError) {
         console.error(networkError);
       }
     }),
