@@ -1,7 +1,7 @@
 import { ApolloClient, ApolloLink, HttpLink, InMemoryCache, Observable, split } from '@apollo/client';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
-import { getAccessToken, setAccessToken } from '../../common';
+import { getAccessToken, setAccessToken } from '../access-token';
 import { envVariables as e } from './env';
 import jwtDecode from 'jwt-decode';
 import { TokenRefreshLink } from 'apollo-link-token-refresh';

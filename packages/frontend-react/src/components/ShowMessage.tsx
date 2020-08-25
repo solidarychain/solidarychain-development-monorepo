@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { errorStyle, validStyle } from '../common';
+import { errorStyle, validStyle } from '../app';
 import { MessageType } from '../types';
 
 interface Props {

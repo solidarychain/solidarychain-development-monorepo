@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { useStateValue, ActionType } from './app/state';
-import { setAccessToken } from './common';
+import { setAccessToken } from './app';
 import { Loading } from './components';
 import { envVariables as e } from './app/config/env';
 import { usePersonProfileLazyQuery } from './generated/graphql';
@@ -40,24 +40,28 @@ export const App: React.FC<Props> = () => {
     return () => {
       // cleanup stuff
     };
-  }, [state.user.logged, profileCalled, profileQuery])
+  }, [state.user.logged, profileCalled, profileQuery]);
 
-  if (!profileLoaded && profileData) {
-    // dispatch state
-    const payload = {
-      profile: {
-        id: profileData.personProfile.id,
-        firstname: profileData.personProfile.firstname,
-        lastname: profileData.personProfile.lastname,
-        username: profileData.personProfile.username,
-        email: profileData.personProfile.email,
-        roles: profileData.personProfile.roles
-      }
-    };
-    dispatch({ type: ActionType.LOGGED_USER, payload });
-    // set state to profile loaded to prevent loops
-    setProfileLoaded(true);
-  }
+  // used to update state with profile data, diferent of profile page that fires mutations to bring all data
+  // require own useEffect to prevent error `Warning: Cannot update a component (`StateProvider`) while rendering a different component (`App`). To locate the bad setState() call inside `App``
+  React.useEffect(() => {
+    if (!profileLoaded && profileData) {
+      // dispatch state
+      const payload = {
+        profile: {
+          id: profileData.personProfile.id,
+          firstname: profileData.personProfile.firstname,
+          lastname: profileData.personProfile.lastname,
+          username: profileData.personProfile.username,
+          email: profileData.personProfile.email,
+          roles: profileData.personProfile.roles
+        }
+      };
+      dispatch({ type: ActionType.LOGGED_USER, payload });
+      // set state to profile loaded to prevent loops
+      setProfileLoaded(true);
+    }
+  }, [profileLoaded, profileData, dispatch]);
 
   // require to use both loading states
   if (loading && profileLoading) {

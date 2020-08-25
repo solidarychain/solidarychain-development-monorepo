@@ -2,11 +2,11 @@ import * as React from 'react';
 import { Fragment } from 'react';
 import { RouteComponentProps } from 'react-router';
 import { ActionType, useStateValue } from '../app/state';
-import { setAccessToken, headerLinksNavStyle } from '../common';
+import { setAccessToken, headerLinksNavStyle } from '../app';
 import { ShowMessage, Loading } from '../components';
 import { LoginPersonInput, PersonProfileDocument, usePersonLoginMutation } from '../generated/graphql';
 import { Link } from 'react-router-dom';
-import { appConstants as c } from '../constants';
+import { appConstants as c } from '../app';
 import { MessageType } from '../types';
 
 // use RouteComponentProps to get history props from Route

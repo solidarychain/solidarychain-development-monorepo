@@ -3,9 +3,9 @@ import { RouteComponentProps } from 'react-router';
 import { Loading, ShowMessage } from '../components';
 import { NewPersonInput, usePersonRegisterMutation } from '../generated/graphql';
 import { Link } from 'react-router-dom';
-import { appConstants as c } from '../constants';
+import { appConstants as c } from '../app';
 import { v4 as uuid } from 'uuid';
-import { headerLinksNavStyle } from '../common';
+import { headerLinksNavStyle } from '../app';
 import { MessageType } from '../types';
 
 // use RouteComponentProps to get history props from Route

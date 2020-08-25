@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { getAccessToken } from '../common';
+import { getAccessToken } from '../app';
 import { ShowMessage, Loading } from '../components';
 import { envVariables as e } from '../app/config/env';
 import { Person, usePersonsLazyQuery } from '../generated/graphql';

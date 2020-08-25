@@ -1,6 +1,6 @@
 import React from 'react';
 import LoadingSvg from '../assets/loading.svg';
-import { loadingStyle } from '../common';
+import { loadingStyle } from '../app';
 
 interface Props { }
 

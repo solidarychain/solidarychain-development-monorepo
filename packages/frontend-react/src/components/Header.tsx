@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { useStateValue, ActionType } from '../app/state';
-import { setAccessToken, headerLinksNavStyle } from '../common';
+import { setAccessToken, headerLinksNavStyle } from '../app';
 import { usePersonLogoutMutation } from '../generated/graphql';
 
 interface Props { }
