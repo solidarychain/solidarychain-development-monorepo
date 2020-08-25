@@ -1,5 +1,6 @@
 overwrite: true
-schema: "https://localhost:3443/graphql"
+# schema: "https://localhost:3443/graphql"
+schema: "https://solidarychain.com/graphql"
 documents: "src/graphql/**/*.graphql"
 generates:
   src/generated/graphql.tsx:

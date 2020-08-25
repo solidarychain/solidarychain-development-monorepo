@@ -1,7 +1,7 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import { gql } from '@apollo/client';
+import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -13,356 +13,6 @@ export type Scalars = {
   JSONObject: any;
   /** Date custom scalar type */
   Date: any;
-};
-
-export type AccessToken = {
-  __typename?: 'AccessToken';
-  accessToken: Scalars['String'];
-};
-
-export type AddPersonAttributeInput = {
-  id: Scalars['ID'];
-  content?: Maybe<Scalars['JSONObject']>;
-  issuedDate?: Maybe<Scalars['Float']>;
-  expiresDate?: Maybe<Scalars['Date']>;
-  expired?: Maybe<Scalars['Boolean']>;
-  certifierID?: Maybe<Scalars['String']>;
-};
-
-export type Asset = {
-  __typename?: 'Asset';
-  id: Scalars['ID'];
-  name: Scalars['String'];
-  description?: Maybe<Scalars['String']>;
-  assetType: Scalars['String'];
-  ambassadors?: Maybe<Array<Scalars['String']>>;
-  owner: EntityResult;
-  location?: Maybe<Scalars['String']>;
-  tags?: Maybe<Array<Scalars['String']>>;
-  metaData?: Maybe<Scalars['JSONObject']>;
-  metaDataInternal?: Maybe<Scalars['JSONObject']>;
-  participant: Participant;
-  createdDate: Scalars['Float'];
-  createdByPersonId?: Maybe<Scalars['String']>;
-};
-
-export type Attribute = {
-  __typename?: 'Attribute';
-  id: Scalars['ID'];
-  content?: Maybe<Scalars['JSONObject']>;
-  issuedDate?: Maybe<Scalars['Float']>;
-  expiresDate?: Maybe<Scalars['Date']>;
-  expired?: Maybe<Scalars['Boolean']>;
-  certifierID?: Maybe<Scalars['String']>;
-};
-
-export type Cause = {
-  __typename?: 'Cause';
-  id: Scalars['ID'];
-  name: Scalars['String'];
-  email?: Maybe<Scalars['String']>;
-  ambassadors?: Maybe<Array<Scalars['String']>>;
-  startDate?: Maybe<Scalars['Float']>;
-  endDate?: Maybe<Scalars['Float']>;
-  location?: Maybe<Scalars['String']>;
-  tags?: Maybe<Array<Scalars['String']>>;
-  metaData?: Maybe<Scalars['JSONObject']>;
-  metaDataInternal?: Maybe<Scalars['JSONObject']>;
-  input: EntityResult;
-  participant: Participant;
-  createdDate: Scalars['Float'];
-  createdByPersonId?: Maybe<Scalars['String']>;
-  fundsBalance: GenericBalance;
-  volunteeringHoursBalance: GenericBalance;
-  goodsStock?: Maybe<Array<Goods>>;
-};
-
-
-export type Entity = {
-  __typename?: 'Entity';
-  id: Scalars['ID'];
-  type: Scalars['String'];
-  createdDate: Scalars['Float'];
-};
-
-export type EntityResult = {
-  __typename?: 'EntityResult';
-  entity: Entity;
-};
-
-export type GenericBalance = {
-  __typename?: 'GenericBalance';
-  debit: Scalars['Float'];
-  credit: Scalars['Float'];
-  balance: Scalars['Float'];
-};
-
-export type GetByAttributeInput = {
-  id: Scalars['String'];
-  content?: Maybe<Scalars['JSONObject']>;
-};
-
-export type GetByComplexQueryInput = {
-  filter: Scalars['JSONObject'];
-  fields?: Maybe<Array<Scalars['String']>>;
-  sort?: Maybe<Array<Scalars['JSONObject']>>;
-};
-
-export type Goods = {
-  __typename?: 'Goods';
-  id: Scalars['ID'];
-  code: Scalars['String'];
-  barCode?: Maybe<Scalars['String']>;
-  name: Scalars['String'];
-  description?: Maybe<Scalars['String']>;
-  tags?: Maybe<Array<Scalars['String']>>;
-  balance: GenericBalance;
-  metaData?: Maybe<Scalars['JSONObject']>;
-  metaDataInternal?: Maybe<Scalars['JSONObject']>;
-  createdDate: Scalars['Float'];
-  createdByPersonId: Scalars['String'];
-};
-
-export type GoodsInput = {
-  id?: Maybe<Scalars['ID']>;
-  code: Scalars['String'];
-  barCode?: Maybe<Scalars['String']>;
-  name: Scalars['String'];
-  description?: Maybe<Scalars['String']>;
-  quantity: Scalars['Float'];
-  tags?: Maybe<Array<Scalars['String']>>;
-  metaData?: Maybe<Scalars['JSONObject']>;
-  metaDataInternal?: Maybe<Scalars['JSONObject']>;
-};
-
-
-export type LoginPersonInput = {
-  username: Scalars['String'];
-  password: Scalars['String'];
-};
-
-export type Mutation = {
-  __typename?: 'Mutation';
-  personLogin: PersonLoginResponse;
-  personLogout: Scalars['Boolean'];
-  revokeUserRefreshTokens: Scalars['Boolean'];
-  causeNew: Cause;
-  participantNew: Participant;
-  personRegister: Person;
-  personAddAttribute: Person;
-  transactionNew: Transaction;
-  assetNew: Asset;
-};
-
-
-export type MutationPersonLoginArgs = {
-  loginPersonData: LoginPersonInput;
-};
-
-
-export type MutationRevokeUserRefreshTokensArgs = {
-  username: Scalars['String'];
-};
-
-
-export type MutationCauseNewArgs = {
-  newCauseData: NewCauseInput;
-};
-
-
-export type MutationParticipantNewArgs = {
-  newParticipantData: NewParticipantInput;
-};
-
-
-export type MutationPersonRegisterArgs = {
-  newPersonData: NewPersonInput;
-};
-
-
-export type MutationPersonAddAttributeArgs = {
-  addPersonAttributeData: AddPersonAttributeInput;
-  personId: Scalars['String'];
-};
-
-
-export type MutationTransactionNewArgs = {
-  newTransactionData: NewTransactionInput;
-};
-
-
-export type MutationAssetNewArgs = {
-  newAssetData: NewAssetInput;
-};
-
-export type NewAssetInput = {
-  id?: Maybe<Scalars['String']>;
-  name: Scalars['String'];
-  assetType: Scalars['String'];
-  ambassadors?: Maybe<Array<Scalars['String']>>;
-  owner: Scalars['JSONObject'];
-  location?: Maybe<Scalars['String']>;
-  tags?: Maybe<Array<Scalars['String']>>;
-  metaData?: Maybe<Scalars['JSONObject']>;
-  metaDataInternal?: Maybe<Scalars['JSONObject']>;
-  loggedPersonId?: Maybe<Scalars['String']>;
-};
-
-export type NewCauseInput = {
-  id?: Maybe<Scalars['String']>;
-  name: Scalars['String'];
-  email?: Maybe<Scalars['String']>;
-  ambassadors?: Maybe<Array<Scalars['String']>>;
-  startDate?: Maybe<Scalars['Date']>;
-  endDate?: Maybe<Scalars['Date']>;
-  location?: Maybe<Scalars['String']>;
-  tags?: Maybe<Array<Scalars['String']>>;
-  metaData?: Maybe<Scalars['JSONObject']>;
-  metaDataInternal?: Maybe<Scalars['JSONObject']>;
-  loggedPersonId?: Maybe<Scalars['String']>;
-  input: Scalars['JSONObject'];
-};
-
-export type NewParticipantInput = {
-  id?: Maybe<Scalars['String']>;
-  code: Scalars['String'];
-  name: Scalars['String'];
-  email?: Maybe<Scalars['String']>;
-  ambassadors?: Maybe<Array<Scalars['String']>>;
-  metaData?: Maybe<Scalars['JSONObject']>;
-  metaDataInternal?: Maybe<Scalars['JSONObject']>;
-  loggedPersonId?: Maybe<Scalars['String']>;
-};
-
-export type NewPersonInput = {
-  id?: Maybe<Scalars['String']>;
-  username?: Maybe<Scalars['String']>;
-  password?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
-  mobilePhone?: Maybe<Scalars['String']>;
-  postal?: Maybe<Scalars['String']>;
-  city?: Maybe<Scalars['String']>;
-  region?: Maybe<Scalars['String']>;
-  geoLocation?: Maybe<Scalars['String']>;
-  timezone?: Maybe<Scalars['String']>;
-  personalInfo?: Maybe<Scalars['String']>;
-  metaData?: Maybe<Scalars['JSONObject']>;
-  metaDataInternal?: Maybe<Scalars['JSONObject']>;
-  profile?: Maybe<Scalars['JSONObject']>;
-  firstname?: Maybe<Scalars['String']>;
-  lastname?: Maybe<Scalars['String']>;
-  gender?: Maybe<Scalars['String']>;
-  height?: Maybe<Scalars['Float']>;
-  fatherFirstname?: Maybe<Scalars['String']>;
-  fatherLastname?: Maybe<Scalars['String']>;
-  motherFirstname?: Maybe<Scalars['String']>;
-  motherLastname?: Maybe<Scalars['String']>;
-  birthDate?: Maybe<Scalars['Date']>;
-  nationality?: Maybe<Scalars['String']>;
-  country?: Maybe<Scalars['String']>;
-  documentNumber?: Maybe<Scalars['String']>;
-  documentType?: Maybe<Scalars['String']>;
-  cardVersion?: Maybe<Scalars['String']>;
-  emissionDate?: Maybe<Scalars['Date']>;
-  expirationDate?: Maybe<Scalars['Date']>;
-  emittingEntity?: Maybe<Scalars['String']>;
-  identityNumber?: Maybe<Scalars['String']>;
-  fiscalNumber: Scalars['String'];
-  socialSecurityNumber?: Maybe<Scalars['String']>;
-  beneficiaryNumber?: Maybe<Scalars['String']>;
-  pan?: Maybe<Scalars['String']>;
-  requestLocation?: Maybe<Scalars['String']>;
-  otherInformation?: Maybe<Scalars['String']>;
-};
-
-export type NewTransactionInput = {
-  id?: Maybe<Scalars['String']>;
-  transactionType: Scalars['String'];
-  resourceType: Scalars['String'];
-  input: Scalars['JSONObject'];
-  output: Scalars['JSONObject'];
-  quantity?: Maybe<Scalars['Float']>;
-  currency?: Maybe<Scalars['String']>;
-  location?: Maybe<Scalars['String']>;
-  tags?: Maybe<Array<Scalars['String']>>;
-  metaData?: Maybe<Scalars['JSONObject']>;
-  metaDataInternal?: Maybe<Scalars['JSONObject']>;
-  loggedPersonId?: Maybe<Scalars['String']>;
-  assetId?: Maybe<Scalars['String']>;
-  goods?: Maybe<Array<GoodsInput>>;
-};
-
-export type Participant = {
-  __typename?: 'Participant';
-  id: Scalars['ID'];
-  code: Scalars['String'];
-  name: Scalars['String'];
-  email?: Maybe<Scalars['String']>;
-  ambassadors?: Maybe<Array<Scalars['String']>>;
-  msp: Scalars['String'];
-  participant?: Maybe<Participant>;
-  metaData?: Maybe<Scalars['JSONObject']>;
-  metaDataInternal?: Maybe<Scalars['JSONObject']>;
-  createdDate: Scalars['Float'];
-  createdByPersonId?: Maybe<Scalars['String']>;
-  fundsBalance: GenericBalance;
-  volunteeringHoursBalance: GenericBalance;
-  goodsStock?: Maybe<Array<Goods>>;
-};
-
-export type Person = {
-  __typename?: 'Person';
-  id: Scalars['ID'];
-  username?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
-  attributes?: Maybe<Array<Attribute>>;
-  roles?: Maybe<Array<Scalars['String']>>;
-  participant: Participant;
-  createdDate: Scalars['Float'];
-  registrationDate: Scalars['Date'];
-  mobilePhone?: Maybe<Scalars['String']>;
-  postal?: Maybe<Scalars['String']>;
-  city?: Maybe<Scalars['String']>;
-  region?: Maybe<Scalars['String']>;
-  geoLocation?: Maybe<Scalars['String']>;
-  timezone?: Maybe<Scalars['String']>;
-  personalInfo?: Maybe<Scalars['String']>;
-  metaData?: Maybe<Scalars['JSONObject']>;
-  metaDataInternal?: Maybe<Scalars['JSONObject']>;
-  profile?: Maybe<Scalars['JSONObject']>;
-  fundsBalance: GenericBalance;
-  volunteeringHoursBalance: GenericBalance;
-  goodsStock?: Maybe<Array<Goods>>;
-  firstname?: Maybe<Scalars['String']>;
-  lastname?: Maybe<Scalars['String']>;
-  gender?: Maybe<Scalars['String']>;
-  height?: Maybe<Scalars['Float']>;
-  fatherFirstname?: Maybe<Scalars['String']>;
-  fatherLastname?: Maybe<Scalars['String']>;
-  motherFirstname?: Maybe<Scalars['String']>;
-  motherLastname?: Maybe<Scalars['String']>;
-  birthDate?: Maybe<Scalars['Date']>;
-  nationality?: Maybe<Scalars['String']>;
-  country?: Maybe<Scalars['String']>;
-  documentNumber?: Maybe<Scalars['String']>;
-  documentType?: Maybe<Scalars['String']>;
-  cardVersion?: Maybe<Scalars['String']>;
-  emissionDate?: Maybe<Scalars['Date']>;
-  expirationDate?: Maybe<Scalars['Date']>;
-  emittingEntity?: Maybe<Scalars['String']>;
-  identityNumber?: Maybe<Scalars['String']>;
-  fiscalNumber: Scalars['String'];
-  socialSecurityNumber?: Maybe<Scalars['String']>;
-  beneficiaryNumber?: Maybe<Scalars['String']>;
-  pan?: Maybe<Scalars['String']>;
-  requestLocation?: Maybe<Scalars['String']>;
-  otherInformation?: Maybe<Scalars['String']>;
-};
-
-export type PersonLoginResponse = {
-  __typename?: 'PersonLoginResponse';
-  user: Person;
-  accessToken: Scalars['String'];
 };
 
 export type Query = {
@@ -509,14 +159,149 @@ export type QueryAssetByIdArgs = {
   id: Scalars['String'];
 };
 
-export type Subscription = {
-  __typename?: 'Subscription';
-  personLogged: Scalars['String'];
-  causeAdded: Cause;
-  participantAdded: Participant;
-  personAdded: Person;
-  transactionAdded: Transaction;
-  assetAdded: Asset;
+export type Cause = {
+  __typename?: 'Cause';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  email?: Maybe<Scalars['String']>;
+  ambassadors?: Maybe<Array<Scalars['String']>>;
+  startDate?: Maybe<Scalars['Float']>;
+  endDate?: Maybe<Scalars['Float']>;
+  location?: Maybe<Scalars['String']>;
+  tags?: Maybe<Array<Scalars['String']>>;
+  metaData?: Maybe<Scalars['JSONObject']>;
+  metaDataInternal?: Maybe<Scalars['JSONObject']>;
+  input: EntityResult;
+  participant: Participant;
+  createdDate: Scalars['Float'];
+  createdByPersonId?: Maybe<Scalars['String']>;
+  fundsBalance: GenericBalance;
+  volunteeringHoursBalance: GenericBalance;
+  goodsStock?: Maybe<Array<Goods>>;
+};
+
+
+export type EntityResult = {
+  __typename?: 'EntityResult';
+  entity: Entity;
+};
+
+export type Entity = {
+  __typename?: 'Entity';
+  id: Scalars['ID'];
+  type: Scalars['String'];
+  createdDate: Scalars['Float'];
+};
+
+export type Participant = {
+  __typename?: 'Participant';
+  id: Scalars['ID'];
+  code: Scalars['String'];
+  name: Scalars['String'];
+  email?: Maybe<Scalars['String']>;
+  ambassadors?: Maybe<Array<Scalars['String']>>;
+  msp: Scalars['String'];
+  participant?: Maybe<Participant>;
+  metaData?: Maybe<Scalars['JSONObject']>;
+  metaDataInternal?: Maybe<Scalars['JSONObject']>;
+  createdDate: Scalars['Float'];
+  createdByPersonId?: Maybe<Scalars['String']>;
+  fundsBalance: GenericBalance;
+  volunteeringHoursBalance: GenericBalance;
+  goodsStock?: Maybe<Array<Goods>>;
+};
+
+export type GenericBalance = {
+  __typename?: 'GenericBalance';
+  debit: Scalars['Float'];
+  credit: Scalars['Float'];
+  balance: Scalars['Float'];
+};
+
+export type Goods = {
+  __typename?: 'Goods';
+  id: Scalars['ID'];
+  code: Scalars['String'];
+  barCode?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  tags?: Maybe<Array<Scalars['String']>>;
+  balance: GenericBalance;
+  metaData?: Maybe<Scalars['JSONObject']>;
+  metaDataInternal?: Maybe<Scalars['JSONObject']>;
+  createdDate: Scalars['Float'];
+  createdByPersonId: Scalars['String'];
+};
+
+export type GetByComplexQueryInput = {
+  filter: Scalars['JSONObject'];
+  fields?: Maybe<Array<Scalars['String']>>;
+  sort?: Maybe<Array<Scalars['JSONObject']>>;
+};
+
+export type Person = {
+  __typename?: 'Person';
+  id: Scalars['ID'];
+  username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  attributes?: Maybe<Array<Attribute>>;
+  roles?: Maybe<Array<Scalars['String']>>;
+  participant: Participant;
+  createdDate: Scalars['Float'];
+  registrationDate: Scalars['Date'];
+  mobilePhone?: Maybe<Scalars['String']>;
+  postal?: Maybe<Scalars['String']>;
+  city?: Maybe<Scalars['String']>;
+  region?: Maybe<Scalars['String']>;
+  geoLocation?: Maybe<Scalars['String']>;
+  timezone?: Maybe<Scalars['String']>;
+  personalInfo?: Maybe<Scalars['String']>;
+  metaData?: Maybe<Scalars['JSONObject']>;
+  metaDataInternal?: Maybe<Scalars['JSONObject']>;
+  profile?: Maybe<Scalars['JSONObject']>;
+  fundsBalance: GenericBalance;
+  volunteeringHoursBalance: GenericBalance;
+  goodsStock?: Maybe<Array<Goods>>;
+  firstname?: Maybe<Scalars['String']>;
+  lastname?: Maybe<Scalars['String']>;
+  gender?: Maybe<Scalars['String']>;
+  height?: Maybe<Scalars['Float']>;
+  fatherFirstname?: Maybe<Scalars['String']>;
+  fatherLastname?: Maybe<Scalars['String']>;
+  motherFirstname?: Maybe<Scalars['String']>;
+  motherLastname?: Maybe<Scalars['String']>;
+  birthDate?: Maybe<Scalars['Date']>;
+  nationality?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  documentNumber?: Maybe<Scalars['String']>;
+  documentType?: Maybe<Scalars['String']>;
+  cardVersion?: Maybe<Scalars['String']>;
+  emissionDate?: Maybe<Scalars['Date']>;
+  expirationDate?: Maybe<Scalars['Date']>;
+  emittingEntity?: Maybe<Scalars['String']>;
+  identityNumber?: Maybe<Scalars['String']>;
+  fiscalNumber: Scalars['String'];
+  socialSecurityNumber?: Maybe<Scalars['String']>;
+  beneficiaryNumber?: Maybe<Scalars['String']>;
+  pan?: Maybe<Scalars['String']>;
+  requestLocation?: Maybe<Scalars['String']>;
+  otherInformation?: Maybe<Scalars['String']>;
+};
+
+export type Attribute = {
+  __typename?: 'Attribute';
+  id: Scalars['ID'];
+  content?: Maybe<Scalars['JSONObject']>;
+  issuedDate?: Maybe<Scalars['Float']>;
+  expiresDate?: Maybe<Scalars['Date']>;
+  expired?: Maybe<Scalars['Boolean']>;
+  certifierID?: Maybe<Scalars['String']>;
+};
+
+
+export type GetByAttributeInput = {
+  id: Scalars['String'];
+  content?: Maybe<Scalars['JSONObject']>;
 };
 
 export type Transaction = {
@@ -539,6 +324,372 @@ export type Transaction = {
   goods?: Maybe<Array<Goods>>;
 };
 
+export type Asset = {
+  __typename?: 'Asset';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  assetType: Scalars['String'];
+  ambassadors?: Maybe<Array<Scalars['String']>>;
+  owner: EntityResult;
+  location?: Maybe<Scalars['String']>;
+  tags?: Maybe<Array<Scalars['String']>>;
+  metaData?: Maybe<Scalars['JSONObject']>;
+  metaDataInternal?: Maybe<Scalars['JSONObject']>;
+  participant: Participant;
+  createdDate: Scalars['Float'];
+  createdByPersonId?: Maybe<Scalars['String']>;
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  personLogin: PersonLoginResponse;
+  personLogout: Scalars['Boolean'];
+  revokeUserRefreshTokens: Scalars['Boolean'];
+  causeNew: Cause;
+  causeUpdate: Cause;
+  participantNew: Participant;
+  participantUpdate: Participant;
+  participantChangeIdentity: Participant;
+  personRegister: Person;
+  personAddAttribute: Person;
+  personUpdate: Person;
+  personUpdatePassword: Person;
+  personUpdateProfile: Person;
+  personUpsertCitizenCard: Person;
+  transactionNew: Transaction;
+  transactionUpdate: Transaction;
+  assetNew: Asset;
+  assetUpdate: Asset;
+};
+
+
+export type MutationPersonLoginArgs = {
+  loginPersonData: LoginPersonInput;
+};
+
+
+export type MutationRevokeUserRefreshTokensArgs = {
+  username: Scalars['String'];
+};
+
+
+export type MutationCauseNewArgs = {
+  newCauseData: NewCauseInput;
+};
+
+
+export type MutationCauseUpdateArgs = {
+  updateCauseData: UpdateCauseInput;
+};
+
+
+export type MutationParticipantNewArgs = {
+  newParticipantData: NewParticipantInput;
+};
+
+
+export type MutationParticipantUpdateArgs = {
+  updateParticipantData: UpdateParticipantInput;
+};
+
+
+export type MutationParticipantChangeIdentityArgs = {
+  changeParticipantIdentityData: ChangeParticipantIdentityData;
+};
+
+
+export type MutationPersonRegisterArgs = {
+  newPersonData: NewPersonInput;
+};
+
+
+export type MutationPersonAddAttributeArgs = {
+  addPersonAttributeData: AddPersonAttributeInput;
+  personId: Scalars['String'];
+};
+
+
+export type MutationPersonUpdateArgs = {
+  updatePersonData: UpdatePersonInput;
+};
+
+
+export type MutationPersonUpdatePasswordArgs = {
+  updatePersonPasswordData: UpdatePersonPasswordInput;
+};
+
+
+export type MutationPersonUpdateProfileArgs = {
+  updatePersonProfileData: UpdatePersonProfileInput;
+};
+
+
+export type MutationPersonUpsertCitizenCardArgs = {
+  upsertCitizenCardData: UpsertCitizenCardInput;
+};
+
+
+export type MutationTransactionNewArgs = {
+  newTransactionData: NewTransactionInput;
+};
+
+
+export type MutationTransactionUpdateArgs = {
+  updateTransactionData: UpdateTransactionInput;
+};
+
+
+export type MutationAssetNewArgs = {
+  newAssetData: NewAssetInput;
+};
+
+
+export type MutationAssetUpdateArgs = {
+  updateAssetData: UpdateAssetInput;
+};
+
+export type LoginPersonInput = {
+  username: Scalars['String'];
+  password: Scalars['String'];
+};
+
+export type PersonLoginResponse = {
+  __typename?: 'PersonLoginResponse';
+  user: Person;
+  accessToken: Scalars['String'];
+};
+
+export type NewCauseInput = {
+  id?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+  email?: Maybe<Scalars['String']>;
+  ambassadors?: Maybe<Array<Scalars['String']>>;
+  startDate?: Maybe<Scalars['Date']>;
+  endDate?: Maybe<Scalars['Date']>;
+  location?: Maybe<Scalars['String']>;
+  tags?: Maybe<Array<Scalars['String']>>;
+  metaData?: Maybe<Scalars['JSONObject']>;
+  metaDataInternal?: Maybe<Scalars['JSONObject']>;
+  loggedPersonId?: Maybe<Scalars['String']>;
+  input: Scalars['JSONObject'];
+};
+
+export type UpdateCauseInput = {
+  id: Scalars['String'];
+  email?: Maybe<Scalars['String']>;
+  ambassadors?: Maybe<Array<Scalars['String']>>;
+  tags?: Maybe<Array<Scalars['String']>>;
+  metaData?: Maybe<Scalars['JSONObject']>;
+  metaDataInternal?: Maybe<Scalars['JSONObject']>;
+};
+
+export type NewParticipantInput = {
+  id?: Maybe<Scalars['String']>;
+  code: Scalars['String'];
+  name: Scalars['String'];
+  email?: Maybe<Scalars['String']>;
+  ambassadors?: Maybe<Array<Scalars['String']>>;
+  metaData?: Maybe<Scalars['JSONObject']>;
+  metaDataInternal?: Maybe<Scalars['JSONObject']>;
+  loggedPersonId?: Maybe<Scalars['String']>;
+};
+
+export type UpdateParticipantInput = {
+  id: Scalars['String'];
+  email?: Maybe<Scalars['String']>;
+  ambassadors?: Maybe<Array<Scalars['String']>>;
+  metaData?: Maybe<Scalars['JSONObject']>;
+  metaDataInternal?: Maybe<Scalars['JSONObject']>;
+};
+
+export type ChangeParticipantIdentityData = {
+  id: Scalars['String'];
+  newIdentity: Scalars['String'];
+};
+
+export type NewPersonInput = {
+  id?: Maybe<Scalars['String']>;
+  username?: Maybe<Scalars['String']>;
+  password?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  mobilePhone?: Maybe<Scalars['String']>;
+  postal?: Maybe<Scalars['String']>;
+  city?: Maybe<Scalars['String']>;
+  region?: Maybe<Scalars['String']>;
+  geoLocation?: Maybe<Scalars['String']>;
+  timezone?: Maybe<Scalars['String']>;
+  personalInfo?: Maybe<Scalars['String']>;
+  metaData?: Maybe<Scalars['JSONObject']>;
+  metaDataInternal?: Maybe<Scalars['JSONObject']>;
+  profile?: Maybe<Scalars['JSONObject']>;
+  firstname?: Maybe<Scalars['String']>;
+  lastname?: Maybe<Scalars['String']>;
+  gender?: Maybe<Scalars['String']>;
+  height?: Maybe<Scalars['Float']>;
+  fatherFirstname?: Maybe<Scalars['String']>;
+  fatherLastname?: Maybe<Scalars['String']>;
+  motherFirstname?: Maybe<Scalars['String']>;
+  motherLastname?: Maybe<Scalars['String']>;
+  birthDate?: Maybe<Scalars['Date']>;
+  nationality?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  documentNumber?: Maybe<Scalars['String']>;
+  documentType?: Maybe<Scalars['String']>;
+  cardVersion?: Maybe<Scalars['String']>;
+  emissionDate?: Maybe<Scalars['Date']>;
+  expirationDate?: Maybe<Scalars['Date']>;
+  emittingEntity?: Maybe<Scalars['String']>;
+  identityNumber?: Maybe<Scalars['String']>;
+  fiscalNumber: Scalars['String'];
+  socialSecurityNumber?: Maybe<Scalars['String']>;
+  beneficiaryNumber?: Maybe<Scalars['String']>;
+  pan?: Maybe<Scalars['String']>;
+  requestLocation?: Maybe<Scalars['String']>;
+  otherInformation?: Maybe<Scalars['String']>;
+};
+
+export type AddPersonAttributeInput = {
+  id: Scalars['ID'];
+  content?: Maybe<Scalars['JSONObject']>;
+  issuedDate?: Maybe<Scalars['Float']>;
+  expiresDate?: Maybe<Scalars['Date']>;
+  expired?: Maybe<Scalars['Boolean']>;
+  certifierID?: Maybe<Scalars['String']>;
+};
+
+export type UpdatePersonInput = {
+  id: Scalars['String'];
+  roles?: Maybe<Array<Scalars['String']>>;
+  metaDataInternal?: Maybe<Scalars['JSONObject']>;
+};
+
+export type UpdatePersonPasswordInput = {
+  id: Scalars['String'];
+  password?: Maybe<Scalars['String']>;
+};
+
+export type UpdatePersonProfileInput = {
+  id: Scalars['String'];
+  email?: Maybe<Scalars['String']>;
+  mobilePhone?: Maybe<Scalars['String']>;
+  postal?: Maybe<Scalars['String']>;
+  city?: Maybe<Scalars['String']>;
+  region?: Maybe<Scalars['String']>;
+  geoLocation?: Maybe<Scalars['String']>;
+  timezone?: Maybe<Scalars['String']>;
+  personalInfo?: Maybe<Scalars['String']>;
+  metaData?: Maybe<Scalars['JSONObject']>;
+};
+
+export type UpsertCitizenCardInput = {
+  id?: Maybe<Scalars['String']>;
+  firstname: Scalars['String'];
+  lastname: Scalars['String'];
+  gender: Scalars['String'];
+  height: Scalars['Float'];
+  fatherFirstname: Scalars['String'];
+  fatherLastname: Scalars['String'];
+  motherFirstname: Scalars['String'];
+  motherLastname: Scalars['String'];
+  birthDate: Scalars['Date'];
+  nationality: Scalars['String'];
+  country: Scalars['String'];
+  documentNumber: Scalars['String'];
+  documentType: Scalars['String'];
+  cardVersion: Scalars['String'];
+  emissionDate: Scalars['Date'];
+  expirationDate: Scalars['Date'];
+  emittingEntity: Scalars['String'];
+  identityNumber: Scalars['String'];
+  fiscalNumber: Scalars['String'];
+  socialSecurityNumber: Scalars['String'];
+  beneficiaryNumber: Scalars['String'];
+  pan: Scalars['String'];
+  requestLocation?: Maybe<Scalars['String']>;
+  otherInformation?: Maybe<Scalars['String']>;
+};
+
+export type NewTransactionInput = {
+  id?: Maybe<Scalars['String']>;
+  transactionType: Scalars['String'];
+  resourceType: Scalars['String'];
+  input: Scalars['JSONObject'];
+  output: Scalars['JSONObject'];
+  quantity?: Maybe<Scalars['Float']>;
+  currency?: Maybe<Scalars['String']>;
+  location?: Maybe<Scalars['String']>;
+  tags?: Maybe<Array<Scalars['String']>>;
+  metaData?: Maybe<Scalars['JSONObject']>;
+  metaDataInternal?: Maybe<Scalars['JSONObject']>;
+  loggedPersonId?: Maybe<Scalars['String']>;
+  assetId?: Maybe<Scalars['String']>;
+  goods?: Maybe<Array<GoodsInput>>;
+};
+
+export type GoodsInput = {
+  id?: Maybe<Scalars['ID']>;
+  code: Scalars['String'];
+  barCode?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  quantity: Scalars['Float'];
+  tags?: Maybe<Array<Scalars['String']>>;
+  metaData?: Maybe<Scalars['JSONObject']>;
+  metaDataInternal?: Maybe<Scalars['JSONObject']>;
+};
+
+export type UpdateTransactionInput = {
+  id: Scalars['String'];
+  metaDataInternal?: Maybe<Scalars['JSONObject']>;
+};
+
+export type NewAssetInput = {
+  id?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+  assetType: Scalars['String'];
+  ambassadors?: Maybe<Array<Scalars['String']>>;
+  owner: Scalars['JSONObject'];
+  location?: Maybe<Scalars['String']>;
+  tags?: Maybe<Array<Scalars['String']>>;
+  metaData?: Maybe<Scalars['JSONObject']>;
+  metaDataInternal?: Maybe<Scalars['JSONObject']>;
+  loggedPersonId?: Maybe<Scalars['String']>;
+};
+
+export type UpdateAssetInput = {
+  id: Scalars['String'];
+  ambassadors?: Maybe<Array<Scalars['String']>>;
+  tags?: Maybe<Array<Scalars['String']>>;
+  metaData?: Maybe<Scalars['JSONObject']>;
+  metaDataInternal?: Maybe<Scalars['JSONObject']>;
+};
+
+export type Subscription = {
+  __typename?: 'Subscription';
+  personLogged: Scalars['String'];
+  causeAdded: Cause;
+  causeUpdated: Cause;
+  participantAdded: Participant;
+  participantUpdated: Participant;
+  participantIdentityChanged: Participant;
+  personAdded: Person;
+  personAttributeAdded: Person;
+  personUpdated: Person;
+  personPasswordUpdated: Person;
+  personProfileUpdated: Person;
+  personCitizenCardUpserted: Person;
+  transactionAdded: Transaction;
+  transactionUpdated: Transaction;
+  assetAdded: Asset;
+  assetUpdated: Asset;
+};
+
+export type AccessToken = {
+  __typename?: 'AccessToken';
+  accessToken: Scalars['String'];
+};
+
 export type X509Identities = {
   __typename?: 'x509Identities';
   id?: Maybe<Scalars['ID']>;
@@ -546,9 +697,9 @@ export type X509Identities = {
   fingerprint: Scalars['String'];
 };
 
-export type NewParticipantDataMutationVariables = {
+export type NewParticipantDataMutationVariables = Exact<{
   newParticipantData: NewParticipantInput;
-};
+}>;
 
 
 export type NewParticipantDataMutation = (
@@ -559,9 +710,9 @@ export type NewParticipantDataMutation = (
   ) }
 );
 
-export type ParticipantNewMutationVariables = {
+export type ParticipantNewMutationVariables = Exact<{
   newParticipantData: NewParticipantInput;
-};
+}>;
 
 
 export type ParticipantNewMutation = (
@@ -572,10 +723,10 @@ export type ParticipantNewMutation = (
   ) }
 );
 
-export type PersonAddAttributeMutationVariables = {
+export type PersonAddAttributeMutationVariables = Exact<{
   personId: Scalars['String'];
   addPersonAttributeData: AddPersonAttributeInput;
-};
+}>;
 
 
 export type PersonAddAttributeMutation = (
@@ -593,9 +744,9 @@ export type PersonAddAttributeMutation = (
   ) }
 );
 
-export type PersonLoginMutationVariables = {
+export type PersonLoginMutationVariables = Exact<{
   loginPersonData: LoginPersonInput;
-};
+}>;
 
 
 export type PersonLoginMutation = (
@@ -617,7 +768,7 @@ export type PersonLoginMutation = (
   ) }
 );
 
-export type PersonLogoutMutationVariables = {};
+export type PersonLogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
 
 export type PersonLogoutMutation = (
@@ -625,9 +776,9 @@ export type PersonLogoutMutation = (
   & Pick<Mutation, 'personLogout'>
 );
 
-export type PersonRegisterMutationVariables = {
+export type PersonRegisterMutationVariables = Exact<{
   newPersonData: NewPersonInput;
-};
+}>;
 
 
 export type PersonRegisterMutation = (
@@ -645,10 +796,10 @@ export type PersonRegisterMutation = (
   ) }
 );
 
-export type CausesQueryVariables = {
+export type CausesQueryVariables = Exact<{
   skip?: Maybe<Scalars['Int']>;
   take?: Maybe<Scalars['Int']>;
-};
+}>;
 
 
 export type CausesQuery = (
@@ -666,9 +817,9 @@ export type CausesQuery = (
   )> }
 );
 
-export type ParticipantByIdQueryVariables = {
+export type ParticipantByIdQueryVariables = Exact<{
   id: Scalars['String'];
-};
+}>;
 
 
 export type ParticipantByIdQuery = (
@@ -683,10 +834,10 @@ export type ParticipantByIdQuery = (
   ) }
 );
 
-export type ParticipantsQueryVariables = {
+export type ParticipantsQueryVariables = Exact<{
   skip?: Maybe<Scalars['Int']>;
   take?: Maybe<Scalars['Int']>;
-};
+}>;
 
 
 export type ParticipantsQuery = (
@@ -701,11 +852,11 @@ export type ParticipantsQuery = (
   )> }
 );
 
-export type PersonByAttributeQueryVariables = {
+export type PersonByAttributeQueryVariables = Exact<{
   getByAttributeInput: GetByAttributeInput;
   skip?: Maybe<Scalars['Int']>;
   take?: Maybe<Scalars['Int']>;
-};
+}>;
 
 
 export type PersonByAttributeQuery = (
@@ -723,9 +874,9 @@ export type PersonByAttributeQuery = (
   )> }
 );
 
-export type PersonByIdQueryVariables = {
+export type PersonByIdQueryVariables = Exact<{
   id: Scalars['String'];
-};
+}>;
 
 
 export type PersonByIdQuery = (
@@ -743,9 +894,9 @@ export type PersonByIdQuery = (
   ) }
 );
 
-export type PersonByUsernameQueryVariables = {
+export type PersonByUsernameQueryVariables = Exact<{
   username: Scalars['String'];
-};
+}>;
 
 
 export type PersonByUsernameQuery = (
@@ -763,7 +914,7 @@ export type PersonByUsernameQuery = (
   ) }
 );
 
-export type PersonProfileQueryVariables = {};
+export type PersonProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type PersonProfileQuery = (
@@ -781,10 +932,10 @@ export type PersonProfileQuery = (
   ) }
 );
 
-export type PersonsQueryVariables = {
+export type PersonsQueryVariables = Exact<{
   skip?: Maybe<Scalars['Int']>;
   take?: Maybe<Scalars['Int']>;
-};
+}>;
 
 
 export type PersonsQuery = (
@@ -822,7 +973,7 @@ export type PersonsQuery = (
   )> }
 );
 
-export type ParticipantAddedSubscriptionVariables = {};
+export type ParticipantAddedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
 export type ParticipantAddedSubscription = (
@@ -833,7 +984,7 @@ export type ParticipantAddedSubscription = (
   ) }
 );
 
-export type PersonAddedSubscriptionVariables = {};
+export type PersonAddedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
 export type PersonAddedSubscription = (
@@ -851,7 +1002,7 @@ export type PersonAddedSubscription = (
   ) }
 );
 
-export type PersonLoggedSubscriptionVariables = {};
+export type PersonLoggedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
 export type PersonLoggedSubscription = (
@@ -869,7 +1020,7 @@ export const NewParticipantDataDocument = gql`
   }
 }
     `;
-export type NewParticipantDataMutationFn = ApolloReactCommon.MutationFunction<NewParticipantDataMutation, NewParticipantDataMutationVariables>;
+export type NewParticipantDataMutationFn = Apollo.MutationFunction<NewParticipantDataMutation, NewParticipantDataMutationVariables>;
 
 /**
  * __useNewParticipantDataMutation__
@@ -888,12 +1039,12 @@ export type NewParticipantDataMutationFn = ApolloReactCommon.MutationFunction<Ne
  *   },
  * });
  */
-export function useNewParticipantDataMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<NewParticipantDataMutation, NewParticipantDataMutationVariables>) {
-        return ApolloReactHooks.useMutation<NewParticipantDataMutation, NewParticipantDataMutationVariables>(NewParticipantDataDocument, baseOptions);
+export function useNewParticipantDataMutation(baseOptions?: Apollo.MutationHookOptions<NewParticipantDataMutation, NewParticipantDataMutationVariables>) {
+        return Apollo.useMutation<NewParticipantDataMutation, NewParticipantDataMutationVariables>(NewParticipantDataDocument, baseOptions);
       }
 export type NewParticipantDataMutationHookResult = ReturnType<typeof useNewParticipantDataMutation>;
-export type NewParticipantDataMutationResult = ApolloReactCommon.MutationResult<NewParticipantDataMutation>;
-export type NewParticipantDataMutationOptions = ApolloReactCommon.BaseMutationOptions<NewParticipantDataMutation, NewParticipantDataMutationVariables>;
+export type NewParticipantDataMutationResult = Apollo.MutationResult<NewParticipantDataMutation>;
+export type NewParticipantDataMutationOptions = Apollo.BaseMutationOptions<NewParticipantDataMutation, NewParticipantDataMutationVariables>;
 export const ParticipantNewDocument = gql`
     mutation participantNew($newParticipantData: NewParticipantInput!) {
   participantNew(newParticipantData: $newParticipantData) {
@@ -903,7 +1054,7 @@ export const ParticipantNewDocument = gql`
   }
 }
     `;
-export type ParticipantNewMutationFn = ApolloReactCommon.MutationFunction<ParticipantNewMutation, ParticipantNewMutationVariables>;
+export type ParticipantNewMutationFn = Apollo.MutationFunction<ParticipantNewMutation, ParticipantNewMutationVariables>;
 
 /**
  * __useParticipantNewMutation__
@@ -922,12 +1073,12 @@ export type ParticipantNewMutationFn = ApolloReactCommon.MutationFunction<Partic
  *   },
  * });
  */
-export function useParticipantNewMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<ParticipantNewMutation, ParticipantNewMutationVariables>) {
-        return ApolloReactHooks.useMutation<ParticipantNewMutation, ParticipantNewMutationVariables>(ParticipantNewDocument, baseOptions);
+export function useParticipantNewMutation(baseOptions?: Apollo.MutationHookOptions<ParticipantNewMutation, ParticipantNewMutationVariables>) {
+        return Apollo.useMutation<ParticipantNewMutation, ParticipantNewMutationVariables>(ParticipantNewDocument, baseOptions);
       }
 export type ParticipantNewMutationHookResult = ReturnType<typeof useParticipantNewMutation>;
-export type ParticipantNewMutationResult = ApolloReactCommon.MutationResult<ParticipantNewMutation>;
-export type ParticipantNewMutationOptions = ApolloReactCommon.BaseMutationOptions<ParticipantNewMutation, ParticipantNewMutationVariables>;
+export type ParticipantNewMutationResult = Apollo.MutationResult<ParticipantNewMutation>;
+export type ParticipantNewMutationOptions = Apollo.BaseMutationOptions<ParticipantNewMutation, ParticipantNewMutationVariables>;
 export const PersonAddAttributeDocument = gql`
     mutation personAddAttribute($personId: String!, $addPersonAttributeData: AddPersonAttributeInput!) {
   personAddAttribute(personId: $personId, addPersonAttributeData: $addPersonAttributeData) {
@@ -984,7 +1135,7 @@ export const PersonAddAttributeDocument = gql`
   }
 }
     `;
-export type PersonAddAttributeMutationFn = ApolloReactCommon.MutationFunction<PersonAddAttributeMutation, PersonAddAttributeMutationVariables>;
+export type PersonAddAttributeMutationFn = Apollo.MutationFunction<PersonAddAttributeMutation, PersonAddAttributeMutationVariables>;
 
 /**
  * __usePersonAddAttributeMutation__
@@ -1004,12 +1155,12 @@ export type PersonAddAttributeMutationFn = ApolloReactCommon.MutationFunction<Pe
  *   },
  * });
  */
-export function usePersonAddAttributeMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<PersonAddAttributeMutation, PersonAddAttributeMutationVariables>) {
-        return ApolloReactHooks.useMutation<PersonAddAttributeMutation, PersonAddAttributeMutationVariables>(PersonAddAttributeDocument, baseOptions);
+export function usePersonAddAttributeMutation(baseOptions?: Apollo.MutationHookOptions<PersonAddAttributeMutation, PersonAddAttributeMutationVariables>) {
+        return Apollo.useMutation<PersonAddAttributeMutation, PersonAddAttributeMutationVariables>(PersonAddAttributeDocument, baseOptions);
       }
 export type PersonAddAttributeMutationHookResult = ReturnType<typeof usePersonAddAttributeMutation>;
-export type PersonAddAttributeMutationResult = ApolloReactCommon.MutationResult<PersonAddAttributeMutation>;
-export type PersonAddAttributeMutationOptions = ApolloReactCommon.BaseMutationOptions<PersonAddAttributeMutation, PersonAddAttributeMutationVariables>;
+export type PersonAddAttributeMutationResult = Apollo.MutationResult<PersonAddAttributeMutation>;
+export type PersonAddAttributeMutationOptions = Apollo.BaseMutationOptions<PersonAddAttributeMutation, PersonAddAttributeMutationVariables>;
 export const PersonLoginDocument = gql`
     mutation personLogin($loginPersonData: LoginPersonInput!) {
   personLogin(loginPersonData: $loginPersonData) {
@@ -1069,7 +1220,7 @@ export const PersonLoginDocument = gql`
   }
 }
     `;
-export type PersonLoginMutationFn = ApolloReactCommon.MutationFunction<PersonLoginMutation, PersonLoginMutationVariables>;
+export type PersonLoginMutationFn = Apollo.MutationFunction<PersonLoginMutation, PersonLoginMutationVariables>;
 
 /**
  * __usePersonLoginMutation__
@@ -1088,18 +1239,18 @@ export type PersonLoginMutationFn = ApolloReactCommon.MutationFunction<PersonLog
  *   },
  * });
  */
-export function usePersonLoginMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<PersonLoginMutation, PersonLoginMutationVariables>) {
-        return ApolloReactHooks.useMutation<PersonLoginMutation, PersonLoginMutationVariables>(PersonLoginDocument, baseOptions);
+export function usePersonLoginMutation(baseOptions?: Apollo.MutationHookOptions<PersonLoginMutation, PersonLoginMutationVariables>) {
+        return Apollo.useMutation<PersonLoginMutation, PersonLoginMutationVariables>(PersonLoginDocument, baseOptions);
       }
 export type PersonLoginMutationHookResult = ReturnType<typeof usePersonLoginMutation>;
-export type PersonLoginMutationResult = ApolloReactCommon.MutationResult<PersonLoginMutation>;
-export type PersonLoginMutationOptions = ApolloReactCommon.BaseMutationOptions<PersonLoginMutation, PersonLoginMutationVariables>;
+export type PersonLoginMutationResult = Apollo.MutationResult<PersonLoginMutation>;
+export type PersonLoginMutationOptions = Apollo.BaseMutationOptions<PersonLoginMutation, PersonLoginMutationVariables>;
 export const PersonLogoutDocument = gql`
     mutation personLogout {
   personLogout
 }
     `;
-export type PersonLogoutMutationFn = ApolloReactCommon.MutationFunction<PersonLogoutMutation, PersonLogoutMutationVariables>;
+export type PersonLogoutMutationFn = Apollo.MutationFunction<PersonLogoutMutation, PersonLogoutMutationVariables>;
 
 /**
  * __usePersonLogoutMutation__
@@ -1117,12 +1268,12 @@ export type PersonLogoutMutationFn = ApolloReactCommon.MutationFunction<PersonLo
  *   },
  * });
  */
-export function usePersonLogoutMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<PersonLogoutMutation, PersonLogoutMutationVariables>) {
-        return ApolloReactHooks.useMutation<PersonLogoutMutation, PersonLogoutMutationVariables>(PersonLogoutDocument, baseOptions);
+export function usePersonLogoutMutation(baseOptions?: Apollo.MutationHookOptions<PersonLogoutMutation, PersonLogoutMutationVariables>) {
+        return Apollo.useMutation<PersonLogoutMutation, PersonLogoutMutationVariables>(PersonLogoutDocument, baseOptions);
       }
 export type PersonLogoutMutationHookResult = ReturnType<typeof usePersonLogoutMutation>;
-export type PersonLogoutMutationResult = ApolloReactCommon.MutationResult<PersonLogoutMutation>;
-export type PersonLogoutMutationOptions = ApolloReactCommon.BaseMutationOptions<PersonLogoutMutation, PersonLogoutMutationVariables>;
+export type PersonLogoutMutationResult = Apollo.MutationResult<PersonLogoutMutation>;
+export type PersonLogoutMutationOptions = Apollo.BaseMutationOptions<PersonLogoutMutation, PersonLogoutMutationVariables>;
 export const PersonRegisterDocument = gql`
     mutation personRegister($newPersonData: NewPersonInput!) {
   personRegister(newPersonData: $newPersonData) {
@@ -1148,7 +1299,7 @@ export const PersonRegisterDocument = gql`
   }
 }
     `;
-export type PersonRegisterMutationFn = ApolloReactCommon.MutationFunction<PersonRegisterMutation, PersonRegisterMutationVariables>;
+export type PersonRegisterMutationFn = Apollo.MutationFunction<PersonRegisterMutation, PersonRegisterMutationVariables>;
 
 /**
  * __usePersonRegisterMutation__
@@ -1167,12 +1318,12 @@ export type PersonRegisterMutationFn = ApolloReactCommon.MutationFunction<Person
  *   },
  * });
  */
-export function usePersonRegisterMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<PersonRegisterMutation, PersonRegisterMutationVariables>) {
-        return ApolloReactHooks.useMutation<PersonRegisterMutation, PersonRegisterMutationVariables>(PersonRegisterDocument, baseOptions);
+export function usePersonRegisterMutation(baseOptions?: Apollo.MutationHookOptions<PersonRegisterMutation, PersonRegisterMutationVariables>) {
+        return Apollo.useMutation<PersonRegisterMutation, PersonRegisterMutationVariables>(PersonRegisterDocument, baseOptions);
       }
 export type PersonRegisterMutationHookResult = ReturnType<typeof usePersonRegisterMutation>;
-export type PersonRegisterMutationResult = ApolloReactCommon.MutationResult<PersonRegisterMutation>;
-export type PersonRegisterMutationOptions = ApolloReactCommon.BaseMutationOptions<PersonRegisterMutation, PersonRegisterMutationVariables>;
+export type PersonRegisterMutationResult = Apollo.MutationResult<PersonRegisterMutation>;
+export type PersonRegisterMutationOptions = Apollo.BaseMutationOptions<PersonRegisterMutation, PersonRegisterMutationVariables>;
 export const CausesDocument = gql`
     query causes($skip: Int, $take: Int) {
   causes(skip: $skip, take: $take) {
@@ -1210,15 +1361,15 @@ export const CausesDocument = gql`
  *   },
  * });
  */
-export function useCausesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<CausesQuery, CausesQueryVariables>) {
-        return ApolloReactHooks.useQuery<CausesQuery, CausesQueryVariables>(CausesDocument, baseOptions);
+export function useCausesQuery(baseOptions?: Apollo.QueryHookOptions<CausesQuery, CausesQueryVariables>) {
+        return Apollo.useQuery<CausesQuery, CausesQueryVariables>(CausesDocument, baseOptions);
       }
-export function useCausesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<CausesQuery, CausesQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<CausesQuery, CausesQueryVariables>(CausesDocument, baseOptions);
+export function useCausesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CausesQuery, CausesQueryVariables>) {
+          return Apollo.useLazyQuery<CausesQuery, CausesQueryVariables>(CausesDocument, baseOptions);
         }
 export type CausesQueryHookResult = ReturnType<typeof useCausesQuery>;
 export type CausesLazyQueryHookResult = ReturnType<typeof useCausesLazyQuery>;
-export type CausesQueryResult = ApolloReactCommon.QueryResult<CausesQuery, CausesQueryVariables>;
+export type CausesQueryResult = Apollo.QueryResult<CausesQuery, CausesQueryVariables>;
 export const ParticipantByIdDocument = gql`
     query participantById($id: String!) {
   participantById(id: $id) {
@@ -1251,15 +1402,15 @@ export const ParticipantByIdDocument = gql`
  *   },
  * });
  */
-export function useParticipantByIdQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<ParticipantByIdQuery, ParticipantByIdQueryVariables>) {
-        return ApolloReactHooks.useQuery<ParticipantByIdQuery, ParticipantByIdQueryVariables>(ParticipantByIdDocument, baseOptions);
+export function useParticipantByIdQuery(baseOptions?: Apollo.QueryHookOptions<ParticipantByIdQuery, ParticipantByIdQueryVariables>) {
+        return Apollo.useQuery<ParticipantByIdQuery, ParticipantByIdQueryVariables>(ParticipantByIdDocument, baseOptions);
       }
-export function useParticipantByIdLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ParticipantByIdQuery, ParticipantByIdQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<ParticipantByIdQuery, ParticipantByIdQueryVariables>(ParticipantByIdDocument, baseOptions);
+export function useParticipantByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ParticipantByIdQuery, ParticipantByIdQueryVariables>) {
+          return Apollo.useLazyQuery<ParticipantByIdQuery, ParticipantByIdQueryVariables>(ParticipantByIdDocument, baseOptions);
         }
 export type ParticipantByIdQueryHookResult = ReturnType<typeof useParticipantByIdQuery>;
 export type ParticipantByIdLazyQueryHookResult = ReturnType<typeof useParticipantByIdLazyQuery>;
-export type ParticipantByIdQueryResult = ApolloReactCommon.QueryResult<ParticipantByIdQuery, ParticipantByIdQueryVariables>;
+export type ParticipantByIdQueryResult = Apollo.QueryResult<ParticipantByIdQuery, ParticipantByIdQueryVariables>;
 export const ParticipantsDocument = gql`
     query participants($skip: Int, $take: Int) {
   participants(skip: $skip, take: $take) {
@@ -1293,15 +1444,15 @@ export const ParticipantsDocument = gql`
  *   },
  * });
  */
-export function useParticipantsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<ParticipantsQuery, ParticipantsQueryVariables>) {
-        return ApolloReactHooks.useQuery<ParticipantsQuery, ParticipantsQueryVariables>(ParticipantsDocument, baseOptions);
+export function useParticipantsQuery(baseOptions?: Apollo.QueryHookOptions<ParticipantsQuery, ParticipantsQueryVariables>) {
+        return Apollo.useQuery<ParticipantsQuery, ParticipantsQueryVariables>(ParticipantsDocument, baseOptions);
       }
-export function useParticipantsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ParticipantsQuery, ParticipantsQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<ParticipantsQuery, ParticipantsQueryVariables>(ParticipantsDocument, baseOptions);
+export function useParticipantsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ParticipantsQuery, ParticipantsQueryVariables>) {
+          return Apollo.useLazyQuery<ParticipantsQuery, ParticipantsQueryVariables>(ParticipantsDocument, baseOptions);
         }
 export type ParticipantsQueryHookResult = ReturnType<typeof useParticipantsQuery>;
 export type ParticipantsLazyQueryHookResult = ReturnType<typeof useParticipantsLazyQuery>;
-export type ParticipantsQueryResult = ApolloReactCommon.QueryResult<ParticipantsQuery, ParticipantsQueryVariables>;
+export type ParticipantsQueryResult = Apollo.QueryResult<ParticipantsQuery, ParticipantsQueryVariables>;
 export const PersonByAttributeDocument = gql`
     query personByAttribute($getByAttributeInput: GetByAttributeInput!, $skip: Int, $take: Int) {
   personByAttribute(getByAttributeInput: $getByAttributeInput, skip: $skip, take: $take) {
@@ -1378,15 +1529,15 @@ export const PersonByAttributeDocument = gql`
  *   },
  * });
  */
-export function usePersonByAttributeQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PersonByAttributeQuery, PersonByAttributeQueryVariables>) {
-        return ApolloReactHooks.useQuery<PersonByAttributeQuery, PersonByAttributeQueryVariables>(PersonByAttributeDocument, baseOptions);
+export function usePersonByAttributeQuery(baseOptions?: Apollo.QueryHookOptions<PersonByAttributeQuery, PersonByAttributeQueryVariables>) {
+        return Apollo.useQuery<PersonByAttributeQuery, PersonByAttributeQueryVariables>(PersonByAttributeDocument, baseOptions);
       }
-export function usePersonByAttributeLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PersonByAttributeQuery, PersonByAttributeQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<PersonByAttributeQuery, PersonByAttributeQueryVariables>(PersonByAttributeDocument, baseOptions);
+export function usePersonByAttributeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PersonByAttributeQuery, PersonByAttributeQueryVariables>) {
+          return Apollo.useLazyQuery<PersonByAttributeQuery, PersonByAttributeQueryVariables>(PersonByAttributeDocument, baseOptions);
         }
 export type PersonByAttributeQueryHookResult = ReturnType<typeof usePersonByAttributeQuery>;
 export type PersonByAttributeLazyQueryHookResult = ReturnType<typeof usePersonByAttributeLazyQuery>;
-export type PersonByAttributeQueryResult = ApolloReactCommon.QueryResult<PersonByAttributeQuery, PersonByAttributeQueryVariables>;
+export type PersonByAttributeQueryResult = Apollo.QueryResult<PersonByAttributeQuery, PersonByAttributeQueryVariables>;
 export const PersonByIdDocument = gql`
     query personById($id: String!) {
   personById(id: $id) {
@@ -1461,15 +1612,15 @@ export const PersonByIdDocument = gql`
  *   },
  * });
  */
-export function usePersonByIdQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PersonByIdQuery, PersonByIdQueryVariables>) {
-        return ApolloReactHooks.useQuery<PersonByIdQuery, PersonByIdQueryVariables>(PersonByIdDocument, baseOptions);
+export function usePersonByIdQuery(baseOptions?: Apollo.QueryHookOptions<PersonByIdQuery, PersonByIdQueryVariables>) {
+        return Apollo.useQuery<PersonByIdQuery, PersonByIdQueryVariables>(PersonByIdDocument, baseOptions);
       }
-export function usePersonByIdLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PersonByIdQuery, PersonByIdQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<PersonByIdQuery, PersonByIdQueryVariables>(PersonByIdDocument, baseOptions);
+export function usePersonByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PersonByIdQuery, PersonByIdQueryVariables>) {
+          return Apollo.useLazyQuery<PersonByIdQuery, PersonByIdQueryVariables>(PersonByIdDocument, baseOptions);
         }
 export type PersonByIdQueryHookResult = ReturnType<typeof usePersonByIdQuery>;
 export type PersonByIdLazyQueryHookResult = ReturnType<typeof usePersonByIdLazyQuery>;
-export type PersonByIdQueryResult = ApolloReactCommon.QueryResult<PersonByIdQuery, PersonByIdQueryVariables>;
+export type PersonByIdQueryResult = Apollo.QueryResult<PersonByIdQuery, PersonByIdQueryVariables>;
 export const PersonByUsernameDocument = gql`
     query personByUsername($username: String!) {
   personByUsername(username: $username) {
@@ -1513,15 +1664,15 @@ export const PersonByUsernameDocument = gql`
  *   },
  * });
  */
-export function usePersonByUsernameQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PersonByUsernameQuery, PersonByUsernameQueryVariables>) {
-        return ApolloReactHooks.useQuery<PersonByUsernameQuery, PersonByUsernameQueryVariables>(PersonByUsernameDocument, baseOptions);
+export function usePersonByUsernameQuery(baseOptions?: Apollo.QueryHookOptions<PersonByUsernameQuery, PersonByUsernameQueryVariables>) {
+        return Apollo.useQuery<PersonByUsernameQuery, PersonByUsernameQueryVariables>(PersonByUsernameDocument, baseOptions);
       }
-export function usePersonByUsernameLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PersonByUsernameQuery, PersonByUsernameQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<PersonByUsernameQuery, PersonByUsernameQueryVariables>(PersonByUsernameDocument, baseOptions);
+export function usePersonByUsernameLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PersonByUsernameQuery, PersonByUsernameQueryVariables>) {
+          return Apollo.useLazyQuery<PersonByUsernameQuery, PersonByUsernameQueryVariables>(PersonByUsernameDocument, baseOptions);
         }
 export type PersonByUsernameQueryHookResult = ReturnType<typeof usePersonByUsernameQuery>;
 export type PersonByUsernameLazyQueryHookResult = ReturnType<typeof usePersonByUsernameLazyQuery>;
-export type PersonByUsernameQueryResult = ApolloReactCommon.QueryResult<PersonByUsernameQuery, PersonByUsernameQueryVariables>;
+export type PersonByUsernameQueryResult = Apollo.QueryResult<PersonByUsernameQuery, PersonByUsernameQueryVariables>;
 export const PersonProfileDocument = gql`
     query personProfile {
   personProfile {
@@ -1595,15 +1746,15 @@ export const PersonProfileDocument = gql`
  *   },
  * });
  */
-export function usePersonProfileQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PersonProfileQuery, PersonProfileQueryVariables>) {
-        return ApolloReactHooks.useQuery<PersonProfileQuery, PersonProfileQueryVariables>(PersonProfileDocument, baseOptions);
+export function usePersonProfileQuery(baseOptions?: Apollo.QueryHookOptions<PersonProfileQuery, PersonProfileQueryVariables>) {
+        return Apollo.useQuery<PersonProfileQuery, PersonProfileQueryVariables>(PersonProfileDocument, baseOptions);
       }
-export function usePersonProfileLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PersonProfileQuery, PersonProfileQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<PersonProfileQuery, PersonProfileQueryVariables>(PersonProfileDocument, baseOptions);
+export function usePersonProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PersonProfileQuery, PersonProfileQueryVariables>) {
+          return Apollo.useLazyQuery<PersonProfileQuery, PersonProfileQueryVariables>(PersonProfileDocument, baseOptions);
         }
 export type PersonProfileQueryHookResult = ReturnType<typeof usePersonProfileQuery>;
 export type PersonProfileLazyQueryHookResult = ReturnType<typeof usePersonProfileLazyQuery>;
-export type PersonProfileQueryResult = ApolloReactCommon.QueryResult<PersonProfileQuery, PersonProfileQueryVariables>;
+export type PersonProfileQueryResult = Apollo.QueryResult<PersonProfileQuery, PersonProfileQueryVariables>;
 export const PersonsDocument = gql`
     query persons($skip: Int, $take: Int) {
   persons(skip: $skip, take: $take) {
@@ -1719,15 +1870,15 @@ export const PersonsDocument = gql`
  *   },
  * });
  */
-export function usePersonsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PersonsQuery, PersonsQueryVariables>) {
-        return ApolloReactHooks.useQuery<PersonsQuery, PersonsQueryVariables>(PersonsDocument, baseOptions);
+export function usePersonsQuery(baseOptions?: Apollo.QueryHookOptions<PersonsQuery, PersonsQueryVariables>) {
+        return Apollo.useQuery<PersonsQuery, PersonsQueryVariables>(PersonsDocument, baseOptions);
       }
-export function usePersonsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PersonsQuery, PersonsQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<PersonsQuery, PersonsQueryVariables>(PersonsDocument, baseOptions);
+export function usePersonsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PersonsQuery, PersonsQueryVariables>) {
+          return Apollo.useLazyQuery<PersonsQuery, PersonsQueryVariables>(PersonsDocument, baseOptions);
         }
 export type PersonsQueryHookResult = ReturnType<typeof usePersonsQuery>;
 export type PersonsLazyQueryHookResult = ReturnType<typeof usePersonsLazyQuery>;
-export type PersonsQueryResult = ApolloReactCommon.QueryResult<PersonsQuery, PersonsQueryVariables>;
+export type PersonsQueryResult = Apollo.QueryResult<PersonsQuery, PersonsQueryVariables>;
 export const ParticipantAddedDocument = gql`
     subscription participantAdded {
   participantAdded {
@@ -1753,11 +1904,11 @@ export const ParticipantAddedDocument = gql`
  *   },
  * });
  */
-export function useParticipantAddedSubscription(baseOptions?: ApolloReactHooks.SubscriptionHookOptions<ParticipantAddedSubscription, ParticipantAddedSubscriptionVariables>) {
-        return ApolloReactHooks.useSubscription<ParticipantAddedSubscription, ParticipantAddedSubscriptionVariables>(ParticipantAddedDocument, baseOptions);
+export function useParticipantAddedSubscription(baseOptions?: Apollo.SubscriptionHookOptions<ParticipantAddedSubscription, ParticipantAddedSubscriptionVariables>) {
+        return Apollo.useSubscription<ParticipantAddedSubscription, ParticipantAddedSubscriptionVariables>(ParticipantAddedDocument, baseOptions);
       }
 export type ParticipantAddedSubscriptionHookResult = ReturnType<typeof useParticipantAddedSubscription>;
-export type ParticipantAddedSubscriptionResult = ApolloReactCommon.SubscriptionResult<ParticipantAddedSubscription>;
+export type ParticipantAddedSubscriptionResult = Apollo.SubscriptionResult<ParticipantAddedSubscription>;
 export const PersonAddedDocument = gql`
     subscription personAdded {
   personAdded {
@@ -1799,11 +1950,11 @@ export const PersonAddedDocument = gql`
  *   },
  * });
  */
-export function usePersonAddedSubscription(baseOptions?: ApolloReactHooks.SubscriptionHookOptions<PersonAddedSubscription, PersonAddedSubscriptionVariables>) {
-        return ApolloReactHooks.useSubscription<PersonAddedSubscription, PersonAddedSubscriptionVariables>(PersonAddedDocument, baseOptions);
+export function usePersonAddedSubscription(baseOptions?: Apollo.SubscriptionHookOptions<PersonAddedSubscription, PersonAddedSubscriptionVariables>) {
+        return Apollo.useSubscription<PersonAddedSubscription, PersonAddedSubscriptionVariables>(PersonAddedDocument, baseOptions);
       }
 export type PersonAddedSubscriptionHookResult = ReturnType<typeof usePersonAddedSubscription>;
-export type PersonAddedSubscriptionResult = ApolloReactCommon.SubscriptionResult<PersonAddedSubscription>;
+export type PersonAddedSubscriptionResult = Apollo.SubscriptionResult<PersonAddedSubscription>;
 export const PersonLoggedDocument = gql`
     subscription personLogged {
   personLogged
@@ -1825,8 +1976,8 @@ export const PersonLoggedDocument = gql`
  *   },
  * });
  */
-export function usePersonLoggedSubscription(baseOptions?: ApolloReactHooks.SubscriptionHookOptions<PersonLoggedSubscription, PersonLoggedSubscriptionVariables>) {
-        return ApolloReactHooks.useSubscription<PersonLoggedSubscription, PersonLoggedSubscriptionVariables>(PersonLoggedDocument, baseOptions);
+export function usePersonLoggedSubscription(baseOptions?: Apollo.SubscriptionHookOptions<PersonLoggedSubscription, PersonLoggedSubscriptionVariables>) {
+        return Apollo.useSubscription<PersonLoggedSubscription, PersonLoggedSubscriptionVariables>(PersonLoggedDocument, baseOptions);
       }
 export type PersonLoggedSubscriptionHookResult = ReturnType<typeof usePersonLoggedSubscription>;
-export type PersonLoggedSubscriptionResult = ApolloReactCommon.SubscriptionResult<PersonLoggedSubscription>;
+export type PersonLoggedSubscriptionResult = Apollo.SubscriptionResult<PersonLoggedSubscription>;

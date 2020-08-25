@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Loading, ShowMessage } from '../components';
-import { envVariables as e } from '../env';
+import { envVariables as e } from '../app/config/env';
 import { usePersonProfileQuery } from '../generated/graphql';
 import { MessageType } from '../types/types';
 

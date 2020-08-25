@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useStateValue, ActionType } from './app/state';
 import { setAccessToken } from './common';
 import { Loading } from './components';
-import { envVariables as e } from './env';
+import { envVariables as e } from './app/config/env';
 import { usePersonProfileLazyQuery } from './generated/graphql';
 import { Routes } from './Routes';
 
@@ -21,7 +21,7 @@ export const App: React.FC<Props> = () => {
   // on app mounts, request a new accessToken with cookie jid refreshToken, and set it in inMemory accessToken
   React.useEffect(() => {
     // require credentials to send jid cookie from browser
-    fetch(`${e.restServerUri}/refresh-token`, {
+    fetch(`${e.restServerHttpUri}/refresh-token`, {
       method: 'POST',
       credentials: 'include'
     })
