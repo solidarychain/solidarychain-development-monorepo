@@ -31,12 +31,15 @@
   - [When we change cc models like adding new props to model...missing the following properties from type  'Person': identities, createdDate](#when-we-change-cc-models-like-adding-new-props-to-modelmissing-the-following-properties-from-type-person-identities-createddate)
   - [Error: GraphQL error: [object Object]](#error-graphql-error-object-object)
   - [React router Property 'message' does not exist on type '{}'.  TS2339](#react-router-property-message-does-not-exist-on-type--ts2339)
+  - [WebSocketLink authToken Subscriptions](#websocketlink-authtoken-subscriptions)
 
 ## TLDR
 
-1. run frontend with `npm run pkg:react:start`
-2. check server `CORS_ORIGIN_REACT_FRONTEND`, if `CORS_ORIGIN_REACT_FRONTEND=https://app.solidarychain.com:3000` use same uri in browser, else we have CORS problems
-3. test login
+1. check server `CORS_ORIGIN_REACT_FRONTEND`, if `CORS_ORIGIN_REACT_FRONTEND=https://app.solidarychain.com:3000` use same uri in browser, else we have CORS problems
+2. run frontend with `npm run pkg:react:start`
+3. launch debug with F5 (https://app.solidarychain.com:3000)
+4. test login/logout and refresh-token
+5. test subscriptions
 
 ## Links
 
@@ -784,4 +787,24 @@ changed `location.state.message` to `(location.state as any).message`
 
 ```typescript
 {(location.state && (location.state as any).message) && <ShowMessage type={MessageType.SUCCESS} message={(location.state as any).message} />}
+```
+
+## WebSocketLink authToken Subscriptions
+
+> the trick to get `getAccessToken()` in WebSocketLink options is using a annonimous function, like show bellow
+
+- [apollo-link-ws: how to change connectionParams (and token) after initial setup?](https://github.com/apollographql/apollo-link/issues/197)
+
+```typescript
+const wsLink = new WebSocketLink({
+  uri: e.graphqlServerWsUri,
+  options: {
+    reconnect: true,
+    // here we can send aribitrary data to be passed to server
+    // ex server catch with `const authToken: string = ('authorization' in connectionParamsLowerKeys)`
+    connectionParams: () => ({
+      authorization: `Bearer ${getAccessToken()}`,
+    }),
+  },
+});
 ```

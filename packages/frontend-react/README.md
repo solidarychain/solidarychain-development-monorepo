@@ -16,7 +16,10 @@ A minimal React Hooks typescript frontend, with **JWT Auth** using **hyperledger
 - login/logout
 - auto refresh jwt token
 - react routes
-- some graphql requests like person profile, and list of persons
+- graphql operations
+  - query: persons, person profile
+  - mutation: login and logout
+  - subscriptions: transactions
 - some context state
 
 ## Pre-Requisites

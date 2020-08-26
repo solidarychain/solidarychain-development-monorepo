@@ -108,8 +108,6 @@ const wsLink = new WebSocketLink({
     reconnect: true,
     // here we can send aribitrary data to be passed to server
     // ex server catch with `const authToken: string = ('authorization' in connectionParamsLowerKeys)`
-    // TODO: put in notes: the trick to get a updated accessToken in use a annonimous function
-    // https://github.com/apollographql/apollo-link/issues/197
     connectionParams: () => ({
       authorization: `Bearer ${getAccessToken()}`,
     }),
