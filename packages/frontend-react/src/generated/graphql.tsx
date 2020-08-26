@@ -697,6 +697,78 @@ export type X509Identities = {
   fingerprint: Scalars['String'];
 };
 
+export type AssetNewMutationVariables = Exact<{
+  newAssetData: NewAssetInput;
+}>;
+
+
+export type AssetNewMutation = (
+  { __typename?: 'Mutation' }
+  & { assetNew: (
+    { __typename?: 'Asset' }
+    & Pick<Asset, 'id' | 'name' | 'assetType' | 'ambassadors' | 'location' | 'tags' | 'metaData' | 'metaDataInternal' | 'createdDate' | 'createdByPersonId'>
+    & { owner: (
+      { __typename?: 'EntityResult' }
+      & { entity: (
+        { __typename?: 'Entity' }
+        & Pick<Entity, 'id' | 'type'>
+      ) }
+    ), participant: (
+      { __typename?: 'Participant' }
+      & Pick<Participant, 'id' | 'name'>
+    ) }
+  ) }
+);
+
+export type AssetUpdateMutationVariables = Exact<{
+  updateAssetData: UpdateAssetInput;
+}>;
+
+
+export type AssetUpdateMutation = (
+  { __typename?: 'Mutation' }
+  & { assetUpdate: (
+    { __typename?: 'Asset' }
+    & Pick<Asset, 'id' | 'name' | 'ambassadors' | 'tags' | 'metaData' | 'metaDataInternal'>
+  ) }
+);
+
+export type CauseNewMutationVariables = Exact<{
+  newCauseData: NewCauseInput;
+}>;
+
+
+export type CauseNewMutation = (
+  { __typename?: 'Mutation' }
+  & { causeNew: (
+    { __typename?: 'Cause' }
+    & Pick<Cause, 'id' | 'name' | 'email' | 'ambassadors' | 'startDate' | 'endDate' | 'location' | 'tags' | 'createdDate' | 'createdByPersonId' | 'metaData' | 'metaDataInternal'>
+    & { input: (
+      { __typename?: 'EntityResult' }
+      & { entity: (
+        { __typename?: 'Entity' }
+        & Pick<Entity, 'id' | 'type'>
+      ) }
+    ), participant: (
+      { __typename?: 'Participant' }
+      & Pick<Participant, 'id' | 'code' | 'name'>
+    ) }
+  ) }
+);
+
+export type CauseUpdateMutationVariables = Exact<{
+  updateCauseData: UpdateCauseInput;
+}>;
+
+
+export type CauseUpdateMutation = (
+  { __typename?: 'Mutation' }
+  & { causeUpdate: (
+    { __typename?: 'Cause' }
+    & Pick<Cause, 'id' | 'name' | 'email' | 'ambassadors' | 'tags' | 'metaData' | 'metaDataInternal'>
+  ) }
+);
+
 export type NewParticipantDataMutationVariables = Exact<{
   newParticipantData: NewParticipantInput;
 }>;
@@ -720,6 +792,19 @@ export type ParticipantNewMutation = (
   & { participantNew: (
     { __typename?: 'Participant' }
     & Pick<Participant, 'id' | 'name' | 'msp'>
+  ) }
+);
+
+export type ParticipantUpdateMutationVariables = Exact<{
+  updateParticipantData: UpdateParticipantInput;
+}>;
+
+
+export type ParticipantUpdateMutation = (
+  { __typename?: 'Mutation' }
+  & { participantUpdate: (
+    { __typename?: 'Participant' }
+    & Pick<Participant, 'id' | 'name' | 'ambassadors' | 'metaData' | 'metaDataInternal'>
   ) }
 );
 
@@ -796,6 +881,256 @@ export type PersonRegisterMutation = (
   ) }
 );
 
+export type PersonUpdateMutationVariables = Exact<{
+  updatePersonData: UpdatePersonInput;
+}>;
+
+
+export type PersonUpdateMutation = (
+  { __typename?: 'Mutation' }
+  & { personUpdate: (
+    { __typename?: 'Person' }
+    & Pick<Person, 'id' | 'roles' | 'metaDataInternal'>
+  ) }
+);
+
+export type PersonUpdatePasswordMutationVariables = Exact<{
+  updatePersonPasswordData: UpdatePersonPasswordInput;
+}>;
+
+
+export type PersonUpdatePasswordMutation = (
+  { __typename?: 'Mutation' }
+  & { personUpdatePassword: (
+    { __typename?: 'Person' }
+    & Pick<Person, 'id' | 'roles' | 'metaDataInternal'>
+  ) }
+);
+
+export type PersonUpdateProfileMutationVariables = Exact<{
+  updatePersonProfileData: UpdatePersonProfileInput;
+}>;
+
+
+export type PersonUpdateProfileMutation = (
+  { __typename?: 'Mutation' }
+  & { personUpdateProfile: (
+    { __typename?: 'Person' }
+    & Pick<Person, 'id' | 'email' | 'mobilePhone' | 'postal' | 'city' | 'region' | 'geoLocation' | 'timezone' | 'personalInfo' | 'metaData'>
+  ) }
+);
+
+export type PersonUpsertCitizenCardMutationVariables = Exact<{
+  upsertCitizenCardData: UpsertCitizenCardInput;
+}>;
+
+
+export type PersonUpsertCitizenCardMutation = (
+  { __typename?: 'Mutation' }
+  & { personUpsertCitizenCard: (
+    { __typename?: 'Person' }
+    & Pick<Person, 'id' | 'documentNumber' | 'identityNumber' | 'fiscalNumber' | 'socialSecurityNumber' | 'beneficiaryNumber' | 'pan' | 'firstname' | 'lastname' | 'gender' | 'height' | 'fatherFirstname' | 'fatherLastname' | 'motherFirstname' | 'motherLastname' | 'birthDate' | 'nationality' | 'country' | 'documentType' | 'cardVersion' | 'emissionDate' | 'expirationDate' | 'emittingEntity' | 'requestLocation' | 'otherInformation'>
+  ) }
+);
+
+export type TransactionNewMutationVariables = Exact<{
+  newTransactionData: NewTransactionInput;
+}>;
+
+
+export type TransactionNewMutation = (
+  { __typename?: 'Mutation' }
+  & { transactionNew: (
+    { __typename?: 'Transaction' }
+    & Pick<Transaction, 'id' | 'transactionType' | 'resourceType' | 'assetId' | 'quantity' | 'currency' | 'location' | 'tags' | 'createdDate' | 'createdByPersonId' | 'metaData' | 'metaDataInternal'>
+    & { input: (
+      { __typename?: 'EntityResult' }
+      & { entity: (
+        { __typename?: 'Entity' }
+        & Pick<Entity, 'id' | 'type'>
+      ) }
+    ), output: (
+      { __typename?: 'EntityResult' }
+      & { entity: (
+        { __typename?: 'Entity' }
+        & Pick<Entity, 'id' | 'type'>
+      ) }
+    ), participant?: Maybe<(
+      { __typename?: 'Participant' }
+      & Pick<Participant, 'id' | 'name' | 'msp'>
+    )> }
+  ) }
+);
+
+export type TransactionUpdateMutationVariables = Exact<{
+  updateTransactionData: UpdateTransactionInput;
+}>;
+
+
+export type TransactionUpdateMutation = (
+  { __typename?: 'Mutation' }
+  & { transactionUpdate: (
+    { __typename?: 'Transaction' }
+    & Pick<Transaction, 'id' | 'metaDataInternal'>
+  ) }
+);
+
+export type AssetByIdQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type AssetByIdQuery = (
+  { __typename?: 'Query' }
+  & { assetById: (
+    { __typename?: 'Asset' }
+    & Pick<Asset, 'id' | 'name' | 'description' | 'assetType' | 'ambassadors' | 'location' | 'tags' | 'createdDate' | 'createdByPersonId' | 'metaData' | 'metaDataInternal'>
+    & { owner: (
+      { __typename?: 'EntityResult' }
+      & { entity: (
+        { __typename?: 'Entity' }
+        & Pick<Entity, 'id' | 'type'>
+      ) }
+    ), participant: (
+      { __typename?: 'Participant' }
+      & Pick<Participant, 'id' | 'name'>
+    ) }
+  ) }
+);
+
+export type AssetComplexQueryQueryVariables = Exact<{
+  getByComplexQueryInput: GetByComplexQueryInput;
+  skip?: Maybe<Scalars['Int']>;
+  take?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type AssetComplexQueryQuery = (
+  { __typename?: 'Query' }
+  & { assetComplexQuery: Array<(
+    { __typename?: 'Asset' }
+    & Pick<Asset, 'id' | 'name' | 'assetType' | 'ambassadors' | 'location' | 'tags' | 'createdDate' | 'createdByPersonId' | 'metaData' | 'metaDataInternal'>
+    & { owner: (
+      { __typename?: 'EntityResult' }
+      & { entity: (
+        { __typename?: 'Entity' }
+        & Pick<Entity, 'id' | 'type'>
+      ) }
+    ), participant: (
+      { __typename?: 'Participant' }
+      & Pick<Participant, 'id' | 'name'>
+    ) }
+  )> }
+);
+
+export type AssetsQueryVariables = Exact<{
+  skip?: Maybe<Scalars['Int']>;
+  take?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type AssetsQuery = (
+  { __typename?: 'Query' }
+  & { assets: Array<(
+    { __typename?: 'Asset' }
+    & Pick<Asset, 'id' | 'name' | 'assetType' | 'ambassadors' | 'location' | 'tags' | 'createdDate' | 'createdByPersonId' | 'metaData' | 'metaDataInternal'>
+    & { owner: (
+      { __typename?: 'EntityResult' }
+      & { entity: (
+        { __typename?: 'Entity' }
+        & Pick<Entity, 'id' | 'type'>
+      ) }
+    ), participant: (
+      { __typename?: 'Participant' }
+      & Pick<Participant, 'id' | 'name'>
+    ) }
+  )> }
+);
+
+export type CauseByIdQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type CauseByIdQuery = (
+  { __typename?: 'Query' }
+  & { causeById: (
+    { __typename?: 'Cause' }
+    & Pick<Cause, 'id' | 'name' | 'email' | 'ambassadors' | 'startDate' | 'endDate' | 'location' | 'tags' | 'metaData' | 'createdDate' | 'createdByPersonId' | 'metaDataInternal'>
+    & { input: (
+      { __typename?: 'EntityResult' }
+      & { entity: (
+        { __typename?: 'Entity' }
+        & Pick<Entity, 'id' | 'type' | 'createdDate'>
+      ) }
+    ), participant: (
+      { __typename?: 'Participant' }
+      & Pick<Participant, 'id' | 'name' | 'msp'>
+    ), fundsBalance: (
+      { __typename?: 'GenericBalance' }
+      & Pick<GenericBalance, 'debit' | 'credit' | 'balance'>
+    ), volunteeringHoursBalance: (
+      { __typename?: 'GenericBalance' }
+      & Pick<GenericBalance, 'debit' | 'credit' | 'balance'>
+    ), goodsStock?: Maybe<Array<(
+      { __typename?: 'Goods' }
+      & Pick<Goods, 'id' | 'code' | 'barCode' | 'name' | 'description' | 'tags' | 'metaData' | 'metaDataInternal' | 'createdDate' | 'createdByPersonId'>
+      & { balance: (
+        { __typename?: 'GenericBalance' }
+        & Pick<GenericBalance, 'debit' | 'credit' | 'balance'>
+      ) }
+    )>> }
+  ) }
+);
+
+export type CauseComplexQueryQueryVariables = Exact<{
+  getByComplexQueryInput: GetByComplexQueryInput;
+  skip?: Maybe<Scalars['Int']>;
+  take?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type CauseComplexQueryQuery = (
+  { __typename?: 'Query' }
+  & { causeComplexQuery: Array<(
+    { __typename?: 'Cause' }
+    & Pick<Cause, 'id' | 'name' | 'ambassadors' | 'startDate' | 'endDate' | 'location' | 'tags' | 'metaData' | 'createdDate' | 'createdByPersonId' | 'metaDataInternal'>
+    & { input: (
+      { __typename?: 'EntityResult' }
+      & { entity: (
+        { __typename?: 'Entity' }
+        & Pick<Entity, 'id' | 'type' | 'createdDate'>
+      ) }
+    ), participant: (
+      { __typename?: 'Participant' }
+      & Pick<Participant, 'id' | 'name' | 'msp'>
+    ) }
+  )> }
+);
+
+export type CauseOngoingQueryVariables = Exact<{
+  date: Scalars['Float'];
+}>;
+
+
+export type CauseOngoingQuery = (
+  { __typename?: 'Query' }
+  & { causeOngoing: Array<(
+    { __typename?: 'Cause' }
+    & Pick<Cause, 'id' | 'name' | 'ambassadors' | 'startDate' | 'endDate' | 'location' | 'tags' | 'metaData' | 'createdDate' | 'createdByPersonId' | 'metaDataInternal'>
+    & { input: (
+      { __typename?: 'EntityResult' }
+      & { entity: (
+        { __typename?: 'Entity' }
+        & Pick<Entity, 'id' | 'type' | 'createdDate'>
+      ) }
+    ), participant: (
+      { __typename?: 'Participant' }
+      & Pick<Participant, 'id' | 'name' | 'msp'>
+    ) }
+  )> }
+);
+
 export type CausesQueryVariables = Exact<{
   skip?: Maybe<Scalars['Int']>;
   take?: Maybe<Scalars['Int']>;
@@ -815,6 +1150,23 @@ export type CausesQuery = (
       ) }
     ) }
   )> }
+);
+
+export type ParticipantByCodeQueryVariables = Exact<{
+  code: Scalars['String'];
+}>;
+
+
+export type ParticipantByCodeQuery = (
+  { __typename?: 'Query' }
+  & { participantByCode: (
+    { __typename?: 'Participant' }
+    & Pick<Participant, 'id' | 'code' | 'name' | 'ambassadors' | 'msp' | 'createdDate' | 'createdByPersonId' | 'metaData' | 'metaDataInternal'>
+    & { participant?: Maybe<(
+      { __typename?: 'Participant' }
+      & Pick<Participant, 'id' | 'name' | 'msp'>
+    )> }
+  ) }
 );
 
 export type ParticipantByIdQueryVariables = Exact<{
@@ -852,6 +1204,25 @@ export type ParticipantsQuery = (
   )> }
 );
 
+export type ParticipantComplexQueryQueryVariables = Exact<{
+  getByComplexQueryInput: GetByComplexQueryInput;
+  skip?: Maybe<Scalars['Int']>;
+  take?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type ParticipantComplexQueryQuery = (
+  { __typename?: 'Query' }
+  & { participantComplexQuery: Array<(
+    { __typename?: 'Participant' }
+    & Pick<Participant, 'id' | 'name' | 'ambassadors' | 'msp' | 'createdDate' | 'createdByPersonId' | 'metaData' | 'metaDataInternal'>
+    & { participant?: Maybe<(
+      { __typename?: 'Participant' }
+      & Pick<Participant, 'id' | 'name' | 'msp'>
+    )> }
+  )> }
+);
+
 export type PersonByAttributeQueryVariables = Exact<{
   getByAttributeInput: GetByAttributeInput;
   skip?: Maybe<Scalars['Int']>;
@@ -872,6 +1243,23 @@ export type PersonByAttributeQuery = (
       & Pick<Participant, 'id' | 'name' | 'msp'>
     ) }
   )> }
+);
+
+export type PersonByFiscalnumberQueryVariables = Exact<{
+  fiscalNumber: Scalars['String'];
+}>;
+
+
+export type PersonByFiscalnumberQuery = (
+  { __typename?: 'Query' }
+  & { personByFiscalnumber: (
+    { __typename?: 'Person' }
+    & Pick<Person, 'id' | 'firstname' | 'lastname' | 'username' | 'fiscalNumber' | 'email' | 'documentNumber' | 'roles'>
+    & { attributes?: Maybe<Array<(
+      { __typename?: 'Attribute' }
+      & Pick<Attribute, 'id' | 'content' | 'issuedDate' | 'expiresDate' | 'expired' | 'certifierID'>
+    )>> }
+  ) }
 );
 
 export type PersonByIdQueryVariables = Exact<{
@@ -912,6 +1300,25 @@ export type PersonByUsernameQuery = (
       & Pick<Participant, 'id' | 'name' | 'msp'>
     ) }
   ) }
+);
+
+export type PersonComplexQueryQueryVariables = Exact<{
+  getByComplexQueryInput: GetByComplexQueryInput;
+  skip?: Maybe<Scalars['Int']>;
+  take?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type PersonComplexQueryQuery = (
+  { __typename?: 'Query' }
+  & { personComplexQuery: Array<(
+    { __typename?: 'Person' }
+    & Pick<Person, 'id' | 'firstname' | 'lastname' | 'username' | 'fiscalNumber' | 'email' | 'roles' | 'createdDate' | 'metaData' | 'metaDataInternal'>
+    & { attributes?: Maybe<Array<(
+      { __typename?: 'Attribute' }
+      & Pick<Attribute, 'id' | 'content' | 'issuedDate' | 'expiresDate' | 'expired' | 'certifierID'>
+    )>> }
+  )> }
 );
 
 export type PersonProfileQueryVariables = Exact<{ [key: string]: never; }>;
@@ -973,6 +1380,139 @@ export type PersonsQuery = (
   )> }
 );
 
+export type TransactionsByIdQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type TransactionsByIdQuery = (
+  { __typename?: 'Query' }
+  & { transactionById: (
+    { __typename?: 'Transaction' }
+    & Pick<Transaction, 'id' | 'transactionType' | 'resourceType' | 'assetId' | 'quantity' | 'currency' | 'location' | 'tags' | 'createdDate' | 'createdByPersonId' | 'metaData' | 'metaDataInternal'>
+    & { input: (
+      { __typename?: 'EntityResult' }
+      & { entity: (
+        { __typename?: 'Entity' }
+        & Pick<Entity, 'id' | 'type'>
+      ) }
+    ), output: (
+      { __typename?: 'EntityResult' }
+      & { entity: (
+        { __typename?: 'Entity' }
+        & Pick<Entity, 'id' | 'type'>
+      ) }
+    ), goods?: Maybe<Array<(
+      { __typename?: 'Goods' }
+      & Pick<Goods, 'id' | 'code' | 'barCode' | 'name' | 'description' | 'tags' | 'metaData' | 'metaDataInternal' | 'createdDate' | 'createdByPersonId'>
+      & { balance: (
+        { __typename?: 'GenericBalance' }
+        & Pick<GenericBalance, 'debit' | 'credit' | 'balance'>
+      ) }
+    )>>, participant?: Maybe<(
+      { __typename?: 'Participant' }
+      & Pick<Participant, 'id' | 'name' | 'msp'>
+    )> }
+  ) }
+);
+
+export type TransactionComplexQueryQueryVariables = Exact<{
+  getByComplexQueryInput: GetByComplexQueryInput;
+  skip?: Maybe<Scalars['Int']>;
+  take?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type TransactionComplexQueryQuery = (
+  { __typename?: 'Query' }
+  & { transactionComplexQuery: Array<(
+    { __typename?: 'Transaction' }
+    & Pick<Transaction, 'id' | 'transactionType' | 'resourceType' | 'assetId' | 'quantity' | 'currency' | 'location' | 'tags' | 'createdDate' | 'createdByPersonId' | 'metaData' | 'metaDataInternal'>
+    & { input: (
+      { __typename?: 'EntityResult' }
+      & { entity: (
+        { __typename?: 'Entity' }
+        & Pick<Entity, 'id' | 'type'>
+      ) }
+    ), output: (
+      { __typename?: 'EntityResult' }
+      & { entity: (
+        { __typename?: 'Entity' }
+        & Pick<Entity, 'id' | 'type'>
+      ) }
+    ), participant?: Maybe<(
+      { __typename?: 'Participant' }
+      & Pick<Participant, 'id' | 'name' | 'msp'>
+    )> }
+  )> }
+);
+
+export type TransactionsQueryVariables = Exact<{
+  skip?: Maybe<Scalars['Int']>;
+  take?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type TransactionsQuery = (
+  { __typename?: 'Query' }
+  & { transactions: Array<(
+    { __typename?: 'Transaction' }
+    & Pick<Transaction, 'id' | 'transactionType' | 'resourceType' | 'assetId' | 'quantity' | 'currency' | 'location' | 'tags' | 'createdDate' | 'createdByPersonId' | 'metaData' | 'metaDataInternal'>
+    & { input: (
+      { __typename?: 'EntityResult' }
+      & { entity: (
+        { __typename?: 'Entity' }
+        & Pick<Entity, 'id' | 'type'>
+      ) }
+    ), output: (
+      { __typename?: 'EntityResult' }
+      & { entity: (
+        { __typename?: 'Entity' }
+        & Pick<Entity, 'id' | 'type'>
+      ) }
+    ), participant?: Maybe<(
+      { __typename?: 'Participant' }
+      & Pick<Participant, 'id' | 'name' | 'msp'>
+    )> }
+  )> }
+);
+
+export type AssetAddedSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AssetAddedSubscription = (
+  { __typename?: 'Subscription' }
+  & { causeAdded: (
+    { __typename?: 'Cause' }
+    & Pick<Cause, 'id' | 'name' | 'location' | 'tags' | 'metaData' | 'createdDate'>
+    & { input: (
+      { __typename?: 'EntityResult' }
+      & { entity: (
+        { __typename?: 'Entity' }
+        & Pick<Entity, 'id'>
+      ) }
+    ) }
+  ) }
+);
+
+export type CauseAddedSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CauseAddedSubscription = (
+  { __typename?: 'Subscription' }
+  & { causeAdded: (
+    { __typename?: 'Cause' }
+    & Pick<Cause, 'id' | 'name' | 'ambassadors' | 'startDate' | 'endDate' | 'location' | 'tags' | 'metaData' | 'createdDate'>
+    & { input: (
+      { __typename?: 'EntityResult' }
+      & { entity: (
+        { __typename?: 'Entity' }
+        & Pick<Entity, 'id'>
+      ) }
+    ) }
+  ) }
+);
+
 export type ParticipantAddedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1010,7 +1550,216 @@ export type PersonLoggedSubscription = (
   & Pick<Subscription, 'personLogged'>
 );
 
+export type TransactionAddedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
+
+export type TransactionAddedSubscription = (
+  { __typename?: 'Subscription' }
+  & { transactionAdded: (
+    { __typename?: 'Transaction' }
+    & Pick<Transaction, 'id' | 'transactionType' | 'resourceType' | 'quantity' | 'currency' | 'location' | 'tags' | 'metaData' | 'metaDataInternal' | 'createdDate'>
+    & { input: (
+      { __typename?: 'EntityResult' }
+      & { entity: (
+        { __typename?: 'Entity' }
+        & Pick<Entity, 'id' | 'type' | 'createdDate'>
+      ) }
+    ), output: (
+      { __typename?: 'EntityResult' }
+      & { entity: (
+        { __typename?: 'Entity' }
+        & Pick<Entity, 'id' | 'type' | 'createdDate'>
+      ) }
+    ), participant?: Maybe<(
+      { __typename?: 'Participant' }
+      & Pick<Participant, 'id' | 'name' | 'msp'>
+    )> }
+  ) }
+);
+
+
+export const AssetNewDocument = gql`
+    mutation assetNew($newAssetData: NewAssetInput!) {
+  assetNew(newAssetData: $newAssetData) {
+    id
+    name
+    assetType
+    owner {
+      entity {
+        id
+        type
+      }
+    }
+    ambassadors
+    location
+    tags
+    metaData
+    metaDataInternal
+    participant {
+      id
+      name
+    }
+    createdDate
+    createdByPersonId
+    metaData
+    metaDataInternal
+  }
+}
+    `;
+export type AssetNewMutationFn = Apollo.MutationFunction<AssetNewMutation, AssetNewMutationVariables>;
+
+/**
+ * __useAssetNewMutation__
+ *
+ * To run a mutation, you first call `useAssetNewMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAssetNewMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [assetNewMutation, { data, loading, error }] = useAssetNewMutation({
+ *   variables: {
+ *      newAssetData: // value for 'newAssetData'
+ *   },
+ * });
+ */
+export function useAssetNewMutation(baseOptions?: Apollo.MutationHookOptions<AssetNewMutation, AssetNewMutationVariables>) {
+        return Apollo.useMutation<AssetNewMutation, AssetNewMutationVariables>(AssetNewDocument, baseOptions);
+      }
+export type AssetNewMutationHookResult = ReturnType<typeof useAssetNewMutation>;
+export type AssetNewMutationResult = Apollo.MutationResult<AssetNewMutation>;
+export type AssetNewMutationOptions = Apollo.BaseMutationOptions<AssetNewMutation, AssetNewMutationVariables>;
+export const AssetUpdateDocument = gql`
+    mutation assetUpdate($updateAssetData: UpdateAssetInput!) {
+  assetUpdate(updateAssetData: $updateAssetData) {
+    id
+    name
+    ambassadors
+    tags
+    metaData
+    metaDataInternal
+  }
+}
+    `;
+export type AssetUpdateMutationFn = Apollo.MutationFunction<AssetUpdateMutation, AssetUpdateMutationVariables>;
+
+/**
+ * __useAssetUpdateMutation__
+ *
+ * To run a mutation, you first call `useAssetUpdateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAssetUpdateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [assetUpdateMutation, { data, loading, error }] = useAssetUpdateMutation({
+ *   variables: {
+ *      updateAssetData: // value for 'updateAssetData'
+ *   },
+ * });
+ */
+export function useAssetUpdateMutation(baseOptions?: Apollo.MutationHookOptions<AssetUpdateMutation, AssetUpdateMutationVariables>) {
+        return Apollo.useMutation<AssetUpdateMutation, AssetUpdateMutationVariables>(AssetUpdateDocument, baseOptions);
+      }
+export type AssetUpdateMutationHookResult = ReturnType<typeof useAssetUpdateMutation>;
+export type AssetUpdateMutationResult = Apollo.MutationResult<AssetUpdateMutation>;
+export type AssetUpdateMutationOptions = Apollo.BaseMutationOptions<AssetUpdateMutation, AssetUpdateMutationVariables>;
+export const CauseNewDocument = gql`
+    mutation causeNew($newCauseData: NewCauseInput!) {
+  causeNew(newCauseData: $newCauseData) {
+    id
+    name
+    email
+    ambassadors
+    startDate
+    endDate
+    input {
+      entity {
+        id
+        type
+      }
+    }
+    location
+    tags
+    participant {
+      id
+      code
+      name
+    }
+    createdDate
+    createdByPersonId
+    metaData
+    metaDataInternal
+  }
+}
+    `;
+export type CauseNewMutationFn = Apollo.MutationFunction<CauseNewMutation, CauseNewMutationVariables>;
+
+/**
+ * __useCauseNewMutation__
+ *
+ * To run a mutation, you first call `useCauseNewMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCauseNewMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [causeNewMutation, { data, loading, error }] = useCauseNewMutation({
+ *   variables: {
+ *      newCauseData: // value for 'newCauseData'
+ *   },
+ * });
+ */
+export function useCauseNewMutation(baseOptions?: Apollo.MutationHookOptions<CauseNewMutation, CauseNewMutationVariables>) {
+        return Apollo.useMutation<CauseNewMutation, CauseNewMutationVariables>(CauseNewDocument, baseOptions);
+      }
+export type CauseNewMutationHookResult = ReturnType<typeof useCauseNewMutation>;
+export type CauseNewMutationResult = Apollo.MutationResult<CauseNewMutation>;
+export type CauseNewMutationOptions = Apollo.BaseMutationOptions<CauseNewMutation, CauseNewMutationVariables>;
+export const CauseUpdateDocument = gql`
+    mutation causeUpdate($updateCauseData: UpdateCauseInput!) {
+  causeUpdate(updateCauseData: $updateCauseData) {
+    id
+    name
+    email
+    ambassadors
+    tags
+    metaData
+    metaDataInternal
+  }
+}
+    `;
+export type CauseUpdateMutationFn = Apollo.MutationFunction<CauseUpdateMutation, CauseUpdateMutationVariables>;
+
+/**
+ * __useCauseUpdateMutation__
+ *
+ * To run a mutation, you first call `useCauseUpdateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCauseUpdateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [causeUpdateMutation, { data, loading, error }] = useCauseUpdateMutation({
+ *   variables: {
+ *      updateCauseData: // value for 'updateCauseData'
+ *   },
+ * });
+ */
+export function useCauseUpdateMutation(baseOptions?: Apollo.MutationHookOptions<CauseUpdateMutation, CauseUpdateMutationVariables>) {
+        return Apollo.useMutation<CauseUpdateMutation, CauseUpdateMutationVariables>(CauseUpdateDocument, baseOptions);
+      }
+export type CauseUpdateMutationHookResult = ReturnType<typeof useCauseUpdateMutation>;
+export type CauseUpdateMutationResult = Apollo.MutationResult<CauseUpdateMutation>;
+export type CauseUpdateMutationOptions = Apollo.BaseMutationOptions<CauseUpdateMutation, CauseUpdateMutationVariables>;
 export const NewParticipantDataDocument = gql`
     mutation newParticipantData($newParticipantData: NewParticipantInput!) {
   participantNew(newParticipantData: $newParticipantData) {
@@ -1079,6 +1828,42 @@ export function useParticipantNewMutation(baseOptions?: Apollo.MutationHookOptio
 export type ParticipantNewMutationHookResult = ReturnType<typeof useParticipantNewMutation>;
 export type ParticipantNewMutationResult = Apollo.MutationResult<ParticipantNewMutation>;
 export type ParticipantNewMutationOptions = Apollo.BaseMutationOptions<ParticipantNewMutation, ParticipantNewMutationVariables>;
+export const ParticipantUpdateDocument = gql`
+    mutation participantUpdate($updateParticipantData: UpdateParticipantInput!) {
+  participantUpdate(updateParticipantData: $updateParticipantData) {
+    id
+    name
+    ambassadors
+    metaData
+    metaDataInternal
+  }
+}
+    `;
+export type ParticipantUpdateMutationFn = Apollo.MutationFunction<ParticipantUpdateMutation, ParticipantUpdateMutationVariables>;
+
+/**
+ * __useParticipantUpdateMutation__
+ *
+ * To run a mutation, you first call `useParticipantUpdateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useParticipantUpdateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [participantUpdateMutation, { data, loading, error }] = useParticipantUpdateMutation({
+ *   variables: {
+ *      updateParticipantData: // value for 'updateParticipantData'
+ *   },
+ * });
+ */
+export function useParticipantUpdateMutation(baseOptions?: Apollo.MutationHookOptions<ParticipantUpdateMutation, ParticipantUpdateMutationVariables>) {
+        return Apollo.useMutation<ParticipantUpdateMutation, ParticipantUpdateMutationVariables>(ParticipantUpdateDocument, baseOptions);
+      }
+export type ParticipantUpdateMutationHookResult = ReturnType<typeof useParticipantUpdateMutation>;
+export type ParticipantUpdateMutationResult = Apollo.MutationResult<ParticipantUpdateMutation>;
+export type ParticipantUpdateMutationOptions = Apollo.BaseMutationOptions<ParticipantUpdateMutation, ParticipantUpdateMutationVariables>;
 export const PersonAddAttributeDocument = gql`
     mutation personAddAttribute($personId: String!, $addPersonAttributeData: AddPersonAttributeInput!) {
   personAddAttribute(personId: $personId, addPersonAttributeData: $addPersonAttributeData) {
@@ -1324,6 +2109,644 @@ export function usePersonRegisterMutation(baseOptions?: Apollo.MutationHookOptio
 export type PersonRegisterMutationHookResult = ReturnType<typeof usePersonRegisterMutation>;
 export type PersonRegisterMutationResult = Apollo.MutationResult<PersonRegisterMutation>;
 export type PersonRegisterMutationOptions = Apollo.BaseMutationOptions<PersonRegisterMutation, PersonRegisterMutationVariables>;
+export const PersonUpdateDocument = gql`
+    mutation personUpdate($updatePersonData: UpdatePersonInput!) {
+  personUpdate(updatePersonData: $updatePersonData) {
+    id
+    roles
+    metaDataInternal
+  }
+}
+    `;
+export type PersonUpdateMutationFn = Apollo.MutationFunction<PersonUpdateMutation, PersonUpdateMutationVariables>;
+
+/**
+ * __usePersonUpdateMutation__
+ *
+ * To run a mutation, you first call `usePersonUpdateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePersonUpdateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [personUpdateMutation, { data, loading, error }] = usePersonUpdateMutation({
+ *   variables: {
+ *      updatePersonData: // value for 'updatePersonData'
+ *   },
+ * });
+ */
+export function usePersonUpdateMutation(baseOptions?: Apollo.MutationHookOptions<PersonUpdateMutation, PersonUpdateMutationVariables>) {
+        return Apollo.useMutation<PersonUpdateMutation, PersonUpdateMutationVariables>(PersonUpdateDocument, baseOptions);
+      }
+export type PersonUpdateMutationHookResult = ReturnType<typeof usePersonUpdateMutation>;
+export type PersonUpdateMutationResult = Apollo.MutationResult<PersonUpdateMutation>;
+export type PersonUpdateMutationOptions = Apollo.BaseMutationOptions<PersonUpdateMutation, PersonUpdateMutationVariables>;
+export const PersonUpdatePasswordDocument = gql`
+    mutation personUpdatePassword($updatePersonPasswordData: UpdatePersonPasswordInput!) {
+  personUpdatePassword(updatePersonPasswordData: $updatePersonPasswordData) {
+    id
+    roles
+    metaDataInternal
+  }
+}
+    `;
+export type PersonUpdatePasswordMutationFn = Apollo.MutationFunction<PersonUpdatePasswordMutation, PersonUpdatePasswordMutationVariables>;
+
+/**
+ * __usePersonUpdatePasswordMutation__
+ *
+ * To run a mutation, you first call `usePersonUpdatePasswordMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePersonUpdatePasswordMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [personUpdatePasswordMutation, { data, loading, error }] = usePersonUpdatePasswordMutation({
+ *   variables: {
+ *      updatePersonPasswordData: // value for 'updatePersonPasswordData'
+ *   },
+ * });
+ */
+export function usePersonUpdatePasswordMutation(baseOptions?: Apollo.MutationHookOptions<PersonUpdatePasswordMutation, PersonUpdatePasswordMutationVariables>) {
+        return Apollo.useMutation<PersonUpdatePasswordMutation, PersonUpdatePasswordMutationVariables>(PersonUpdatePasswordDocument, baseOptions);
+      }
+export type PersonUpdatePasswordMutationHookResult = ReturnType<typeof usePersonUpdatePasswordMutation>;
+export type PersonUpdatePasswordMutationResult = Apollo.MutationResult<PersonUpdatePasswordMutation>;
+export type PersonUpdatePasswordMutationOptions = Apollo.BaseMutationOptions<PersonUpdatePasswordMutation, PersonUpdatePasswordMutationVariables>;
+export const PersonUpdateProfileDocument = gql`
+    mutation personUpdateProfile($updatePersonProfileData: UpdatePersonProfileInput!) {
+  personUpdateProfile(updatePersonProfileData: $updatePersonProfileData) {
+    id
+    email
+    mobilePhone
+    postal
+    city
+    region
+    geoLocation
+    timezone
+    personalInfo
+    metaData
+  }
+}
+    `;
+export type PersonUpdateProfileMutationFn = Apollo.MutationFunction<PersonUpdateProfileMutation, PersonUpdateProfileMutationVariables>;
+
+/**
+ * __usePersonUpdateProfileMutation__
+ *
+ * To run a mutation, you first call `usePersonUpdateProfileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePersonUpdateProfileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [personUpdateProfileMutation, { data, loading, error }] = usePersonUpdateProfileMutation({
+ *   variables: {
+ *      updatePersonProfileData: // value for 'updatePersonProfileData'
+ *   },
+ * });
+ */
+export function usePersonUpdateProfileMutation(baseOptions?: Apollo.MutationHookOptions<PersonUpdateProfileMutation, PersonUpdateProfileMutationVariables>) {
+        return Apollo.useMutation<PersonUpdateProfileMutation, PersonUpdateProfileMutationVariables>(PersonUpdateProfileDocument, baseOptions);
+      }
+export type PersonUpdateProfileMutationHookResult = ReturnType<typeof usePersonUpdateProfileMutation>;
+export type PersonUpdateProfileMutationResult = Apollo.MutationResult<PersonUpdateProfileMutation>;
+export type PersonUpdateProfileMutationOptions = Apollo.BaseMutationOptions<PersonUpdateProfileMutation, PersonUpdateProfileMutationVariables>;
+export const PersonUpsertCitizenCardDocument = gql`
+    mutation personUpsertCitizenCard($upsertCitizenCardData: UpsertCitizenCardInput!) {
+  personUpsertCitizenCard(upsertCitizenCardData: $upsertCitizenCardData) {
+    id
+    documentNumber
+    identityNumber
+    fiscalNumber
+    socialSecurityNumber
+    beneficiaryNumber
+    pan
+    firstname
+    lastname
+    gender
+    height
+    fatherFirstname
+    fatherLastname
+    motherFirstname
+    motherLastname
+    birthDate
+    nationality
+    country
+    documentType
+    cardVersion
+    emissionDate
+    expirationDate
+    emittingEntity
+    requestLocation
+    otherInformation
+  }
+}
+    `;
+export type PersonUpsertCitizenCardMutationFn = Apollo.MutationFunction<PersonUpsertCitizenCardMutation, PersonUpsertCitizenCardMutationVariables>;
+
+/**
+ * __usePersonUpsertCitizenCardMutation__
+ *
+ * To run a mutation, you first call `usePersonUpsertCitizenCardMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePersonUpsertCitizenCardMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [personUpsertCitizenCardMutation, { data, loading, error }] = usePersonUpsertCitizenCardMutation({
+ *   variables: {
+ *      upsertCitizenCardData: // value for 'upsertCitizenCardData'
+ *   },
+ * });
+ */
+export function usePersonUpsertCitizenCardMutation(baseOptions?: Apollo.MutationHookOptions<PersonUpsertCitizenCardMutation, PersonUpsertCitizenCardMutationVariables>) {
+        return Apollo.useMutation<PersonUpsertCitizenCardMutation, PersonUpsertCitizenCardMutationVariables>(PersonUpsertCitizenCardDocument, baseOptions);
+      }
+export type PersonUpsertCitizenCardMutationHookResult = ReturnType<typeof usePersonUpsertCitizenCardMutation>;
+export type PersonUpsertCitizenCardMutationResult = Apollo.MutationResult<PersonUpsertCitizenCardMutation>;
+export type PersonUpsertCitizenCardMutationOptions = Apollo.BaseMutationOptions<PersonUpsertCitizenCardMutation, PersonUpsertCitizenCardMutationVariables>;
+export const TransactionNewDocument = gql`
+    mutation transactionNew($newTransactionData: NewTransactionInput!) {
+  transactionNew(newTransactionData: $newTransactionData) {
+    id
+    transactionType
+    resourceType
+    assetId
+    input {
+      entity {
+        id
+        type
+      }
+    }
+    output {
+      entity {
+        id
+        type
+      }
+    }
+    quantity
+    currency
+    location
+    tags
+    participant {
+      id
+      name
+      msp
+    }
+    createdDate
+    createdByPersonId
+    metaData
+    metaDataInternal
+  }
+}
+    `;
+export type TransactionNewMutationFn = Apollo.MutationFunction<TransactionNewMutation, TransactionNewMutationVariables>;
+
+/**
+ * __useTransactionNewMutation__
+ *
+ * To run a mutation, you first call `useTransactionNewMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useTransactionNewMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [transactionNewMutation, { data, loading, error }] = useTransactionNewMutation({
+ *   variables: {
+ *      newTransactionData: // value for 'newTransactionData'
+ *   },
+ * });
+ */
+export function useTransactionNewMutation(baseOptions?: Apollo.MutationHookOptions<TransactionNewMutation, TransactionNewMutationVariables>) {
+        return Apollo.useMutation<TransactionNewMutation, TransactionNewMutationVariables>(TransactionNewDocument, baseOptions);
+      }
+export type TransactionNewMutationHookResult = ReturnType<typeof useTransactionNewMutation>;
+export type TransactionNewMutationResult = Apollo.MutationResult<TransactionNewMutation>;
+export type TransactionNewMutationOptions = Apollo.BaseMutationOptions<TransactionNewMutation, TransactionNewMutationVariables>;
+export const TransactionUpdateDocument = gql`
+    mutation transactionUpdate($updateTransactionData: UpdateTransactionInput!) {
+  transactionUpdate(updateTransactionData: $updateTransactionData) {
+    id
+    metaDataInternal
+  }
+}
+    `;
+export type TransactionUpdateMutationFn = Apollo.MutationFunction<TransactionUpdateMutation, TransactionUpdateMutationVariables>;
+
+/**
+ * __useTransactionUpdateMutation__
+ *
+ * To run a mutation, you first call `useTransactionUpdateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useTransactionUpdateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [transactionUpdateMutation, { data, loading, error }] = useTransactionUpdateMutation({
+ *   variables: {
+ *      updateTransactionData: // value for 'updateTransactionData'
+ *   },
+ * });
+ */
+export function useTransactionUpdateMutation(baseOptions?: Apollo.MutationHookOptions<TransactionUpdateMutation, TransactionUpdateMutationVariables>) {
+        return Apollo.useMutation<TransactionUpdateMutation, TransactionUpdateMutationVariables>(TransactionUpdateDocument, baseOptions);
+      }
+export type TransactionUpdateMutationHookResult = ReturnType<typeof useTransactionUpdateMutation>;
+export type TransactionUpdateMutationResult = Apollo.MutationResult<TransactionUpdateMutation>;
+export type TransactionUpdateMutationOptions = Apollo.BaseMutationOptions<TransactionUpdateMutation, TransactionUpdateMutationVariables>;
+export const AssetByIdDocument = gql`
+    query assetById($id: String!) {
+  assetById(id: $id) {
+    id
+    name
+    description
+    assetType
+    owner {
+      entity {
+        id
+        type
+      }
+    }
+    ambassadors
+    location
+    tags
+    assetType
+    owner {
+      entity {
+        id
+        type
+      }
+    }
+    participant {
+      id
+      name
+    }
+    createdDate
+    createdByPersonId
+    metaData
+    metaDataInternal
+  }
+}
+    `;
+
+/**
+ * __useAssetByIdQuery__
+ *
+ * To run a query within a React component, call `useAssetByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAssetByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAssetByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useAssetByIdQuery(baseOptions?: Apollo.QueryHookOptions<AssetByIdQuery, AssetByIdQueryVariables>) {
+        return Apollo.useQuery<AssetByIdQuery, AssetByIdQueryVariables>(AssetByIdDocument, baseOptions);
+      }
+export function useAssetByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AssetByIdQuery, AssetByIdQueryVariables>) {
+          return Apollo.useLazyQuery<AssetByIdQuery, AssetByIdQueryVariables>(AssetByIdDocument, baseOptions);
+        }
+export type AssetByIdQueryHookResult = ReturnType<typeof useAssetByIdQuery>;
+export type AssetByIdLazyQueryHookResult = ReturnType<typeof useAssetByIdLazyQuery>;
+export type AssetByIdQueryResult = Apollo.QueryResult<AssetByIdQuery, AssetByIdQueryVariables>;
+export const AssetComplexQueryDocument = gql`
+    query assetComplexQuery($getByComplexQueryInput: GetByComplexQueryInput!, $skip: Int, $take: Int) {
+  assetComplexQuery(getByComplexQueryInput: $getByComplexQueryInput, skip: $skip, take: $take) {
+    id
+    name
+    assetType
+    owner {
+      entity {
+        id
+        type
+      }
+    }
+    ambassadors
+    location
+    tags
+    assetType
+    owner {
+      entity {
+        id
+        type
+      }
+    }
+    participant {
+      id
+      name
+    }
+    createdDate
+    createdByPersonId
+    metaData
+    metaDataInternal
+  }
+}
+    `;
+
+/**
+ * __useAssetComplexQueryQuery__
+ *
+ * To run a query within a React component, call `useAssetComplexQueryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAssetComplexQueryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAssetComplexQueryQuery({
+ *   variables: {
+ *      getByComplexQueryInput: // value for 'getByComplexQueryInput'
+ *      skip: // value for 'skip'
+ *      take: // value for 'take'
+ *   },
+ * });
+ */
+export function useAssetComplexQueryQuery(baseOptions?: Apollo.QueryHookOptions<AssetComplexQueryQuery, AssetComplexQueryQueryVariables>) {
+        return Apollo.useQuery<AssetComplexQueryQuery, AssetComplexQueryQueryVariables>(AssetComplexQueryDocument, baseOptions);
+      }
+export function useAssetComplexQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AssetComplexQueryQuery, AssetComplexQueryQueryVariables>) {
+          return Apollo.useLazyQuery<AssetComplexQueryQuery, AssetComplexQueryQueryVariables>(AssetComplexQueryDocument, baseOptions);
+        }
+export type AssetComplexQueryQueryHookResult = ReturnType<typeof useAssetComplexQueryQuery>;
+export type AssetComplexQueryLazyQueryHookResult = ReturnType<typeof useAssetComplexQueryLazyQuery>;
+export type AssetComplexQueryQueryResult = Apollo.QueryResult<AssetComplexQueryQuery, AssetComplexQueryQueryVariables>;
+export const AssetsDocument = gql`
+    query assets($skip: Int, $take: Int) {
+  assets(skip: $skip, take: $take) {
+    id
+    name
+    assetType
+    owner {
+      entity {
+        id
+        type
+      }
+    }
+    ambassadors
+    location
+    tags
+    assetType
+    owner {
+      entity {
+        id
+        type
+      }
+    }
+    participant {
+      id
+      name
+    }
+    createdDate
+    createdByPersonId
+    metaData
+    metaDataInternal
+  }
+}
+    `;
+
+/**
+ * __useAssetsQuery__
+ *
+ * To run a query within a React component, call `useAssetsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAssetsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAssetsQuery({
+ *   variables: {
+ *      skip: // value for 'skip'
+ *      take: // value for 'take'
+ *   },
+ * });
+ */
+export function useAssetsQuery(baseOptions?: Apollo.QueryHookOptions<AssetsQuery, AssetsQueryVariables>) {
+        return Apollo.useQuery<AssetsQuery, AssetsQueryVariables>(AssetsDocument, baseOptions);
+      }
+export function useAssetsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AssetsQuery, AssetsQueryVariables>) {
+          return Apollo.useLazyQuery<AssetsQuery, AssetsQueryVariables>(AssetsDocument, baseOptions);
+        }
+export type AssetsQueryHookResult = ReturnType<typeof useAssetsQuery>;
+export type AssetsLazyQueryHookResult = ReturnType<typeof useAssetsLazyQuery>;
+export type AssetsQueryResult = Apollo.QueryResult<AssetsQuery, AssetsQueryVariables>;
+export const CauseByIdDocument = gql`
+    query causeById($id: String!) {
+  causeById(id: $id) {
+    id
+    name
+    email
+    ambassadors
+    startDate
+    endDate
+    location
+    tags
+    metaData
+    input {
+      entity {
+        id
+        type
+        createdDate
+      }
+    }
+    participant {
+      id
+      name
+      msp
+    }
+    fundsBalance {
+      debit
+      credit
+      balance
+    }
+    volunteeringHoursBalance {
+      debit
+      debit
+      credit
+      balance
+    }
+    goodsStock {
+      id
+      code
+      barCode
+      name
+      description
+      tags
+      balance {
+        debit
+        credit
+        balance
+      }
+      metaData
+      metaDataInternal
+      createdDate
+      createdByPersonId
+    }
+    createdDate
+    createdByPersonId
+    metaData
+    metaDataInternal
+  }
+}
+    `;
+
+/**
+ * __useCauseByIdQuery__
+ *
+ * To run a query within a React component, call `useCauseByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCauseByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCauseByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useCauseByIdQuery(baseOptions?: Apollo.QueryHookOptions<CauseByIdQuery, CauseByIdQueryVariables>) {
+        return Apollo.useQuery<CauseByIdQuery, CauseByIdQueryVariables>(CauseByIdDocument, baseOptions);
+      }
+export function useCauseByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CauseByIdQuery, CauseByIdQueryVariables>) {
+          return Apollo.useLazyQuery<CauseByIdQuery, CauseByIdQueryVariables>(CauseByIdDocument, baseOptions);
+        }
+export type CauseByIdQueryHookResult = ReturnType<typeof useCauseByIdQuery>;
+export type CauseByIdLazyQueryHookResult = ReturnType<typeof useCauseByIdLazyQuery>;
+export type CauseByIdQueryResult = Apollo.QueryResult<CauseByIdQuery, CauseByIdQueryVariables>;
+export const CauseComplexQueryDocument = gql`
+    query causeComplexQuery($getByComplexQueryInput: GetByComplexQueryInput!, $skip: Int, $take: Int) {
+  causeComplexQuery(getByComplexQueryInput: $getByComplexQueryInput, skip: $skip, take: $take) {
+    id
+    name
+    ambassadors
+    startDate
+    endDate
+    location
+    tags
+    metaData
+    input {
+      entity {
+        id
+        type
+        createdDate
+      }
+    }
+    participant {
+      id
+      name
+      msp
+    }
+    createdDate
+    createdByPersonId
+    metaData
+    metaDataInternal
+  }
+}
+    `;
+
+/**
+ * __useCauseComplexQueryQuery__
+ *
+ * To run a query within a React component, call `useCauseComplexQueryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCauseComplexQueryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCauseComplexQueryQuery({
+ *   variables: {
+ *      getByComplexQueryInput: // value for 'getByComplexQueryInput'
+ *      skip: // value for 'skip'
+ *      take: // value for 'take'
+ *   },
+ * });
+ */
+export function useCauseComplexQueryQuery(baseOptions?: Apollo.QueryHookOptions<CauseComplexQueryQuery, CauseComplexQueryQueryVariables>) {
+        return Apollo.useQuery<CauseComplexQueryQuery, CauseComplexQueryQueryVariables>(CauseComplexQueryDocument, baseOptions);
+      }
+export function useCauseComplexQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CauseComplexQueryQuery, CauseComplexQueryQueryVariables>) {
+          return Apollo.useLazyQuery<CauseComplexQueryQuery, CauseComplexQueryQueryVariables>(CauseComplexQueryDocument, baseOptions);
+        }
+export type CauseComplexQueryQueryHookResult = ReturnType<typeof useCauseComplexQueryQuery>;
+export type CauseComplexQueryLazyQueryHookResult = ReturnType<typeof useCauseComplexQueryLazyQuery>;
+export type CauseComplexQueryQueryResult = Apollo.QueryResult<CauseComplexQueryQuery, CauseComplexQueryQueryVariables>;
+export const CauseOngoingDocument = gql`
+    query causeOngoing($date: Float!) {
+  causeOngoing(date: $date) {
+    id
+    name
+    ambassadors
+    startDate
+    endDate
+    location
+    tags
+    metaData
+    input {
+      entity {
+        id
+        type
+        createdDate
+      }
+    }
+    participant {
+      id
+      name
+      msp
+    }
+    createdDate
+    createdByPersonId
+    metaData
+    metaDataInternal
+  }
+}
+    `;
+
+/**
+ * __useCauseOngoingQuery__
+ *
+ * To run a query within a React component, call `useCauseOngoingQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCauseOngoingQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCauseOngoingQuery({
+ *   variables: {
+ *      date: // value for 'date'
+ *   },
+ * });
+ */
+export function useCauseOngoingQuery(baseOptions?: Apollo.QueryHookOptions<CauseOngoingQuery, CauseOngoingQueryVariables>) {
+        return Apollo.useQuery<CauseOngoingQuery, CauseOngoingQueryVariables>(CauseOngoingDocument, baseOptions);
+      }
+export function useCauseOngoingLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CauseOngoingQuery, CauseOngoingQueryVariables>) {
+          return Apollo.useLazyQuery<CauseOngoingQuery, CauseOngoingQueryVariables>(CauseOngoingDocument, baseOptions);
+        }
+export type CauseOngoingQueryHookResult = ReturnType<typeof useCauseOngoingQuery>;
+export type CauseOngoingLazyQueryHookResult = ReturnType<typeof useCauseOngoingLazyQuery>;
+export type CauseOngoingQueryResult = Apollo.QueryResult<CauseOngoingQuery, CauseOngoingQueryVariables>;
 export const CausesDocument = gql`
     query causes($skip: Int, $take: Int) {
   causes(skip: $skip, take: $take) {
@@ -1370,6 +2793,52 @@ export function useCausesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Cau
 export type CausesQueryHookResult = ReturnType<typeof useCausesQuery>;
 export type CausesLazyQueryHookResult = ReturnType<typeof useCausesLazyQuery>;
 export type CausesQueryResult = Apollo.QueryResult<CausesQuery, CausesQueryVariables>;
+export const ParticipantByCodeDocument = gql`
+    query participantByCode($code: String!) {
+  participantByCode(code: $code) {
+    id
+    code
+    name
+    ambassadors
+    msp
+    participant {
+      id
+      name
+      msp
+    }
+    createdDate
+    createdByPersonId
+    metaData
+    metaDataInternal
+  }
+}
+    `;
+
+/**
+ * __useParticipantByCodeQuery__
+ *
+ * To run a query within a React component, call `useParticipantByCodeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useParticipantByCodeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useParticipantByCodeQuery({
+ *   variables: {
+ *      code: // value for 'code'
+ *   },
+ * });
+ */
+export function useParticipantByCodeQuery(baseOptions?: Apollo.QueryHookOptions<ParticipantByCodeQuery, ParticipantByCodeQueryVariables>) {
+        return Apollo.useQuery<ParticipantByCodeQuery, ParticipantByCodeQueryVariables>(ParticipantByCodeDocument, baseOptions);
+      }
+export function useParticipantByCodeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ParticipantByCodeQuery, ParticipantByCodeQueryVariables>) {
+          return Apollo.useLazyQuery<ParticipantByCodeQuery, ParticipantByCodeQueryVariables>(ParticipantByCodeDocument, baseOptions);
+        }
+export type ParticipantByCodeQueryHookResult = ReturnType<typeof useParticipantByCodeQuery>;
+export type ParticipantByCodeLazyQueryHookResult = ReturnType<typeof useParticipantByCodeLazyQuery>;
+export type ParticipantByCodeQueryResult = Apollo.QueryResult<ParticipantByCodeQuery, ParticipantByCodeQueryVariables>;
 export const ParticipantByIdDocument = gql`
     query participantById($id: String!) {
   participantById(id: $id) {
@@ -1453,6 +2922,53 @@ export function useParticipantsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type ParticipantsQueryHookResult = ReturnType<typeof useParticipantsQuery>;
 export type ParticipantsLazyQueryHookResult = ReturnType<typeof useParticipantsLazyQuery>;
 export type ParticipantsQueryResult = Apollo.QueryResult<ParticipantsQuery, ParticipantsQueryVariables>;
+export const ParticipantComplexQueryDocument = gql`
+    query participantComplexQuery($getByComplexQueryInput: GetByComplexQueryInput!, $skip: Int, $take: Int) {
+  participantComplexQuery(getByComplexQueryInput: $getByComplexQueryInput, skip: $skip, take: $take) {
+    id
+    name
+    ambassadors
+    msp
+    participant {
+      id
+      name
+      msp
+    }
+    createdDate
+    createdByPersonId
+    metaData
+    metaDataInternal
+  }
+}
+    `;
+
+/**
+ * __useParticipantComplexQueryQuery__
+ *
+ * To run a query within a React component, call `useParticipantComplexQueryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useParticipantComplexQueryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useParticipantComplexQueryQuery({
+ *   variables: {
+ *      getByComplexQueryInput: // value for 'getByComplexQueryInput'
+ *      skip: // value for 'skip'
+ *      take: // value for 'take'
+ *   },
+ * });
+ */
+export function useParticipantComplexQueryQuery(baseOptions?: Apollo.QueryHookOptions<ParticipantComplexQueryQuery, ParticipantComplexQueryQueryVariables>) {
+        return Apollo.useQuery<ParticipantComplexQueryQuery, ParticipantComplexQueryQueryVariables>(ParticipantComplexQueryDocument, baseOptions);
+      }
+export function useParticipantComplexQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ParticipantComplexQueryQuery, ParticipantComplexQueryQueryVariables>) {
+          return Apollo.useLazyQuery<ParticipantComplexQueryQuery, ParticipantComplexQueryQueryVariables>(ParticipantComplexQueryDocument, baseOptions);
+        }
+export type ParticipantComplexQueryQueryHookResult = ReturnType<typeof useParticipantComplexQueryQuery>;
+export type ParticipantComplexQueryLazyQueryHookResult = ReturnType<typeof useParticipantComplexQueryLazyQuery>;
+export type ParticipantComplexQueryQueryResult = Apollo.QueryResult<ParticipantComplexQueryQuery, ParticipantComplexQueryQueryVariables>;
 export const PersonByAttributeDocument = gql`
     query personByAttribute($getByAttributeInput: GetByAttributeInput!, $skip: Int, $take: Int) {
   personByAttribute(getByAttributeInput: $getByAttributeInput, skip: $skip, take: $take) {
@@ -1538,6 +3054,54 @@ export function usePersonByAttributeLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type PersonByAttributeQueryHookResult = ReturnType<typeof usePersonByAttributeQuery>;
 export type PersonByAttributeLazyQueryHookResult = ReturnType<typeof usePersonByAttributeLazyQuery>;
 export type PersonByAttributeQueryResult = Apollo.QueryResult<PersonByAttributeQuery, PersonByAttributeQueryVariables>;
+export const PersonByFiscalnumberDocument = gql`
+    query personByFiscalnumber($fiscalNumber: String!) {
+  personByFiscalnumber(fiscalNumber: $fiscalNumber) {
+    id
+    firstname
+    lastname
+    username
+    fiscalNumber
+    email
+    documentNumber
+    attributes {
+      id
+      content
+      issuedDate
+      expiresDate
+      expired
+      certifierID
+    }
+    roles
+  }
+}
+    `;
+
+/**
+ * __usePersonByFiscalnumberQuery__
+ *
+ * To run a query within a React component, call `usePersonByFiscalnumberQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePersonByFiscalnumberQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePersonByFiscalnumberQuery({
+ *   variables: {
+ *      fiscalNumber: // value for 'fiscalNumber'
+ *   },
+ * });
+ */
+export function usePersonByFiscalnumberQuery(baseOptions?: Apollo.QueryHookOptions<PersonByFiscalnumberQuery, PersonByFiscalnumberQueryVariables>) {
+        return Apollo.useQuery<PersonByFiscalnumberQuery, PersonByFiscalnumberQueryVariables>(PersonByFiscalnumberDocument, baseOptions);
+      }
+export function usePersonByFiscalnumberLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PersonByFiscalnumberQuery, PersonByFiscalnumberQueryVariables>) {
+          return Apollo.useLazyQuery<PersonByFiscalnumberQuery, PersonByFiscalnumberQueryVariables>(PersonByFiscalnumberDocument, baseOptions);
+        }
+export type PersonByFiscalnumberQueryHookResult = ReturnType<typeof usePersonByFiscalnumberQuery>;
+export type PersonByFiscalnumberLazyQueryHookResult = ReturnType<typeof usePersonByFiscalnumberLazyQuery>;
+export type PersonByFiscalnumberQueryResult = Apollo.QueryResult<PersonByFiscalnumberQuery, PersonByFiscalnumberQueryVariables>;
 export const PersonByIdDocument = gql`
     query personById($id: String!) {
   personById(id: $id) {
@@ -1673,6 +3237,58 @@ export function usePersonByUsernameLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type PersonByUsernameQueryHookResult = ReturnType<typeof usePersonByUsernameQuery>;
 export type PersonByUsernameLazyQueryHookResult = ReturnType<typeof usePersonByUsernameLazyQuery>;
 export type PersonByUsernameQueryResult = Apollo.QueryResult<PersonByUsernameQuery, PersonByUsernameQueryVariables>;
+export const PersonComplexQueryDocument = gql`
+    query personComplexQuery($getByComplexQueryInput: GetByComplexQueryInput!, $skip: Int, $take: Int) {
+  personComplexQuery(getByComplexQueryInput: $getByComplexQueryInput, skip: $skip, take: $take) {
+    id
+    firstname
+    lastname
+    username
+    fiscalNumber
+    email
+    attributes {
+      id
+      content
+      issuedDate
+      expiresDate
+      expired
+      certifierID
+    }
+    roles
+    createdDate
+    metaData
+    metaDataInternal
+  }
+}
+    `;
+
+/**
+ * __usePersonComplexQueryQuery__
+ *
+ * To run a query within a React component, call `usePersonComplexQueryQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePersonComplexQueryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePersonComplexQueryQuery({
+ *   variables: {
+ *      getByComplexQueryInput: // value for 'getByComplexQueryInput'
+ *      skip: // value for 'skip'
+ *      take: // value for 'take'
+ *   },
+ * });
+ */
+export function usePersonComplexQueryQuery(baseOptions?: Apollo.QueryHookOptions<PersonComplexQueryQuery, PersonComplexQueryQueryVariables>) {
+        return Apollo.useQuery<PersonComplexQueryQuery, PersonComplexQueryQueryVariables>(PersonComplexQueryDocument, baseOptions);
+      }
+export function usePersonComplexQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PersonComplexQueryQuery, PersonComplexQueryQueryVariables>) {
+          return Apollo.useLazyQuery<PersonComplexQueryQuery, PersonComplexQueryQueryVariables>(PersonComplexQueryDocument, baseOptions);
+        }
+export type PersonComplexQueryQueryHookResult = ReturnType<typeof usePersonComplexQueryQuery>;
+export type PersonComplexQueryLazyQueryHookResult = ReturnType<typeof usePersonComplexQueryLazyQuery>;
+export type PersonComplexQueryQueryResult = Apollo.QueryResult<PersonComplexQueryQuery, PersonComplexQueryQueryVariables>;
 export const PersonProfileDocument = gql`
     query personProfile {
   personProfile {
@@ -1879,6 +3495,288 @@ export function usePersonsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Pe
 export type PersonsQueryHookResult = ReturnType<typeof usePersonsQuery>;
 export type PersonsLazyQueryHookResult = ReturnType<typeof usePersonsLazyQuery>;
 export type PersonsQueryResult = Apollo.QueryResult<PersonsQuery, PersonsQueryVariables>;
+export const TransactionsByIdDocument = gql`
+    query transactionsById($id: String!) {
+  transactionById(id: $id) {
+    id
+    transactionType
+    resourceType
+    assetId
+    input {
+      entity {
+        id
+        type
+      }
+    }
+    output {
+      entity {
+        id
+        type
+      }
+    }
+    quantity
+    currency
+    goods {
+      id
+      code
+      barCode
+      name
+      description
+      tags
+      balance {
+        debit
+        credit
+        balance
+      }
+      metaData
+      metaDataInternal
+      createdDate
+      createdByPersonId
+    }
+    location
+    tags
+    participant {
+      id
+      name
+      msp
+    }
+    createdDate
+    createdByPersonId
+    metaData
+    metaDataInternal
+  }
+}
+    `;
+
+/**
+ * __useTransactionsByIdQuery__
+ *
+ * To run a query within a React component, call `useTransactionsByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTransactionsByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTransactionsByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useTransactionsByIdQuery(baseOptions?: Apollo.QueryHookOptions<TransactionsByIdQuery, TransactionsByIdQueryVariables>) {
+        return Apollo.useQuery<TransactionsByIdQuery, TransactionsByIdQueryVariables>(TransactionsByIdDocument, baseOptions);
+      }
+export function useTransactionsByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TransactionsByIdQuery, TransactionsByIdQueryVariables>) {
+          return Apollo.useLazyQuery<TransactionsByIdQuery, TransactionsByIdQueryVariables>(TransactionsByIdDocument, baseOptions);
+        }
+export type TransactionsByIdQueryHookResult = ReturnType<typeof useTransactionsByIdQuery>;
+export type TransactionsByIdLazyQueryHookResult = ReturnType<typeof useTransactionsByIdLazyQuery>;
+export type TransactionsByIdQueryResult = Apollo.QueryResult<TransactionsByIdQuery, TransactionsByIdQueryVariables>;
+export const TransactionComplexQueryDocument = gql`
+    query transactionComplexQuery($getByComplexQueryInput: GetByComplexQueryInput!, $skip: Int, $take: Int) {
+  transactionComplexQuery(getByComplexQueryInput: $getByComplexQueryInput, skip: $skip, take: $take) {
+    id
+    transactionType
+    resourceType
+    assetId
+    input {
+      entity {
+        id
+        type
+      }
+    }
+    output {
+      entity {
+        id
+        type
+      }
+    }
+    quantity
+    currency
+    location
+    tags
+    participant {
+      id
+      name
+      msp
+    }
+    createdDate
+    createdByPersonId
+    metaData
+    metaDataInternal
+  }
+}
+    `;
+
+/**
+ * __useTransactionComplexQueryQuery__
+ *
+ * To run a query within a React component, call `useTransactionComplexQueryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTransactionComplexQueryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTransactionComplexQueryQuery({
+ *   variables: {
+ *      getByComplexQueryInput: // value for 'getByComplexQueryInput'
+ *      skip: // value for 'skip'
+ *      take: // value for 'take'
+ *   },
+ * });
+ */
+export function useTransactionComplexQueryQuery(baseOptions?: Apollo.QueryHookOptions<TransactionComplexQueryQuery, TransactionComplexQueryQueryVariables>) {
+        return Apollo.useQuery<TransactionComplexQueryQuery, TransactionComplexQueryQueryVariables>(TransactionComplexQueryDocument, baseOptions);
+      }
+export function useTransactionComplexQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TransactionComplexQueryQuery, TransactionComplexQueryQueryVariables>) {
+          return Apollo.useLazyQuery<TransactionComplexQueryQuery, TransactionComplexQueryQueryVariables>(TransactionComplexQueryDocument, baseOptions);
+        }
+export type TransactionComplexQueryQueryHookResult = ReturnType<typeof useTransactionComplexQueryQuery>;
+export type TransactionComplexQueryLazyQueryHookResult = ReturnType<typeof useTransactionComplexQueryLazyQuery>;
+export type TransactionComplexQueryQueryResult = Apollo.QueryResult<TransactionComplexQueryQuery, TransactionComplexQueryQueryVariables>;
+export const TransactionsDocument = gql`
+    query transactions($skip: Int, $take: Int) {
+  transactions(skip: $skip, take: $take) {
+    id
+    transactionType
+    resourceType
+    assetId
+    input {
+      entity {
+        id
+        type
+      }
+    }
+    output {
+      entity {
+        id
+        type
+      }
+    }
+    quantity
+    currency
+    location
+    tags
+    participant {
+      id
+      name
+      msp
+    }
+    createdDate
+    createdByPersonId
+    metaData
+    metaDataInternal
+  }
+}
+    `;
+
+/**
+ * __useTransactionsQuery__
+ *
+ * To run a query within a React component, call `useTransactionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTransactionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTransactionsQuery({
+ *   variables: {
+ *      skip: // value for 'skip'
+ *      take: // value for 'take'
+ *   },
+ * });
+ */
+export function useTransactionsQuery(baseOptions?: Apollo.QueryHookOptions<TransactionsQuery, TransactionsQueryVariables>) {
+        return Apollo.useQuery<TransactionsQuery, TransactionsQueryVariables>(TransactionsDocument, baseOptions);
+      }
+export function useTransactionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TransactionsQuery, TransactionsQueryVariables>) {
+          return Apollo.useLazyQuery<TransactionsQuery, TransactionsQueryVariables>(TransactionsDocument, baseOptions);
+        }
+export type TransactionsQueryHookResult = ReturnType<typeof useTransactionsQuery>;
+export type TransactionsLazyQueryHookResult = ReturnType<typeof useTransactionsLazyQuery>;
+export type TransactionsQueryResult = Apollo.QueryResult<TransactionsQuery, TransactionsQueryVariables>;
+export const AssetAddedDocument = gql`
+    subscription assetAdded {
+  causeAdded {
+    id
+    name
+    location
+    tags
+    metaData
+    input {
+      entity {
+        id
+      }
+    }
+    createdDate
+  }
+}
+    `;
+
+/**
+ * __useAssetAddedSubscription__
+ *
+ * To run a query within a React component, call `useAssetAddedSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useAssetAddedSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAssetAddedSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAssetAddedSubscription(baseOptions?: Apollo.SubscriptionHookOptions<AssetAddedSubscription, AssetAddedSubscriptionVariables>) {
+        return Apollo.useSubscription<AssetAddedSubscription, AssetAddedSubscriptionVariables>(AssetAddedDocument, baseOptions);
+      }
+export type AssetAddedSubscriptionHookResult = ReturnType<typeof useAssetAddedSubscription>;
+export type AssetAddedSubscriptionResult = Apollo.SubscriptionResult<AssetAddedSubscription>;
+export const CauseAddedDocument = gql`
+    subscription causeAdded {
+  causeAdded {
+    id
+    name
+    ambassadors
+    startDate
+    endDate
+    location
+    tags
+    metaData
+    input {
+      entity {
+        id
+      }
+    }
+    createdDate
+  }
+}
+    `;
+
+/**
+ * __useCauseAddedSubscription__
+ *
+ * To run a query within a React component, call `useCauseAddedSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useCauseAddedSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCauseAddedSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCauseAddedSubscription(baseOptions?: Apollo.SubscriptionHookOptions<CauseAddedSubscription, CauseAddedSubscriptionVariables>) {
+        return Apollo.useSubscription<CauseAddedSubscription, CauseAddedSubscriptionVariables>(CauseAddedDocument, baseOptions);
+      }
+export type CauseAddedSubscriptionHookResult = ReturnType<typeof useCauseAddedSubscription>;
+export type CauseAddedSubscriptionResult = Apollo.SubscriptionResult<CauseAddedSubscription>;
 export const ParticipantAddedDocument = gql`
     subscription participantAdded {
   participantAdded {
@@ -1981,3 +3879,59 @@ export function usePersonLoggedSubscription(baseOptions?: Apollo.SubscriptionHoo
       }
 export type PersonLoggedSubscriptionHookResult = ReturnType<typeof usePersonLoggedSubscription>;
 export type PersonLoggedSubscriptionResult = Apollo.SubscriptionResult<PersonLoggedSubscription>;
+export const TransactionAddedDocument = gql`
+    subscription transactionAdded {
+  transactionAdded {
+    id
+    transactionType
+    resourceType
+    input {
+      entity {
+        id
+        type
+        createdDate
+      }
+    }
+    output {
+      entity {
+        id
+        type
+        createdDate
+      }
+    }
+    quantity
+    currency
+    location
+    tags
+    metaData
+    metaDataInternal
+    participant {
+      id
+      name
+      msp
+    }
+    createdDate
+  }
+}
+    `;
+
+/**
+ * __useTransactionAddedSubscription__
+ *
+ * To run a query within a React component, call `useTransactionAddedSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useTransactionAddedSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTransactionAddedSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useTransactionAddedSubscription(baseOptions?: Apollo.SubscriptionHookOptions<TransactionAddedSubscription, TransactionAddedSubscriptionVariables>) {
+        return Apollo.useSubscription<TransactionAddedSubscription, TransactionAddedSubscriptionVariables>(TransactionAddedDocument, baseOptions);
+      }
+export type TransactionAddedSubscriptionHookResult = ReturnType<typeof useTransactionAddedSubscription>;
+export type TransactionAddedSubscriptionResult = Apollo.SubscriptionResult<TransactionAddedSubscription>;

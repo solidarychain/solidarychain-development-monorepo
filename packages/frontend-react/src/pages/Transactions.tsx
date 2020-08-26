@@ -1,5 +1,6 @@
+// normal subscription without graphql-codegen
+
 import * as React from 'react';
-// TODO replace all gql with import gql from 'graphql-tag';
 import { useSubscription, gql } from '@apollo/client';
 
 type Props = { causeId: string };

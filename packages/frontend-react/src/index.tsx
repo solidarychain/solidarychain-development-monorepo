@@ -10,7 +10,9 @@ ReactDOM.render(
   <ApolloProvider client={client}>
     {/* wrap with state provider */}
     <StateProvider initialState={initialState} reducer={reducer}>
-      <App />
+      <div className="App">
+        <App />
+      </div>
     </StateProvider>
   </ApolloProvider>
   , document.getElementById('root')

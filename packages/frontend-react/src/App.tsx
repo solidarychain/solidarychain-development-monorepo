@@ -6,6 +6,7 @@ import { Loading } from './components';
 import { envVariables as e } from './app/config/env';
 import { usePersonProfileLazyQuery } from './generated/graphql';
 import { Routes } from './Routes';
+import './App.css';
 
 interface Props { }
 
