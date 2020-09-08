@@ -800,7 +800,7 @@ const wsLink = new WebSocketLink({
   uri: e.graphqlServerWsUri,
   options: {
     reconnect: true,
-    // here we can send aribitrary data to be passed to server
+    // here we can send arbitrary data to be passed to server
     // ex server catch with `const authToken: string = ('authorization' in connectionParamsLowerKeys)`
     connectionParams: () => ({
       authorization: `Bearer ${getAccessToken()}`,
