@@ -2,6 +2,8 @@
 
 - [NOTES : Warning : Internal notes, subject to errors and typos](#notes--warning--internal-notes-subject-to-errors-and-typos)
   - [TLDR](#tldr)
+  - [Commit Ids](#commit-ids)
+    - [4c427d4: Last commit before Chakra UI layer on React Frontend](#4c427d4-last-commit-before-chakra-ui-layer-on-react-frontend)
   - [Links](#links)
     - [React Apollo](#react-apollo)
     - [React Apollo / Migration Project](#react-apollo--migration-project)
@@ -40,6 +42,15 @@
 3. launch debug with F5 (https://app.solidarychain.com:3000)
 4. test login/logout and refresh-token
 5. test subscriptions
+
+## Commit Ids
+
+### 4c427d4: Last commit before Chakra UI layer on React Frontend
+
+- [4c427d4](https://github.com/solidarychain/solidarychain-development-monorepo/commit/4c427d4dc007edc81d315e634fcc2b9667e5ac60)
+- [4c427d4dc007edc81d315e634fcc2b9667e5ac60](https://github.com/solidarychain/solidarychain-development-monorepo/tree/4c427d4dc007edc81d315e634fcc2b9667e5ac60)
+
+> checkout to get old non chakra ui version, with all 100% inclusive subscriptions
 
 ## Links
 
