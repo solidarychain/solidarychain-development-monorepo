@@ -1,11 +1,14 @@
-0 silly argv { _: [ 'add' ],
-0 silly argv   scope: '@convector-sample/common',
+0 silly argv {
+0 silly argv   _: [ 'add' ],
+0 silly argv   D: true,
+0 silly argv   dev: true,
+0 silly argv   scope: '@solidary-chain/frontend-react',
 0 silly argv   globs: [],
-0 silly argv   lernaVersion: '3.16.4',
-0 silly argv   '$0': 'lerna',
-0 silly argv   pkg: 'class-validato' }
-1 notice cli v3.16.4
-2 verbose rootPath /media/mario/Storage/Development/@SolidaryChain/network
-3 error Error: 404 Not Found - GET https://registry.npmjs.org/class-validato - Not found
-3 error     at res.buffer.catch.then.body (/media/mario/Storage/Development/@SolidaryChain/network/node_modules/@evocateur/npm-registry-fetch/check-response.js:104:15)
-3 error     at <anonymous>
+0 silly argv   lernaVersion: '3.20.2',
+0 silly argv   '$0': 'node_modules/.bin/lerna',
+0 silly argv   pkg: '@types/react-use-dimensions'
+0 silly argv }
+1 notice cli v3.20.2
+2 verbose rootPath /media/mario/Storage/Documents/Development/@SolidaryChain/solidarychain-development-monorepo
+3 error Error: 404 Not Found - GET https://registry.npmjs.org/@types%2freact-use-dimensions - Not found
+3 error     at /media/mario/Storage/Documents/Development/@SolidaryChain/solidarychain-development-monorepo/node_modules/@evocateur/npm-registry-fetch/check-response.js:104:15
