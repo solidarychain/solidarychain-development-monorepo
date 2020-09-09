@@ -31,14 +31,14 @@ mutation personLogin($loginPersonData: LoginPersonInput!) {
 			personalInfo
 			profile
 			# citizenCard data
-			firstname
-			lastname
+			firstName
+			lastName
 			gender
 			height
-			fatherFirstname
-			fatherLastname
-			motherFirstname
-			motherLastname
+			fatherFirstName
+			fatherLastName
+			motherFirstName
+			motherLastName
 			birthDate
 			nationality
 			country

@@ -71,14 +71,14 @@ query persons($skip: Int, $take: Int) {
       createdByPersonId
     }		
 		# citizenCard data
-		firstname
-		lastname
+		firstName
+		lastName
 		gender
 		height
-		fatherFirstname
-		fatherLastname
-		motherFirstname
-		motherLastname
+		fatherFirstName
+		fatherLastName
+		motherFirstName
+		motherLastName
 		birthDate
 		nationality
 		country

@@ -207,14 +207,14 @@ input NewPersonInput {
   metaData: JSONObject
   metaDataInternal: JSONObject
   profile: JSONObject
-  firstname: String
-  lastname: String
+  firstName: String
+  lastName: String
   gender: String
   height: Float
-  fatherFirstname: String
-  fatherLastname: String
-  motherFirstname: String
-  motherLastname: String
+  fatherFirstName: String
+  fatherLastName: String
+  motherFirstName: String
+  motherLastName: String
   birthDate: Date
   nationality: String
   country: String
@@ -289,14 +289,14 @@ type Person {
   fundsBalance: GenericBalance!
   volunteeringHoursBalance: GenericBalance!
   goodsStock: [Goods!]
-  firstname: String
-  lastname: String
+  firstName: String
+  lastName: String
   gender: String
   height: Float
-  fatherFirstname: String
-  fatherLastname: String
-  motherFirstname: String
-  motherLastname: String
+  fatherFirstName: String
+  fatherLastName: String
+  motherFirstName: String
+  motherLastName: String
   birthDate: Date
   nationality: String
   country: String
@@ -438,14 +438,14 @@ input UpdateTransactionInput {
 
 input UpsertCitizenCardInput {
   id: String
-  firstname: String!
-  lastname: String!
+  firstName: String!
+  lastName: String!
   gender: String!
   height: Float!
-  fatherFirstname: String!
-  fatherLastname: String!
-  motherFirstname: String!
-  motherLastname: String!
+  fatherFirstName: String!
+  fatherLastName: String!
+  motherFirstName: String!
+  motherLastName: String!
   birthDate: Date!
   nationality: String!
   country: String!

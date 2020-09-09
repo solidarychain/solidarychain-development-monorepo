@@ -1,8 +1,8 @@
 // stub
 const REGISTER_DEFAULT_USER = {
   fiscalNumber: '282692124',
-  firstname: 'Mário',
-  lastname: 'Monteiro',
+  firstName: 'Mário',
+  lastName: 'Monteiro',
   email: 'mario@koakh.com',
   username: 'mario',
   password: '12345678',
@@ -10,8 +10,8 @@ const REGISTER_DEFAULT_USER = {
 const KEYWORDS = {
 	id: "id",
 	fiscalNumber: "fiscalNumber",
-	firstname: "firstname",
-	lastname: "lastname",
+	firstName: "firstName",
+	lastName: "lastName",
 	email: "email",
 	username: "username",
 	password: "password",

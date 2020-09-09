@@ -11,11 +11,11 @@ export class UpsertCitizenCardInput {
 
   @Field()
   @IsDefined()
-  firstname?: string;
+  firstName?: string;
 
   @Field()
   @IsDefined()
-  lastname?: string;
+  lastName?: string;
 
   // M
   @Field()
@@ -32,22 +32,22 @@ export class UpsertCitizenCardInput {
   // Alberto
   @Field()
   @IsDefined()
-  fatherFirstname?: string;
+  fatherFirstName?: string;
 
   // De Andrade Monteiro
   @Field()
   @IsDefined()
-  fatherLastname?: string;
+  fatherLastName?: string;
 
   // Maria Da Graça De Oliveira Mendes
   @Field()
   @IsDefined()
-  motherFirstname?: string;
+  motherFirstName?: string;
 
   // Monteiro
   @Field()
   @IsDefined()
-  motherLastname?: string;
+  motherLastName?: string;
 
   // 19 12 1971
   @Field(type => Date)

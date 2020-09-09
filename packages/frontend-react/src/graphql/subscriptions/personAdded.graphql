@@ -1,8 +1,8 @@
 subscription personAdded {
 	personAdded {
 		id
-		firstname
-		lastname
+		firstName
+		lastName
 		username
 		email
 		attributes {

@@ -69,7 +69,7 @@ export class PersonResolver {
 
   @UseGuards(GqlAuthGuard)
   @Query(returns => Person)
-  async personByFiscalnumber(
+  async personByFiscalNumber(
     @Args('fiscalNumber') fiscalNumber: string,
   ): Promise<Person> {
     const person = await this.personService.findOneByFiscalnumber(fiscalNumber);

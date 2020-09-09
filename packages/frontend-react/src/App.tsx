@@ -53,8 +53,8 @@ export const App: React.FC<Props> = () => {
       const payload = {
         profile: {
           id: profileData.personProfile.id,
-          firstname: profileData.personProfile.firstname,
-          lastname: profileData.personProfile.lastname,
+          firstName: profileData.personProfile.firstName,
+          lastName: profileData.personProfile.lastName,
           username: profileData.personProfile.username,
           email: profileData.personProfile.email,
           roles: profileData.personProfile.roles

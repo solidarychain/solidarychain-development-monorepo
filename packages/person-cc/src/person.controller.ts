@@ -226,14 +226,14 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     upsertPerson.beneficiaryNumber = person.beneficiaryNumber;
     upsertPerson.pan = person.pan;
     // non unique
-    upsertPerson.firstname = person.firstname;
-    upsertPerson.lastname = person.lastname;
+    upsertPerson.firstName = person.firstName;
+    upsertPerson.lastName = person.lastName;
     upsertPerson.gender = person.gender;
     upsertPerson.height = person.height;
-    upsertPerson.fatherFirstname = person.fatherFirstname;
-    upsertPerson.fatherLastname = person.fatherLastname;
-    upsertPerson.motherFirstname = person.motherFirstname;
-    upsertPerson.motherLastname = person.motherLastname;
+    upsertPerson.fatherFirstName = person.fatherFirstName;
+    upsertPerson.fatherLastName = person.fatherLastName;
+    upsertPerson.motherFirstName = person.motherFirstName;
+    upsertPerson.motherLastName = person.motherLastName;
     upsertPerson.birthDate = person.birthDate;
     upsertPerson.nationality = person.nationality;
     upsertPerson.country = person.country;
@@ -457,14 +457,14 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
   //   let gov: Participant = await Participant.getOne(c.GOV_UUID);
   //   // mock data
   //   const mockData = [
-  //     { id: c.JOHN_UUID, firstname: c.JOHN_FIRST_NAME, lastname: c.JOHN_LAST_NAME, username: c.JOHN_USER_NAME, password: c.DEFAULT_PASSWORD, fiscalNumber: c.JOHN_FISCAL_NUMBER },
-  //     { id: c.JANE_UUID, firstname: c.JANE_FIRST_NAME, lastname: c.JANE_LAST_NAME, username: c.JANE_USER_NAME, password: c.DEFAULT_PASSWORD, fiscalNumber: c.JANE_FISCAL_NUMBER },
+  //     { id: c.JOHN_UUID, firstName: c.JOHN_FIRST_NAME, lastName: c.JOHN_LAST_NAME, username: c.JOHN_USER_NAME, password: c.DEFAULT_PASSWORD, fiscalNumber: c.JOHN_FISCAL_NUMBER },
+  //     { id: c.JANE_UUID, firstName: c.JANE_FIRST_NAME, lastName: c.JANE_LAST_NAME, username: c.JANE_USER_NAME, password: c.DEFAULT_PASSWORD, fiscalNumber: c.JANE_FISCAL_NUMBER },
   //   ];
   //   await Promise.all(
   //     mockData.map(async (person: Person) => {
   //       let newPerson = new Person(person.id);
-  //       newPerson.firstname = person.firstname;
-  //       newPerson.lastname = person.lastname;
+  //       newPerson.firstName = person.firstName;
+  //       newPerson.lastName = person.lastName;
   //       newPerson.username = person.username;
   //       newPerson.fiscalNumber = person.fiscalNumber;
   //       newPerson.participant = gov;

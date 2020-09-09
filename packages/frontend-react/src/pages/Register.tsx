@@ -15,8 +15,8 @@ export const Register: React.FC<RouteComponentProps> = ({ history }) => {
 	// hooks: state
 	const [id, setId] = useState(uuid())
 	const [fiscalNumber, setFiscalNumber] = useState(defaultUser.fiscalNumber)
-	const [firstname, setFirstname] = useState(defaultUser.firstname)
-	const [lastname, setLastname] = useState(defaultUser.lastname)
+	const [firstName, setFirstname] = useState(defaultUser.firstName)
+	const [lastName, setLastname] = useState(defaultUser.lastName)
 	const [email, setEmail] = useState(defaultUser.email);
 	const [username, setUsername] = useState(defaultUser.username)
 	const [password, setPassword] = useState(defaultUser.password);
@@ -50,7 +50,7 @@ export const Register: React.FC<RouteComponentProps> = ({ history }) => {
 		try {
 			e.preventDefault();
 			const newPersonData: NewPersonInput = {
-				id, fiscalNumber, firstname, lastname, email, username, password
+				id, fiscalNumber, firstName, lastName, email, username, password
 			};
 			const response = await personNewMutation({ variables: { newPersonData } }).catch(error => {
 				throw error;
@@ -89,20 +89,20 @@ export const Register: React.FC<RouteComponentProps> = ({ history }) => {
 						placeholder='fiscalNumber'
 						onChange={(e) => onChangeFiscalNumberHandler(e)} />
 				</div>
-				{/* firstname */}
-				<label>{c.KEYWORDS.firstname}:</label>
+				{/* firstName */}
+				<label>{c.KEYWORDS.firstName}:</label>
 				<div>
 					<input
-						value={firstname}
-						placeholder='firstname'
+						value={firstName}
+						placeholder='firstName'
 						onChange={(e) => onChangeFirstnameHandler(e)} />
 				</div>
-				{/* lastname */}
-				<label>{c.KEYWORDS.lastname}:</label>
+				{/* lastName */}
+				<label>{c.KEYWORDS.lastName}:</label>
 				<div>
 					<input
-						value={lastname}
-						placeholder='lastname'
+						value={lastName}
+						placeholder='lastName'
 						onChange={(e) => onChangeLastnameHandler(e)} />
 				</div>
 				{/* email */}

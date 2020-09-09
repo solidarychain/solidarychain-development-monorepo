@@ -262,14 +262,14 @@ export type Person = {
   fundsBalance: GenericBalance;
   volunteeringHoursBalance: GenericBalance;
   goodsStock?: Maybe<Array<Goods>>;
-  firstname?: Maybe<Scalars['String']>;
-  lastname?: Maybe<Scalars['String']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
   gender?: Maybe<Scalars['String']>;
   height?: Maybe<Scalars['Float']>;
-  fatherFirstname?: Maybe<Scalars['String']>;
-  fatherLastname?: Maybe<Scalars['String']>;
-  motherFirstname?: Maybe<Scalars['String']>;
-  motherLastname?: Maybe<Scalars['String']>;
+  fatherFirstName?: Maybe<Scalars['String']>;
+  fatherLastName?: Maybe<Scalars['String']>;
+  motherFirstName?: Maybe<Scalars['String']>;
+  motherLastName?: Maybe<Scalars['String']>;
   birthDate?: Maybe<Scalars['Date']>;
   nationality?: Maybe<Scalars['String']>;
   country?: Maybe<Scalars['String']>;
@@ -523,14 +523,14 @@ export type NewPersonInput = {
   metaData?: Maybe<Scalars['JSONObject']>;
   metaDataInternal?: Maybe<Scalars['JSONObject']>;
   profile?: Maybe<Scalars['JSONObject']>;
-  firstname?: Maybe<Scalars['String']>;
-  lastname?: Maybe<Scalars['String']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
   gender?: Maybe<Scalars['String']>;
   height?: Maybe<Scalars['Float']>;
-  fatherFirstname?: Maybe<Scalars['String']>;
-  fatherLastname?: Maybe<Scalars['String']>;
-  motherFirstname?: Maybe<Scalars['String']>;
-  motherLastname?: Maybe<Scalars['String']>;
+  fatherFirstName?: Maybe<Scalars['String']>;
+  fatherLastName?: Maybe<Scalars['String']>;
+  motherFirstName?: Maybe<Scalars['String']>;
+  motherLastName?: Maybe<Scalars['String']>;
   birthDate?: Maybe<Scalars['Date']>;
   nationality?: Maybe<Scalars['String']>;
   country?: Maybe<Scalars['String']>;
@@ -584,14 +584,14 @@ export type UpdatePersonProfileInput = {
 
 export type UpsertCitizenCardInput = {
   id?: Maybe<Scalars['String']>;
-  firstname: Scalars['String'];
-  lastname: Scalars['String'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
   gender: Scalars['String'];
   height: Scalars['Float'];
-  fatherFirstname: Scalars['String'];
-  fatherLastname: Scalars['String'];
-  motherFirstname: Scalars['String'];
-  motherLastname: Scalars['String'];
+  fatherFirstName: Scalars['String'];
+  fatherLastName: Scalars['String'];
+  motherFirstName: Scalars['String'];
+  motherLastName: Scalars['String'];
   birthDate: Scalars['Date'];
   nationality: Scalars['String'];
   country: Scalars['String'];
@@ -818,7 +818,7 @@ export type PersonAddAttributeMutation = (
   { __typename?: 'Mutation' }
   & { personAddAttribute: (
     { __typename?: 'Person' }
-    & Pick<Person, 'id' | 'username' | 'email' | 'roles' | 'mobilePhone' | 'postal' | 'city' | 'region' | 'geoLocation' | 'timezone' | 'personalInfo' | 'profile' | 'firstname' | 'lastname' | 'gender' | 'height' | 'fatherFirstname' | 'fatherLastname' | 'motherFirstname' | 'motherLastname' | 'birthDate' | 'nationality' | 'country' | 'documentNumber' | 'documentType' | 'cardVersion' | 'emissionDate' | 'expirationDate' | 'emittingEntity' | 'identityNumber' | 'fiscalNumber' | 'socialSecurityNumber' | 'beneficiaryNumber' | 'pan' | 'requestLocation' | 'otherInformation' | 'registrationDate'>
+    & Pick<Person, 'id' | 'username' | 'email' | 'roles' | 'mobilePhone' | 'postal' | 'city' | 'region' | 'geoLocation' | 'timezone' | 'personalInfo' | 'profile' | 'firstName' | 'lastName' | 'gender' | 'height' | 'fatherFirstName' | 'fatherLastName' | 'motherFirstName' | 'motherLastName' | 'birthDate' | 'nationality' | 'country' | 'documentNumber' | 'documentType' | 'cardVersion' | 'emissionDate' | 'expirationDate' | 'emittingEntity' | 'identityNumber' | 'fiscalNumber' | 'socialSecurityNumber' | 'beneficiaryNumber' | 'pan' | 'requestLocation' | 'otherInformation' | 'registrationDate'>
     & { attributes?: Maybe<Array<(
       { __typename?: 'Attribute' }
       & Pick<Attribute, 'id' | 'content' | 'issuedDate' | 'expiresDate' | 'expired' | 'certifierID'>
@@ -841,7 +841,7 @@ export type PersonLoginMutation = (
     & Pick<PersonLoginResponse, 'accessToken'>
     & { user: (
       { __typename?: 'Person' }
-      & Pick<Person, 'id' | 'username' | 'email' | 'roles' | 'mobilePhone' | 'postal' | 'city' | 'region' | 'geoLocation' | 'timezone' | 'personalInfo' | 'profile' | 'firstname' | 'lastname' | 'gender' | 'height' | 'fatherFirstname' | 'fatherLastname' | 'motherFirstname' | 'motherLastname' | 'birthDate' | 'nationality' | 'country' | 'documentNumber' | 'documentType' | 'cardVersion' | 'emissionDate' | 'expirationDate' | 'emittingEntity' | 'identityNumber' | 'fiscalNumber' | 'socialSecurityNumber' | 'beneficiaryNumber' | 'pan' | 'requestLocation' | 'otherInformation' | 'registrationDate'>
+      & Pick<Person, 'id' | 'username' | 'email' | 'roles' | 'mobilePhone' | 'postal' | 'city' | 'region' | 'geoLocation' | 'timezone' | 'personalInfo' | 'profile' | 'firstName' | 'lastName' | 'gender' | 'height' | 'fatherFirstName' | 'fatherLastName' | 'motherFirstName' | 'motherLastName' | 'birthDate' | 'nationality' | 'country' | 'documentNumber' | 'documentType' | 'cardVersion' | 'emissionDate' | 'expirationDate' | 'emittingEntity' | 'identityNumber' | 'fiscalNumber' | 'socialSecurityNumber' | 'beneficiaryNumber' | 'pan' | 'requestLocation' | 'otherInformation' | 'registrationDate'>
       & { attributes?: Maybe<Array<(
         { __typename?: 'Attribute' }
         & Pick<Attribute, 'id' | 'content' | 'issuedDate' | 'expiresDate' | 'expired' | 'certifierID'>
@@ -870,7 +870,7 @@ export type PersonRegisterMutation = (
   { __typename?: 'Mutation' }
   & { personRegister: (
     { __typename?: 'Person' }
-    & Pick<Person, 'id' | 'firstname' | 'lastname' | 'username' | 'email' | 'roles'>
+    & Pick<Person, 'id' | 'firstName' | 'lastName' | 'username' | 'email' | 'roles'>
     & { attributes?: Maybe<Array<(
       { __typename?: 'Attribute' }
       & Pick<Attribute, 'id' | 'content' | 'issuedDate' | 'expiresDate' | 'expired' | 'certifierID'>
@@ -929,7 +929,7 @@ export type PersonUpsertCitizenCardMutation = (
   { __typename?: 'Mutation' }
   & { personUpsertCitizenCard: (
     { __typename?: 'Person' }
-    & Pick<Person, 'id' | 'documentNumber' | 'identityNumber' | 'fiscalNumber' | 'socialSecurityNumber' | 'beneficiaryNumber' | 'pan' | 'firstname' | 'lastname' | 'gender' | 'height' | 'fatherFirstname' | 'fatherLastname' | 'motherFirstname' | 'motherLastname' | 'birthDate' | 'nationality' | 'country' | 'documentType' | 'cardVersion' | 'emissionDate' | 'expirationDate' | 'emittingEntity' | 'requestLocation' | 'otherInformation'>
+    & Pick<Person, 'id' | 'documentNumber' | 'identityNumber' | 'fiscalNumber' | 'socialSecurityNumber' | 'beneficiaryNumber' | 'pan' | 'firstName' | 'lastName' | 'gender' | 'height' | 'fatherFirstName' | 'fatherLastName' | 'motherFirstName' | 'motherLastName' | 'birthDate' | 'nationality' | 'country' | 'documentType' | 'cardVersion' | 'emissionDate' | 'expirationDate' | 'emittingEntity' | 'requestLocation' | 'otherInformation'>
   ) }
 );
 
@@ -1234,7 +1234,7 @@ export type PersonByAttributeQuery = (
   { __typename?: 'Query' }
   & { personByAttribute: Array<(
     { __typename?: 'Person' }
-    & Pick<Person, 'id' | 'username' | 'email' | 'roles' | 'mobilePhone' | 'postal' | 'city' | 'region' | 'geoLocation' | 'timezone' | 'personalInfo' | 'profile' | 'firstname' | 'lastname' | 'gender' | 'height' | 'fatherFirstname' | 'fatherLastname' | 'motherFirstname' | 'motherLastname' | 'birthDate' | 'nationality' | 'country' | 'documentNumber' | 'documentType' | 'cardVersion' | 'emissionDate' | 'expirationDate' | 'emittingEntity' | 'identityNumber' | 'fiscalNumber' | 'socialSecurityNumber' | 'beneficiaryNumber' | 'pan' | 'requestLocation' | 'otherInformation' | 'registrationDate' | 'createdDate'>
+    & Pick<Person, 'id' | 'username' | 'email' | 'roles' | 'mobilePhone' | 'postal' | 'city' | 'region' | 'geoLocation' | 'timezone' | 'personalInfo' | 'profile' | 'firstName' | 'lastName' | 'gender' | 'height' | 'fatherFirstName' | 'fatherLastName' | 'motherFirstName' | 'motherLastName' | 'birthDate' | 'nationality' | 'country' | 'documentNumber' | 'documentType' | 'cardVersion' | 'emissionDate' | 'expirationDate' | 'emittingEntity' | 'identityNumber' | 'fiscalNumber' | 'socialSecurityNumber' | 'beneficiaryNumber' | 'pan' | 'requestLocation' | 'otherInformation' | 'registrationDate' | 'createdDate'>
     & { attributes?: Maybe<Array<(
       { __typename?: 'Attribute' }
       & Pick<Attribute, 'id' | 'content' | 'issuedDate' | 'expiresDate' | 'expired' | 'certifierID'>
@@ -1254,7 +1254,7 @@ export type PersonByFiscalnumberQuery = (
   { __typename?: 'Query' }
   & { personByFiscalnumber: (
     { __typename?: 'Person' }
-    & Pick<Person, 'id' | 'firstname' | 'lastname' | 'username' | 'fiscalNumber' | 'email' | 'documentNumber' | 'roles'>
+    & Pick<Person, 'id' | 'firstName' | 'lastName' | 'username' | 'fiscalNumber' | 'email' | 'documentNumber' | 'roles'>
     & { attributes?: Maybe<Array<(
       { __typename?: 'Attribute' }
       & Pick<Attribute, 'id' | 'content' | 'issuedDate' | 'expiresDate' | 'expired' | 'certifierID'>
@@ -1271,7 +1271,7 @@ export type PersonByIdQuery = (
   { __typename?: 'Query' }
   & { personById: (
     { __typename?: 'Person' }
-    & Pick<Person, 'id' | 'username' | 'email' | 'roles' | 'mobilePhone' | 'postal' | 'city' | 'region' | 'geoLocation' | 'timezone' | 'personalInfo' | 'profile' | 'firstname' | 'lastname' | 'gender' | 'height' | 'fatherFirstname' | 'fatherLastname' | 'motherFirstname' | 'motherLastname' | 'birthDate' | 'nationality' | 'country' | 'documentNumber' | 'documentType' | 'cardVersion' | 'emissionDate' | 'expirationDate' | 'emittingEntity' | 'identityNumber' | 'fiscalNumber' | 'socialSecurityNumber' | 'beneficiaryNumber' | 'pan' | 'requestLocation' | 'otherInformation' | 'registrationDate' | 'createdDate'>
+    & Pick<Person, 'id' | 'username' | 'email' | 'roles' | 'mobilePhone' | 'postal' | 'city' | 'region' | 'geoLocation' | 'timezone' | 'personalInfo' | 'profile' | 'firstName' | 'lastName' | 'gender' | 'height' | 'fatherFirstName' | 'fatherLastName' | 'motherFirstName' | 'motherLastName' | 'birthDate' | 'nationality' | 'country' | 'documentNumber' | 'documentType' | 'cardVersion' | 'emissionDate' | 'expirationDate' | 'emittingEntity' | 'identityNumber' | 'fiscalNumber' | 'socialSecurityNumber' | 'beneficiaryNumber' | 'pan' | 'requestLocation' | 'otherInformation' | 'registrationDate' | 'createdDate'>
     & { attributes?: Maybe<Array<(
       { __typename?: 'Attribute' }
       & Pick<Attribute, 'id' | 'content' | 'issuedDate' | 'expiresDate' | 'expired' | 'certifierID'>
@@ -1291,7 +1291,7 @@ export type PersonByUsernameQuery = (
   { __typename?: 'Query' }
   & { personByUsername: (
     { __typename?: 'Person' }
-    & Pick<Person, 'id' | 'firstname' | 'lastname' | 'username' | 'email' | 'roles' | 'createdDate'>
+    & Pick<Person, 'id' | 'firstName' | 'lastName' | 'username' | 'email' | 'roles' | 'createdDate'>
     & { attributes?: Maybe<Array<(
       { __typename?: 'Attribute' }
       & Pick<Attribute, 'id' | 'content' | 'issuedDate' | 'expiresDate' | 'expired' | 'certifierID'>
@@ -1313,7 +1313,7 @@ export type PersonComplexQueryQuery = (
   { __typename?: 'Query' }
   & { personComplexQuery: Array<(
     { __typename?: 'Person' }
-    & Pick<Person, 'id' | 'firstname' | 'lastname' | 'username' | 'fiscalNumber' | 'email' | 'roles' | 'createdDate' | 'metaData' | 'metaDataInternal'>
+    & Pick<Person, 'id' | 'firstName' | 'lastName' | 'username' | 'fiscalNumber' | 'email' | 'roles' | 'createdDate' | 'metaData' | 'metaDataInternal'>
     & { attributes?: Maybe<Array<(
       { __typename?: 'Attribute' }
       & Pick<Attribute, 'id' | 'content' | 'issuedDate' | 'expiresDate' | 'expired' | 'certifierID'>
@@ -1328,7 +1328,7 @@ export type PersonProfileQuery = (
   { __typename?: 'Query' }
   & { personProfile: (
     { __typename?: 'Person' }
-    & Pick<Person, 'id' | 'username' | 'email' | 'roles' | 'mobilePhone' | 'postal' | 'city' | 'region' | 'geoLocation' | 'timezone' | 'personalInfo' | 'profile' | 'firstname' | 'lastname' | 'gender' | 'height' | 'fatherFirstname' | 'fatherLastname' | 'motherFirstname' | 'motherLastname' | 'birthDate' | 'nationality' | 'country' | 'documentNumber' | 'documentType' | 'cardVersion' | 'emissionDate' | 'expirationDate' | 'emittingEntity' | 'identityNumber' | 'fiscalNumber' | 'socialSecurityNumber' | 'beneficiaryNumber' | 'pan' | 'requestLocation' | 'otherInformation' | 'registrationDate' | 'createdDate'>
+    & Pick<Person, 'id' | 'username' | 'email' | 'roles' | 'mobilePhone' | 'postal' | 'city' | 'region' | 'geoLocation' | 'timezone' | 'personalInfo' | 'profile' | 'firstName' | 'lastName' | 'gender' | 'height' | 'fatherFirstName' | 'fatherLastName' | 'motherFirstName' | 'motherLastName' | 'birthDate' | 'nationality' | 'country' | 'documentNumber' | 'documentType' | 'cardVersion' | 'emissionDate' | 'expirationDate' | 'emittingEntity' | 'identityNumber' | 'fiscalNumber' | 'socialSecurityNumber' | 'beneficiaryNumber' | 'pan' | 'requestLocation' | 'otherInformation' | 'registrationDate' | 'createdDate'>
     & { attributes?: Maybe<Array<(
       { __typename?: 'Attribute' }
       & Pick<Attribute, 'id' | 'content' | 'issuedDate' | 'expiresDate' | 'expired' | 'certifierID'>
@@ -1349,7 +1349,7 @@ export type PersonsQuery = (
   { __typename?: 'Query' }
   & { persons: Array<(
     { __typename?: 'Person' }
-    & Pick<Person, 'id' | 'username' | 'email' | 'roles' | 'mobilePhone' | 'postal' | 'city' | 'region' | 'geoLocation' | 'timezone' | 'personalInfo' | 'profile' | 'firstname' | 'lastname' | 'gender' | 'height' | 'fatherFirstname' | 'fatherLastname' | 'motherFirstname' | 'motherLastname' | 'birthDate' | 'nationality' | 'country' | 'documentNumber' | 'documentType' | 'cardVersion' | 'emissionDate' | 'expirationDate' | 'emittingEntity' | 'identityNumber' | 'fiscalNumber' | 'socialSecurityNumber' | 'beneficiaryNumber' | 'pan' | 'requestLocation' | 'otherInformation' | 'registrationDate' | 'createdDate'>
+    & Pick<Person, 'id' | 'username' | 'email' | 'roles' | 'mobilePhone' | 'postal' | 'city' | 'region' | 'geoLocation' | 'timezone' | 'personalInfo' | 'profile' | 'firstName' | 'lastName' | 'gender' | 'height' | 'fatherFirstName' | 'fatherLastName' | 'motherFirstName' | 'motherLastName' | 'birthDate' | 'nationality' | 'country' | 'documentNumber' | 'documentType' | 'cardVersion' | 'emissionDate' | 'expirationDate' | 'emittingEntity' | 'identityNumber' | 'fiscalNumber' | 'socialSecurityNumber' | 'beneficiaryNumber' | 'pan' | 'requestLocation' | 'otherInformation' | 'registrationDate' | 'createdDate'>
     & { attributes?: Maybe<Array<(
       { __typename?: 'Attribute' }
       & Pick<Attribute, 'id' | 'content' | 'issuedDate' | 'expiresDate' | 'expired' | 'certifierID'>
@@ -1531,7 +1531,7 @@ export type PersonAddedSubscription = (
   { __typename?: 'Subscription' }
   & { personAdded: (
     { __typename?: 'Person' }
-    & Pick<Person, 'id' | 'firstname' | 'lastname' | 'username' | 'email' | 'roles'>
+    & Pick<Person, 'id' | 'firstName' | 'lastName' | 'username' | 'email' | 'roles'>
     & { attributes?: Maybe<Array<(
       { __typename?: 'Attribute' }
       & Pick<Attribute, 'id' | 'content' | 'issuedDate' | 'expiresDate' | 'expired' | 'certifierID'>
@@ -1892,14 +1892,14 @@ export const PersonAddAttributeDocument = gql`
     timezone
     personalInfo
     profile
-    firstname
-    lastname
+    firstName
+    lastName
     gender
     height
-    fatherFirstname
-    fatherLastname
-    motherFirstname
-    motherLastname
+    fatherFirstName
+    fatherLastName
+    motherFirstName
+    motherLastName
     birthDate
     nationality
     country
@@ -1976,14 +1976,14 @@ export const PersonLoginDocument = gql`
       timezone
       personalInfo
       profile
-      firstname
-      lastname
+      firstName
+      lastName
       gender
       height
-      fatherFirstname
-      fatherLastname
-      motherFirstname
-      motherLastname
+      fatherFirstName
+      fatherLastName
+      motherFirstName
+      motherLastName
       birthDate
       nationality
       country
@@ -2063,8 +2063,8 @@ export const PersonRegisterDocument = gql`
     mutation personRegister($newPersonData: NewPersonInput!) {
   personRegister(newPersonData: $newPersonData) {
     id
-    firstname
-    lastname
+    firstName
+    lastName
     username
     email
     attributes {
@@ -2228,14 +2228,14 @@ export const PersonUpsertCitizenCardDocument = gql`
     socialSecurityNumber
     beneficiaryNumber
     pan
-    firstname
-    lastname
+    firstName
+    lastName
     gender
     height
-    fatherFirstname
-    fatherLastname
-    motherFirstname
-    motherLastname
+    fatherFirstName
+    fatherLastName
+    motherFirstName
+    motherLastName
     birthDate
     nationality
     country
@@ -2997,14 +2997,14 @@ export const PersonByAttributeDocument = gql`
     timezone
     personalInfo
     profile
-    firstname
-    lastname
+    firstName
+    lastName
     gender
     height
-    fatherFirstname
-    fatherLastname
-    motherFirstname
-    motherLastname
+    fatherFirstName
+    fatherLastName
+    motherFirstName
+    motherLastName
     birthDate
     nationality
     country
@@ -3058,8 +3058,8 @@ export const PersonByFiscalnumberDocument = gql`
     query personByFiscalnumber($fiscalNumber: String!) {
   personByFiscalnumber(fiscalNumber: $fiscalNumber) {
     id
-    firstname
-    lastname
+    firstName
+    lastName
     username
     fiscalNumber
     email
@@ -3130,14 +3130,14 @@ export const PersonByIdDocument = gql`
     timezone
     personalInfo
     profile
-    firstname
-    lastname
+    firstName
+    lastName
     gender
     height
-    fatherFirstname
-    fatherLastname
-    motherFirstname
-    motherLastname
+    fatherFirstName
+    fatherLastName
+    motherFirstName
+    motherLastName
     birthDate
     nationality
     country
@@ -3189,8 +3189,8 @@ export const PersonByUsernameDocument = gql`
     query personByUsername($username: String!) {
   personByUsername(username: $username) {
     id
-    firstname
-    lastname
+    firstName
+    lastName
     username
     email
     attributes {
@@ -3241,8 +3241,8 @@ export const PersonComplexQueryDocument = gql`
     query personComplexQuery($getByComplexQueryInput: GetByComplexQueryInput!, $skip: Int, $take: Int) {
   personComplexQuery(getByComplexQueryInput: $getByComplexQueryInput, skip: $skip, take: $take) {
     id
-    firstname
-    lastname
+    firstName
+    lastName
     username
     fiscalNumber
     email
@@ -3317,14 +3317,14 @@ export const PersonProfileDocument = gql`
     timezone
     personalInfo
     profile
-    firstname
-    lastname
+    firstName
+    lastName
     gender
     height
-    fatherFirstname
-    fatherLastname
-    motherFirstname
-    motherLastname
+    fatherFirstName
+    fatherLastName
+    motherFirstName
+    motherLastName
     birthDate
     nationality
     country
@@ -3439,14 +3439,14 @@ export const PersonsDocument = gql`
       createdDate
       createdByPersonId
     }
-    firstname
-    lastname
+    firstName
+    lastName
     gender
     height
-    fatherFirstname
-    fatherLastname
-    motherFirstname
-    motherLastname
+    fatherFirstName
+    fatherLastName
+    motherFirstName
+    motherLastName
     birthDate
     nationality
     country
@@ -3811,8 +3811,8 @@ export const PersonAddedDocument = gql`
     subscription personAdded {
   personAdded {
     id
-    firstname
-    lastname
+    firstName
+    lastName
     username
     email
     attributes {

@@ -2151,7 +2151,7 @@
             "deprecationReason": null
           },
           {
-            "name": "firstname",
+            "name": "firstName",
             "description": null,
             "args": [],
             "type": {
@@ -2163,7 +2163,7 @@
             "deprecationReason": null
           },
           {
-            "name": "lastname",
+            "name": "lastName",
             "description": null,
             "args": [],
             "type": {
@@ -2199,7 +2199,7 @@
             "deprecationReason": null
           },
           {
-            "name": "fatherFirstname",
+            "name": "fatherFirstName",
             "description": null,
             "args": [],
             "type": {
@@ -2211,7 +2211,7 @@
             "deprecationReason": null
           },
           {
-            "name": "fatherLastname",
+            "name": "fatherLastName",
             "description": null,
             "args": [],
             "type": {
@@ -2223,7 +2223,7 @@
             "deprecationReason": null
           },
           {
-            "name": "motherFirstname",
+            "name": "motherFirstName",
             "description": null,
             "args": [],
             "type": {
@@ -2235,7 +2235,7 @@
             "deprecationReason": null
           },
           {
-            "name": "motherLastname",
+            "name": "motherLastName",
             "description": null,
             "args": [],
             "type": {
@@ -4302,7 +4302,7 @@
             "defaultValue": null
           },
           {
-            "name": "firstname",
+            "name": "firstName",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -4312,7 +4312,7 @@
             "defaultValue": null
           },
           {
-            "name": "lastname",
+            "name": "lastName",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -4342,7 +4342,7 @@
             "defaultValue": null
           },
           {
-            "name": "fatherFirstname",
+            "name": "fatherFirstName",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -4352,7 +4352,7 @@
             "defaultValue": null
           },
           {
-            "name": "fatherLastname",
+            "name": "fatherLastName",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -4362,7 +4362,7 @@
             "defaultValue": null
           },
           {
-            "name": "motherFirstname",
+            "name": "motherFirstName",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -4372,7 +4372,7 @@
             "defaultValue": null
           },
           {
-            "name": "motherLastname",
+            "name": "motherLastName",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -4845,7 +4845,7 @@
             "defaultValue": null
           },
           {
-            "name": "firstname",
+            "name": "firstName",
             "description": null,
             "type": {
               "kind": "NON_NULL",
@@ -4859,7 +4859,7 @@
             "defaultValue": null
           },
           {
-            "name": "lastname",
+            "name": "lastName",
             "description": null,
             "type": {
               "kind": "NON_NULL",
@@ -4901,7 +4901,7 @@
             "defaultValue": null
           },
           {
-            "name": "fatherFirstname",
+            "name": "fatherFirstName",
             "description": null,
             "type": {
               "kind": "NON_NULL",
@@ -4915,7 +4915,7 @@
             "defaultValue": null
           },
           {
-            "name": "fatherLastname",
+            "name": "fatherLastName",
             "description": null,
             "type": {
               "kind": "NON_NULL",
@@ -4929,7 +4929,7 @@
             "defaultValue": null
           },
           {
-            "name": "motherFirstname",
+            "name": "motherFirstName",
             "description": null,
             "type": {
               "kind": "NON_NULL",
@@ -4943,7 +4943,7 @@
             "defaultValue": null
           },
           {
-            "name": "motherLastname",
+            "name": "motherLastName",
             "description": null,
             "type": {
               "kind": "NON_NULL",

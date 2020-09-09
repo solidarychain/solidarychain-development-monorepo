@@ -36,7 +36,7 @@ export const Home: React.FC<Props> = () => {
       <h2>Home</h2>
       <ul>
         {data.persons.map((e: Person) =>
-          <li key={e.id}>{e.id} : {e.firstname} : {e.lastname} : {e.email} : {e.username}</li>
+          <li key={e.id}>{e.id} : {e.firstName} : {e.lastName} : {e.email} : {e.username}</li>
         )}
       </ul>
     </div>

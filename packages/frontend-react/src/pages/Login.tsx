@@ -68,8 +68,8 @@ export const Login: React.FC<RouteComponentProps> = ({ history, location }) => {
 				const payload = {
 					profile: {
 						id: user.id,
-						firstname: user.username,
-						lastname: user.lastname,
+						firstName: user.username,
+						lastName: user.lastName,
 						username: user.username,
 						email: user.email,
 						roles: user.roles

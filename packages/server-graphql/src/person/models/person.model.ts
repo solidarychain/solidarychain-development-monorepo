@@ -113,11 +113,11 @@ export class Person {
 
   @Field({ nullable: true })
   @IsDefined()
-  firstname?: string;
+  firstName?: string;
 
   @Field({ nullable: true })
   @IsDefined()
-  lastname?: string;
+  lastName?: string;
 
   // M
   @Field({ nullable: true })
@@ -134,22 +134,22 @@ export class Person {
   // Alberto
   @Field({ nullable: true })
   @IsDefined()
-  fatherFirstname?: string;
+  fatherFirstName?: string;
 
   // De Andrade Monteiro
   @Field({ nullable: true })
   @IsDefined()
-  fatherLastname?: string;
+  fatherLastName?: string;
 
   // Maria Da Graça De Oliveira Mendes
   @Field({ nullable: true })
   @IsDefined()
-  motherFirstname?: string;
+  motherFirstName?: string;
 
   // Monteiro
   @Field({ nullable: true })
   @IsDefined()
-  motherLastname?: string;
+  motherLastName?: string;
 
   // 19 12 1971
   @Field(type => Date, { nullable: true })

@@ -1,8 +1,8 @@
 query personComplexQuery($getByComplexQueryInput: GetByComplexQueryInput!, $skip: Int, $take: Int) {
   personComplexQuery(getByComplexQueryInput: $getByComplexQueryInput, skip: $skip, take: $take) {
     id
-    firstname
-    lastname
+    firstName
+    lastName
     username
     fiscalNumber
     email

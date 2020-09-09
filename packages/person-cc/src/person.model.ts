@@ -109,12 +109,12 @@ export class Person extends ConvectorModel<Person> {
   // Mário Alberto
   // @Required()
   @Validate(yup.string())
-  public firstname: string;
+  public firstName: string;
 
   // Mendes Monteiro
   // @Required()
   @Validate(yup.string())
-  public lastname: string;
+  public lastName: string;
 
   // M
   // @Required()
@@ -129,22 +129,22 @@ export class Person extends ConvectorModel<Person> {
   // Alberto
   // @Required()
   @Validate(yup.string())
-  public fatherFirstname: string;
+  public fatherFirstName: string;
 
   // De Andrade Monteiro
   // @Required()
   @Validate(yup.string())
-  public fatherLastname: string;
+  public fatherLastName: string;
 
   // Maria Da Graça De Oliveira Mendes
   // @Required()
   @Validate(yup.string())
-  public motherFirstname: string;
+  public motherFirstName: string;
 
   // Monteiro
   // @Required()
   @Validate(yup.string())
-  public motherLastname: string;
+  public motherLastName: string;
 
   // 19 12 1971
   // @Required()

@@ -1,8 +1,8 @@
 query personByFiscalnumber($fiscalNumber: String!){
   personByFiscalnumber(fiscalNumber: $fiscalNumber) {
     id
-    firstname
-    lastname
+    firstName
+    lastName
     username
     fiscalNumber
     email

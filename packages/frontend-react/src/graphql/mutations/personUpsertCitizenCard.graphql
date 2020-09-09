@@ -7,14 +7,14 @@ mutation personUpsertCitizenCard($upsertCitizenCardData: UpsertCitizenCardInput!
     socialSecurityNumber
     beneficiaryNumber
     pan
-    firstname
-    lastname
+    firstName
+    lastName
     gender
     height
-    fatherFirstname
-    fatherLastname
-    motherFirstname
-    motherLastname
+    fatherFirstName
+    fatherLastName
+    motherFirstName
+    motherLastName
     birthDate
     nationality
     country

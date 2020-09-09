@@ -81,12 +81,12 @@ export class NewPersonInput {
   @Field({ nullable: true })
   @IsDefined()
   @IsOptional()
-  firstname?: string;
+  firstName?: string;
 
   @Field({ nullable: true })
   @IsDefined()
   @IsOptional()
-  lastname?: string;
+  lastName?: string;
 
   // M
   @Field({ nullable: true })
@@ -106,25 +106,25 @@ export class NewPersonInput {
   @Field({ nullable: true })
   @IsDefined()
   @IsOptional()
-  fatherFirstname?: string;
+  fatherFirstName?: string;
 
   // De Andrade Monteiro
   @Field({ nullable: true })
   @IsDefined()
   @IsOptional()
-  fatherLastname?: string;
+  fatherLastName?: string;
 
   // Maria Da Graça De Oliveira Mendes
   @Field({ nullable: true })
   @IsDefined()
   @IsOptional()
-  motherFirstname?: string;
+  motherFirstName?: string;
 
   // Monteiro
   @Field({ nullable: true })
   @IsDefined()
   @IsOptional()
-  motherLastname?: string;
+  motherLastName?: string;
 
   // 19 12 1971
   @Field(type => Date, { nullable: true })
