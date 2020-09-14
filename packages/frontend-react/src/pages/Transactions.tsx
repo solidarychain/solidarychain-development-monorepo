@@ -1,42 +1,16 @@
-// normal subscription without graphql-codegen
-
-import * as React from 'react';
-import { useSubscription, gql } from '@apollo/client';
+import { useTransactionAddedSubscription, TransactionAddedSubscription } from '../generated/graphql';
+import React, { Fragment } from 'react';
 
 type Props = { causeId: string };
-type DataScheme = { transactionAdded?: any} ;
-
-const TRANSACTION_ADDED = gql`
-subscription transactionAdded{
-  transactionAdded {
-    id
-    transactionType
-    resourceType
-    input {
-      entity {
-        id
-        type
-        createdDate
-      }
-    }
-    output {
-      entity {
-        id
-        type
-        createdDate
-      }
-    }
-    quantity
-    currency
-    location
-    createdDate
-  }
-}`;
+const transactionAdded = new Array<TransactionAddedSubscription>();
 
 export const Transactions: React.FC<Props> = ({ causeId }) => {
-  const { data, loading } = useSubscription<DataScheme>(
-    TRANSACTION_ADDED,
-    // { variables: { causeId } }
+  const { data, loading } = useTransactionAddedSubscription();
+  if (!loading && data && data.transactionAdded) {
+    transactionAdded.push(data);
+  }
+  const transactions = transactionAdded.map((e: TransactionAddedSubscription) => (
+    <li key={e.transactionAdded.id}>{e.transactionAdded.createdDate} : {e.transactionAdded.id} : {e.transactionAdded.transactionType} : {e.transactionAdded.resourceType}</li>)
   );
-  return <h4>New transaction: {!loading && data && data.transactionAdded ? data.transactionAdded.id : 'waiting' }</h4>;
+  return <Fragment>{transactionAdded.length > 0 ? <ul>{transactions}</ul> : 'waiting for transactions...'}</Fragment>;
 };

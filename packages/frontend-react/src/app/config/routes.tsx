@@ -1,6 +1,6 @@
 import { AddBox as AddBoxIcon, Explore as ExploreIcon, Fingerprint as FingerprintIcon, Home as HomeIcon, Loyalty as LoyaltyIcon, PanTool as PanToolIcon } from '@material-ui/icons';
 import React from 'react';
-import { Causes, Community, Feed, Home, Login, Profile, SignUp } from '../../components/material-ui/pages';
+import { Causes, Community, Feed, Home, Login, Profile, SignUp } from '../../components/pages';
 import { DrawerListItem, DrawerSections, RouteItem } from '../../types';
 
 export const defaultDrawerListItemIcon: JSX.Element = <AddBoxIcon />;

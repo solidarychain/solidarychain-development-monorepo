@@ -35,6 +35,7 @@
   - [React router Property 'message' does not exist on type '{}'.  TS2339](#react-router-property-message-does-not-exist-on-type--ts2339)
   - [WebSocketLink authToken Subscriptions](#websocketlink-authtoken-subscriptions)
   - [Add Material-UI and React Router](#add-material-ui-and-react-router)
+  - [Material-UI Sign-In](#material-ui-sign-in)
 
 ## TLDR
 
@@ -837,3 +838,8 @@ $ ADD_PACKAGE="react-use-dimensions" && npx lerna add ${ADD_PACKAGE} --scope ${T
 # dev
 $ ADD_PACKAGE="@types/react-router-dom" && npx lerna add -D ${ADD_PACKAGE} --scope ${TO_PACKAGE}
 ```
+
+## Material-UI Sign-In
+
+- [GitHub](https://github.com/mui-org/material-ui/tree/master/docs/src/pages/getting-started/templates/sign-in)
+- [Material-UI Sign-In](https://material-ui.com/pt/getting-started/templates/sign-in/)

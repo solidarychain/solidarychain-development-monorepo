@@ -7,20 +7,25 @@ const REGISTER_DEFAULT_USER = {
   username: 'mario',
   password: '12345678',
 };
+
 const KEYWORDS = {
-	id: "id",
-	fiscalNumber: "fiscalNumber",
-	firstName: "firstName",
-	lastName: "lastName",
-	email: "email",
-	username: "username",
-	password: "password",
+  id: "id",
+  fiscalNumber: "fiscalNumber",
+  firstName: "firstName",
+  lastName: "lastName",
+  email: "email",
+  username: "username",
+  password: "password",
+  error: 'Error',
 };
+
 const MESSAGES = {
-  ERROR: {
-    LOGIN_FAILED: 'login failed please try again...'
-  }
-}
+  loginFailed: 'login failed please try again...',
+  signIn: 'Sign In',
+  nonAccountSignUp: 'Don\'t have an account? Sign Up',
+  rememberMe: 'Remember me',
+};
+
 const DEFAULT_LOGIN_CREDENTIALS = {
   username: 'johndoe',
   password: '12345678',
