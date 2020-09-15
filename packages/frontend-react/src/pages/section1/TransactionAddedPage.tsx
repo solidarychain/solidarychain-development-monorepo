@@ -1,10 +1,10 @@
-import { useTransactionAddedSubscription, TransactionAddedSubscription } from '../generated/graphql';
+import { useTransactionAddedSubscription, TransactionAddedSubscription } from '../../generated/graphql';
 import React, { Fragment } from 'react';
 
 type Props = { causeId: string };
 const transactionAdded = new Array<TransactionAddedSubscription>();
 
-export const Transactions: React.FC<Props> = ({ causeId }) => {
+export const TransactionAddedPage: React.FC<Props> = ({ causeId }) => {
   const { data, loading } = useTransactionAddedSubscription();
   if (!loading && data && data.transactionAdded) {
     transactionAdded.push(data);

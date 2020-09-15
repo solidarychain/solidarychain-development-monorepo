@@ -4,7 +4,7 @@ import { Fragment } from 'react';
 
 interface Props { }
 
-export const Causes: React.FC<Props> = () => {
+export const CausesPage: React.FC<Props> = () => {
   return (
     <Fragment>
       <Typography variant="h6" noWrap>

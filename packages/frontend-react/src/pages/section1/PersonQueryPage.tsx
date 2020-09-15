@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { getAccessToken } from '../app';
-import { ShowMessage, Loading } from '../components';
-import { envVariables as e } from '../app/config/env';
-import { Person, usePersonsLazyQuery } from '../generated/graphql';
-import { MessageType } from '../types';
+import { envVariables as e } from '../../app/config';
+import { getAccessToken } from '../../app';
+import { Loading, ShowMessage } from '../../components';
+import { Person, usePersonsLazyQuery } from '../../generated/graphql';
+import { MessageType } from '../../types';
 
 interface Props { }
 
-export const Home: React.FC<Props> = () => {
+export const PersonQueryPage: React.FC<Props> = () => {
   // hooks
   const [personQuery, { data, loading, error }] = usePersonsLazyQuery({
     fetchPolicy: e.apolloFetchPolicy,

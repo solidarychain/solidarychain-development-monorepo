@@ -4,7 +4,7 @@ import { Fragment } from 'react';
 
 interface Props { }
 
-export const Home: React.FC<Props> = () => {
+export const HomePage: React.FC<Props> = () => {
   return (
     <Fragment>
       <Typography variant="h6" noWrap>

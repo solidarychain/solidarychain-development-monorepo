@@ -14,8 +14,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Link, Route, Switch, useLocation } from 'react-router-dom';
 import useDimensions from 'react-use-dimensions';
-import { ActionType, useStateValue } from '../../../app/state';
 import { defaultDrawerListItemIcon, drawerWidth, routes } from '../../../app/config';
+import { ActionType, useStateValue } from '../../../app/state';
 import { DrawerListItem, DrawerSections } from '../../../types';
 
 interface ResponsiveDrawerProps {
@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function ResponsiveDrawer(props: ResponsiveDrawerProps) {
+export const ResponsiveDrawer = (props: ResponsiveDrawerProps) => {
   // hooks
   const classes = useStyles();
   const theme = useTheme();
@@ -65,6 +65,7 @@ export default function ResponsiveDrawer(props: ResponsiveDrawerProps) {
   const [appBarRef, { width }] = useDimensions();
   const location = useLocation();
   // context state hook
+  // eslint-disable-next-line
   const [state, dispatch] = useStateValue();
   // useCallback for optimization, could be omitted if child components don’t rely on shallow comparing.
   const setWidth = useCallback((width) => dispatch({ type: ActionType.SET_SHELL_WIDTH, width }), [dispatch]);
@@ -72,9 +73,15 @@ export default function ResponsiveDrawer(props: ResponsiveDrawerProps) {
   const drawerSections: DrawerListItem[][] = [];
 
   useEffect(() => {
-    const margin: number = 48;
-    const shellWidth: number = Math.trunc(mobileOpen ? width - drawerWidth - margin : width - margin);
-    setWidth(shellWidth);
+    // TODO: remove hard coded number
+    // const margin: number = 48;
+    // if (!isNaN(width)) {
+    //   const shellWidth: number = Math.trunc(mobileOpen ? width - drawerWidth - margin : width - margin);
+    //   // TODO: fix width, fix in starter to
+    //   console.log(`shellWidth:[${shellWidth}]`);
+    //   setWidth(shellWidth);
+    // }
+    // cleanup
     return () => { };
   }, [mobileOpen, width, setWidth])
 

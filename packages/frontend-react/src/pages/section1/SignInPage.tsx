@@ -1,24 +1,26 @@
 import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
-import LinearProgress from '@material-ui/core/LinearProgress';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import IconButton from '@material-ui/core/IconButton';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Grid from '@material-ui/core/Grid';
+import Link from '@material-ui/core/Link';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityIconOff from '@material-ui/icons/VisibilityOff';
 import React, { useState } from 'react';
 import { RouteComponentProps } from 'react-router';
-import { appConstants as c, setAccessToken } from '../app';
-import { ActionType, useStateValue } from '../app/state';
-import { AlertMessage, AlertSeverityType } from '../components/material-ui/alert/AlertMessage';
-import { Copyright, Props as CopyrightProps } from '../components/material-ui/other/Copyright';
-import { LoginPersonInput, PersonProfileDocument, usePersonLoginMutation } from '../generated/graphql';
-import VisibilityIconOff from '@material-ui/icons/VisibilityOff';
-import VisibilityIcon from '@material-ui/icons/Visibility';
+import { appConstants as c, setAccessToken } from '../../app';
+import { ActionType, useStateValue } from '../../app/state';
+import { AlertMessage, AlertSeverityType } from '../../components/material-ui/alert/AlertMessage';
+import { Copyright, Props as CopyrightProps } from '../../components/material-ui/other/Copyright';
+import { LoginPersonInput, PersonProfileDocument, usePersonLoginMutation } from '../../generated/graphql';
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
@@ -47,7 +49,7 @@ const copyrightProps: CopyrightProps = {
 }
 
 // use RouteComponentProps to get history props from Route
-export const Login: React.FC<RouteComponentProps> = ({ history, location }) => {
+export const SignInPage: React.FC<RouteComponentProps> = ({ history, location }) => {
 	// get hooks
 	const [, dispatch] = useStateValue();
 	// hooks: state
@@ -69,7 +71,6 @@ export const Login: React.FC<RouteComponentProps> = ({ history, location }) => {
 		setPassword((e.target as HTMLSelectElement).value);
 	};
 	const handlePasswordVisibility = () => setShowPassword(!showPassword);
-
 	const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		try {
 			e.preventDefault();
@@ -126,7 +127,7 @@ export const Login: React.FC<RouteComponentProps> = ({ history, location }) => {
 			setPassword('');
 			setShowPassword(false);
 			// if (error.graphQLErrors[0]) {
-			// 	const {status, error: errorMmssage, message} = error.graphQLErrors[0].message;
+			// 	const {status, error: errorMessage, message} = error.graphQLErrors[0].message;
 			// 	console.log(`status: ${status}, message: ${message}`);
 			// }
 		}
@@ -198,7 +199,7 @@ export const Login: React.FC<RouteComponentProps> = ({ history, location }) => {
 						{c.MESSAGES.signIn}
 					</Button>
 					{loading && <LinearProgress />}
-					{/* <Grid container>
+					<Grid container>
 						<Grid item xs>
 							<Link href='#' variant='body2'>
 								Forgot password?
@@ -209,7 +210,7 @@ export const Login: React.FC<RouteComponentProps> = ({ history, location }) => {
 								{c.MESSAGES.nonAccountSignUp}
 							</Link>
 						</Grid>
-					</Grid> */}
+					</Grid>
 				</form>
 			</div>
 			{error && <AlertMessage severity={AlertSeverityType.ERROR} message={c.MESSAGES.loginFailed} />}
