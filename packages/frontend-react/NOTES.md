@@ -34,17 +34,15 @@
   - [Error: GraphQL error: [object Object]](#error-graphql-error-object-object)
   - [React router Property 'message' does not exist on type '{}'.  TS2339](#react-router-property-message-does-not-exist-on-type--ts2339)
   - [WebSocketLink authToken Subscriptions](#websocketlink-authtoken-subscriptions)
-  - [Add Material-UI and React Router](#add-material-ui-and-react-router)
 
 ## TLDR
 
-> Notes: use node 12.8.1 or 8.16.0 to
-
-1. check server `CORS_ORIGIN_REACT_FRONTEND`, if `CORS_ORIGIN_REACT_FRONTEND=https://app.solidarychain.com:3000` use same uri in browser, else we have CORS problems
-2. run frontend with `npm run pkg:react:start`
-3. launch debug with F5 (https://app.solidarychain.com:3000)
-4. test login/logout and refresh-token
-5. test subscriptions
+1. bootstrap change to 8.16.0 and bootstrap modules with `nvh && npx lerna bootstrap --scope @solidary-chain/frontend-react`
+2. check server `CORS_ORIGIN_REACT_FRONTEND`, if `CORS_ORIGIN_REACT_FRONTEND=https://app.solidarychain.com:3000` use same uri in browser, else we have CORS problems
+3. run frontend with `npm run pkg:react:start`
+4. launch debug with F5 (https://app.solidarychain.com:3000)
+5. test login/logout and refresh-token
+6. test subscriptions
 
 ## Commit Ids
 
@@ -821,20 +819,4 @@ const wsLink = new WebSocketLink({
     }),
   },
 });
-```
-
-## Add Material-UI and React Router
-
-- [commit id fbd4965](https://github.com/solidarychain/solidarychain-development-monorepo/commit/fbd49657b5638802c0f962f346b0729756a8cfa5)
-
-```shell
-# add package to package
-$ TO_PACKAGE="@solidary-chain/frontend-react"
-$ ADD_PACKAGE="@material-ui/core" && npx lerna add ${ADD_PACKAGE} --scope ${TO_PACKAGE}
-$ ADD_PACKAGE="@material-ui/icons" && npx lerna add ${ADD_PACKAGE} --scope ${TO_PACKAGE}
-$ ADD_PACKAGE="@material-ui/lab" && npx lerna add ${ADD_PACKAGE} --scope ${TO_PACKAGE}
-$ ADD_PACKAGE="react-router-dom" && npx lerna add ${ADD_PACKAGE} --scope ${TO_PACKAGE}
-$ ADD_PACKAGE="react-use-dimensions" && npx lerna add ${ADD_PACKAGE} --scope ${TO_PACKAGE}
-# dev
-$ ADD_PACKAGE="@types/react-router-dom" && npx lerna add -D ${ADD_PACKAGE} --scope ${TO_PACKAGE}
 ```

@@ -9,27 +9,21 @@ export const initialState = {
   }
 };
 
-// this infers State type from initialState object???
-export type State = typeof initialState;
-
 // reducer actions
 export enum ActionType {
   CHANGE_THEME = 'CHANGE_THEME',
   INCREMENT = 'INCREMENT',
   CHANGE_SEARCH_USERS_QUERY = 'CHANGE_SEARCH_USERS_QUERY',
-  LOGGED_USER = 'LOGGED_USER',
-  LOGOUT_USER = 'LOGOUT_USER',
-  // material
-  SET_SHELL_WIDTH = 'SET_SHELL_WIDTH',
+  SIGNED_IN_USER = 'SIGNED_IN_USER',
+  SIGNED_OUT_USER = 'SIGNED_OUT_USER',
 }
 
 export type Action =
   | { type: ActionType.CHANGE_THEME, payload: { newTheme: string } }
   | { type: ActionType.INCREMENT, payload: any }
   | { type: ActionType.CHANGE_SEARCH_USERS_QUERY, payload: { query: string } }
-  | { type: ActionType.LOGGED_USER, payload: { profile: any } }
-  | { type: ActionType.LOGOUT_USER, payload: any }
-  | { type: ActionType.SET_SHELL_WIDTH, payload: { width: number } }
+  | { type: ActionType.SIGNED_IN_USER, payload: { profile: any } }
+  | { type: ActionType.SIGNED_OUT_USER }
   ;
 
 // reducer types
@@ -42,7 +36,7 @@ export enum Themes {
   PINK = 'Pink',
 }
 
-export default (state: State, action: Action) => {
+export default (state: any, action: Action) => {
   switch (action.type) {
     case ActionType.CHANGE_THEME:
       return {
@@ -61,7 +55,7 @@ export default (state: State, action: Action) => {
         ...state,
         searchUsersQuery: action.payload.query
       }
-    case ActionType.LOGGED_USER:
+    case ActionType.SIGNED_IN_USER:
       return {
         ...state,
         user: {
@@ -69,7 +63,7 @@ export default (state: State, action: Action) => {
           profile: action.payload.profile
         }
       }
-    case ActionType.LOGOUT_USER:
+    case ActionType.SIGNED_OUT_USER:
       return {
         ...state,
         user: {
@@ -77,11 +71,6 @@ export default (state: State, action: Action) => {
           profile: {}
         }
       }
-    case ActionType.SET_SHELL_WIDTH: return {
-      ...state,
-      shellWidth: action.payload.width,
-    };
-
     default:
       throw new Error('Unknown Action type!');
   }

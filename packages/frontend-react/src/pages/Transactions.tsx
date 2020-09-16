@@ -33,7 +33,7 @@ subscription transactionAdded{
   }
 }`;
 
-export const TransactionsNonCodeGen: React.FC<Props> = ({ causeId }) => {
+export const Transactions: React.FC<Props> = ({ causeId }) => {
   const { data, loading } = useSubscription<DataScheme>(
     TRANSACTION_ADDED,
     // { variables: { causeId } }

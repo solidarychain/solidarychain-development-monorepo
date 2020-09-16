@@ -1,16 +1,15 @@
 import React, { Fragment, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
+import { Loading, ShowMessage } from '../components';
+import { NewPersonInput, usePersonRegisterMutation } from '../generated/graphql';
 import { Link } from 'react-router-dom';
+import { appConstants as c } from '../app';
 import { v4 as uuid } from 'uuid';
-import { appConstants as c, headerLinksNavStyle } from '../../app';
-import { Loading, ShowMessage } from '../../components';
-import { NewPersonInput, usePersonRegisterMutation } from '../../generated/graphql';
-import { MessageType } from '../../types';
-
-// TODO: use reactFormHooks to create signUp
+import { headerLinksNavStyle } from '../app';
+import { MessageType } from '../types';
 
 // use RouteComponentProps to get history props from Route
-export const SignUpPage: React.FC<RouteComponentProps> = ({ history }) => {
+export const Register: React.FC<RouteComponentProps> = ({ history }) => {
 	// assign from appConstants
 	const defaultUser = c.REGISTER_DEFAULT_USER;
 	// hooks: state

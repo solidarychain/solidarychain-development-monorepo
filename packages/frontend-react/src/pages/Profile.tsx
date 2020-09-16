@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { Loading, ShowMessage } from '../../components';
-import { envVariables as e } from '../../app/config/env';
-import { usePersonProfileQuery } from '../../generated/graphql';
-import { MessageType } from '../../types/types';
+import { Loading, ShowMessage } from '../components';
+import { envVariables as e } from '../app/config/env';
+import { usePersonProfileQuery } from '../generated/graphql';
+import { MessageType } from '../types/types';
 
 interface Props { }
 
-export const PersonProfilePage: React.FC<Props> = () => {
+export const Profile: React.FC<Props> = () => {
   const { data, loading, error } = usePersonProfileQuery({
     fetchPolicy: e.apolloFetchPolicy
   });

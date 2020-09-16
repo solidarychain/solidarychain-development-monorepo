@@ -55,7 +55,7 @@ export const Header: React.FC<Props> = () => {
                 // clean inMemory accessToken
                 setAccessToken('');
                 // dispatch logout
-                dispatch({ type: ActionType.LOGOUT_USER });
+                dispatch({ type: ActionType.SIGNED_OUT_USER });
               })
               .catch(error => {
                 console.error(error);
