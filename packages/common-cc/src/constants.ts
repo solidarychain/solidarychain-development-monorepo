@@ -30,34 +30,40 @@ const NAB_UUID: string = 'b130558c-b910-4e82-b92b-caa199a047c1';
 const NAB_CODE: string = 'nab';
 const NAB_NAME: string = 'National Bank';
 // person
-const DEFAULT_PASSWORD: string = '12345678';
+const DEFAULT_PASSWORD: string = 'Aa456#45';
 const JOHN_UUID: string = '4ea88521-031b-4279-9165-9c10e1839001';
 const JOHN_FIRST_NAME: string = 'John';
 const JOHN_LAST_NAME: string = 'Doe';
 const JOHN_USER_NAME: string = 'johndoe';
-const JOHN_EMAIL: string = `${JOHN_USER_NAME}@mail.com`;
-const JOHN_FISCAL_NUMBER: string = '182692124';
+const JOHN_EMAIL: string = `${JOHN_USER_NAME}@example.com`;
+const JOHN_FISCAL_NUMBER: string = 'PT182692124';
 const JANE_UUID: string = '4ea88521-031b-4279-9165-9c10e1838010';
 const JANE_FIRST_NAME: string = 'Jane';
 const JANE_LAST_NAME: string = 'Doe';
 const JANE_USER_NAME: string = 'janedoe';
-const JANE_EMAIL: string = `${JANE_USER_NAME}@mail.com`;
-const JANE_FISCAL_NUMBER: string = '582692178';
+const JANE_EMAIL: string = `${JANE_USER_NAME}@example.com`;
+const JANE_FISCAL_NUMBER: string = 'PT582692178';
 
 // yup messages
 const YUP_MESSAGE_INTEGER: string = 'Should be a integer number.';
-const YUP_MESSAGE_USERNAME_TO_SHORT: string = 'Username is too short - should be 6 chars minimum.';
+const YUP_MESSAGE_USERNAME_TO_SHORT: string = 'Username is too short - should be 4 chars minimum.';
 const YUP_MESSAGE_USERNAME_TO_LONG: string = 'Username is too long - should be 16 chars maximum.';
-const YUP_MESSAGE_PASSWORD_TO_SHORT: string = 'Password is too short - should be 6 chars minimum.';
+const YUP_MESSAGE_PASSWORD_TO_SHORT: string = 'Password is too short - should be 8 chars minimum.';
 // regex yup messages
 const YUP_MESSAGE_INVALID_EMAIL: string = 'Should be a valid email.';
+const YUP_MESSAGE_INVALID_PHONE_NUMBER: string = 'Should be a valid international phone number.';
+const YUP_MESSAGE_INVALID_FISCAL_NUMBER: string = 'Should be a valid fiscal number.';
 const YUP_MESSAGE_INVALID_UUID_V4: string = 'Should be a valid uuid v4.';
 const YUP_MESSAGE_INVALID_PASSWORD: string = 'Password can only contain Latin letters and numbers.';
 // regex expressions
 const REGEX_EMAIL: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-const REGEX_UUID_V4: RegExp = /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/;
+const REGEX_UUID_V4: RegExp = /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
 const REGEX_PASSWORD: RegExp = /[1-9a-zA-Z]/;
-const REGEX_LOCATION: RegExp = /^([-+]?)([\d]{1,2})(((\.)(\d+)(,)))(\s*)(([-+]?)([\d]{1,3})((\.)(\d+))?)$/;
+const REGEX_LOCATION: RegExp = /^([-+]?)([\d]{1,2})(((\.)(\d+)(,)))(\s*)(([-+]?)([\d]{1,3})((\.)(\d+))?)$/i;
+// phone number ex +351936282828
+const REGEX_PHONE_NUMBER: RegExp = /^(?!\b(0)\1+\b)(\+?\d{1,3}[. -]?)?\(?\d{3}\)?([. -]?)\d{3}\3\d{4}$/i;
+// portuguese fiscalNumber
+const REGEX_FISCAL_NUMBER: RegExp = /^[A-Z]{2}[0-9]{9}$/i;
 // exception error messages
 const EXCEPTION_ERROR_NO_COMPLEX_QUERY: string = 'You must supply a valid filter in complex query.';
 
@@ -107,10 +113,14 @@ export const appConstants = {
 	YUP_MESSAGE_PASSWORD_TO_SHORT,
 	// regex yup messages
 	YUP_MESSAGE_INVALID_EMAIL,
+	YUP_MESSAGE_INVALID_PHONE_NUMBER,
+	YUP_MESSAGE_INVALID_FISCAL_NUMBER,
 	YUP_MESSAGE_INVALID_UUID_V4,
 	YUP_MESSAGE_INVALID_PASSWORD,
 	// regex expressions
 	REGEX_EMAIL,
+	REGEX_PHONE_NUMBER,
+	REGEX_FISCAL_NUMBER,
 	REGEX_UUID_V4,
 	REGEX_PASSWORD,
 	REGEX_LOCATION,

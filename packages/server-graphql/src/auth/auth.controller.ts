@@ -27,7 +27,7 @@ export class AuthController {
     // Logger.log('cookies', JSON.stringify(req.cookies, undefined, 2));
     const invalidPayload = () => res.status(HttpStatus.UNAUTHORIZED).send({ valid: false, accessToken: '' });
     // get jid token from cookies
-    const token: string = req.cookies.jid;
+    const token: string = (req.cookies && req.cookies.jid) ? req.cookies.jid : null;
     // check if jid token is present
     if (!token) {
       return invalidPayload();
@@ -35,6 +35,7 @@ export class AuthController {
 
     let payload: GqlContextPayload;
     try {
+      // warn this seems to use old way of send secret, in new versions we must send with `this.jwtService.verify(token, {secret: e.refreshTokenJwtSecret})`
       payload = this.jwtService.verify(token, e.refreshTokenJwtSecret);
     } catch (error) {
       // Logger.log(error);

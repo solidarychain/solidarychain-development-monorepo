@@ -89,11 +89,12 @@ export class Cause extends ConvectorModel<Cause> {
 
   // custom static implementation getByFilter
   public static async getByFilter(filter: any): Promise<Cause | Cause[]> {
-    return await this.query(Cause, {
+    const mangoQuery = {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_CAUSE,
         ...filter,
       }
-    });
+    };
+    return await this.query(Cause, mangoQuery);
   }
 }

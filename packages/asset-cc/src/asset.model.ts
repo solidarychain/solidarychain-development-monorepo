@@ -31,15 +31,15 @@ export class Asset extends ConvectorModel<Asset> {
 
   @Validate(yup.array().of(yup.string()))
   public tags: string[];
-  
+
   @Required()
   @Validate(entitySchema)
   public owner: Entity;
-  
+
   @Required()
   @Validate(Participant.schema())
   public participant: FlatConvectorModel<Participant>;
-  
+
   @Required()
   @Validate(yup.array(x509Identities.schema()))
   public identities: Array<FlatConvectorModel<x509Identities>>;
@@ -57,7 +57,7 @@ export class Asset extends ConvectorModel<Asset> {
   // persisted with loggedPersonId
   @Validate(yup.string())
   public createdByPersonId?: string;
-  
+
   // send by graphql api
   @Validate(yup.string())
   public loggedPersonId?: string;
@@ -77,11 +77,12 @@ export class Asset extends ConvectorModel<Asset> {
 
   // custom static implementation getByFilter
   public static async getByFilter(filter: any): Promise<Asset | Asset[]> {
-    return await this.query(Asset, {
+    const mangoQuery = {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_ASSET,
         ...filter,
       }
-    });
+    };
+    return await this.query(Asset, mangoQuery);
   }
 }

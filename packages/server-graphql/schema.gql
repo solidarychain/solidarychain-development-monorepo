@@ -334,7 +334,7 @@ type Query {
   personComplexQuery(skip: Int = 0, take: Int = 25, getByComplexQueryInput: GetByComplexQueryInput!): [Person!]!
   personById(id: String!): Person!
   personByUsername(username: String!): Person!
-  personByFiscalnumber(fiscalNumber: String!): Person!
+  personByFiscalNumber(fiscalNumber: String!): Person!
   personProfile: Person!
   transactions(skip: Int = 0, take: Int = 25): [Transaction!]!
   transactionComplexQuery(skip: Int = 0, take: Int = 25, getByComplexQueryInput: GetByComplexQueryInput!): [Transaction!]!

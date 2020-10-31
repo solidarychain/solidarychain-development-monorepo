@@ -3,27 +3,27 @@
 		"path": "$ROOTPATH$/NOTES.md",
 		"bookmarks": [
 			{
-				"line": 128,
+				"line": 129,
 				"column": 51,
 				"label": ""
 			},
 			{
-				"line": 142,
+				"line": 143,
 				"column": 24,
 				"label": ""
 			},
 			{
-				"line": 176,
+				"line": 177,
 				"column": 0,
 				"label": ""
 			},
 			{
-				"line": 2779,
+				"line": 2789,
 				"column": 93,
 				"label": ""
 			},
 			{
-				"line": 3089,
+				"line": 3099,
 				"column": 28,
 				"label": ""
 			}
@@ -118,7 +118,7 @@
 		"path": "$ROOTPATH$/packages/server-graphql/src/auth/auth.resolver.ts",
 		"bookmarks": [
 			{
-				"line": 42,
+				"line": 41,
 				"column": 0,
 				"label": ""
 			}

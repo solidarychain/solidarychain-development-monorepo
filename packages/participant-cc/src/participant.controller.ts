@@ -21,6 +21,10 @@ export class ParticipantController extends ConvectorController {
     code: string,
     @Param(yup.string())
     name: string,
+    @Param(yup.string().matches(c.REGEX_EMAIL, c.YUP_MESSAGE_INVALID_EMAIL))
+    email: string,
+    @Param(yup.string())
+    fiscalNumber: string,
   ) {
     // get participant if not gov, in case of gov it won't exists yet and will be without participant
     let gov: Participant;
@@ -38,12 +42,16 @@ export class ParticipantController extends ConvectorController {
     await checkUniqueField('_id', id, true);
     await checkUniqueField('code', code, true);
     await checkUniqueField('name', name, true);
+    await checkUniqueField('email', email, true);
+    await checkUniqueField('fiscalNumber', fiscalNumber, true);
 
     // add participant
     let newParticipant = new Participant();
     newParticipant.id = id;
     newParticipant.code = code || id;
     newParticipant.name = name || id;
+    newParticipant.email = email;
+    newParticipant.fiscalNumber = fiscalNumber;
     newParticipant.msp = this.fullIdentity.getMSPID();
     // create a new identity
     newParticipant.identities = [{
@@ -96,6 +104,8 @@ export class ParticipantController extends ConvectorController {
     await checkUniqueField('_id', participant.id, true);
     await checkUniqueField('code', participant.code, true);
     await checkUniqueField('name', participant.name, true);
+    await checkUniqueField('email', participant.email, true);
+    await checkUniqueField('fiscalNumber', participant.fiscalNumber, true);
 
     // add participant
     participant.msp = this.fullIdentity.getMSPID();
@@ -133,6 +143,7 @@ export class ParticipantController extends ConvectorController {
     @Param(Participant)
     participant: Participant,
   ) {
+    debugger;
     // Check permissions
     let isAdmin = this.fullIdentity.getAttributeValue('admin');
     let requesterMSP = this.fullIdentity.getMSPID();

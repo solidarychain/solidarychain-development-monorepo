@@ -5,6 +5,15 @@
   "version": "0.2.0",
   "configurations": [
     {
+      // required to attach and debug chaincode
+      "type": "node",
+      "request": "attach",
+      "name": "Attach to Chaincode",
+      "port": 9990,
+      "sourceMaps": true,
+      "trace" : true
+    },
+    {
       "name": "Chrome",
       "type": "chrome",
       "request": "launch",

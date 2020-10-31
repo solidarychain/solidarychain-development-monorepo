@@ -5,7 +5,7 @@ const REGISTER_DEFAULT_USER = {
   lastName: 'Monteiro',
   email: 'mario@koakh.com',
   username: 'mario',
-  password: '12345678',
+  password: 'Aa456#45',
 };
 const KEYWORDS = {
 	id: "id",
@@ -23,7 +23,7 @@ const MESSAGES = {
 }
 const DEFAULT_LOGIN_CREDENTIALS = {
   username: 'johndoe',
-  password: '12345678',
+  password: 'Aa456#45',
 };
 const COOKIES = {
   jid: 'jid',

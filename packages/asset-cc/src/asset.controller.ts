@@ -40,6 +40,11 @@ export class AssetController extends ConvectorController<ChaincodeTx> {
     }];
     // assign input
     asset.owner.entity = await getEntity(asset.owner.type, asset.owner.id);
+    // check if is a valid input from entity
+    if (!asset.owner.entity) {
+      const entityType: string = asset.owner.type.replace(`${c.CONVECTOR_MODEL_PATH_PREFIX}.`, '');
+      throw new Error(`There is no entity of type '${entityType}' with Id '${asset.owner.id}'`);
+    }
     // assign createdByPersonId before delete loggedPersonId
     asset.createdByPersonId = asset.loggedPersonId;
     // add date in epoch unix time

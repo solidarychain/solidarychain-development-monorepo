@@ -185,10 +185,7 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     let getPerson: Person | Person[] = await Person.getByField('fiscalNumber', person.fiscalNumber);
     // insert person
     if (!getPerson || (getPerson && (getPerson as Person[]).length < 1)) {
-      // TODO use newUuid() after removed from send from graphql
-      // get id from sent graphql id
-      // currentPersonId = person.id;
-      upsertPerson = new Person(person.id);
+      upsertPerson = new Person(newUuid());
       upsertPerson.username = person.username || person.fiscalNumber;
       upsertPerson.password = hashPassword(newPassword(10));
       upsertPerson.participant = gov;

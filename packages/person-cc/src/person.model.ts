@@ -79,7 +79,7 @@ export class Person extends ConvectorModel<Person> {
   @Validate(yup.number())
   public registrationDate: number;
 
-  @Validate(yup.string())
+  @Validate(yup.string().matches(c.REGEX_PHONE_NUMBER, c.YUP_MESSAGE_INVALID_PHONE_NUMBER))
   public mobilePhone: string;
 
   @Validate(yup.string())
@@ -198,7 +198,7 @@ export class Person extends ConvectorModel<Person> {
 
   // 182692124
   // @Required()
-  @Validate(yup.string())
+  @Validate(yup.string().matches(c.REGEX_FISCAL_NUMBER, c.YUP_MESSAGE_INVALID_FISCAL_NUMBER))
   public fiscalNumber: string;
 
   // 11103478242
@@ -229,7 +229,15 @@ export class Person extends ConvectorModel<Person> {
 
   // custom static implementation getById
   public static async getById(id: string): Promise<Person> {
-    const result: Person | Person[] = await this.getByFilter({ _id: id });
+    let result: Person | Person[] = await this.getByFilter({ _id: id });
+    // try get by fiscalNumber
+    if (!result[0]) {
+      result = await this.getByFilter({ 'fiscalNumber': id });
+    }
+    // try get by mobilePhone
+    if (!result[0]) {
+      result = await this.getByFilter({ 'mobilePhone': id });
+    }
     return (result) ? result[0] : null;
   }
 
@@ -240,11 +248,12 @@ export class Person extends ConvectorModel<Person> {
 
   // custom static implementation getByFilter
   public static async getByFilter(filter: any): Promise<Person | Person[]> {
-    return await this.query(Person, {
+    const mangoQuery = {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_PERSON,
         ...filter,
       }
-    });
+    };
+    return await this.query(Person, mangoQuery);
   }
 }

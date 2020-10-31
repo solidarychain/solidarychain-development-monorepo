@@ -41,6 +41,11 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
     }];
     // assign input
     cause.input.entity = await getEntity(cause.input.type, cause.input.id);
+    // check if is a valid input from entity
+    if (!cause.input.entity) {
+      const entityType: string = cause.input.type.replace(`${c.CONVECTOR_MODEL_PATH_PREFIX}.`, '');
+      throw new Error(`There is no entity of type '${entityType}' with Id '${cause.input.id}'`);
+    }
     // assign createdByPersonId before delete loggedPersonId
     cause.createdByPersonId = cause.loggedPersonId;
     // add date in epoch unix time

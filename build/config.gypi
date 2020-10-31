@@ -66,9 +66,7 @@
     "v8_trace_maps": 0,
     "v8_use_snapshot": "true",
     "want_separate_host_toolset": 0,
-    "nodedir": "/root/.node-gyp/8.16.0",
-    "standalone_static_library": 1,
-    "g": "true",
-    "unsafe_perm": "true"
+    "nodedir": "/home/mario/.cache/node-gyp/8.16.0",
+    "standalone_static_library": 1
   }
 }

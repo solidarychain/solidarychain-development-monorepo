@@ -13,9 +13,11 @@ export class Participant extends ConvectorModel<Participant> {
   @Validate(yup.string())
   public name: string;
 
-  // @Validate(yup.string().matches(c.REGEX_EMAIL, c.YUP_MESSAGE_INVALID_EMAIL))
-  @Validate(yup.string())
+  @Validate(yup.string().matches(c.REGEX_EMAIL, c.YUP_MESSAGE_INVALID_EMAIL))
   public email: string;
+
+  @Validate(yup.string().matches(c.REGEX_FISCAL_NUMBER, c.YUP_MESSAGE_INVALID_FISCAL_NUMBER))
+  public fiscalNumber: string;
 
   @Validate(yup.array().of(yup.string().nullable()))
   public ambassadors: string[];
@@ -49,7 +51,7 @@ export class Participant extends ConvectorModel<Participant> {
 
   @Validate(GenericBalance.schema())
   public fundsBalance: GenericBalance;
-  
+
   @Validate(GenericBalance.schema())
   public volunteeringHoursBalance: GenericBalance;
 
@@ -60,7 +62,16 @@ export class Participant extends ConvectorModel<Participant> {
 
   // custom static implementation getById
   public static async getById(id: string): Promise<Participant> {
-    const result: Participant | Participant[] = await this.getByFilter({ _id: id });
+    let result: Participant | Participant[] = await this.getByFilter({ _id: id });
+    // try get by code
+    if (!result[0]) {
+      result = await this.getByFilter({ 'code': id });
+    }
+    // try get by fiscalNumber
+    if (!result[0]) {
+      result = await this.getByFilter({ 'fiscalNumber': id });
+    }
+    // require first record
     return (result) ? result[0] : null;
   }
 
@@ -71,11 +82,12 @@ export class Participant extends ConvectorModel<Participant> {
 
   // custom static implementation getByFilter
   public static async getByFilter(filter: any): Promise<Participant | Participant[]> {
-    return await this.query(Participant, {
+    const mangoQuery = {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_PARTICIPANT,
         ...filter,
       }
-    });
+    };
+    return await this.query(Participant, mangoQuery);
   }
 }
