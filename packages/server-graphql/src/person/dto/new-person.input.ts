@@ -29,9 +29,9 @@ export class NewPersonInput {
 
   // extended non citizenCard data
 
-  @Field({ nullable: true })
+  @Field()
   // @IsDefined()
-  mobilePhone?: string;
+  mobilePhone: string;
 
   @Field({ nullable: true })
   // @IsDefined()
@@ -192,8 +192,7 @@ export class NewPersonInput {
   // 182692124
   @Field()
   @IsDefined()
-  @IsOptional()
-  fiscalNumber?: string;
+  fiscalNumber: string;
 
   // 11103478242
   @Field({ nullable: true })

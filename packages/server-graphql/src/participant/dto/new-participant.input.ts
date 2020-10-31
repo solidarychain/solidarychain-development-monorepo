@@ -21,8 +21,13 @@ export class NewParticipantInput {
   @Length(3, 100)
   name: string;
 
-  @Field({ nullable: true })
-  email?: string;
+  @Field()
+  @IsDefined()
+  email: string;
+
+  @Field()
+  @IsDefined()
+  fiscalNumber: string;
 
   @Field(type => [String], { nullable: true })
   @Optional()

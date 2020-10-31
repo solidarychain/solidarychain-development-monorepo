@@ -96,11 +96,12 @@ export class Transaction extends ConvectorModel<Transaction> {
 
   // custom static implementation getByFilter
   public static async getByFilter(filter: any): Promise<Transaction | Transaction[]> {
-    return await this.query(Transaction, {
+    const mangoQuery = {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_TRANSACTION,
         ...filter,
       }
-    });
+    };
+    return await this.query(Transaction, mangoQuery);
   }
 }

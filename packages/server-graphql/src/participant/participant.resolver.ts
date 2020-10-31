@@ -80,12 +80,11 @@ export class ParticipantResolver {
   async participantChangeIdentity(
     @Args('changeParticipantIdentityData') changeParticipantIdentityData: ChangeParticipantIdentityInput,
   ): Promise<Participant> {
-    debugger;
     const participant = await this.participantService.changeIdentity(changeParticipantIdentityData);
     pubSub.publish(SubscriptionEvent.participantIdentityChanged, { [SubscriptionEvent.participantIdentityChanged]: participant });
     return participant;
   }
-  
+
   @Subscription(returns => Participant)
   participantAdded() {
     return pubSub.asyncIterator(SubscriptionEvent.participantAdded);

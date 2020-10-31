@@ -59,9 +59,9 @@ export class Person {
   @IsDate()
   registrationDate: Date;
 
-  @Field({ nullable: true })
+  @Field()
   @IsDefined()
-  mobilePhone?: string;
+  mobilePhone: string;
 
   @Field({ nullable: true })
   @IsDefined()
@@ -207,7 +207,7 @@ export class Person {
   // 182692124
   @Field()
   @IsDefined()
-  fiscalNumber?: string;
+  fiscalNumber: string;
 
   // 11103478242
   @Field({ nullable: true })

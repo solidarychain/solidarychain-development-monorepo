@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# script to upgrade hurley network after cc changes, used to upgrade chaincode
+
 FILE_VERSION=upgrade-chaincode.txt
 CHAINCODE_NAME=solidary-chain-chaincode
 [ -f $FILE_VERSION ] && VERSION=$(cat ${FILE_VERSION})

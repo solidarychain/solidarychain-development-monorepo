@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# this extends seedNetwork.sh, advice to run after seedNetwork.sh
+# used manually
+# scp seedNetworkMinimal.sh 192.168.1.61:/tmp
+# scp seed.env  192.168.1.61:/tmp
+# enter node 1 and launch cd /tmp && ./seedNetworkMinimal.sh
+
 # load .env
 set -a
 . seed.env
@@ -10,25 +16,21 @@ BASE_CMD="docker exec cli peer chaincode invoke -C ${CHANNEL_ALL} -n ${CHAINCODE
 
 # participant gov
 echo "create participant ${GOV_NAME}..."
-${BASE_CMD} -c "{ \"Args\" : [\"participant_createWithParameters\", \"${GOV_ID}\", \"${GOV_CODE}\", \"${GOV_NAME}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"participant_createWithParameters\", \"${GOV_ID}\", \"${GOV_CODE}\", \"${GOV_NAME}\", \"${GOV_EMAIL}\", \"${GOV_NIF}\" ] }"
 ${SLEEP}
 echo "get participant ${GOV_NAME}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"participant_get\", \"${GOV_ID}\" ] }"
 ${SLEEP}
 
-# person johndoe
-ID=${JOHN_ID}
-FIRST_NAME="John"
-LAST_NAME="Doe"
-USER_NAME="johndoe"
-EMAIL="${USER_NAME}@mail.com"
-FISCAL_NUMBER="182692124"
-BENEFICIARY_NUMBER="285191659"
-DOCUMENT_NUMBER="09879462 0 ZZ3"
-IDENTITY_NUMBER="098794620"
-SOCIAL_SECURITY_NUMBER="11103478242"
-PAN="0000036014662658"
-PAYLOAD='{\"id\":\"'${ID}'\",\"firstname\":\"'${FIRST_NAME}'\",\"lastname\":\"'${LAST_NAME}'\",\"beneficiaryNumber\":\"'${BENEFICIARY_NUMBER}'\",\"birthDate\":\"'${DATE}'\",\"cardVersion\":\"006.007.23\",\"country\":\"PRT\",\"documentNumber\":\"'${DOCUMENT_NUMBER}'\",\"documentType\":\"Cartão De Cidadão\",\"emissionDate\":\"'${DATE}'\",\"emittingEntity\":\"República Portuguesa\",\"expirationDate\":\"'${DATE}'\",\"fatherFirstname\":\"Alberto\",\"fatherLastname\":\"De Andrade Monteiro\",\"fiscalNumber\":\"'${FISCAL_NUMBER}'\",\"gender\":\"M\",\"height\":\"1.81\",\"identityNumber\":\"'${IDENTITY_NUMBER}'\",\"motherFirstname\":\"Maria Da Graça De Oliveira Mendes\",\"motherLastname\":\"Monteiro\",\"nationality\":\"PRT\",\"otherInformation\":\"\",\"pan\":\"'${PAN}'\",\"requestLocation\":\"CRCiv. Figueira da Foz\",\"socialSecurityNumber\":\"'${SOCIAL_SECURITY_NUMBER}'\",\"username\":\"'${USER_NAME}'\",\"password\":\"'${DEFAULT_PASSWORD}'\",\"email\":\"'${EMAIL}'\"}'
+# person admin
+ID=${ADMIN_ID}
+FISCAL_NUMBER="PT000000000"
+PHONE_NUMBER="+351936200001"
+FIRST_NAME="Super"
+LAST_NAME="User"
+USER_NAME="admin"
+EMAIL="${USER_NAME}@example.com"
+PAYLOAD='{\"id\":\"'${ID}'\",\"firstname\":\"'${FIRST_NAME}'\",\"lastname\":\"'${LAST_NAME}'\",\"fiscalNumber\":\"'${FISCAL_NUMBER}'\",\"mobilePhone\":\"'${PHONE_NUMBER}'\",\"otherInformation\":\"\",\"username\":\"'${USER_NAME}'\",\"password\":\"'${ADMIN_PASSWORD}'\",\"email\":\"'${EMAIL}'\"}'
 echo "create person ${USER_NAME}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"person_create\", \"${PAYLOAD}\" ] }"
 ${SLEEP}

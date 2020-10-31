@@ -1,14 +1,15 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Mutation, Resolver, Subscription, Context } from '@nestjs/graphql';
+import { Args, Context, Mutation, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'apollo-server-express';
-import { AuthService } from './auth.service';
+import SignJwtTokenPayload from 'src/common/types/sign-jwt-token-payload';
+import { SubscriptionEvent } from '../common/types';
 import { LoginPersonInput } from '../person/dto';
-import { AccessToken, PersonLoginResponse } from './models';
-import { GqlLocalAuthGuard } from './guards';
+import { Person } from '../person/models/person.model';
 import { GqlContext } from '../types';
 import { UsersService } from '../users/users.service';
-import { Person } from '../person/models/person.model';
-import { SubscriptionEvent } from '../common/types';
+import { AuthService } from './auth.service';
+import { GqlLocalAuthGuard } from './guards';
+import { AccessToken, PersonLoginResponse } from './models';
 
 const pubSub = new PubSub();
 
@@ -30,7 +31,7 @@ export class AuthResolver {
     // get person
     const person: Person = await this.usersService.findOneByUsername(loginPersonData.username);
     // accessToken: add some person data to it, like id and roles
-    const signJwtTokenDto = { ...loginPersonData, userId: person.id, roles: person.roles };
+    const signJwtTokenDto: SignJwtTokenPayload = { ...loginPersonData, userId: person.id, roles: person.roles };
     const { accessToken } = await this.authService.signJwtToken(signJwtTokenDto);
     // TODO: payload is assigned to context?
     // assign jwt Payload to context

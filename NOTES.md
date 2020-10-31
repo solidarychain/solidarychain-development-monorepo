@@ -89,6 +89,7 @@
   - [Error: Failed to load gRPC binary module because it was not installed for the current system](#error-failed-to-load-grpc-binary-module-because-it-was-not-installed-for-the-current-system)
     - [require await ele Error: PUT_STATE failed: transaction ID: ...: no ledger context](#require-await-ele-error-put_state-failed-transaction-id--no-ledger-context)
   - [Problem: Jest error TS1005: ';' expected.](#problem-jest-error-ts1005--expected)
+  - [Problem launching Hurley with deprecated `hyperledger/fabric-ccenv`](#problem-launching-hurley-with-deprecated-hyperledgerfabric-ccenv)
 
 This is a simple NestJs starter, based on above links, I only extended it with a few things like **swagger api**, **https**, **jwt**, and other stuff, thanks m8s
 
@@ -233,7 +234,7 @@ $ npx lerna run start:debug --scope @solidary-chain/server-graphql --stream
 
 ### Tools
 
-- [Fauxton](http://localhost:5084/_utils/#database/)
+- [Hurley Fauxton](http://localhost:5084/_utils/#database/)
 
 ### Mango Queries
 
@@ -250,6 +251,15 @@ $ npx lerna run start:debug --scope @solidary-chain/server-graphql --stream
       }
     }
   }
+}
+```
+
+```json
+{
+   "selector": {
+      "type": "com.chain.solidary.model.participant",
+      "fiscalNumber": "PT500123001"
+   }
 }
 ```
 
@@ -1818,15 +1828,15 @@ echo "Creating participant: National Bank"
 npx hurl invoke ${CHAINCODE_NAME} participant_register naba "National Bank" -u user1 -o org2
 
 echo "Creating person: John Doe"
-npx hurl invoke ${CHAINCODE_NAME} person_create "{ \"id\": \"1-100-100\", \"firstname\": \"John\", \"lastname\": \"Doe\", \"username\": \"johndoe\", \"password\": \"12345678\", \"email\": \"john.doe@mail.com\"}" -u admin
+npx hurl invoke ${CHAINCODE_NAME} person_create "{ \"id\": \"1-100-100\", \"firstname\": \"John\", \"lastname\": \"Doe\", \"username\": \"johndoe\", \"password\": \"12345678\", \"email\": \"john.doe@example.com\"}" -u admin
 
 echo "Adding attribute 'birth-year' as the Big Government identity"
 npx hurl invoke ${CHAINCODE_NAME} person_addAttribute "1-100-100" "{\"id\": \"birth-year\", \"certifierID\": \"gov\", \"content\": \"1993\", \"issuedDate\": 1554239270 }" -u admin
 
-npx hurl invoke ${CHAINCODE_NAME} person_create "{ \"id\": \"1-100-101\", \"firstname\": \"Jane\", \"lastname\": \"Doe\", \"username\": \"janedoe\", \"password\": \"12345678\", \"email\": \"jane.doe@mail.com\"}" -u admin
+npx hurl invoke ${CHAINCODE_NAME} person_create "{ \"id\": \"1-100-101\", \"firstname\": \"Jane\", \"lastname\": \"Doe\", \"username\": \"janedoe\", \"password\": \"12345678\", \"email\": \"jane.doe@example.com\"}" -u admin
 npx hurl invoke ${CHAINCODE_NAME} person_addAttribute "1-100-101" "{\"id\": \"birth-year\", \"certifierID\": \"gov\", \"content\": \"1993\", \"issuedDate\": 1554239270 }" -u admin
 
-npx hurl invoke ${CHAINCODE_NAME} person_create "{ \"id\": \"1-100-102\", \"firstname\": \"Dick\", \"lastname\": \"Doe\", \"username\": \"dickdoe\", \"password\": \"12345678\", \"email\": \"dick.doe@mail.com\"}" -u admin
+npx hurl invoke ${CHAINCODE_NAME} person_create "{ \"id\": \"1-100-102\", \"firstname\": \"Dick\", \"lastname\": \"Doe\", \"username\": \"dickdoe\", \"password\": \"12345678\", \"email\": \"dick.doe@example.com\"}" -u admin
 npx hurl invoke ${CHAINCODE_NAME} person_addAttribute "1-100-102" "{\"id\": \"birth-year\", \"certifierID\": \"gov\", \"content\": \"1988\", \"issuedDate\": 1554239270 }" -u admin
 ```
 
@@ -3309,3 +3319,13 @@ remove
 ```
 
 from solidarychain-development-monorepo/package-lock.json and to finish with `npm i `
+
+## Problem launching Hurley with deprecated `hyperledger/fabric-ccenv`
+
+```shell
+$ ./restartEnv.sh
+...
+Error: could not assemble transaction, err proposal response was not successful, error code 500, msg error starting container: error starting container: Failed to generate platform-specific docker build: Failed to pull hyperledger/fabric-ccenv:latest: API error (404): manifest for hyperledger/fabric-ccenv:latest not found: manifest unknown: manifest unknown
+[hurley] - Found error while running script!
+```
+

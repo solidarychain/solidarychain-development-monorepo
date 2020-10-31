@@ -34,7 +34,7 @@ mutation personLogin($loginPersonData: LoginPersonInput!) {
 {
 	"loginPersonData": {
 		"username": "johndoe",
-		"password": "12345678"
+		"password": "Aa456#45"
 	}
 }
 

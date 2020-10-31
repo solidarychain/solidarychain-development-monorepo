@@ -14,8 +14,8 @@ export class UpdatePersonProfileInput {
 
   // extended non citizenCard data
 
-  @Field({ nullable: true })
-  mobilePhone?: string;
+  @Field()
+  mobilePhone: string;
 
   @Field({ nullable: true })
   postal?: string;

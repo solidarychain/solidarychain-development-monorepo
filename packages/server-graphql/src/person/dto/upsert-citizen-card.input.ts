@@ -104,7 +104,7 @@ export class UpsertCitizenCardInput {
   // 182692124
   @Field()
   @IsDefined()
-  fiscalNumber?: string;
+  fiscalNumber: string;
 
   // 11103478242
   @Field()

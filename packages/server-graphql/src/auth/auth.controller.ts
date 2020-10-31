@@ -1,12 +1,12 @@
 import { Controller, HttpStatus, Post, Request, Response } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { GqlContextPayload } from '../types';
+import SignJwtTokenPayload from 'src/common/types/sign-jwt-token-payload';
 import { envVariables as e } from '../env';
+import { Person } from '../person/models';
+import { GqlContextPayload } from '../types';
 import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
 import { AccessToken } from './models';
-import { LoginPersonInput } from '../person/dto';
-import { Person } from '../person/models';
 
 @Controller()
 export class AuthController {
@@ -56,13 +56,12 @@ export class AuthController {
     }
 
     // refresh the refreshToken on accessToken, this way we extended/reset refreshToken validity to default value
-    const loginPersonInput: LoginPersonInput = { username: person.username, password: person.password };
+    const signJwtTokenDto: SignJwtTokenPayload = { username: person.username, userId: person.id, roles: person.roles };
     // we don't increment tokenVersion here, only when we login, this way refreshToken is always valid until we login again
-    const refreshToken: AccessToken = await this.authService.signRefreshToken(loginPersonInput, tokenVersion);
+    const refreshToken: AccessToken = await this.authService.signRefreshToken(signJwtTokenDto, tokenVersion);
     // send refreshToken in response/setCookie
     this.authService.sendRefreshToken(res, refreshToken);
-
-    const { accessToken }: AccessToken = await this.authService.signJwtToken(person);
+    const { accessToken }: AccessToken = await this.authService.signJwtToken(signJwtTokenDto);
     res.send({ valid: true, accessToken });
   }
 }

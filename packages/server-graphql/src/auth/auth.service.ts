@@ -1,8 +1,9 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { Response } from 'express';
 import { SignOptions } from 'jsonwebtoken';
+import SignJwtTokenPayload from 'src/common/types/sign-jwt-token-payload';
 import { envVariables as e } from '../env';
 import { GqlContextPayload } from '../types';
 import { UsersService } from '../users/users.service';
@@ -30,17 +31,17 @@ export class AuthService {
     return null;
   }
 
-  async signJwtToken(user: any, options?: SignOptions): Promise<AccessToken> {
+  async signJwtToken(signPayload: SignJwtTokenPayload, options?: SignOptions): Promise<AccessToken> {
     // note: we choose a property name of sub to hold our userId value to be consistent with JWT standards
-    const payload = { username: user.username, sub: user.userId, roles: user.roles };
+    const payload = { username: signPayload.username, sub: signPayload.userId, roles: signPayload.roles };
     return {
       // generate JWT from a subset of the user object properties
       accessToken: this.jwtService.sign(payload, options),
     };
   }
 
-  async signRefreshToken(user: any, tokenVersion: number, options?: SignOptions): Promise<AccessToken> {
-    const payload = { username: user.username, sub: user.userId, roles: user.roles, tokenVersion };
+  async signRefreshToken(signPayload: SignJwtTokenPayload, tokenVersion: number, options?: SignOptions): Promise<AccessToken> {
+    const payload = { username: signPayload.username, sub: signPayload.userId, roles: signPayload.roles, tokenVersion };
     return {
       // generate JWT from a subset of the user object properties
       accessToken: this.jwtService.sign(payload, { ...options, expiresIn: e.refreshTokenExpiresIn }),

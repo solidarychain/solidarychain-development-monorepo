@@ -226,7 +226,7 @@ and some helper script `restartEnv.sh`, that can be used to start or restart **h
 # launch restart network
 $ ./restartEnv.sh
 # in the end we get one valid transaction like this
-[hurley] - Result: {"_attributes":[{"certifierID":"gov","content":null,"id":"birth-year","issuedDate":1554239270}],"_email":"john.doe@mail.com","_firstname":"John","_id":"1-100-100","_lastname":"Doe","_participant":{"id":"gov","identities":[{"fingerprint":"72:BA:6B:03:89:E9:F9:CE:53:AB:14:D0:90:13:3B:A8:DC:99:C2:81","status":true}],"msp":"org1MSP","name":"Big Government","type":"com.chain.solidary.model.participant"},"_password":"$2b$10$H2l30bMr5dhCVNg53M/0BeHrgSh7rdHUokfrQi0HMs.H509MpCs/S","_roles":["USER"],"_type":"com.chain.solidary.model.person","_username":"johndoe"}
+[hurley] - Result: {"_attributes":[{"certifierID":"gov","content":null,"id":"birth-year","issuedDate":1554239270}],"_email":"john.doe@example.com","_firstname":"John","_id":"1-100-100","_lastname":"Doe","_participant":{"id":"gov","identities":[{"fingerprint":"72:BA:6B:03:89:E9:F9:CE:53:AB:14:D0:90:13:3B:A8:DC:99:C2:81","status":true}],"msp":"org1MSP","name":"Big Government","type":"com.chain.solidary.model.participant"},"_password":"$2b$10$H2l30bMr5dhCVNg53M/0BeHrgSh7rdHUokfrQi0HMs.H509MpCs/S","_roles":["USER"],"_type":"com.chain.solidary.model.person","_username":"johndoe"}
 Cleaning up event hubs
 ```
 
@@ -267,7 +267,7 @@ $ npx hurl invoke person person_get 1-100-100
 [hurley] - 1-100-100
 [hurley] - Sending transaction as user1 in org org1...
 [hurley] - Transaction sent! VALID  SUCCESS a824d0a4cd66ed776f6b6ea1ed30a89a76d8d5672b2a482cd0ab00526ec85b49
-[hurley] - Result: {"_attributes":[{"certifierID":"gov","content":null,"id":"birth-year","issuedDate":1554239270}],"_email":"john.doe@mail.com","_firstname":"John","_id":"1-100-100","_lastname":"Doe","_participant":{"id":"gov","identities":[{"fingerprint":"72:BA:6B:03:89:E9:F9:CE:53:AB:14:D0:90:13:3B:A8:DC:99:C2:81","status":true}],"msp":"org1MSP","name":"Big Government","type":"com.chain.solidary.model.participant"},"_password":"$2b$10$H2l30bMr5dhCVNg53M/0BeHrgSh7rdHUokfrQi0HMs.H509MpCs/S","_roles":["USER"],"_type":"com.chain.solidary.model.person","_username":"johndoe"}
+[hurley] - Result: {"_attributes":[{"certifierID":"gov","content":null,"id":"birth-year","issuedDate":1554239270}],"_email":"john.doe@example.com","_firstname":"John","_id":"1-100-100","_lastname":"Doe","_participant":{"id":"gov","identities":[{"fingerprint":"72:BA:6B:03:89:E9:F9:CE:53:AB:14:D0:90:13:3B:A8:DC:99:C2:81","status":true}],"msp":"org1MSP","name":"Big Government","type":"com.chain.solidary.model.participant"},"_password":"$2b$10$H2l30bMr5dhCVNg53M/0BeHrgSh7rdHUokfrQi0HMs.H509MpCs/S","_roles":["USER"],"_type":"com.chain.solidary.model.person","_username":"johndoe"}
 Cleaning up event hubs
 
 $ npx hurl invoke person participant_get gov

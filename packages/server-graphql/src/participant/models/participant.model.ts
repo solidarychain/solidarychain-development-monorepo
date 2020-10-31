@@ -21,6 +21,10 @@ export class Participant {
   @Field({ nullable: true })
   email?: string;
 
+  @Field()
+  @IsDefined()
+  fiscalNumber: string;
+
   @Field(type => [String], { nullable: true })
   @Optional()
   ambassadors: string[];

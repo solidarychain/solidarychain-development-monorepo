@@ -4,7 +4,7 @@
   - [Versions Used](#versions-used)
   - [Important Notes](#important-notes)
   - [MODE1: Start in debug chaincode](#mode1-start-in-debug-chaincode)
-    - [1. restart network manually, without `restartEnv.sh` script, and without deploying chaincode, on network, we use debug mode environment, that does not lift any container](#1-restart-network-manually-without-restartenvsh-script-and-without-deploying-chaincode-on-network-we-use-debug-mode-environment-that-does-not-lift-any-container)
+    - [1. restart network manually with npm run env:restart](#1-restart-network-manually-with-npm-run-envrestart)
     - [2. launch chaincode in debug mode](#2-launch-chaincode-in-debug-mode)
     - [3. now wait that the chaincode in running](#3-now-wait-that-the-chaincode-in-running)
     - [4. Create Views](#4-create-views)
@@ -15,6 +15,7 @@
   - [MODE3: View logs/ open terminal in normal update-chaincode.sh mode](#mode3-view-logs-open-terminal-in-normal-update-chaincodesh-mode)
   - [Problems and Solutions](#problems-and-solutions)
     - [Error #ERR-DEBUG-001](#error-err-debug-001)
+    - [Error #ERR-DEBUG-002](#error-err-debug-002)
 
 ## Versions Used
 
@@ -34,13 +35,15 @@ $ npx hurl --version
 
 1. to change chaincode while debug, use `dist/**/*.js` file versions
 2. if change are made in `chaincode-solidary-chain-chaincode/**/*.ts` source code while debugging, don't forget to apply the same changes on `packages/**/*.ts`
-3. if have prpblems with debug, remove chaincode dir, I lost a few hours to figure out that the problem is in a sort of error, check error
+3. if have problems with debug, remove chaincode dir, I lost a **few hours** to figure out that the problem is in a sort of error, check error
 
 ## MODE1: Start in debug chaincode
 
 to start debug and develop chaincode always follow this steps to prevent some hard times put debugger working......
 
-### 1. restart network manually, without `restartEnv.sh` script, and without deploying chaincode, on network, we use debug mode environment, that does not lift any container
+### 1. restart network manually with npm run env:restart
+
+...without `restartEnv.sh` script, and without deploying chaincode, on network, we use debug mode environment, that does not lift any container, else it won't work
 
 ```shell
 # restart hyperledger network
@@ -53,27 +56,34 @@ $ npm run env:restart
 ```shell
 # start define CHAINCODE_NAME
 $ CHAINCODE_NAME=solidary-chain-chaincode
+# to prevent problems rm chaincode-solidary-chain-chaincode in version 1.0
+$ rm -r chaincode-${CHAINCODE_NAME}
 # launch chaincode debug, NOTE this command must be run inside Vscode to attach debugger (side note it will build all packages)
 $ npm run cc:start:debug -- ${CHAINCODE_NAME}
 ```
 
-> NOTE: `dev-peer0.org2.hurley.lab-solidary-chain-chaincode-1.x` container, won't appear with below command, like it does when we deploy chaincode without `cc:start:debug`
-
 ```shell
+# `dev-peer0.org2.hurley.lab-solidary-chain-chaincode-1.x` container, won't appear with below command, like it does when we deploy chaincode without `cc:start:debug`, ex with `restartEnv.sh`
 $ watch "docker container ls --format "{{.Names}}" | grep \"${CHAINCODE_NAME}\""
 ```
 
 ### 3. now wait that the chaincode in running
 
+UPDATE: 2020-10-27 22:03:45 we need to press F5 and use `"Attach to Chaincode"` `launch.json` config when we land in `Instantiated Chaincode at org1`, and `Debugger attached`
+
 ```shell
 # debugger attached
 Debugger attached.
 ...
-Instantiating Chaincode at org1 for channel ch1
+# require to wait for Instantiating Chaincode message before launch debugger
 It may take a few minutes depending on the chaincode dependencies
-2020-02-02 17:39:35.708 WET [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
-2020-02-02 17:39:35.708 WET [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
-Error: could not assemble transaction, err proposal response was not successful, error code 500, msg chaincode with name 'solidary-chain-chaincode' already exists
+2020-10-27 22:40:16.525 WET [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+2020-10-27 22:40:16.525 WET [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+info: [Chaincode] =========== Instantiated Chaincode chaincode ===========
+info: [Chaincode] Transaction ID: b044b5330671dcd90527bfb3f33259fde0cac473fa1e690a7407b657d1a1e4c3
+info: [Chaincode] Args: init,
+2020-10-27T22:40:16.538Z info [shim:lib/handler.js]                               [ch1-b044b533] Calling chaincode Init() succeeded. Sending COMPLETED message back to peer  
+Instantiated Chaincode at org1
 ```
 
 > ignore error `Error: could not assemble transaction, err proposal response was not successful, error code 500, msg chaincode with name 'solidary-chain-chaincode' already exists`, sometimes it gives that error because we forget to define variable with `CHAINCODE_NAME=solidary-chain-chaincode`
@@ -81,7 +91,7 @@ Error: could not assemble transaction, err proposal response was not successful,
 when work appears
 
 ```shell
-incode Init() succeeded. Sending COMPLETED message back to peer  
+incode Init() succeeded. Sending COMPLETED message back to peer
 Instantiated Chaincode at org1
 ```
 
@@ -93,7 +103,9 @@ $ ./couchdb/install.sh
 
 ### 5. Add some seed to ledger
 
-> advice to launch line by line in case of problems....
+> TIP: here we can launch F5 and attach debugger and stop in breakpoints when we seed
+
+> advice to launch line by line in case of problems....to debug bad invokes
 
 ```shell
 $ ./seed.sh
@@ -105,7 +117,7 @@ add some breakpoints on `chaincode-solidary-chain-chaincode/packages/@solidary-c
 
 ### 7. Edit and deploy chaincode again
 
-after edit code changes, stop current debug with ctrl+c and re-launch chaincode in debug mode again and that's all, it is VERY FAST and we asure we edit the source *.ts
+after edit code changes, stop current debug with ctrl+c and re-launch chaincode in debug mode again and that's all, it is VERY FAST and we assure we edit the source *.ts
 
 ```shell
 # start define CHAINCODE_NAME
@@ -196,3 +208,28 @@ undefined
 ```
 
 > TIP: now we only press one F5 on debugger to continue VS selecting the Auto attached process and F5 more than one time, GREAT NEWS
+
+
+to prevent vscode and node problems, ex debug `solidary-chain-chaincode`
+
+- [How to set and understand fs.notify.max_user_watches](https://unix.stackexchange.com/questions/444998/how-to-set-and-understand-fs-notify-max-user-watches)
+
+### Error #ERR-DEBUG-002
+
+```shell
+$ npm run cc:start:debug -- ${CHAINCODE_NAME}
+[nodemon] Internal watch failed: watch /media/mario/storage/Documents/Development/@SolidaryChain/solidarychain-development-monorepo/chaincode-solidary-chain-chaincode EMFILE
+```
+
+> bellow occurs in new os opensuse
+
+```shell
+# opening /etc/sysctl.conf in an editor and adding this to it:
+$ sudo nano /etc/sysctl.conf
+
+# add
+
+fs.inotify.max_user_watches=524288
+```
+
+Then run sudo `sysctl -p` to process the changes made to the file.

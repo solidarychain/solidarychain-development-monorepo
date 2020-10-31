@@ -88,7 +88,7 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     transaction.input.entity = await getEntity(transaction.input.type, transaction.input.id);
     transaction.output.entity = await getEntity(transaction.output.type, transaction.output.id);
 
-    // check if is a valid input and output form entity
+    // check if is a valid input and output from entity
     if (!transaction.input.entity) {
       const entityType: string = transaction.input.type.replace(`${c.CONVECTOR_MODEL_PATH_PREFIX}.`, '');
       throw new Error(`There is no entity of type '${entityType}' with Id '${transaction.input.id}'`);
