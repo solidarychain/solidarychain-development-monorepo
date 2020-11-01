@@ -23,7 +23,7 @@ set +a
 # [hurley] - Sending transaction as chaincodeAdmin in org org1...
 # (node:27965) UnhandledPromiseRejectionWarning: Error: Cannot save null userContext.
 
-echo -n "> Do you wish to run minimal or full seed this program? (Minimal/Full/Cancel) " >&2
+echo -n "> Do you wish to run minimal or full seed? (Minimal/Full/Cancel) " >&2
 while [ -z "${result}" ] ; do
   read -s -n 1 choice
   case "${choice}" in
@@ -40,6 +40,19 @@ echo "Creating participant: Big Government"
 npx hurl invoke ${CHAINCODE_NAME} participant_createWithParameters "${GOV_ID}" "${GOV_CODE}" "${GOV_NAME}" "${GOV_EMAIL}" "${GOV_NIF}" -u admin
 # npx hurl invoke ${CHAINCODE_NAME} participant_get ${GOV_ID} -u admin
 # npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${GOV_CODE} -u admin
+
+# create person with all data
+ID="${ADMIN_ID}"
+FISCAL_NUMBER="PT182692123"
+PHONE_NUMBER="+351936200000"
+USER_NAME="admin"
+EMAIL="${USER_NAME}@example.com"
+DATE="61985472"
+PAYLOAD="{\"id\":\"${ADMIN_ID}\",\"fiscalNumber\":\"${FISCAL_NUMBER}\",\"mobilePhone\":\"${PHONE_NUMBER}\",\"otherInformation\":\"\",\"username\":\"${USER_NAME}\",\"password\":\"${ADMIN_PASSWORD}\",\"email\":\"${EMAIL}\"}"
+# echo $PAYLOAD  | jq
+npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" -u admin
+# npx hurl invoke ${CHAINCODE_NAME} person_get ${JOHN_ID} -u admin
+# npx hurl invoke ${CHAINCODE_NAME} person_getByUsername ${USER_NAME} -u admin
 
 # create person with all data
 ID="${JOHN_ID}"
@@ -442,6 +455,8 @@ npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u user1
 # npx hurl invoke ${CHAINCODE_NAME} person_getByUsername ${USER_NAME} -u admin
 # npx hurl invoke ${CHAINCODE_NAME} person_getByFiscalnumber ${FISCAL_NUMBER} -u admin
 
+# register chaincodeAdmin before use it to prevent error `(node:11177) UnhandledPromiseRejectionWarning: Error: Cannot save null userContext.`
+node registerIdentitiesManager.js 
 # update participant gov: all updateable fields, require to be user 'chaincodeAdmin' with 'admin' attribute
 AMBASSADORS_UPDATE="[\"${MINI_ID}\"]"
 EMAIL_UPDATE="gov-updated@example.com"

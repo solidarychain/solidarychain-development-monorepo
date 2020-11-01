@@ -243,7 +243,7 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
   // ) {
   //   const existing = await Transaction.getOne(id);
   //   if (!existing || !existing.id) {
-  //     throw new Error(`No transaction exists with that ID ${id}`);
+  //     throw new Error(`No transaction exists with that id ${id}`);
   //   }
   //   return existing;
   // }
@@ -257,7 +257,7 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     let existing = await Transaction.getById(transaction.id);
 
     if (!existing || !existing.id) {
-      throw new Error('No transaction exists with that ID');
+      throw new Error('No transaction exists with that id');
     }
 
     // update fields

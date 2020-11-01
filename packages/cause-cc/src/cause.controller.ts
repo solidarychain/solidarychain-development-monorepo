@@ -1,10 +1,10 @@
-import { appConstants as c, checkValidModelIds, GenericBalance, Goods, ChaincodeEvent } from '@solidary-chain/common-cc';
+import { appConstants as c, checkValidModelIds, GenericBalance, Goods, ChaincodeEvent, randomString  } from '@solidary-chain/common-cc';
 import { getParticipantByIdentity, Participant } from '@solidary-chain/participant-cc';
 import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
 import * as yup from 'yup';
 import { Cause } from './cause.model';
-import { checkUniqueField, getEntity } from './utils';
+import { checkUniqueField, getEntity} from './utils';
 
 @Controller('cause')
 export class CauseController extends ConvectorController<ChaincodeTx> {
@@ -19,11 +19,11 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
       throw new Error('There is no participant with that identity');
     }
 
-    // check if all ambassadors are valid persons
-    await checkValidModelIds(c.CONVECTOR_MODEL_PATH_PERSON, c.CONVECTOR_MODEL_PATH_PERSON_NAME, cause.ambassadors);
+    // check if all ambassadors are valid persons, and update model.ambassadors with uuid's
+    cause.ambassadors = await checkValidModelIds(c.CONVECTOR_MODEL_PATH_PERSON, c.CONVECTOR_MODEL_PATH_PERSON_NAME, cause.ambassadors);
 
     // get postfix name this way we can have multiple causes with same name
-    const postfixCode: string = cause.id.split('-')[0];
+    const postfixCode: string = randomString(10);
     // modify cause.name, used in save to
     cause.name = `${cause.name} [${postfixCode}]`;
 
@@ -76,8 +76,11 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
     let existing = await Cause.getById(cause.id);
 
     if (!existing || !existing.id) {
-      throw new Error('No cause exists with that ID');
+      throw new Error('No cause exists with that id');
     }
+
+    // check if all ambassadors are valid persons, and update model.ambassadors with uuid's
+    cause.ambassadors = await checkValidModelIds(c.CONVECTOR_MODEL_PATH_PERSON, c.CONVECTOR_MODEL_PATH_PERSON_NAME, cause.ambassadors);
 
     // update fields
     existing.email = cause.email;

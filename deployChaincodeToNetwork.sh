@@ -39,7 +39,7 @@ GOV_ID=c8ca045c-9d1b-407f-b9ae-31711758f2d0
 GOV_CODE=gov
 GOV_NAME="Big Government"
 # seed script
-SCRIPT_SEED=seedNetworkMinimal.sh
+SCRIPT_SEED=seedNetwork.sh
 
 # press any key function
 press_any_key() {

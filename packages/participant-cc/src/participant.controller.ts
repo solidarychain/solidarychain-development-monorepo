@@ -97,8 +97,8 @@ export class ParticipantController extends ConvectorController {
       }
     }
 
-    // check if all ambassadors are valid persons
-    await checkValidModelIds(c.CONVECTOR_MODEL_PATH_PERSON, c.CONVECTOR_MODEL_PATH_PERSON_NAME, participant.ambassadors);
+    // check if all ambassadors are valid persons, and update model.ambassadors with uuid's
+    participant.ambassadors = await checkValidModelIds(c.CONVECTOR_MODEL_PATH_PERSON, c.CONVECTOR_MODEL_PATH_PERSON_NAME, participant.ambassadors);
 
     // check unique fields
     await checkUniqueField('_id', participant.id, true);
@@ -143,7 +143,6 @@ export class ParticipantController extends ConvectorController {
     @Param(Participant)
     participant: Participant,
   ) {
-    debugger;
     // Check permissions
     let isAdmin = this.fullIdentity.getAttributeValue('admin');
     let requesterMSP = this.fullIdentity.getMSPID();
@@ -152,7 +151,7 @@ export class ParticipantController extends ConvectorController {
     let existing = await Participant.getById(participant.id);
 
     if (!existing || !existing.id) {
-      throw new Error('No participant exists with that ID');
+      throw new Error('No participant exists with that id');
     }
 
     if (existing.msp != requesterMSP) {
@@ -162,6 +161,9 @@ export class ParticipantController extends ConvectorController {
     if (!isAdmin) {
       throw new Error('Unauthorized. Requester identity is not an admin');
     }
+
+    // check if all ambassadors are valid persons, and update model.ambassadors with uuid's
+    participant.ambassadors = await checkValidModelIds(c.CONVECTOR_MODEL_PATH_PERSON, c.CONVECTOR_MODEL_PATH_PERSON_NAME, participant.ambassadors);
 
     // update fields
     existing.email = participant.email;
@@ -193,7 +195,7 @@ export class ParticipantController extends ConvectorController {
     // const existing = await Participant.getOne(id);
 
     if (!existing || !existing.id) {
-      throw new Error('No participant exists with that ID');
+      throw new Error('No participant exists with that id');
     }
 
     if (existing.msp != requesterMSP) {

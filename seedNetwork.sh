@@ -5,6 +5,21 @@ set -a
 . seed.env
 set +a
 
+# used manually
+# scp seedNetworkMinimal.sh 192.168.1.61:/tmp
+# scp seed.env 192.168.1.61:/tmp
+# enter node 1 and launch cd /tmp && ./seedNetwork.sh
+
+echo -n "> Do you wish to run minimal or full seed? (Minimal/Full/Cancel) " >&2
+while [ -z "${result}" ] ; do
+  read -s -n 1 choice
+  case "${choice}" in
+    m|M ) result='M' ;;
+    f|F ) result='F' ;;
+    c|C ) echo ""; exit 0 ;;
+  esac
+done
+
 # TODO: FIX queries, mutations and subscriptions
 # [] fix person_addAttribute, content is empty
 # TODO: ./deployChaincodeToNetwork.sh ask if want to seed ledger, WARN always create participant and an admin user, and johndoe
@@ -22,13 +37,38 @@ TAGS='[\"red\", \"blue\"]'
 METADATA='{\"key\":\"value\"}'
 METADATA_INTERNAL='{\"key\":\"internal value\"}'
 
-# can be removed, already in seedNetworkMinimal.sh
-# # participant gov
-# echo "create participant ${GOV_NAME}..."
-# ${BASE_CMD} -c "{ \"Args\" : [\"participant_createWithParameters\", \"${GOV_ID}\", \"${GOV_CODE}\", \"${GOV_NAME}\" ] }"
-# # ${BASE_CMD} -c "{ \"Args\" : [\"participant_get\", \"${GOV_ID}\" ] }"
-# # ${BASE_CMD} -c "{ \"Args\" : [\"participant_getByCode\", \"${GOV_CODE}\" ] }"
-# ${SLEEP}
+# participant gov
+echo "create participant ${GOV_NAME}..."
+${BASE_CMD} -c "{ \"Args\" : [\"participant_createWithParameters\", \"${GOV_ID}\", \"${GOV_CODE}\", \"${GOV_NAME}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"participant_get\", \"${GOV_ID}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"participant_getByCode\", \"${GOV_CODE}\" ] }"
+${SLEEP}
+
+# person johndoe
+ID="${JOHN_ID}"
+FISCAL_NUMBER="PT182692124"
+PHONE_NUMBER="+351936200001"
+FIRST_NAME="John"
+LAST_NAME="Doe"
+USER_NAME="johndoe"
+EMAIL="${USER_NAME}@example.com"
+BENEFICIARY_NUMBER="285191659"
+DOCUMENT_NUMBER="09879462 0 ZZ3"
+IDENTITY_NUMBER="098794620"
+SOCIAL_SECURITY_NUMBER="11103478242"
+PAN="0000036014662658"
+PAYLOAD='{\"id\":\"'${ID}'\",\"firstname\":\"'${FIRST_NAME}'\",\"lastname\":\"'${LAST_NAME}'\",\"beneficiaryNumber\":\"'${BENEFICIARY_NUMBER}'\",\"birthDate\":\"'${DATE}'\",\"cardVersion\":\"006.007.23\",\"country\":\"PRT\",\"documentNumber\":\"'${DOCUMENT_NUMBER}'\",\"documentType\":\"Cartão De Cidadão\",\"emissionDate\":\"'${DATE}'\",\"emittingEntity\":\"República Portuguesa\",\"expirationDate\":\"'${DATE}'\",\"fatherFirstname\":\"Alberto\",\"fatherLastname\":\"De Andrade Monteiro\",\"fiscalNumber\":\"'${FISCAL_NUMBER}'\",\"mobilePhone\":\"'${PHONE_NUMBER}'\",\"gender\":\"M\",\"height\":\"1.81\",\"identityNumber\":\"'${IDENTITY_NUMBER}'\",\"motherFirstname\":\"Maria Da Graça De Oliveira Mendes\",\"motherLastname\":\"Monteiro\",\"nationality\":\"PRT\",\"otherInformation\":\"\",\"pan\":\"'${PAN}'\",\"requestLocation\":\"CRCiv. Figueira da Foz\",\"socialSecurityNumber\":\"'${SOCIAL_SECURITY_NUMBER}'\",\"username\":\"'${USER_NAME}'\",\"password\":\"'${DEFAULT_PASSWORD}'\",\"email\":\"'${EMAIL}'\"}'
+echo "create person ${USER_NAME}..."
+${BASE_CMD} -c "{ \"Args\" : [\"person_create\", \"${PAYLOAD}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${ID}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"person_getByUsername\", \"${USER_NAME}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"person_getByFiscalnumber\", \"${FISCAL_NUMBER}\" ] }"
+${SLEEP}
+
+# exit full seed
+if [ "${result}" = "M" ]; then
+  exit 0
+fi
 
 # participant mit
 PAYLOAD='{\"id\":\"'${MIT_ID}'\",\"code\":\"'${MIT_CODE}'\",\"name\":\"'${MIT_NAME}'\",\"email\":\"'${MIT_EMAIL}'\",\"fiscalNumber\":\"'${MIT_NIF}'\"}'
@@ -60,27 +100,6 @@ echo "create participant ${GODB_NAME}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"participant_create\", \"${PAYLOAD}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"participant_get\", \"${GODB_ID}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"participant_getByCode\", \"${GODB_CODE}\" ] }"
-${SLEEP}
-
-# person johndoe
-ID="${JOHN_ID}"
-FISCAL_NUMBER="PT182692124"
-PHONE_NUMBER="+351936200001"
-FIRST_NAME="John"
-LAST_NAME="Doe"
-USER_NAME="johndoe"
-EMAIL="${USER_NAME}@example.com"
-BENEFICIARY_NUMBER="285191659"
-DOCUMENT_NUMBER="09879462 0 ZZ3"
-IDENTITY_NUMBER="098794620"
-SOCIAL_SECURITY_NUMBER="11103478242"
-PAN="0000036014662658"
-PAYLOAD='{\"id\":\"'${ID}'\",\"firstname\":\"'${FIRST_NAME}'\",\"lastname\":\"'${LAST_NAME}'\",\"beneficiaryNumber\":\"'${BENEFICIARY_NUMBER}'\",\"birthDate\":\"'${DATE}'\",\"cardVersion\":\"006.007.23\",\"country\":\"PRT\",\"documentNumber\":\"'${DOCUMENT_NUMBER}'\",\"documentType\":\"Cartão De Cidadão\",\"emissionDate\":\"'${DATE}'\",\"emittingEntity\":\"República Portuguesa\",\"expirationDate\":\"'${DATE}'\",\"fatherFirstname\":\"Alberto\",\"fatherLastname\":\"De Andrade Monteiro\",\"fiscalNumber\":\"'${FISCAL_NUMBER}'\",\"mobilePhone\":\"'${PHONE_NUMBER}'\",\"gender\":\"M\",\"height\":\"1.81\",\"identityNumber\":\"'${IDENTITY_NUMBER}'\",\"motherFirstname\":\"Maria Da Graça De Oliveira Mendes\",\"motherLastname\":\"Monteiro\",\"nationality\":\"PRT\",\"otherInformation\":\"\",\"pan\":\"'${PAN}'\",\"requestLocation\":\"CRCiv. Figueira da Foz\",\"socialSecurityNumber\":\"'${SOCIAL_SECURITY_NUMBER}'\",\"username\":\"'${USER_NAME}'\",\"password\":\"'${DEFAULT_PASSWORD}'\",\"email\":\"'${EMAIL}'\"}'
-echo "create person ${USER_NAME}..."
-${BASE_CMD} -c "{ \"Args\" : [\"person_create\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${ID}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"person_getByUsername\", \"${USER_NAME}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"person_getByFiscalnumber\", \"${FISCAL_NUMBER}\" ] }"
 ${SLEEP}
 
 # person  janedoe

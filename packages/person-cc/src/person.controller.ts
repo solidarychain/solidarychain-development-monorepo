@@ -70,7 +70,7 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     let existing = await Person.getById(person.id);
 
     if (!existing || !existing.id) {
-      throw new Error('No person exists with that ID');
+      throw new Error('No person exists with that id');
     }
 
     // update fields
@@ -96,7 +96,7 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     let existing = await Person.getById(person.id);
 
     if (!existing || !existing.id) {
-      throw new Error('No person exists with that ID');
+      throw new Error('No person exists with that id');
     }
 
     // update fields
@@ -121,7 +121,7 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     let existing = await Person.getById(person.id);
 
     if (!existing || !existing.id) {
-      throw new Error('No person exists with that ID');
+      throw new Error('No person exists with that id');
     }
 
     // update fields
@@ -146,7 +146,7 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     let existing = await Person.getById(person.id);
 
     if (!existing || !existing.id) {
-      throw new Error('No person exists with that ID');
+      throw new Error('No person exists with that id');
     }
 
     // check unique fields
@@ -316,7 +316,7 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
   // ) {
   //   const existing = await Person.getOne(id);
   //   if (!existing || !existing.id) {
-  //     throw new Error(`No person exists with that ID ${id}`);
+  //     throw new Error(`No person exists with that id ${id}`);
   //   }
   //   return existing;
   // }

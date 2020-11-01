@@ -35,12 +35,12 @@ export class Transaction extends ConvectorModel<Transaction> {
   @Validate(currencySchema)
   public currency: string;
 
-  @Validate(yup.string().matches(c.REGEX_LOCATION))
+  @Validate(yup.string().matches(c.REGEX_LOCATION, { excludeEmptyString: true }))
   public location: string;
 
   @Validate(yup.array().of(yup.string()))
   public tags: string[];
-  
+
   @Validate(yup.object().nullable())
   public metaData: any;
 
@@ -58,7 +58,7 @@ export class Transaction extends ConvectorModel<Transaction> {
   // DON'T add @Required
   @Validate(Participant.schema())
   public participant: FlatConvectorModel<Participant>;
-    
+
   // DON'T add @Required
   @Validate(yup.array(x509Identities.schema()))
   public identities: Array<FlatConvectorModel<x509Identities>>;

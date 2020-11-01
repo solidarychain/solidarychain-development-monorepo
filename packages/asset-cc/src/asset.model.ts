@@ -26,7 +26,7 @@ export class Asset extends ConvectorModel<Asset> {
   @Validate(yup.array().of(yup.string()))
   public ambassadors: string[];
 
-  @Validate(yup.string().matches(c.REGEX_LOCATION))
+  @Validate(yup.string().matches(c.REGEX_LOCATION, { excludeEmptyString: true }))
   public location: string;
 
   @Validate(yup.array().of(yup.string()))

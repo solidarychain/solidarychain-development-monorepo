@@ -50,9 +50,6 @@ export class TransactionResolver {
   ): Promise<Transaction> {
     // inject username into newTransactionData
     newTransactionData.loggedPersonId = user.userId;
-    // TODO: fix#28
-    Logger.log(`user: ${JSON.stringify(user, undefined, 2)}`);
-    Logger.log(`newTransactionData: ${JSON.stringify(newTransactionData, undefined, 2)}`);
     const transaction = await this.transactionService.create(newTransactionData);
     pubSub.publish(SubscriptionEvent.transactionAdded, { [SubscriptionEvent.transactionAdded]: transaction });
     return transaction;

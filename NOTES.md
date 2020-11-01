@@ -90,6 +90,7 @@
     - [require await ele Error: PUT_STATE failed: transaction ID: ...: no ledger context](#require-await-ele-error-put_state-failed-transaction-id--no-ledger-context)
   - [Problem: Jest error TS1005: ';' expected.](#problem-jest-error-ts1005--expected)
   - [Problem launching Hurley with deprecated `hyperledger/fabric-ccenv`](#problem-launching-hurley-with-deprecated-hyperledgerfabric-ccenv)
+  - [Problem enroll admin and users](#problem-enroll-admin-and-users)
 
 This is a simple NestJs starter, based on above links, I only extended it with a few things like **swagger api**, **https**, **jwt**, and other stuff, thanks m8s
 
@@ -3329,3 +3330,52 @@ Error: could not assemble transaction, err proposal response was not successful,
 [hurley] - Found error while running script!
 ```
 
+## Problem enroll admin and users
+
+```shell
+$ npm run env:restart 
+Registering admin for org1
+2020-10-31T22:53:27.415Z - error: [FabricCAClientService.js]: Failed to enroll admin, error:%o message=Calling enrollment endpoint failed with error [Error: read ECONNRESET], stack=Error: Calling enrollment endpoint failed with error [Error: read ECONNRESET]
+    at ClientRequest.request.on (/media/mario/storage/Documents/Development/@SolidaryChain/solidarychain-development-monorepo/node_modules/fabric-client/node_modules/fabric-ca-client/lib/FabricCAClient.js:487:12)
+    at emitOne (events.js:116:13)
+    at ClientRequest.emit (events.js:211:7)
+    at Socket.socketErrorListener (_http_client.js:401:9)
+    at emitOne (events.js:116:13)
+    at Socket.emit (events.js:211:7)
+    at emitErrorNT (internal/streams/destroy.js:66:8)
+    at _combinedTickCallback (internal/process/next_tick.js:139:11)
+    at process._tickCallback (internal/process/next_tick.js:181:9)
+(node:30254) UnhandledPromiseRejectionWarning: Error: Calling enrollment endpoint failed with error [Error: read ECONNRESET]
+    at ClientRequest.request.on (/media/mario/storage/Documents/Development/@SolidaryChain/solidarychain-development-monorepo/node_modules/fabric-client/node_modules/fabric-ca-client/lib/FabricCAClient.js:487:12)
+```
+
+```shell
+# launch script from hyperledger-fabric-network gives a better error 
+# Error: Calling enrollment endpoint failed with error [Error: connect ECONNREFUSED 127.0.0.1:7054]
+$ cd ~/hyperledger-fabric-network
+$ ./restart.sh
+```
+
+seems that the reason is the `ca.org1.hurley.lab` won't run
+
+to fix clean all with `docker system prune`, and mannually clean systen and use `hurl new` to create the network, and not `npm run env:restart`
+
+now it works and boot **ca** generate users
+
+```shell
+$ docker ps --format "table {{.Names}}\t{{.Ports}}"
+NAMES                           PORTS
+peer0.org1.hurley.lab           0.0.0.0:7051-7053->7051-7053/tcp
+couchdb.peer0.org1.hurley.lab   4369/tcp, 9100/tcp, 0.0.0.0:5084->5984/tcp
+orderer.hurley.lab              0.0.0.0:7050->7050/tcp
+ca.org1.hurley.lab              0.0.0.0:7054->7054/tcp
+
+$ tree /home/mario/hyperledger-fabric-network/.hfc-org1/
+/home/mario/hyperledger-fabric-network/.hfc-org1/
+├── 6de1afe6cc76486f2abb4bc31215d1ed5cc13b8a77dd5d4df8d9ab4275e1f8bd-priv
+├── 6de1afe6cc76486f2abb4bc31215d1ed5cc13b8a77dd5d4df8d9ab4275e1f8bd-pub
+├── 9dbaae75fb28e8c58bd867a8d527b997d9c29182f22cc8d7d0cdcd97e81274bc-priv
+├── 9dbaae75fb28e8c58bd867a8d527b997d9c29182f22cc8d7d0cdcd97e81274bc-pub
+├── admin
+└── user1
+```

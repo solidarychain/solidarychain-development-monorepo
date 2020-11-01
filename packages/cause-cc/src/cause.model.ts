@@ -26,7 +26,7 @@ export class Cause extends ConvectorModel<Cause> {
   @Validate(yup.number())
   public endDate: number;
 
-  @Validate(yup.string().matches(c.REGEX_LOCATION))
+  @Validate(yup.string().matches(c.REGEX_LOCATION, { excludeEmptyString: true }))
   public location: string;
 
   @Validate(yup.array().of(yup.string()))

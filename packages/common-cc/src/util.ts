@@ -37,6 +37,18 @@ export const newPassword = (length: number = 10): string => {
   return result;
 }
 
+/**
+ * random string
+ */
+export const randomString = (length: number = 10): string => {
+  const charset: string = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+  let result = '';
+  for (let i = 0, n = charset.length; i < length; ++i) {
+    result += charset.charAt(Math.floor(Math.random() * n));
+  }
+  return result;
+}
+
 // not used anymore
 // convert from citizen card date format '19 12 1971' to Date
 export const citizenCardDateToIsoDate = (inputDate: string) => {
@@ -62,18 +74,21 @@ export const asyncForEach = async (array, callback) => {
 }
 
 /**
- * helper function to check if all model ids are valid
+ * helper function to check if all model ids(can be ids, fiscalNumber, code, mobilePhones etc) are valid
+ * returns the array, required when we send for ex fiscalNumber's and we required to store it in ambassadors with array of ids and not array of fiscalNumbers
  * required asyncForEach to solve the problem of async/await in arrays
  * use with await ex `await asyncForEach`
  * @param type a model CONVECTOR_MODEL_PATH_* type
  * @param modelName friendlyName used in show errors ex There is no Person(s) with Id(s)
  * @param modelIds array of model ids
  */
-export const checkValidModelIds = async (type: string, modelName: string, modelIds: string[]) => {
+export const checkValidModelIds = async (type: string, modelName: string, modelIds: string[]): Promise<string[]> => {
   // check if ambassadors are valid persons
   if (modelIds && modelIds.length > 0) {
     // init invalidIds array, this is used to store invalid ids inside asyncForEach loop
     const invalidIds: string[] = [];
+    // return value
+    const validIds: string[] = [];
     // require to use await asyncForEach to solve the problem of async/await and forEach()
     await asyncForEach(modelIds, async (id: string) => {
       // replace this with a richQuery, this way we don't need Person model in common, and with that we prevent circular dependencies
@@ -81,12 +96,17 @@ export const checkValidModelIds = async (type: string, modelName: string, modelI
       if (!model) {
         // if is invalid push it to invalidIds
         invalidIds.push(id);
+      } else {
+        // push model.id and not source id, that can be a fiscalNumber for ex
+        validIds.push(model.id);
       }
     })
     // throw exception outside of forEach
     if (invalidIds.length > 0) {
       throw new Error(`There is no ${modelName}(s) with Id(s) (${invalidIds.join(',')})`);
     }
+
+    return validIds;
   }
 }
 

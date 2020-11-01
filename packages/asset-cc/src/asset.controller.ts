@@ -1,4 +1,4 @@
-import { appConstants as c, checkValidModelIds, removeOwnerFromAmbassadorsArray, ChaincodeEvent } from '@solidary-chain/common-cc';
+import { appConstants as c, checkValidModelIds, removeOwnerFromAmbassadorsArray, ChaincodeEvent, randomString } from '@solidary-chain/common-cc';
 import { Participant, getParticipantByIdentity } from '@solidary-chain/participant-cc';
 import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
@@ -19,11 +19,11 @@ export class AssetController extends ConvectorController<ChaincodeTx> {
       throw new Error('There is no participant with that identity');
     }
 
-    // check if all ambassadors are valid persons
-    await checkValidModelIds(c.CONVECTOR_MODEL_PATH_PERSON, c.CONVECTOR_MODEL_PATH_PERSON_NAME, asset.ambassadors);
+    // check if all ambassadors are valid persons, and update model.ambassadors with uuid's
+    asset.ambassadors = await checkValidModelIds(c.CONVECTOR_MODEL_PATH_PERSON, c.CONVECTOR_MODEL_PATH_PERSON_NAME, asset.ambassadors);
 
     // get postfix name this way we can have multiple assets with same name
-    const postfixCode: string = asset.id.split('-')[0];
+    const postfixCode: string = randomString(10);
     // modify asset.name, used in save to
     asset.name = `${asset.name} [${postfixCode}]`;
     // check unique fields
@@ -76,8 +76,11 @@ export class AssetController extends ConvectorController<ChaincodeTx> {
     let existing = await Asset.getById(asset.id);
 
     if (!existing || !existing.id) {
-      throw new Error('No asset exists with that ID');
+      throw new Error('No asset exists with that id');
     }
+
+    // check if all ambassadors are valid persons, and update model.ambassadors with uuid's
+    asset.ambassadors = await checkValidModelIds(c.CONVECTOR_MODEL_PATH_PERSON, c.CONVECTOR_MODEL_PATH_PERSON_NAME, asset.ambassadors);
 
     // update fields
     existing.ambassadors = asset.ambassadors;

@@ -37,7 +37,7 @@ export const getEntity = (entityType: EntityType, id: string): Promise<Participa
         }
       }
       // call trySwitch
-      trySwitch();
+      await trySwitch();
     } catch (error) {
       // reject promise
       reject(error);
