@@ -22,6 +22,7 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     await checkUniqueField('_id', person.id, true);
     await checkUniqueField('username', person.username, true);
     await checkUniqueField('fiscalNumber', person.fiscalNumber, true);
+    await checkUniqueField('mobilePhone', person.mobilePhone, false);
     await checkUniqueField('email', person.email, false);
     await checkUniqueField('identityNumber', person.identityNumber, false);
     await checkUniqueField('socialSecurityNumber', person.socialSecurityNumber, false);

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo "Installing template views and indexs"
 
 CHAINCODE_NAME=solidary-chain-chaincode

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # load .env
 set -a
 . seed.env
@@ -41,7 +43,7 @@ npx hurl invoke ${CHAINCODE_NAME} participant_createWithParameters "${GOV_ID}" "
 # npx hurl invoke ${CHAINCODE_NAME} participant_get ${GOV_ID} -u admin
 # npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${GOV_CODE} -u admin
 
-# create person with all data
+# create admin with all data
 ID="${ADMIN_ID}"
 FISCAL_NUMBER="PT182692123"
 PHONE_NUMBER="+351936200000"
@@ -56,7 +58,7 @@ npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" -u admin
 
 # create person with all data
 ID="${JOHN_ID}"
-FISCAL_NUMBER="PT182692124"
+FISCAL_NUMBER="PT282692124"
 PHONE_NUMBER="+351936200001"
 FIRST_NAME="John"
 LAST_NAME="Doe"

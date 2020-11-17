@@ -14,14 +14,14 @@ export const getEntity = (entityType: EntityType, id: string): Promise<Participa
           case EntityType.Participant:
             const participant = await Participant.getById(id);
             if (!!participant && !participant.id) {
-              throw new Error(`No participant found with id ${id}`);
+              throw new Error(`No participant found with id/fiscalNumber ${id}`);
             }
             resolve(participant);
             break;
           case EntityType.Person:
             const person = await Person.getById(id);
             if (!person || !person.id) {
-              throw new Error(`No person found with id ${id}`);
+              throw new Error(`No person found with id/fiscalNumber/mobilePhone ${id}`);
             }
             resolve(person);
             break;

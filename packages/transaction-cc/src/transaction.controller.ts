@@ -1,6 +1,6 @@
 import { Asset } from '@solidary-chain/asset-cc';
 import { Cause } from '@solidary-chain/cause-cc';
-import { appConstants as c, ChaincodeEvent, EntityType } from '@solidary-chain/common-cc';
+import { appConstants as c, ChaincodeEvent, EntityType, isDecimal } from '@solidary-chain/common-cc';
 import { getParticipantByIdentity, Participant } from '@solidary-chain/participant-cc';
 import { Person } from '@solidary-chain/person-cc';
 import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
@@ -31,6 +31,12 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
       throw new Error('There is no participant with that identity');
     }
 
+    // participant
+    transaction.participant = participant;
+    // assign input/output
+    transaction.input.entity = await getEntity(transaction.input.type, transaction.input.id);
+    transaction.output.entity = await getEntity(transaction.output.type, transaction.output.id);
+
     // protection required loggedPersonId
     if (!transaction.loggedPersonId) {
       throw new Error(`You must supply a loggedPersonId in transfers`);
@@ -53,40 +59,15 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
       throw new Error('You can\'t transfer from input to same output entity, you must transfer from input to a different output entity!');
     }
 
-    // protection for positive quantity when working TransactionType.TransferFunds or TransactionType.TransferVolunteeringHours
-    if ((transaction.transactionType === TransactionType.TransferFunds || transaction.transactionType === TransactionType.TransferVolunteeringHours)
-      && (!transaction.quantity || transaction.quantity <= 0)) {
-      throw new Error(`You must supply a quantity greater than 0 when work with transactionType: [${TransactionType.TransferFunds} or ${TransactionType.TransferVolunteeringHours}]`);
+    // protection for positive and integer quantity when working TransactionType.TransferFunds or TransactionType.TransferVolunteeringHours
+    if (transaction.transactionType === TransactionType.TransferFunds || transaction.transactionType === TransactionType.TransferVolunteeringHours) {
+      if (!transaction.quantity || transaction.quantity <= 0) {
+        throw new Error(`You must supply a quantity greater than 0 when work with transactionType: ${TransactionType.TransferFunds} or ${TransactionType.TransferVolunteeringHours}`);
+      }
+      if (!transaction.quantity || isDecimal(transaction.quantity)) {
+        throw new Error(`You must supply a integer quantity when work with transactionType: ${TransactionType.TransferFunds} or ${TransactionType.TransferVolunteeringHours}`);
+      }
     }
-
-    // MOVED to TransferFunds Block
-    // // protection for currency when working TransactionType.TransferFunds
-    // if (transaction.transactionType === TransactionType.TransferFunds && (!transaction.currency || transaction.currency !== 'EUR')) {
-    //   throw new Error(`You must supply a currency of EUR when work with transactionType: [${TransactionType.TransferFunds}]`);
-    // }
-
-    // MOVED to TransferGoods
-    // protection TransactionType.TransferGoods
-    // if (transaction.transactionType === TransactionType.TransferGoods) {
-    //   // protection check if TransactionType.TransferGoods has valid ResourceType
-    //   if (transaction.resourceType !== ResourceType.GenericGoods) {
-    //     throw new Error(`You must use a valid combination of TransactionType: [${TransactionType.TransferGoods}] with a valid ResourceType ex: [${ResourceType.GenericGoods}]`);
-    //   }
-    //   // protection check if TransactionType.TransferGoods has valid goods item array
-    //   if (!transaction.goodsInput || !Array.isArray(transaction.goodsInput) || transaction.goodsInput.length <= 0) {
-    //     throw new Error(`You must have a valid goods item array when work with transactionType: [${transaction.transactionType}]`);
-    //   }
-    //   // protection invalid properties are presented when working with TransferGoods
-    //   if (transaction.quantity || transaction.currency || transaction.assetId) {
-    //     throw new Error(`Detected invalid properties quantity, currency defined or asset when working with transactionType: [${transaction.transactionType}]!`);
-    //   }
-    // }
-
-    // participant
-    transaction.participant = participant;
-    // assign input/output
-    transaction.input.entity = await getEntity(transaction.input.type, transaction.input.id);
-    transaction.output.entity = await getEntity(transaction.output.type, transaction.output.id);
 
     // check if is a valid input and output from entity
     if (!transaction.input.entity) {
@@ -96,6 +77,11 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     if (!transaction.output.entity) {
       const entityType: string = transaction.output.type.replace(`${c.CONVECTOR_MODEL_PATH_PREFIX}.`, '');
       throw new Error(`There is no entity of type '${entityType}' with Id '${transaction.output.id}'`);
+    }
+
+    // protection for funds + causes amount funds balance violation
+    if (transaction.transactionType === TransactionType.TransferFunds && transaction.input.type === EntityType.Cause && (transaction.input.entity as Cause).fundsBalance.balance < transaction.quantity) {
+      throw new Error(`Balance violation! when work with causes, you must supply a total amount lesser or equal than current funds balance. current funds balance is ${(transaction.input.entity as Cause).fundsBalance.balance}`);
     }
 
     // ambassador protection: if entity is participant or cause, the logged user must be a ambassador else throw error
@@ -140,7 +126,7 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
         // REMOVED: not quantity and currency are optional, this way we can transfer assets and funds, like sell the asset
         // // protection invalid properties are presented when working with TransferGoods
         // if (transaction.quantity || transaction.currency) {
-        //   throw new Error(`Detected invalid properties quantity and currency when working with transactionType: [${transaction.transactionType}]!`);
+        //   throw new Error(`Detected invalid properties quantity and currency when working with transactionType: ${transaction.transactionType}!`);
         // }
 
         // assign new owner id and type
@@ -160,17 +146,18 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     else if (transaction.transactionType === TransactionType.TransferGoods) {
       // protection check if TransactionType.TransferGoods has valid ResourceType
       if (transaction.resourceType !== ResourceType.GenericGoods) {
-        throw new Error(`You must use a valid combination of TransactionType: [${TransactionType.TransferGoods}] with a valid ResourceType ex: [${ResourceType.GenericGoods}]`);
+        throw new Error(`You must use a valid combination of TransactionType: ${TransactionType.TransferGoods} with a valid ResourceType ex: ${ResourceType.GenericGoods}`);
       }
       // protection check if TransactionType.TransferGoods has valid goods item array
       if (!transaction.goodsInput || !Array.isArray(transaction.goodsInput) || transaction.goodsInput.length <= 0) {
-        throw new Error(`You must have a valid goods item array when work with transactionType: [${transaction.transactionType}]`);
+        throw new Error(`You must have a valid goods item array when work with transactionType: ${transaction.transactionType}`);
       }
       // protection invalid properties are presented when working with TransferGoods
       if (transaction.quantity || transaction.currency || transaction.assetId) {
-        throw new Error(`Detected invalid properties quantity, currency defined or asset when working with transactionType: [${transaction.transactionType}]!`);
+        throw new Error(`Detected invalid properties when working with transactionType: ${transaction.transactionType}. Invalid properties are: quantity, currency and assetId`);
       }
       // transfer goods from one entity to other entity, and receive final goods to be stored in transaction
+      // tslint:disable-next-line: max-line-length
       transaction.goods = await processTransferGoodsInput((transaction.input.entity as Participant | Person | Cause), (transaction.output.entity as Participant | Person | Cause), transaction.goodsInput, loggedPerson);
       // save references modified in processGoodsInput
       (transaction.input.entity as Participant | Person | Cause).save();
@@ -182,7 +169,7 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     else if (transaction.transactionType === TransactionType.TransferFunds && transaction.resourceType === ResourceType.Funds) {
       // protection for currency when working TransactionType.TransferFunds
       if (!transaction.currency && transaction.currency !== 'EUR') {
-        throw new Error(`You must supply a currency of EUR when work with transactionType: [${TransactionType.TransferFunds}]`);
+        throw new Error(`You must supply a currency of EUR when work with transactionType: ${TransactionType.TransferFunds}`);
       }
       // input debit&balance
       (transaction.input.entity as Participant | Person | Cause).fundsBalance.debit += transaction.quantity;
@@ -214,7 +201,7 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     // mode: Not Detected Transaction Type or Wrong Combination ex TRANSFER_VOLUNTEERING_HOURS with FUNDS
 
     else {
-      throw new Error(`Invalid transaction type combination, you must supply a valid combination ex TransactionType:[${TransactionType.TransferFunds}] with ResourceType: [${ResourceType.Funds}]`);
+      throw new Error(`Invalid transaction type combination, you must supply a valid combination ex TransactionType:${TransactionType.TransferFunds} with ResourceType: ${ResourceType.Funds}`);
     }
 
     // common post transaction for all modes

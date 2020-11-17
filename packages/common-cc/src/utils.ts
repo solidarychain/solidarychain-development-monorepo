@@ -74,8 +74,8 @@ export const asyncForEach = async (array, callback) => {
 }
 
 /**
- * helper function to check if all model ids(can be ids, fiscalNumber, code, mobilePhones etc) are valid
- * returns the array, required when we send for ex fiscalNumber's and we required to store it in ambassadors with array of ids and not array of fiscalNumbers
+ * helper function to check if all model ids, fiscalNumber, code or mobilePhones etc are valid ids
+ * returns the array of ids, required when we send for ex fiscalNumber's and we required to store it in ambassadors with array of ids and not array of fiscalNumbers
  * required asyncForEach to solve the problem of async/await in arrays
  * use with await ex `await asyncForEach`
  * @param type a model CONVECTOR_MODEL_PATH_* type
@@ -125,4 +125,11 @@ export const removeOwnerFromAmbassadorsArray = (ambassadors: string[], ownerId: 
   }
   // always return original or modified ambassadors
   return ambassadors;
+}
+
+/**
+ * check if number is decimal, useful to check for integers
+ */
+export const isDecimal = (input:number): boolean => {
+  return (input  % 1 != 0);
 }

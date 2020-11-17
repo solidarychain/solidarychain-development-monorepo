@@ -3124,6 +3124,8 @@ export class PaginationArgs {
 
 ## Hurley and fix Globall install
 
+> UPDATE 2020-11-17 19:28:01: after having this error, disabling AUTO ATACH solves the problem, just disable it and launch `npm run cc:start:debug -- ${CHAINCODE_NAME}` and it starts to work again
+
 ```shell
 # install
 $ npm i -g @worldsibu/hurley
@@ -3135,7 +3137,7 @@ npm WARN deprecated request@2.88.2: request has been deprecated, see https://git
 > @ampretia/x509@0.4.7 install /usr/local/lib/node_modules/@worldsibu/hurley/node_modules/fabric-shim/node_modules/@ampretia/x509
 > node-gyp rebuild
 
-gyp ERR! clean error 
+gyp ERR! clean error
 gyp ERR! stack Error: EACCES: permission denied, rmdir 'build'
 gyp ERR! System Linux 4.14.0-deepin2-amd64
 gyp ERR! command "/usr/local/bin/node" "/usr/local/lib/node_modules/npm/node_modules/node-gyp/bin/node-gyp.js" "rebuild"
@@ -3262,6 +3264,20 @@ I generate a wallet and use node sdk to create some invokes, but what happens is
 ## Problem `(node:32043) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'curve' of undefined`
 
 - [Cannot read property 'curve' of undefined, while running hyperledger fabric project](https://stackoverflow.com/questions/54434165/cannot-read-property-curve-of-undefined-while-running-hyperledger-fabric-proj)
+
+> UPDATE: 2020-11-05 22:40:33, seems that move and delete folder and rsync the folder is the same, what maybe put this to work is down and restart graphql again, this is not closed yet
+
+```shell
+$ cd /srv/docker/hyperledger-fabric-extra_hosts-5orgs/fabric-samples/5node2channel/server-graphql
+$ mv wallets /tmp
+# sync wallets again
+$ ./deployServerToNode.sh
+# run server-graphql again and now we have
+solidarychain-server-graphql    | [Nest] 25   - 2020-11-05 22:39:53   graphql server started, endpointexposed at https://localhost:443/graphql
+solidarychain-server-graphql    | [Nest] 25   - 2020-11-05 22:39:53   Context path with cryptographic materials exists +2ms
+```
+
+skip thais after use ablove update
 
 1. look for the folder where enrolled user certificates are placed
 2. delete that folder

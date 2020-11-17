@@ -22,7 +22,7 @@ export class Common extends ConvectorModel<Common> {
     // try get by mobilePhone
     if (!result[0]) {
       result = await this.getByFilter(type, { 'mobilePhone': id });
-    }
+    }    
     return (result) ? result[0] : null;
   }
 

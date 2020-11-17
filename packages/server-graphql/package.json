@@ -8,9 +8,9 @@
     "start": "npx env-cmd -f .env ts-node src/main",
     "prestart:prod": "npm run build",
     "start:dev": "npx env-cmd -f .env tsc-watch -p tsconfig.build.json --onSuccess \"node dist/main.js\"",
-    "start:debug": "npx env-cmd -f .env tsc-watch -p tsconfig.build.json --onSuccess \"node --inspect-brk=9230 dist/main.js\"",
+    "start:debug": "npx env-cmd -f .env tsc-watch -p tsconfig.build.json --onSuccess \"node --inspect=9230 dist/main.js\"",
     "start:dev:network": "npx env-cmd -f network.env tsc-watch -p tsconfig.build.json --onSuccess \"node dist/main.js\"",
-    "start:debug:network": "npx env-cmd -f network.env tsc-watch -p tsconfig.build.json --onSuccess \"node --inspect-brk=9230 dist/main.js\"",
+    "start:debug:network": "npx env-cmd -f network.env tsc-watch -p tsconfig.build.json --onSuccess \"node --inspect=9230 dist/main.js\"",
     "start:prod": "npx env-cmd -f .env node dist/main.js",
     "start:container": "npx node dist/main.js"
   },

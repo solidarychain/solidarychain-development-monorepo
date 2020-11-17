@@ -98,7 +98,7 @@
 		"path": "$ROOTPATH$/packages/transaction-cc/src/transaction.controller.ts",
 		"bookmarks": [
 			{
-				"line": 134,
+				"line": 116,
 				"column": 26,
 				"label": ""
 			}
@@ -130,6 +130,26 @@
 			{
 				"line": 54,
 				"column": 10,
+				"label": ""
+			}
+		]
+	},
+	{
+		"path": "$ROOTPATH$/packages/participant-cc/src/participant.controller.ts",
+		"bookmarks": [
+			{
+				"line": 100,
+				"column": 68,
+				"label": ""
+			}
+		]
+	},
+	{
+		"path": "$ROOTPATH$/packages/participant-cc/src/participant.model.ts",
+		"bookmarks": [
+			{
+				"line": 63,
+				"column": 22,
 				"label": ""
 			}
 		]

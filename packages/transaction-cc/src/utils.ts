@@ -15,14 +15,14 @@ export const getEntity = (entityType: EntityType, id: string): Promise<Participa
           case EntityType.Participant:
             const participant = await Participant.getById(id);
             if (!!participant && !participant.id) {
-              throw new Error(`No participant found with id ${id}`);
+              throw new Error(`No participant found with id/fiscalNumber ${id}`);
             }
             resolve(participant);
             break;
           case EntityType.Person:
             const person = await Person.getById(id);
             if (!person || !person.id) {
-              throw new Error(`No person found with id ${id}`);
+              throw new Error(`No person found with id/fiscalNumber/mobilePhone ${id}`);
             }
             resolve(person);
             break;
@@ -117,16 +117,22 @@ export const processTransferGoodsInput = (inputEntity: Participant | Person | Ca
         const inputItemIndex = inputEntity.goodsStock.findIndex((i: Goods) => i.code == e.code);
         const outputItemIndex = outputEntity.goodsStock.findIndex((i: Goods) => i.code == e.code);
 
+        // protection if try to use a barCode that not exists
+        if (inputItemIndex === -1) {
+          throw new Error(`Entity don't have any items registered for code: ${e.code}`);
+        }
+
         // protection required fields
         if (!e.quantity || (e.quantity && e.quantity <= 0)) {
-          throw new Error(`You must supply a positive quantity in item code: [${e.code}]'`);
+          throw new Error(`You must supply a positive quantity in item code: ${e.code}'`);
         }
 
         // protection valid stock balance: if input is a cause or participant, must contemplate the stock in balance, persons don't have stock balance and can go to negative values
         if (inputEntity.type === c.CONVECTOR_MODEL_PATH_PARTICIPANT || inputEntity.type === c.CONVECTOR_MODEL_PATH_CAUSE) {
           // protection for stock balance, compare with -1 (not found), else index 0(first index) gives a false negative
-          if (inputItemIndex === -1 || e.quantity > inputEntity.goodsStock[inputItemIndex].balance.balance)
-            throw new Error(`You must have a sufficient quantity of goods of item code:[${e.code}] to complete the transaction'`);
+          if (e.quantity > inputEntity.goodsStock[inputItemIndex].balance.balance) {
+            throw new Error(`Balance violation! you must supply a quantity of goods lesser or equal than current balance. current existing balance for code: ${e.code} is ${inputEntity.goodsStock[inputItemIndex].balance.balance}`);
+          }
         }
 
         // always create a goods item to add to result, this will be resolved in promise to be stored in transaction

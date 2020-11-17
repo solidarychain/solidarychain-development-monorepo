@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ $(node -v) != "v8.16.0" ]; then
+  echo "error! to prevent problems, use node v8.16.0"
+  exit 0
+fi
+
 CHAINCODE_NAME=solidary-chain-chaincode
 
 # in case of problems invoke something mv hyperledger-fabric-network to /tmp
@@ -10,9 +15,10 @@ CHAINCODE_NAME=solidary-chain-chaincode
 clear
 
 # lift hyperledger
+npm run env:clean
 npm run env:restart
 
-# first build @solidary-chain/common-cc package else fails in deploy smart contract/chaincode
+# optional build @solidary-chain/common-cc package if not already build previously, else fails in deploy smart contract/chaincode
 npx lerna run build --scope @solidary-chain/common-cc --stream
 
 # deploy smart contract/chaincode
@@ -26,11 +32,14 @@ sleep 20
 # create views and indexs before seed
 ./couchdb/install.sh
 
+# NOTE this is in seed.sh too, to work when we launch network manually
 # enroll member user "chaincodeAdmin"
-node registerIdentitiesManager.js
+# NOTE seems that this will freeze script, commented for now
+# node registerIdentitiesManager.js
 
 # seed ledger
-npm run seed
+# npm run seed
+./seed.sh
 
 # prevent lost props, rebuild chaincode packages: comment this already is executed in cc:start above
 # npx lerna run build --scope @solidary-chain/common-cc --stream
