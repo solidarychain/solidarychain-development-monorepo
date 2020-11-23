@@ -5,11 +5,11 @@
 @requestType = GraphQL
 
 @personUsernameJohn = johndoe
-@personIdJohn = 4ea88521-031b-4279-9165-9c10e1839001
-@personIdJane = 4ea88521-031b-4279-9165-9c10e1838010
+@personIdJohn = 4ea88521-031b-4279-9165-9c10e1839002
+@personIdJane = 4ea88521-031b-4279-9165-9c10e1839002
 @personId = b2756e4d-0b69-49cd-a446-64c884e01f9e
 @transferAssetId = 54a89a14-8b6e-47e6-bb01-f4a80aa627e9
-@causeId = acef70e5-cd25-4533-8392-9fa57e43cf69
+@causeId = acef70e5-cd25-4533-8392-9fa57e43cf13
 @participantIdGov = c8ca045c-9d1b-407f-b9ae-31711758f2d0
 
 ### mutation: personLogin
@@ -278,7 +278,7 @@ mutation assetUpdate($updateAssetData: UpdateAssetInput!) {
 ### mutations update: causeUpdate
 
 // @name causeUpdate
-// neo4j: MATCH (n:Cause {id:"acef70e5-cd25-4533-8392-9fa57e43cf69"}) RETURN n.email,n.ambassadors, n.tags, n.metaData, n.metaDataInternal
+// neo4j: MATCH (n:Cause {id:"acef70e5-cd25-4533-8392-9fa57e43cf13"}) RETURN n.email,n.ambassadors, n.tags, n.metaData, n.metaDataInternal
 
 POST {{uri}} HTTP/1.1
 Content-Type: {{contentType}}
@@ -361,7 +361,7 @@ mutation participantUpdate($updateParticipantData: UpdateParticipantInput!) {
 ### mutations update: personUpdate
 
 // @name personUpdate
-// neo4j: MATCH (n:Person {id:"4ea88521-031b-4279-9165-9c10e1839001"}) RETURN n.roles, n.metaDataInternal
+// neo4j: MATCH (n:Person {id:"4ea88521-031b-4279-9165-9c10e1839002"}) RETURN n.roles, n.metaDataInternal
 
 POST {{uri}} HTTP/1.1
 Content-Type: {{contentType}}

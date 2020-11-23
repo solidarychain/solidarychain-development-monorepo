@@ -49,7 +49,7 @@ sleep 20
 # npx lerna run build --scope @solidary-chain/transaction-cc
 
 # invoke some stuff
-npx hurl invoke ${CHAINCODE_NAME} person_get 4ea88521-031b-4279-9165-9c10e1839001
+npx hurl invoke ${CHAINCODE_NAME} person_get 4ea88521-031b-4279-9165-9c10e1839002
 
 # start server/frontend
 # echo "start server-rest with: 'npx lerna run start:dev --scope @solidary-chain/server-rest --stream'"

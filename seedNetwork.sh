@@ -45,9 +45,9 @@ ${BASE_CMD} -c "{ \"Args\" : [\"participant_createWithParameters\", \"${GOV_ID}\
 ${SLEEP}
 
 # person admin
-ID=${ADMIN_ID}
+ID=${ADMN_ID}
 FISCAL_NUMBER="PT000000000"
-PHONE_NUMBER="+351936200001"
+PHONE_NUMBER="+351936200000"
 FIRST_NAME="Super"
 LAST_NAME="User"
 USER_NAME="admin"
@@ -60,10 +60,26 @@ echo "get person ${USER_NAME}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${ID}\" ] }"
 ${SLEEP}
 
+# person anonymous
+ID=${ANON_ID}
+FISCAL_NUMBER="PT999999990"
+PHONE_NUMBER="+351936200001"
+FIRST_NAME="Super"
+LAST_NAME="Anonymous"
+USER_NAME="anonymous"
+EMAIL="${USER_NAME}@example.com"
+PAYLOAD='{\"id\":\"'${ID}'\",\"firstname\":\"'${FIRST_NAME}'\",\"lastname\":\"'${LAST_NAME}'\",\"fiscalNumber\":\"'${FISCAL_NUMBER}'\",\"mobilePhone\":\"'${PHONE_NUMBER}'\",\"otherInformation\":\"\",\"username\":\"'${USER_NAME}'\",\"password\":\"'${ADMIN_PASSWORD}'\",\"email\":\"'${EMAIL}'\"}'
+echo "create person ${USER_NAME}..."
+${BASE_CMD} -c "{ \"Args\" : [\"person_create\", \"${PAYLOAD}\" ] }"
+${SLEEP}
+echo "get person ${USER_NAME}..."
+${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${ID}\" ] }"
+${SLEEP}
+
 # person johndoe
 ID="${JOHN_ID}"
 FISCAL_NUMBER="PT182692124"
-PHONE_NUMBER="+351936200001"
+PHONE_NUMBER="+351936200002"
 FIRST_NAME="John"
 LAST_NAME="Doe"
 USER_NAME="johndoe"
@@ -121,7 +137,7 @@ ${SLEEP}
 # person  janedoe
 ID="${JANE_ID}"
 FISCAL_NUMBER="PT582692178"
-PHONE_NUMBER="+351936200002"
+PHONE_NUMBER="+351936200003"
 FIRST_NAME="Jane"
 LAST_NAME="Doe"
 USER_NAME="janedoe"
@@ -143,7 +159,7 @@ ${SLEEP}
 # create person with minimal required data
 ID="${MINI_ID}"
 FISCAL_NUMBER="PT182692152"
-PHONE_NUMBER="+351936200003"
+PHONE_NUMBER="+351936200004"
 USER_NAME="${FISCAL_NUMBER}"
 PAYLOAD='{\"id\":\"'${ID}'\",\"fiscalNumber\":\"'${FISCAL_NUMBER}'\",\"mobilePhone\":\"'${PHONE_NUMBER}'\",\"username\":\"'${USER_NAME}'\", \"password\":\"'${DEFAULT_PASSWORD}'\"}'
 echo "create person ${USER_NAME}..."

@@ -10,7 +10,7 @@ set +a
 # commands
 # npx hurl invoke ${CHAINCODE_NAME} participant_getAll
 # npx hurl invoke ${CHAINCODE_NAME} person_getAll
-# npx hurl invoke ${CHAINCODE_NAME} person_get 4ea88521-031b-4279-9165-9c10e1839001
+# npx hurl invoke ${CHAINCODE_NAME} person_get 4ea88521-031b-4279-9165-9c10e1839002
 # npx hurl invoke ${CHAINCODE_NAME} person_getByUsername johndoe
 # npx hurl invoke ${CHAINCODE_NAME} cause_getAll
 # npx hurl invoke ${CHAINCODE_NAME} asset_getAll
@@ -21,7 +21,7 @@ set +a
 
 # TODO BUG seems related with `-u chaincodeAdmin`
 # npx hurl invoke ${CHAINCODE_NAME} participant_update "${PAYLOAD}" -u chaincodeAdmin
-# [hurley] - {"id":"c8ca045c-9d1b-407f-b9ae-31711758f2d0","email":"gov-updated@example.com","ambassadors":["4ea88521-031b-4279-9165-9c10e1839053"],"metaData":{"key":"value updated"},"metaDataInternal":{"key":"internal value updated"}}
+# [hurley] - {"id":"c8ca045c-9d1b-407f-b9ae-31711758f2d0","email":"gov-updated@example.com","ambassadors":["4ea88521-031b-4279-9165-9c10e1839004"],"metaData":{"key":"value updated"},"metaDataInternal":{"key":"internal value updated"}}
 # [hurley] - Sending transaction as chaincodeAdmin in org org1...
 # (node:27965) UnhandledPromiseRejectionWarning: Error: Cannot save null userContext.
 
@@ -44,13 +44,26 @@ npx hurl invoke ${CHAINCODE_NAME} participant_createWithParameters "${GOV_ID}" "
 # npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${GOV_CODE} -u admin
 
 # create admin with all data
-ID="${ADMIN_ID}"
+ID="${ADMN_ID}"
 FISCAL_NUMBER="PT182692123"
 PHONE_NUMBER="+351936200000"
 USER_NAME="admin"
 EMAIL="${USER_NAME}@example.com"
 DATE="61985472"
-PAYLOAD="{\"id\":\"${ADMIN_ID}\",\"fiscalNumber\":\"${FISCAL_NUMBER}\",\"mobilePhone\":\"${PHONE_NUMBER}\",\"otherInformation\":\"\",\"username\":\"${USER_NAME}\",\"password\":\"${ADMIN_PASSWORD}\",\"email\":\"${EMAIL}\"}"
+PAYLOAD="{\"id\":\"${ADMN_ID}\",\"fiscalNumber\":\"${FISCAL_NUMBER}\",\"mobilePhone\":\"${PHONE_NUMBER}\",\"otherInformation\":\"\",\"username\":\"${USER_NAME}\",\"password\":\"${ADMIN_PASSWORD}\",\"email\":\"${EMAIL}\"}"
+# echo $PAYLOAD  | jq
+npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" -u admin
+# npx hurl invoke ${CHAINCODE_NAME} person_get ${JOHN_ID} -u admin
+# npx hurl invoke ${CHAINCODE_NAME} person_getByUsername ${USER_NAME} -u admin
+
+# create admin with all data
+ID="${ANON_ID}"
+FISCAL_NUMBER="PT00000"
+PHONE_NUMBER="+351936200000"
+USER_NAME="admin"
+EMAIL="${USER_NAME}@example.com"
+DATE="61985472"
+PAYLOAD="{\"id\":\"${ADMN_ID}\",\"fiscalNumber\":\"${FISCAL_NUMBER}\",\"mobilePhone\":\"${PHONE_NUMBER}\",\"otherInformation\":\"\",\"username\":\"${USER_NAME}\",\"password\":\"${ADMIN_PASSWORD}\",\"email\":\"${EMAIL}\"}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" -u admin
 # npx hurl invoke ${CHAINCODE_NAME} person_get ${JOHN_ID} -u admin

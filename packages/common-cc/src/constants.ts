@@ -31,13 +31,13 @@ const NAB_CODE: string = 'nab';
 const NAB_NAME: string = 'National Bank';
 // person
 const DEFAULT_PASSWORD: string = 'Aa456#45';
-const JOHN_UUID: string = '4ea88521-031b-4279-9165-9c10e1839001';
+const JOHN_UUID: string = '4ea88521-031b-4279-9165-9c10e1839002';
 const JOHN_FIRST_NAME: string = 'John';
 const JOHN_LAST_NAME: string = 'Doe';
 const JOHN_USER_NAME: string = 'johndoe';
 const JOHN_EMAIL: string = `${JOHN_USER_NAME}@example.com`;
 const JOHN_FISCAL_NUMBER: string = 'PT182692124';
-const JANE_UUID: string = '4ea88521-031b-4279-9165-9c10e1838010';
+const JANE_UUID: string = '4ea88521-031b-4279-9165-9c10e1839002';
 const JANE_FIRST_NAME: string = 'Jane';
 const JANE_LAST_NAME: string = 'Doe';
 const JANE_USER_NAME: string = 'janedoe';

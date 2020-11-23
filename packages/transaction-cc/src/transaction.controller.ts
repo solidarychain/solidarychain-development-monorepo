@@ -37,6 +37,13 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     transaction.input.entity = await getEntity(transaction.input.type, transaction.input.id);
     transaction.output.entity = await getEntity(transaction.output.type, transaction.output.id);
 
+    // ambassador protection: if entity is participant or cause, the logged user must be a ambassador else throw error
+    if (transaction.input.type === EntityType.Participant || transaction.input.type === EntityType.Cause) {
+      if (!(transaction.input.entity as Participant | Cause).ambassadors || !(transaction.input.entity as Participant | Cause).ambassadors.find((id: string) => id === loggedPerson.id)) {
+        throw new Error(`Logged user must be an ambassador of input entity`);
+      }
+    }
+
     // protection required loggedPersonId
     if (!transaction.loggedPersonId) {
       throw new Error(`You must supply a loggedPersonId in transfers`);
@@ -80,15 +87,10 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     }
 
     // protection for funds + causes amount funds balance violation
+    // tslint:disable-next-line: max-line-length
     if (transaction.transactionType === TransactionType.TransferFunds && transaction.input.type === EntityType.Cause && (transaction.input.entity as Cause).fundsBalance.balance < transaction.quantity) {
+      // tslint:disable-next-line: max-line-length
       throw new Error(`Balance violation! when work with causes, you must supply a total amount lesser or equal than current funds balance. current funds balance is ${(transaction.input.entity as Cause).fundsBalance.balance}`);
-    }
-
-    // ambassador protection: if entity is participant or cause, the logged user must be a ambassador else throw error
-    if (transaction.input.type === EntityType.Participant || transaction.input.type === EntityType.Cause) {
-      if (!(transaction.input.entity as Participant | Cause).ambassadors || !(transaction.input.entity as Participant | Cause).ambassadors.find((id: string) => id === loggedPerson.id)) {
-        throw new Error(`Logged user must be an ambassador of input entity`);
-      }
     }
 
     // mode: TransactionType.TransferAsset

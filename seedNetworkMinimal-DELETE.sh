@@ -23,7 +23,7 @@ ${BASE_CMD} -c "{ \"Args\" : [\"participant_get\", \"${GOV_ID}\" ] }"
 ${SLEEP}
 
 # person admin
-ID=${ADMIN_ID}
+ID=${ADMN_ID}
 FISCAL_NUMBER="PT000000000"
 PHONE_NUMBER="+351936200001"
 FIRST_NAME="Super"
