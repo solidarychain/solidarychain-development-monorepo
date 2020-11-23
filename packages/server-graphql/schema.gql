@@ -122,6 +122,32 @@ input GoodsInput {
   metaDataInternal: JSONObject
 }
 
+type GraphData {
+  nodes: [GraphNode!]
+  links: [GraphLink!]
+}
+
+type GraphLink {
+  source: ID!
+  target: ID!
+  label: String
+  desc: String
+  color: String
+  autoColorBy: String
+  linkWidth: Float
+  group: String
+}
+
+type GraphNode {
+  id: ID!
+  label: String!
+  desc: String
+  nodeVal: Float
+  color: String
+  autoColorBy: String
+  group: String
+}
+
 """
 The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -344,6 +370,7 @@ type Query {
   assets(skip: Int = 0, take: Int = 25): [Asset!]!
   assetComplexQuery(skip: Int = 0, take: Int = 25, getByComplexQueryInput: GetByComplexQueryInput!): [Asset!]!
   assetById(id: String!): Asset!
+  reactForceData(skip: Int = 0, take: Int = 25): GraphData!
 }
 
 type Subscription {

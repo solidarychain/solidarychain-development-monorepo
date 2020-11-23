@@ -1,7 +1,7 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'apollo-server-express';
-import SignJwtTokenPayload from 'src/common/types/sign-jwt-token-payload';
+import SignJwtTokenPayload from '../common/types/sign-jwt-token-payload';
 import { SubscriptionEvent } from '../common/types';
 import { LoginPersonInput } from '../person/dto';
 import { Person } from '../person/models/person.model';

@@ -58,7 +58,7 @@ npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" -u admin
 
 # create admin with all data
 ID="${ANON_ID}"
-FISCAL_NUMBER="PT00000"
+FISCAL_NUMBER="PT999999990"
 PHONE_NUMBER="+351936200000"
 USER_NAME="admin"
 EMAIL="${USER_NAME}@example.com"

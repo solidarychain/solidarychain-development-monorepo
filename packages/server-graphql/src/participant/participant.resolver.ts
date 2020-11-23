@@ -4,7 +4,7 @@ import { PubSub } from 'apollo-server-express';
 import { GqlAuthGuard } from '../auth/guards';
 import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
 import { NewParticipantInput, UpdateParticipantInput, ChangeParticipantIdentityData as ChangeParticipantIdentityInput } from './dto';
-import { Participant } from './models/participant.model';
+import { Participant } from './models';
 import { ParticipantService } from './participant.service';
 import { CurrentUser } from '../common/decorators';
 import CurrentUserPayload from '../common/types/current-user-payload';

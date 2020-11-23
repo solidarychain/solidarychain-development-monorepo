@@ -4,7 +4,7 @@ import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, ID, ObjectType } from 'type-graphql';
 import * as yup from 'yup';
 import { EntityResult } from '../../common/models';
-import { Participant } from '../../participant/models/participant.model';
+import { Participant } from '../../participant/models';
 import { Goods } from '../../common/models';
 
 @ObjectType()

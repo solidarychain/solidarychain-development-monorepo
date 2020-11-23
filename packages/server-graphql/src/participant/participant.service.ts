@@ -4,7 +4,7 @@ import { FlatConvectorModel } from '@worldsibu/convector-core-model';
 import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
 import { ParticipantControllerBackEnd } from '../convector';
 import { NewParticipantInput, UpdateParticipantInput, ChangeParticipantIdentityData } from './dto';
-import { Participant } from './models/participant.model';
+import { Participant } from './models';
 import { v4 as uuid } from 'uuid';
 
 @Injectable()

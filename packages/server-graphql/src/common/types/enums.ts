@@ -15,4 +15,5 @@ export enum SubscriptionEvent {
   personAttributeAdded = 'personAttributeAdded',
   transactionAdded = 'transactionAdded',
   transactionUpdated = 'transactionUpdated',
+  reactForceData = 'reactForceData',
 }

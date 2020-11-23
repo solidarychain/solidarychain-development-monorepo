@@ -12,6 +12,8 @@
     "sourceMap": true,
     "outDir": "dist",
     "baseUrl": "./",
+    // Could not load source '/src/dashboard/dashboard.service.ts': Unable to retrieve source content.
+    "rootDir": "./src",
     "skipLibCheck": true
   },
   "exclude": [

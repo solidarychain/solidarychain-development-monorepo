@@ -1,5 +1,5 @@
 import { createUnionType } from 'type-graphql';
-import { Participant } from './../../participant/models/participant.model';
+import { Participant } from './../../participant/models';
 import { Person } from './../../person/models/person.model';
 
 // TODO: NOT USED YET

@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { Response } from 'express';
 import { SignOptions } from 'jsonwebtoken';
-import SignJwtTokenPayload from 'src/common/types/sign-jwt-token-payload';
+import SignJwtTokenPayload from '../common/types/sign-jwt-token-payload';
 import { envVariables as e } from '../env';
 import { GqlContextPayload } from '../types';
 import { UsersService } from '../users/users.service';

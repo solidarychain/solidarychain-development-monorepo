@@ -1,6 +1,6 @@
 import { Controller, HttpStatus, Post, Request, Response } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import SignJwtTokenPayload from 'src/common/types/sign-jwt-token-payload';
+import SignJwtTokenPayload from '../common/types/sign-jwt-token-payload';
 import { envVariables as e } from '../env';
 import { Person } from '../person/models';
 import { GqlContextPayload } from '../types';

@@ -13,6 +13,7 @@ import { AssetModule } from './asset/asset.module';
 import { GqlContext, GqlContextPayload } from './types';
 import { UsersModule } from './users/users.module';
 import { mapKeysToLowerCase } from './utils';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { mapKeysToLowerCase } from './utils';
     CauseModule,
     AssetModule,
     TransactionModule,
+    DashboardModule,
     // apolloServer config: use forRootAsync to import AuthModule and inject AuthService
     GraphQLModule.forRootAsync({
       // import AuthModule
