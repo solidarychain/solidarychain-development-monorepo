@@ -117,11 +117,6 @@ export const processTransferGoodsInput = (inputEntity: Participant | Person | Ca
         const inputItemIndex = inputEntity.goodsStock.findIndex((i: Goods) => i.code == e.code);
         const outputItemIndex = outputEntity.goodsStock.findIndex((i: Goods) => i.code == e.code);
 
-        // protection if try to use a barCode that not exists
-        if (inputItemIndex === -1) {
-          throw new Error(`Entity don't have any items registered for code: ${e.code}`);
-        }
-
         // protection required fields
         if (!e.quantity || (e.quantity && e.quantity <= 0)) {
           throw new Error(`You must supply a positive quantity in item code: ${e.code}'`);
@@ -130,8 +125,15 @@ export const processTransferGoodsInput = (inputEntity: Participant | Person | Ca
         // protection valid stock balance: if input is a cause or participant, must contemplate the stock in balance, persons don't have stock balance and can go to negative values
         if (inputEntity.type === c.CONVECTOR_MODEL_PATH_PARTICIPANT || inputEntity.type === c.CONVECTOR_MODEL_PATH_CAUSE) {
           // protection for stock balance, compare with -1 (not found), else index 0(first index) gives a false negative
+          if (inputItemIndex === -1) {
+            throw new Error(`Balance violation! entity don't have any balance product for code: ${e.code}`);
+          }
           if (e.quantity > inputEntity.goodsStock[inputItemIndex].balance.balance) {
             throw new Error(`Balance violation! you must supply a quantity of goods lesser or equal than current balance. current existing balance for code: ${e.code} is ${inputEntity.goodsStock[inputItemIndex].balance.balance}`);
+          }
+          // protection if try to use a barCode that not exists and is a cause, participants and persons can work with no stock
+          if (inputItemIndex === -1) {
+            throw new Error(`Entity don't have any items registered for code: ${e.code}`);
           }
         }
 

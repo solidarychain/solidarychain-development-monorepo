@@ -59,11 +59,11 @@ npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" -u admin
 # create admin with all data
 ID="${ANON_ID}"
 FISCAL_NUMBER="PT999999990"
-PHONE_NUMBER="+351936200000"
-USER_NAME="admin"
+PHONE_NUMBER="+351936200001"
+USER_NAME="anon"
 EMAIL="${USER_NAME}@example.com"
 DATE="61985472"
-PAYLOAD="{\"id\":\"${ADMN_ID}\",\"fiscalNumber\":\"${FISCAL_NUMBER}\",\"mobilePhone\":\"${PHONE_NUMBER}\",\"otherInformation\":\"\",\"username\":\"${USER_NAME}\",\"password\":\"${ADMIN_PASSWORD}\",\"email\":\"${EMAIL}\"}"
+PAYLOAD="{\"id\":\"${ANON_ID}\",\"fiscalNumber\":\"${FISCAL_NUMBER}\",\"mobilePhone\":\"${PHONE_NUMBER}\",\"otherInformation\":\"\",\"username\":\"${USER_NAME}\",\"password\":\"${DEFAULT_PASSWORD}\",\"email\":\"${EMAIL}\"}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" -u admin
 # npx hurl invoke ${CHAINCODE_NAME} person_get ${JOHN_ID} -u admin
@@ -72,7 +72,7 @@ npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" -u admin
 # create person with all data
 ID="${JOHN_ID}"
 FISCAL_NUMBER="PT282692124"
-PHONE_NUMBER="+351936200001"
+PHONE_NUMBER="+351936200002"
 FIRST_NAME="John"
 LAST_NAME="Doe"
 USER_NAME="johndoe"

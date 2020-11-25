@@ -9,6 +9,10 @@ import { CauseService } from './cause.service';
 import { NewCauseInput, UpdateCauseInput } from './dto';
 import { Cause } from './models';
 import { SubscriptionEvent } from '../common/types';
+import { GraphData } from '../dashboard/models';
+import { RelationType } from '../dashboard/enums';
+import { appConstants as c } from '../dashboard/constants';
+import { appConstants as cc } from '@solidary-chain/common-cc';
 
 const pubSub = new PubSub();
 
@@ -60,6 +64,12 @@ export class CauseResolver {
     newCauseData.loggedPersonId = user.userId;
     const cause = await this.causeService.create(newCauseData);
     pubSub.publish(SubscriptionEvent.causeAdded, { [SubscriptionEvent.causeAdded]: cause });
+    // TODO leave it maybe be useful in future
+    // pubSub.publish(SubscriptionEvent.reactForceData, { [SubscriptionEvent.reactForceData]: {
+    //   // nodes: [{ id: 1 }]
+    //     nodes: [{ id: cause.id, label: `${cc.CONVECTOR_MODEL_PATH_PERSON_NAME}:${cause.name}`, ...c.PERSON_NODE_PROPS }],
+    //     links: [{ source: cause.id, target: c.GENESIS_NODE_ID, label: RelationType.HAS_BORN, ...c.LINK_COMMON_PROPS }],
+    // }});
     return cause;
   }
 
@@ -81,4 +91,11 @@ export class CauseResolver {
   causeUpdated() {
     return pubSub.asyncIterator(SubscriptionEvent.causeUpdated);
   }
+
+  // work but seems that we must create on subscription for eash entity model, this way is better to listen to main create event and map data in frontend
+  // @UseGuards(GqlAuthGuard)
+  // @Subscription(returns => GraphData)
+  // reactForceData() {
+  //   return pubSub.asyncIterator(SubscriptionEvent.reactForceData);
+  // }
 }

@@ -17,6 +17,7 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     @Param(Transaction)
     transaction: Transaction,
   ) {
+    debugger;
     // use '' to prevent undefined when empty
     let debugMessage: string = '';
 
@@ -29,6 +30,11 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     const participant: Participant = await getParticipantByIdentity(this.sender);
     if (!!participant && !participant.id) {
       throw new Error('There is no participant with that identity');
+    }
+    // get loggedPerson from loggedPersonId
+    const loggedPerson: Person = await Person.getById(transaction.loggedPersonId);
+    if (!!loggedPerson && !loggedPerson.id) {
+      throw new Error('There is no logged user with that identity');
     }
 
     // participant
@@ -49,8 +55,6 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
       throw new Error(`You must supply a loggedPersonId in transfers`);
     }
 
-    // get loggedPerson from loggedPersonId
-    const loggedPerson: Person = await Person.getById(transaction.loggedPersonId);
     // protection check if ownerPerson exists 
     if (!loggedPerson && !loggedPerson.id) {
       throw new Error(`There is no person with Id '${transaction.loggedPersonId}'`);
@@ -88,6 +92,9 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
 
     // protection for funds + causes amount funds balance violation
     // tslint:disable-next-line: max-line-length
+    if (transaction.transactionType === TransactionType.TransferFunds && transaction.input.type === EntityType.Cause && !(transaction.input.entity as Cause).fundsBalance) {
+      throw new Error(`Balance violation! when work with causes, current cause don't have funds for transaction. current funds balance is 0`);
+    }
     if (transaction.transactionType === TransactionType.TransferFunds && transaction.input.type === EntityType.Cause && (transaction.input.entity as Cause).fundsBalance.balance < transaction.quantity) {
       // tslint:disable-next-line: max-line-length
       throw new Error(`Balance violation! when work with causes, you must supply a total amount lesser or equal than current funds balance. current funds balance is ${(transaction.input.entity as Cause).fundsBalance.balance}`);

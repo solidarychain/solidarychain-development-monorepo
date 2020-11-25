@@ -10,11 +10,11 @@ export enum NodeType {
 
 export enum NodeValue {
   GENESIS = 1,
-  PARTICIPANTS = 5,
-  PERSON = 10,
-  CAUSE = 15,
-  ASSET = 20,
-  TRANSACTION = 25,
+  PARTICIPANTS = 15,
+  PERSON = 20,
+  CAUSE = 25,
+  ASSET = 30,
+  TRANSACTION = 35,
 }
 
 export enum TransactionType {

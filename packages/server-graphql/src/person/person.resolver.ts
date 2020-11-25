@@ -4,11 +4,11 @@ import { PubSub } from 'apollo-server-express';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
 import { CurrentUser } from '../common/decorators';
 import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
+import { SubscriptionEvent } from '../common/types';
+import CurrentUserPayload from '../common/types/current-user-payload';
 import { AddPersonAttributeInput, GetByAttributeInput, NewPersonInput, UpdatePersonInput, UpdatePersonPasswordInput, UpdatePersonProfileInput, UpsertCitizenCardInput } from './dto';
 import { Person } from './models';
 import { PersonService } from './person.service';
-import CurrentUserPayload from '../common/types/current-user-payload';
-import { SubscriptionEvent } from '../common/types';
 
 const pubSub = new PubSub();
 
@@ -103,7 +103,7 @@ export class PersonResolver {
     @Args('personId') personId: string,
     @Args('addPersonAttributeData') addPersonAttributeData: AddPersonAttributeInput,
   ): Promise<Person> {
-    const person = await this.personService.addAttribute(personId, addPersonAttributeData);  
+    const person = await this.personService.addAttribute(personId, addPersonAttributeData);
     pubSub.publish(SubscriptionEvent.personAttributeAdded, { [SubscriptionEvent.personAttributeAdded]: person });
     return person;
   }

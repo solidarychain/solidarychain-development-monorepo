@@ -202,7 +202,7 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
       upsertPerson.volunteeringHoursBalance = new GenericBalance();
       upsertPerson.goodsStock = new Array<Goods>()
     }
-    // upadte person
+    // update person
     else {
       upsertPerson = getPerson[0];
       // prevent fiscalNumber from change, assing old value to model, in this case even if we change fiscalNumber in upsert it never changes, but even if we hack fiscalNumber it fails in other unique fields after

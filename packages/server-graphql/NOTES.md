@@ -35,6 +35,7 @@
   - [TypeError: httpAdapter.getType is not a function](#typeerror-httpadaptergettype-is-not-a-function)
   - [Cannot determine GraphQL input type](#cannot-determine-graphql-input-type)
     - [Input types](#input-types)
+  - [Error: Cannot return null for non-nullable field Subscription.reactForceDataAdded.](#error-cannot-return-null-for-non-nullable-field-subscriptionreactforcedataadded)
 
 ## Start
 
@@ -681,3 +682,58 @@ class AddRecipeInput implements Partial<Recipe> {
   description?: string;
 }
 ```
+
+## Error: Cannot return null for non-nullable field Subscription.reactForceDataAdded.
+
+```json
+{
+  "errors": [
+    {
+      "message": "Cannot return null for non-nullable field Subscription.foobar.",
+      "locations": [
+        {
+          "line": 2,
+          "column": 3
+        }
+      ],
+      "path": [
+        "foobar"
+      ],
+      "extensions": {
+        "code": "INTERNAL_SERVER_ERROR",
+        "exception": {
+          "stacktrace": [
+            "Error: Cannot return null for non-nullable field Subscription.foobar.",
+            "    at completeValue (/media/mario/storage/Home/Documents/Development/@SolidaryChain/solidarychain-development-monorepo/node_modules/graphql/execution/execute.js:560:13)",
+            "    at completeValueCatchingError (/media/mario/storage/Home/Documents/Development/@SolidaryChain/solidarychain-development-monorepo/node_modules/graphql/execution/execute.js:495:19)",
+            "    at resolveField (/media/mario/storage/Home/Documents/Development/@SolidaryChain/solidarychain-development-monorepo/node_modules/graphql/execution/execute.js:435:10)",
+            "    at executeFields (/media/mario/storage/Home/Documents/Development/@SolidaryChain/solidarychain-development-monorepo/node_modules/graphql/execution/execute.js:275:18)",
+            "    at executeOperation (/media/mario/storage/Home/Documents/Development/@SolidaryChain/solidarychain-development-monorepo/node_modules/graphql/execution/execute.js:219:122)",
+            "    at executeImpl (/media/mario/storage/Home/Documents/Development/@SolidaryChain/solidarychain-development-monorepo/node_modules/graphql/execution/execute.js:104:14)",
+            "    at execute (/media/mario/storage/Home/Documents/Development/@SolidaryChain/solidarychain-development-monorepo/node_modules/graphql/execution/execute.js:64:63)",
+            "    at mapSourceToResponse (/media/mario/storage/Home/Documents/Development/@SolidaryChain/solidarychain-development-monorepo/node_modules/graphql/subscription/subscribe.js:75:33)",
+            "    at /media/mario/storage/Home/Documents/Development/@SolidaryChain/solidarychain-development-monorepo/node_modules/graphql/subscription/mapAsyncIterator.js:76:20",
+            "    at new Promise (<anonymous>)"
+          ]
+        }
+      }
+    }
+  ],
+  "data": null
+}
+```
+
+fuck seems that `reactForceData` must match in publish and subscriptions name, 2h in this stuff, I started with this but how cares move on
+
+```typescript
+...
+  pubSub.publish(SubscriptionEvent.reactForceData, { [SubscriptionEvent.reactForceData]: cause });
+}
+@UseGuards(GqlAuthGuard)
+@Subscription(returns => Cause)
+reactForceData() {
+  return pubSub.asyncIterator(SubscriptionEvent.reactForceData);
+}
+```
+
+Update: seems that when I started I used `reactForceDataAdded` and not `reactForceData` in this is the main reason for epic faillure

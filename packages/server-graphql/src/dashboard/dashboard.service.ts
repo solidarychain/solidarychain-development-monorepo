@@ -99,6 +99,7 @@ export class DashboardService {
     // transactions
     const label = '';
     transactions.forEach((e: Transaction) => {
+      // TODO
       // switch (e.transactionType) {
       //   case TransactionType.TransferFunds:
       //     label = `${}`;
@@ -118,7 +119,6 @@ export class DashboardService {
     });
 
     // Logger.log(`assetLinks: [${JSON.stringify(assetLinks, undefined, 2)}]`, DashboardService.name);
-    debugger;
     return {
       nodes,
       links,

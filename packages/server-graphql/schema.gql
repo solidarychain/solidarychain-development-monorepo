@@ -135,7 +135,7 @@ type GraphLink {
   color: String
   autoColorBy: String
   linkWidth: Float
-  group: String
+  group: Float
 }
 
 type GraphNode {
@@ -145,7 +145,7 @@ type GraphNode {
   nodeVal: Float
   color: String
   autoColorBy: String
-  group: String
+  group: Float
 }
 
 """
