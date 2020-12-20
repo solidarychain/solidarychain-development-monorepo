@@ -30,4 +30,6 @@ export enum ResourceType {
   // common with packages/asset-cc/src/enums.ts: prevent circular dependency
   PhysicalAsset = 'PHYSICAL_ASSET',
   DigitalAsset = 'DIGITAL_ASSET',
+  PhysicalVoucher = 'PHYSICAL_VOUCHER',
+  DigitalVoucher = 'DIGITAL_VOUCHER',
 }

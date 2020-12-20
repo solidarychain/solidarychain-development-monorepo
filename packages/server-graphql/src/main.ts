@@ -21,7 +21,10 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   await app.listen(e.httpsPort)
-    .then(() => Logger.log(`graphql server started, endpoint exposed at https://localhost:${e.httpsPort}/graphql`));
+    .then(() => {
+      Logger.log(`graphql server started, endpoint exposed at https://localhost:${e.httpsPort}/graphql`);
+      Logger.log(`corsOrigin authorized domains '${e.corsOriginReactFrontend.join(', ')}'`);
+    });
 }
 
 bootstrap();

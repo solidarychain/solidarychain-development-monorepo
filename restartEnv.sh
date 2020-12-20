@@ -40,6 +40,7 @@ sleep 20
 # seed ledger
 # npm run seed
 ./seed.sh
+# can skip bellow and start graphql server
 
 # prevent lost props, rebuild chaincode packages: comment this already is executed in cc:start above
 # npx lerna run build --scope @solidary-chain/common-cc --stream

@@ -1,10 +1,10 @@
 /**
- * ChaincodeEvent enum must be insync with 
+ * ChaincodeEvent enum must be inSync with 
  * solidarychain-development-graphdb-events/src/network/network.enums.ts
  * solidarychain-development-monorepo/packages/common-cc/src/enums.ts
  */
 
- export enum UserRoles {
+export enum UserRoles {
   User = 'USER',
   Admin = 'ADMIN'
 }

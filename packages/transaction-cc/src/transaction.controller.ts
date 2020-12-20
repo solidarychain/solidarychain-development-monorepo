@@ -85,6 +85,7 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
       const entityType: string = transaction.input.type.replace(`${c.CONVECTOR_MODEL_PATH_PREFIX}.`, '');
       throw new Error(`There is no entity of type '${entityType}' with Id '${transaction.input.id}'`);
     }
+    // TODO: create entity if has fiscalNumber defined
     if (!transaction.output.entity) {
       const entityType: string = transaction.output.type.replace(`${c.CONVECTOR_MODEL_PATH_PREFIX}.`, '');
       throw new Error(`There is no entity of type '${entityType}' with Id '${transaction.output.id}'`);

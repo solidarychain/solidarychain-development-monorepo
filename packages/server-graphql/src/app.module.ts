@@ -40,7 +40,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
         // get context with decorator `@Context() { req, res, payload, connection }: GqlContext`
         // req, res used in http/query&mutations, connection used in webSockets/subscriptions
         context: ({ req, res, payload, connection }: GqlContext) => ({ req, res, payload, connection }),
-        // configure graphql cors here
+        // configure graphql cors here, rest cors is configured in packages/server-graphql/src/main.ts
         cors: {
           origin: e.corsOriginReactFrontend,
           credentials: true,

@@ -38,6 +38,7 @@
     "easyconfig",
     "ecert",
     "firstname",
+    "graphdb",
     "graphql",
     "hyperledger",
     "inmemory",
