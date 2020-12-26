@@ -6,7 +6,7 @@ import { Transaction } from './transaction.model';
 
 // interface Entity and getEntity() function duplicated with asset, cause and transaction, to prevent circular dependencies, 
 // this way we leave common package clean of dependencies like person-cc and participant-cc
-export const getEntity = (entityType: EntityType, id: string): Promise<Participant | Person | Cause> => {
+export const getEntity = (entityType: EntityType, id: string, throwError: boolean = true): Promise<Participant | Person | Cause> => {
   return new Promise(async (resolve, reject) => {
     try {
       // use trySwitch inner function, to solve problem `async await in switch case statement don't work`
@@ -15,14 +15,16 @@ export const getEntity = (entityType: EntityType, id: string): Promise<Participa
           case EntityType.Participant:
             const participant = await Participant.getById(id);
             if (!!participant && !participant.id) {
-              throw new Error(`No participant found with id/fiscalNumber ${id}`);
+              // let it pass for participant and person, to create it if have fiscalNumber in transaction controller
+              if (throwError) { throw new Error(`No participant found with id/fiscalNumber ${id}`); };
             }
             resolve(participant);
             break;
           case EntityType.Person:
             const person = await Person.getById(id);
             if (!person || !person.id) {
-              throw new Error(`No person found with id/fiscalNumber/mobilePhone ${id}`);
+              // let it pass for participant and person, to create it if have fiscalNumber in transaction controller
+              if (throwError) { throw new Error(`No person found with id/fiscalNumber/mobilePhone ${id}`); };
             }
             resolve(person);
             break;

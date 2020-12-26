@@ -229,6 +229,7 @@ export class Person extends ConvectorModel<Person> {
 
   // custom static implementation getById
   public static async getById(id: string): Promise<Person> {
+    debugger;
     let result: Person | Person[] = await this.getByFilter({ _id: id });
     // try get by fiscalNumber
     if (!result[0]) {

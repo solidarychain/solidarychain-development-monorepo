@@ -1,6 +1,12 @@
 // Warn if changes model names, don't forget to change views ex
 // "map": "function(doc) {if (doc.type.toUpperCase() === 'com.chain.solidary.model.person'...
 
+// this is used to detected ids in transactions that are fiscalNumbers, detected by prefix
+const FISCAL_NUMBER_VALID_PREFIX = ['PT', 'ES'];
+// used when create input person in transactions, when persons don't exists we create it on the fly
+const PERSON_DEFAULT_MINIMAL_ENTITY_PASSWORD = 'qz5HbnzA5B9bp3Kg';
+const PERSON_DEFAULT_MINIMAL_ENTITY_MOBILE_PHONE = '+351000000000';
+
 // convector models
 const CONVECTOR_MODEL_PATH_PREFIX: string = 'com.chain.solidary.model';
 const CONVECTOR_MODEL_PATH_PARTICIPANT: string = `${CONVECTOR_MODEL_PATH_PREFIX}.participant`;
@@ -68,6 +74,9 @@ const REGEX_FISCAL_NUMBER: RegExp = /^[A-Z]{2}[0-9]{9}$/i;
 const EXCEPTION_ERROR_NO_COMPLEX_QUERY: string = 'You must supply a valid filter in complex query.';
 
 export const appConstants = {
+	FISCAL_NUMBER_VALID_PREFIX,
+	PERSON_DEFAULT_MINIMAL_ENTITY_PASSWORD,
+	PERSON_DEFAULT_MINIMAL_ENTITY_MOBILE_PHONE,
 	// convector models
 	CONVECTOR_MODEL_PATH_PREFIX,
 	CONVECTOR_MODEL_PATH_ENTITY,

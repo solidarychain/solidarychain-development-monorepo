@@ -1,8 +1,8 @@
 import { Asset } from '@solidary-chain/asset-cc';
 import { Cause } from '@solidary-chain/cause-cc';
-import { appConstants as c, ChaincodeEvent, EntityType, isDecimal } from '@solidary-chain/common-cc';
+import { appConstants as c, ChaincodeEvent, EntityType, GenericBalance, Goods, isDecimal, newUuid } from '@solidary-chain/common-cc';
 import { getParticipantByIdentity, Participant } from '@solidary-chain/participant-cc';
-import { Person } from '@solidary-chain/person-cc';
+import { Person, hashPassword } from '@solidary-chain/person-cc';
 import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
 import * as yup from 'yup';
@@ -17,7 +17,6 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     @Param(Transaction)
     transaction: Transaction,
   ) {
-    debugger;
     // use '' to prevent undefined when empty
     let debugMessage: string = '';
 
@@ -39,8 +38,8 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
 
     // participant
     transaction.participant = participant;
-    // assign input/output
-    transaction.input.entity = await getEntity(transaction.input.type, transaction.input.id);
+    // assign input/output, don't throw error on input, used throwError=false
+    transaction.input.entity = await getEntity(transaction.input.type, transaction.input.id, false);
     transaction.output.entity = await getEntity(transaction.output.type, transaction.output.id);
 
     // ambassador protection: if entity is participant or cause, the logged user must be a ambassador else throw error
@@ -81,11 +80,44 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     }
 
     // check if is a valid input and output from entity
+    // inputEntity
     if (!transaction.input.entity) {
-      const entityType: string = transaction.input.type.replace(`${c.CONVECTOR_MODEL_PATH_PREFIX}.`, '');
-      throw new Error(`There is no entity of type '${entityType}' with Id '${transaction.input.id}'`);
+      // if id is a prefixed fiscalNumber try to create it on the fly
+      const isValidFiscalNumberPrefix = c.FISCAL_NUMBER_VALID_PREFIX.some((e) => transaction.input.id.startsWith(e));
+      // don't create Participant's they require ambassador's and other stuff
+      if ((transaction.input.type === EntityType.Person /*|| transaction.input.type === EntityType.Participant*/) && isValidFiscalNumberPrefix) {
+        // const newEntity = ((transaction.input.type === EntityType.Person)) ? new Person() : new Participant();
+        const newEntity = new Person();
+        newEntity.id = newUuid();
+        newEntity.participant = await Participant.getOne(c.GOV_UUID);;
+        newEntity.fiscalNumber = transaction.input.id;
+        if (transaction.input.type === EntityType.Person) {
+          (newEntity as Person).username = transaction.input.id;
+          (newEntity as Person).password = hashPassword(c.PERSON_DEFAULT_MINIMAL_ENTITY_PASSWORD);
+          (newEntity as Person).mobilePhone = c.PERSON_DEFAULT_MINIMAL_ENTITY_MOBILE_PHONE;
+          (newEntity as Person).registrationDate = new Date().getTime();
+        }
+        // create a new identity
+        newEntity.identities = [{
+          fingerprint: this.sender,
+          status: true
+        }];
+        // add date in epoch unix time
+        newEntity.createdDate = new Date().getTime();
+        // init objects
+        newEntity.fundsBalance = new GenericBalance();
+        newEntity.volunteeringHoursBalance = new GenericBalance();
+        newEntity.goodsStock = new Array<Goods>()
+        newEntity.save();
+        // assign newEntity to transaction.input
+        transaction.input.entity = newEntity;
+      } else {
+        const entityType: string = transaction.input.type.replace(`${c.CONVECTOR_MODEL_PATH_PREFIX}.`, '');
+        throw new Error(`There is no entity of type '${entityType}' with Id '${transaction.input.id}'`);
+      }
     }
-    // TODO: create entity if has fiscalNumber defined
+
+    // outputEntity
     if (!transaction.output.entity) {
       const entityType: string = transaction.output.type.replace(`${c.CONVECTOR_MODEL_PATH_PREFIX}.`, '');
       throw new Error(`There is no entity of type '${entityType}' with Id '${transaction.output.id}'`);

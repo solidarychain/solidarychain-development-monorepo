@@ -205,7 +205,7 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     // update person
     else {
       upsertPerson = getPerson[0];
-      // prevent fiscalNumber from change, assing old value to model, in this case even if we change fiscalNumber in upsert it never changes, but even if we hack fiscalNumber it fails in other unique fields after
+      // prevent fiscalNumber from change, assign old value to model, in this case even if we change fiscalNumber in upsert it never changes, but even if we hack fiscalNumber it fails in other unique fields after
       upsertPerson.fiscalNumber = getPerson[0].fiscalNumber;
     }
 
