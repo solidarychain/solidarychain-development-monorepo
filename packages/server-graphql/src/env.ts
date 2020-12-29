@@ -23,5 +23,5 @@ export const envVariables: any = {
   refreshTokenSkipIncrementVersion: process.env.REFRESH_TOKEN_SKIP_INCREMENT_VERSION || 'false',
 
   // cors origin react frontend, split to array, used in cors graphql and cors rest
-  corsOriginReactFrontend: process.env.CORS_ORIGIN_REACT_FRONTEND.split(',') || ['https://localhost:3000'],
+  corsOriginReactFrontend: (process.env.CORS_ORIGIN_REACT_FRONTEND) ? process.env.CORS_ORIGIN_REACT_FRONTEND.split(',') : ['https://localhost:3000'],
 };

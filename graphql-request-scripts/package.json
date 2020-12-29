@@ -1,0 +1,17 @@
+{
+  "name": "solidarychain-graphql-request",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "node -r esm main.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "esm": "^3.2.25",
+    "graphql": "^15.4.0",
+    "graphql-request": "^3.4.0"
+  }
+}
