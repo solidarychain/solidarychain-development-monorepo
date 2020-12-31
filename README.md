@@ -1,6 +1,6 @@
 # READ ME: @solidary-chain : starters
 
-- [READ ME: @solidary-chain : starters](#read-me-convector-sample--starters)
+- [READ ME: @solidary-chain : starters](#read-me-solidary-chain--starters)
   - [Description](#description)
   - [Collaborate to the Convector Suite projects](#collaborate-to-the-convector-suite-projects)
   - [Advice Read Links](#advice-read-links)
@@ -360,3 +360,5 @@ REFRESH_TOKEN_SKIP_INCREMENT_VERSION=true
 # required to define when we don't use default origin http://localhost:3000
 CORS_ORIGIN_REACT_FRONTEND=https://192.168.1.133:3000
 ```
+
+> NOTE: ALL Paswords and Secrets like `ACCESS_TOKEN_JWT_SECRET` in every files like `.env` are not used in production, feel free to try to use it, are exposed only has a example
