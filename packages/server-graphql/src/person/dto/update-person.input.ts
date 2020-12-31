@@ -9,7 +9,7 @@ export class UpdatePersonInput {
   @IsUUID()
   id: string;
 
-  @Field(type => [String], { defaultValue: UserRoles.User })
+  @Field(type => [String], { defaultValue: UserRoles.ROLE_USER })
   roles: string[];
 
   @Field(type => GraphQLJSONObject, { nullable: true })

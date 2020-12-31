@@ -6,9 +6,9 @@ import { Asset } from './models';
 import { AssetService } from './asset.service';
 import { GqlAuthGuard } from '../auth/guards';
 import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
-import { CurrentUser } from '../common/decorators';
+import { CurrentUser } from '../auth/decorators';
 import CurrentUserPayload from '../common/types/current-user-payload';
-import { SubscriptionEvent } from '../common/types';
+import { SubscriptionEvent } from '../common/enums';
 
 const pubSub = new PubSub();
 

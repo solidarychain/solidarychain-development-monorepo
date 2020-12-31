@@ -1,4 +1,5 @@
-import { appConstants as c, checkValidModelIds, GenericBalance, Goods, x509Identities, ChaincodeEvent } from '@solidary-chain/common-cc';
+import { appConstants as c, checkValidModelIds, GenericBalance, Goods, x509Identities, ChaincodeEvent, getAmbassadorUserFilter } from '@solidary-chain/common-cc';
+import { UserInfo } from '@solidary-chain/common-cc/dist/src/interfaces';
 import { BaseStorage, Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ClientIdentity } from 'fabric-shim';
 import * as yup from 'yup';
@@ -291,15 +292,20 @@ export class ParticipantController extends ConvectorController {
   public async getComplexQuery(
     @Param(yup.object())
     complexQueryInput: any,
+    @Param(yup.object())
+    userInfo?: UserInfo,
   ): Promise<Participant | Participant[]> {
     if (!complexQueryInput || !complexQueryInput.filter) {
       throw new Error(c.EXCEPTION_ERROR_NO_COMPLEX_QUERY);
     }
+    const userFilter = getAmbassadorUserFilter(userInfo);
     const complexQuery: any = {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_PARTICIPANT,
         // spread arbitrary query filter
-        ...complexQueryInput.filter
+        ...complexQueryInput.filter,
+        // add userFilter
+        ...userFilter
       },
       // not useful
       // fields: (complexQueryInput.fields) ? complexQueryInput.fields : undefined,

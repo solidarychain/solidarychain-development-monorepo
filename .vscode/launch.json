@@ -11,7 +11,17 @@
       "name": "Attach to Chaincode",
       "port": 9990,
       "sourceMaps": true,
-      "trace" : true
+      "trace" : true,
+      "restart": true,
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Attach to GraphQL",
+      "port": 9230,
+      "sourceMaps": true,
+      "trace" : true,
+      "restart": true,
     },
     {
       "name": "Chrome",

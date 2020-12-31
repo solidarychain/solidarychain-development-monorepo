@@ -30,7 +30,7 @@ export class Person {
   @Field(type => [Attribute], { nullable: true })
   attributes?: Attribute[];
 
-  @Field(type => [String], { defaultValue: UserRoles.User })
+  @Field(type => [String], { defaultValue: UserRoles.ROLE_USER })
   roles: string[];
 
   @Field()

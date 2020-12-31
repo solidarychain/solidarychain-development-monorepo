@@ -1,22 +1,26 @@
 import { NotFoundException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'apollo-server-express';
-import { GqlAuthGuard } from '../auth/guards';
+import { CurrentUser, Roles } from '../auth/decorators';
+import { UserRoles } from '../auth/enums';
+import { GqlAuthGuard, GqlRolesGuard } from '../auth/guards';
 import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
-import { NewParticipantInput, UpdateParticipantInput, ChangeParticipantIdentityData as ChangeParticipantIdentityInput } from './dto';
+import { SubscriptionEvent } from '../common/enums';
+import { UserInfo } from '../common/types';
+import CurrentUserPayload from '../common/types/current-user-payload';
+import { ChangeParticipantIdentityData as ChangeParticipantIdentityInput, NewParticipantInput, UpdateParticipantInput } from './dto';
 import { Participant } from './models';
 import { ParticipantService } from './participant.service';
-import { CurrentUser } from '../common/decorators';
-import CurrentUserPayload from '../common/types/current-user-payload';
-import { SubscriptionEvent } from '../common/types';
 
 const pubSub = new PubSub();
-
 @UseGuards(GqlAuthGuard)
 @Resolver(of => Participant)
 export class ParticipantResolver {
   constructor(private readonly participantService: ParticipantService) { }
 
+  // TODO
+  @Roles(UserRoles.ROLE_ADMIN)
+  @UseGuards(GqlRolesGuard)
   @Query(returns => [Participant])
   participants(
     @Args() paginationArgs: PaginationArgs,
@@ -24,12 +28,15 @@ export class ParticipantResolver {
     return this.participantService.findAll(paginationArgs);
   }
 
+  // TODO
   @Query(returns => [Participant])
   participantComplexQuery(
+    @CurrentUser() user: CurrentUserPayload,
     @Args('getByComplexQueryInput') getByComplexQueryInput: GetByComplexQueryInput,
     @Args() paginationArgs: PaginationArgs,
   ): Promise<Participant | Participant[]> {
-    return this.participantService.findComplexQuery(getByComplexQueryInput, paginationArgs);
+    const userInfo: UserInfo = { personId: user.userId, roles: user.roles };
+    return this.participantService.findComplexQuery(getByComplexQueryInput, userInfo, paginationArgs);
   }
 
   @Query(returns => Participant)

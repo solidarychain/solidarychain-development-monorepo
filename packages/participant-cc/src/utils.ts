@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcrypt';
-import { appConstants as c } from '@solidary-chain/common-cc';
+import { appConstants as c, UserRoles } from '@solidary-chain/common-cc';
 import { Participant } from './participant.model';
 
 // duplicated with 

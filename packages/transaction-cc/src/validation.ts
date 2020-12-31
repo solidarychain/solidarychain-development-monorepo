@@ -24,6 +24,8 @@ export const resourceTypeSchema = yup
     ResourceType.GenericGoods,
     ResourceType.PhysicalAsset,
     ResourceType.DigitalAsset,
+    ResourceType.PhysicalVoucher,
+    ResourceType.DigitalVoucher,
   ])
   .required();
 

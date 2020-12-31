@@ -137,7 +137,8 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
 
     // detect if is a transfer type, and asset resourceType
     if (transaction.transactionType === TransactionType.TransferAsset && (
-      transaction.resourceType === ResourceType.PhysicalAsset || transaction.resourceType === ResourceType.DigitalAsset
+      transaction.resourceType === ResourceType.PhysicalAsset || transaction.resourceType === ResourceType.DigitalAsset ||
+      transaction.resourceType === ResourceType.PhysicalVoucher || transaction.resourceType === ResourceType.DigitalVoucher
     )) {
       if (!transaction.assetId) {
         throw new Error(`You must supply a assetId when transfer assets of type '${transaction.resourceType}'`);
@@ -154,15 +155,25 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
         }
 
         // protection check if transaction input owner is the same as asset owner and same type, if one is different throw exception
-        if (transaction.input.id != (asset.owner.entity as any).id || transaction.input.type != (asset.owner.entity as any).type) {
-          // debugMessage = `transaction.input.id: ${transaction.input.id} != asset.owner.entity: ${(asset.owner.entity as any).id} && transaction.input.type: ${transaction.input.type} != asset.owner.entity: ${(asset.owner.entity as any).type}`;
-          throw new Error(`Transaction input owner is not the owner of the asset${debugMessage}`);
+        // note: must compare id using transaction.input.entity.id, and not with `transaction.input.id`, the transaction.input.entity.id is requested from id, fiscalNumber, mobilePhone
+        if ((transaction.input.entity as Participant | Person | Cause).id != (asset.owner.entity as Participant | Person | Cause).id && transaction.input.type != (asset.owner.entity as Participant | Person | Cause).type) {
+          // debugMessage = `transaction.input.entity.id: ${(transaction.input.entity as Participant | Person | Cause).id} != asset.owner.entity.id: ${(asset.owner.entity as Participant | Person | Cause).id} && transaction.input.type: ${transaction.input.type} != asset.owner.entity: ${(asset.owner.entity as any).type}`;
+          throw new Error(`Transaction input owner is not the owner of the asset, or the type os transaction don't match. Must match asset type and use the owner of asset has input for transaction${debugMessage}`);
         }
-
-        // protection check if loggedPerson is the owner or if loggedPerson in in authorized ambassador's
-        if (transaction.input.id != loggedPerson.id && !asset.ambassadors.includes(loggedPerson.id)) {
+        
+        // protection check if loggedPerson is the asset owner, or if loggedPerson in in assets authorized ambassador's, or in asset.owner.entity.ambassadors (when asset don't have ambassadors)
+        // all conditions must be false to throw, if one pass it don't throw
+        // TODO: must check if this is working
+        if ((transaction.input.entity as Participant | Person | Cause).id != loggedPerson.id
+          && (
+            // must check if ambassadors exists
+            !('ambassadors' in asset && asset.ambassadors.includes(loggedPerson.id))
+            // must check if ambassadors exists
+            && !('ambassadors' in asset.owner.entity && (asset.owner.entity as Participant | Cause).ambassadors.includes(loggedPerson.id))
+          )
+        ) {
           // debugMessage = `:debugMessage:transaction.input.id: ${transaction.input.id} != loggedPerson.id: ${loggedPerson.id} (${transaction.input.id != loggedPerson.id}}) - ${JSON.stringify(asset.ambassadors)}:${asset.ambassadors.includes(loggedPerson.id)}:(${!asset.ambassadors.includes(loggedPerson.id)})`;
-          throw new Error(`Logged person is not the owner of the asset, or is not an authorized asset ambassador${debugMessage}`);
+          throw new Error(`Logged person is not the owner of the asset, is not an authorized asset ambassador, or asset owner ambassador${debugMessage}`);
         }
 
         // REMOVED: not quantity and currency are optional, this way we can transfer assets and funds, like sell the asset
@@ -172,6 +183,7 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
         // }
 
         // assign new owner id and type
+        debugger;
         asset.owner.entity = transaction.output.entity;
         // assign which asset was transferred to transaction
         transaction.assetId = asset.id;

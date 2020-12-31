@@ -5,8 +5,8 @@
  */
 
 export enum UserRoles {
-  User = 'USER',
-  Admin = 'ADMIN'
+  ROLE_USER = 'ROLE_USER',
+  ROLE_ADMIN = 'ROLE_ADMIN'
 }
 
 export enum EntityType {

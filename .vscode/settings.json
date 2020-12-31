@@ -7,7 +7,21 @@
     // "**/node_modules/": true,
     // The following will hide the js and map files in the editor
     // "**/*.js": true,
-    "**/*.map": true
+    "**/*.map": true,
+    "packages/**/dist": true,
+    "packages/**/node_modules": true,
+    // "packages/server-graphql/dist": true,
+    // "packages/server-graphql/node_modules": true,
+    // "packages/asset-cc/node_modules": true,
+    // "packages/asset-cc/dist": true,
+    // "packages/cause-cc/node_modules": true,
+    // "packages/cause-cc/dist": true,
+    // "packages/common-cc/node_modules": true,
+    // "packages/common-cc/dist": true,
+    // "packages/person-cc/node_modules": true,
+    // "packages/person-cc/dist": true,
+    // "packages/participant-cc/dist": true,
+    // "packages/transaction-cc/dist": true
   },
   "cSpell.words": [
     "Andrade",

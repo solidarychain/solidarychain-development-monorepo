@@ -3,6 +3,8 @@ import { GraphQLClient, gql } from 'graphql-request'
 const endpoint = 'https://api.solidarychain.com/graphql';
 const adminUsername = 'admin';
 const adminPassword = 'Aa123#12';
+const defaultPassword = 'Aa456#45';
+
 
 const getUserToken = async (username, password) => {
   const graphQLClient = new GraphQLClient(endpoint, {

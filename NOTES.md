@@ -239,6 +239,10 @@ $ npx lerna run start:debug --scope @solidary-chain/server-graphql --stream
 
 ### Mango Queries
 
+- [Mango search in Arrays](https://stackoverflow.com/questions/43892556/mango-search-in-arrays)
+- [CouchDB query selector on string in array of elements](https://stackoverflow.com/questions/55169530/couchdb-query-selector-on-string-in-array-of-elements)
+
+
 > Use double quotes in fauxton else silent error, does nothing, or copy some values from result sets
 
 ```json
@@ -277,6 +281,130 @@ $ npx lerna run start:debug --scope @solidary-chain/server-graphql --stream
       }
     }
   }
+}
+```
+
+elemMatch in a array of strings using "$eq", It will return all objects where ambassadors field equals id
+
+participants, causes are equal only change the type
+
+```json
+{
+  "selector": {
+    "type": "com.chain.solidary.model.participant",
+    "ambassadors": {
+      "$elemMatch": {
+      "$eq": "4ea88521-031b-4279-9165-9c10e1839002"
+      }
+    }
+  },
+  "sort": [
+    {
+      "name": "asc"
+    }
+  ]
+}
+```
+
+cause
+
+```json
+{
+  "selector": {
+    "type": "com.chain.solidary.model.cause",
+    "ambassadors": {
+      "$elemMatch": {
+      "$eq": "4ea88521-031b-4279-9165-9c10e1839000"
+      }
+    }
+  },
+  "sort": [
+    {
+      "name": "asc"
+    }
+  ]
+}
+```
+
+asset
+
+```json
+{
+  "selector": {
+    "type": "com.chain.solidary.model.asset",
+    "$or": [
+      {
+        "owner": {
+          "entity": {
+            "ambassadors": {
+              "$elemMatch": {
+                "$eq": "4ea88521-031b-4279-9165-9c10e1839000"
+              }
+            }
+          }
+        }
+      },
+      {
+        "ambassadors": {
+          "$elemMatch": {}
+        }
+      }
+    ]
+  },
+  "sort": [
+    {
+      "name": "asc"
+    }
+  ]
+}
+```
+
+transaction
+
+```json
+{
+  "selector": {
+    "type": "com.chain.solidary.model.transaction",
+    "$or": [
+      {
+        "input": {
+          "entity": {
+            "id": "4ea88521-031b-4279-9165-9c10e1839000"
+          }
+        }
+      },
+      {
+        "input": {
+          "entity": {
+            "ambassadors": {
+              "$elemMatch": {
+                "$eq": "4ea88521-031b-4279-9165-9c10e1839000"
+              }
+            }
+          }
+        }
+      },
+      {
+        "output": {
+          "entity": {
+            "id": "4ea88521-031b-4279-9165-9c10e1839000"
+          }
+        }
+      },
+      {
+        "output": {
+          "entity": {
+            "ambassadors": {
+              "$elemMatch": {
+                "$eq": "4ea88521-031b-4279-9165-9c10e1839000"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "sort": []
 }
 ```
 

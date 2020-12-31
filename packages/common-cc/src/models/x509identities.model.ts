@@ -1,5 +1,5 @@
 import { ConvectorModel, ReadOnly, Validate, Required } from '@worldsibu/convector-core';
-import { appConstants as c } from './constants';
+import { appConstants as c } from '../constants';
 import * as yup from 'yup';
 
 export class x509Identities extends ConvectorModel<x509Identities>{

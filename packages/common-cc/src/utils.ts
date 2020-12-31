@@ -1,8 +1,10 @@
 // not used anymore
 
-import { Common } from './common.model';
+import { Common } from './models/common.model';
 import { v4 as uuid } from 'uuid';
 import * as cryptoJs from "crypto-js"
+import { UserInfo } from './interfaces';
+import { UserRoles } from './enums';
 
 // convert comma string float to float ex '1,81' to 1.81
 export const convertStringToFloat = (input: string): number => parseFloat(input.replace(/,/g, '.'));
@@ -163,6 +165,28 @@ export const removeOwnerFromAmbassadorsArray = (ambassadors: string[], ownerId: 
 /**
  * check if number is decimal, useful to check for integers
  */
-export const isDecimal = (input:number): boolean => {
-  return (input  % 1 != 0);
+export const isDecimal = (input: number): boolean => {
+  return (input % 1 != 0);
+}
+
+/**
+ * check if roles array hasRole
+ */
+export const hasRole = (roles: string[], role: UserRoles) => roles.some((e: UserRoles) => e === role);
+
+/**
+ * compose userFilter with user as an ambassador
+ */
+export const getAmbassadorUserFilter = (userInfo: UserInfo) => {
+  if (hasRole(userInfo.roles, UserRoles.ROLE_ADMIN)) {
+    return {};
+  } else {
+    return {
+      ambassadors: {
+        $elemMatch: {
+          $eq: userInfo.personId,
+        }
+      }
+    }
+  }
 }

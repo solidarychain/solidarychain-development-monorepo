@@ -30,7 +30,7 @@ export class Person extends ConvectorModel<Person> {
   @Validate(yup.array(PersonAttribute.schema()))
   public attributes: Array<PersonAttribute>;
 
-  @Default([UserRoles.User])
+  @Default([UserRoles.ROLE_USER])
   @Validate(yup.array().of(yup.string()))
   public roles: Array<String>;
 
@@ -229,7 +229,6 @@ export class Person extends ConvectorModel<Person> {
 
   // custom static implementation getById
   public static async getById(id: string): Promise<Person> {
-    debugger;
     let result: Person | Person[] = await this.getByFilter({ _id: id });
     // try get by fiscalNumber
     if (!result[0]) {

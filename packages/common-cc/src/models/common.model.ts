@@ -1,4 +1,4 @@
-import { appConstants as c } from './constants';
+import { appConstants as c } from '../constants';
 import { ConvectorModel, ReadOnly, Required } from '@worldsibu/convector-core';
 
 export class Common extends ConvectorModel<Common> {

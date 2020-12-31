@@ -1,6 +1,6 @@
 import { ConvectorModel, ReadOnly, Required, Validate } from '@worldsibu/convector-core';
 import * as yup from 'yup';
-import { appConstants as c } from './constants';
+import { appConstants as c } from '../constants';
 import { GenericBalance } from './generic-balance.model';
 
 export class Goods extends ConvectorModel<Goods> {

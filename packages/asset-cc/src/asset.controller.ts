@@ -20,7 +20,10 @@ export class AssetController extends ConvectorController<ChaincodeTx> {
     }
 
     // check if all ambassadors are valid persons, and update model.ambassadors with uuid's
-    asset.ambassadors = await checkValidModelIds(c.CONVECTOR_MODEL_PATH_PERSON, c.CONVECTOR_MODEL_PATH_PERSON_NAME, asset.ambassadors);
+    // optional: assets don't required ambassadors, check if first item in array is not ''
+    if (asset.ambassadors && asset.ambassadors[0] !== '') {
+      asset.ambassadors = await checkValidModelIds(c.CONVECTOR_MODEL_PATH_PERSON, c.CONVECTOR_MODEL_PATH_PERSON_NAME, asset.ambassadors);
+    }
 
     // get postfix name this way we can have multiple assets with same name
     const postfixCode: string = randomString(10);

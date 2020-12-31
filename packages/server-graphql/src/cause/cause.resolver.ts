@@ -2,13 +2,13 @@ import { NotFoundException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'apollo-server-express';
 import { GqlAuthGuard } from '../auth/guards';
-import { CurrentUser } from '../common/decorators';
+import { CurrentUser } from '../auth/decorators';
 import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
 import CurrentUserPayload from '../common/types/current-user-payload';
 import { CauseService } from './cause.service';
 import { NewCauseInput, UpdateCauseInput } from './dto';
 import { Cause } from './models';
-import { SubscriptionEvent } from '../common/types';
+import { SubscriptionEvent } from '../common/enums';
 import { GraphData } from '../dashboard/models';
 import { RelationType } from '../dashboard/enums';
 import { appConstants as c } from '../dashboard/constants';
@@ -92,7 +92,7 @@ export class CauseResolver {
     return pubSub.asyncIterator(SubscriptionEvent.causeUpdated);
   }
 
-  // work but seems that we must create on subscription for eash entity model, this way is better to listen to main create event and map data in frontend
+  // work but seems that we must create on subscription for each entity model, this way is better to listen to main create event and map data in frontend
   // @UseGuards(GqlAuthGuard)
   // @Subscription(returns => GraphData)
   // reactForceData() {

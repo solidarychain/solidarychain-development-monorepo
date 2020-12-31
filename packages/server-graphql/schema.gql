@@ -94,6 +94,7 @@ input GetByComplexQueryInput {
   filter: JSONObject!
   fields: [String!]
   sort: [JSONObject!]
+  userInfo: [JSONObject!]
 }
 
 type Goods {
@@ -438,7 +439,7 @@ input UpdateParticipantInput {
 
 input UpdatePersonInput {
   id: String!
-  roles: [String!] = "USER"
+  roles: [String!] = "ROLE_USER"
   metaDataInternal: JSONObject
 }
 

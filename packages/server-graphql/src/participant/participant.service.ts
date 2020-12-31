@@ -6,6 +6,7 @@ import { ParticipantControllerBackEnd } from '../convector';
 import { NewParticipantInput, UpdateParticipantInput, ChangeParticipantIdentityData } from './dto';
 import { Participant } from './models';
 import { v4 as uuid } from 'uuid';
+import { UserInfo } from '../common/types/user-info';
 
 @Injectable()
 export class ParticipantService {
@@ -64,9 +65,9 @@ export class ParticipantService {
     }
   }
 
-  async findComplexQuery(getByComplexQueryInput: GetByComplexQueryInput, paginationArgs: PaginationArgs): Promise<Participant | Participant[]> {
+  async findComplexQuery(getByComplexQueryInput: GetByComplexQueryInput, userInfo: UserInfo, paginationArgs: PaginationArgs): Promise<Participant | Participant[]> {
     // get fabric model with _props
-    const fabricModel: Array<FlatConvectorModel<ParticipantConvectorModel>> = await ParticipantControllerBackEnd.getComplexQuery(getByComplexQueryInput) as ParticipantConvectorModel[];
+    const fabricModel: Array<FlatConvectorModel<ParticipantConvectorModel>> = await ParticipantControllerBackEnd.getComplexQuery(getByComplexQueryInput, userInfo) as ParticipantConvectorModel[];
     // convert fabric model to convector model (remove _props)
     const convectorModel: ParticipantConvectorModel[] = fabricModel.map((e: ParticipantConvectorModel) => new ParticipantConvectorModel(e));
     // call common find method
