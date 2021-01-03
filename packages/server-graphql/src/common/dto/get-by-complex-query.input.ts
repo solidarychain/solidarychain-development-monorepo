@@ -1,7 +1,7 @@
+import { UserInfo } from '@solidary-chain/common-cc';
 import { IsDefined, IsOptional } from 'class-validator';
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, InputType } from 'type-graphql';
-import { UserInfo } from '../types';
 
 @InputType()
 export class GetByComplexQueryInput {

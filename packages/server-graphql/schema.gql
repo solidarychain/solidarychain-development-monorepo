@@ -351,8 +351,8 @@ type PersonLoginResponse {
 
 type Query {
   causes(skip: Int = 0, take: Int = 25): [Cause!]!
-  causeOngoing(skip: Int = 0, take: Int = 25, date: Float!): [Cause!]!
   causeComplexQuery(skip: Int = 0, take: Int = 25, getByComplexQueryInput: GetByComplexQueryInput!): [Cause!]!
+  causeOngoing(skip: Int = 0, take: Int = 25, date: Float!): [Cause!]!
   causeById(id: String!): Cause!
   participants(skip: Int = 0, take: Int = 25): [Participant!]!
   participantComplexQuery(skip: Int = 0, take: Int = 25, getByComplexQueryInput: GetByComplexQueryInput!): [Participant!]!

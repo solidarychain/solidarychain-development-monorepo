@@ -1,6 +1,6 @@
 import { Asset } from '@solidary-chain/asset-cc';
 import { Cause } from '@solidary-chain/cause-cc';
-import { appConstants as c, ChaincodeEvent, EntityType, GenericBalance, Goods, isDecimal, newUuid } from '@solidary-chain/common-cc';
+import { appConstants as c, ChaincodeEvent, EntityType, GenericBalance, Goods, isDecimal, newUuid, getInputAndOutputAmbassadorUserFilter, UserInfo } from '@solidary-chain/common-cc';
 import { getParticipantByIdentity, Participant } from '@solidary-chain/participant-cc';
 import { Person, hashPassword } from '@solidary-chain/person-cc';
 import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
@@ -160,7 +160,7 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
           // debugMessage = `transaction.input.entity.id: ${(transaction.input.entity as Participant | Person | Cause).id} != asset.owner.entity.id: ${(asset.owner.entity as Participant | Person | Cause).id} && transaction.input.type: ${transaction.input.type} != asset.owner.entity: ${(asset.owner.entity as any).type}`;
           throw new Error(`Transaction input owner is not the owner of the asset, or the type os transaction don't match. Must match asset type and use the owner of asset has input for transaction${debugMessage}`);
         }
-        
+
         // protection check if loggedPerson is the asset owner, or if loggedPerson in in assets authorized ambassador's, or in asset.owner.entity.ambassadors (when asset don't have ambassadors)
         // all conditions must be false to throw, if one pass it don't throw
         // TODO: must check if this is working
@@ -347,15 +347,20 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
   public async getComplexQuery(
     @Param(yup.object())
     complexQueryInput: any,
+    @Param(yup.object())
+    userInfo?: UserInfo,
   ): Promise<Transaction | Transaction[]> {
     if (!complexQueryInput || !complexQueryInput.filter) {
       throw new Error(c.EXCEPTION_ERROR_NO_COMPLEX_QUERY);
     }
+    const userFilter = getInputAndOutputAmbassadorUserFilter(userInfo);
     const complexQuery: any = {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_TRANSACTION,
         // spread arbitrary query filter
-        ...complexQueryInput.filter
+        ...complexQueryInput.filter,
+        // add userFilter
+        ...userFilter
       },
       // not useful
       // fields: (complexQueryInput.fields) ? complexQueryInput.fields : undefined,

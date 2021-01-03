@@ -1,8 +1,8 @@
 import { NotFoundException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'apollo-server-express';
-import { GqlAuthGuard } from '../auth/guards';
-import { CurrentUser } from '../auth/decorators';
+import { GqlAuthGuard, GqlRolesGuard } from '../auth/guards';
+import { CurrentUser, Roles } from '../auth/decorators';
 import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
 import CurrentUserPayload from '../common/types/current-user-payload';
 import { CauseService } from './cause.service';
@@ -12,7 +12,7 @@ import { SubscriptionEvent } from '../common/enums';
 import { GraphData } from '../dashboard/models';
 import { RelationType } from '../dashboard/enums';
 import { appConstants as c } from '../dashboard/constants';
-import { appConstants as cc } from '@solidary-chain/common-cc';
+import { appConstants as cc, UserInfo, UserRoles } from '@solidary-chain/common-cc';
 
 const pubSub = new PubSub();
 
@@ -21,6 +21,9 @@ const pubSub = new PubSub();
 export class CauseResolver {
   constructor(private readonly causeService: CauseService) { }
 
+  // TODO
+  @Roles(UserRoles.ROLE_ADMIN)
+  @UseGuards(GqlRolesGuard)
   @Query(returns => [Cause])
   causes(
     @Args() paginationArgs: PaginationArgs,
@@ -28,20 +31,25 @@ export class CauseResolver {
     return this.causeService.findAll(paginationArgs);
   }
 
-  @Query(returns => [Cause])
-  causeOngoing(
-    @Args('date') date: number,
-    @Args() paginationArgs: PaginationArgs,
-  ): Promise<Cause | Cause[]> {
-    return this.causeService.findOngoing(date, paginationArgs);
-  }
-
+  // TODO
   @Query(returns => [Cause])
   causeComplexQuery(
+    @CurrentUser() user: CurrentUserPayload,
     @Args('getByComplexQueryInput') getByComplexQueryInput: GetByComplexQueryInput,
     @Args() paginationArgs: PaginationArgs,
   ): Promise<Cause | Cause[]> {
-    return this.causeService.findComplexQuery(getByComplexQueryInput, paginationArgs);
+    const userInfo: UserInfo = { personId: user.userId, roles: user.roles };
+    return this.causeService.findComplexQuery(getByComplexQueryInput, userInfo, paginationArgs);
+  }
+
+  @Query(returns => [Cause])
+  causeOngoing(
+    @CurrentUser() user: CurrentUserPayload,
+    @Args('date') date: number,
+    @Args() paginationArgs: PaginationArgs,
+  ): Promise<Cause | Cause[]> {
+    const userInfo: UserInfo = { personId: user.userId, roles: user.roles };
+    return this.causeService.findOngoing(date, userInfo, paginationArgs);
   }
 
   @Query(returns => Cause)

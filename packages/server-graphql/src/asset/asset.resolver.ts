@@ -4,11 +4,12 @@ import { PubSub } from 'apollo-server-express';
 import { NewAssetInput, UpdateAssetInput } from './dto';
 import { Asset } from './models';
 import { AssetService } from './asset.service';
-import { GqlAuthGuard } from '../auth/guards';
+import { GqlAuthGuard, GqlRolesGuard } from '../auth/guards';
 import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
-import { CurrentUser } from '../auth/decorators';
+import { CurrentUser, Roles } from '../auth/decorators';
 import CurrentUserPayload from '../common/types/current-user-payload';
 import { SubscriptionEvent } from '../common/enums';
+import { UserRoles, UserInfo } from '@solidary-chain/common-cc';
 
 const pubSub = new PubSub();
 
@@ -17,6 +18,9 @@ const pubSub = new PubSub();
 export class AssetResolver {
   constructor(private readonly assetService: AssetService) { }
 
+  // TODO
+  @Roles(UserRoles.ROLE_ADMIN)
+  @UseGuards(GqlRolesGuard)
   @Query(returns => [Asset])
   assets(
     @Args() paginationArgs: PaginationArgs,
@@ -26,10 +30,12 @@ export class AssetResolver {
 
   @Query(returns => [Asset])
   assetComplexQuery(
+    @CurrentUser() user: CurrentUserPayload,
     @Args('getByComplexQueryInput') getByComplexQueryInput: GetByComplexQueryInput,
     @Args() paginationArgs: PaginationArgs,
   ): Promise<Asset | Asset[]> {
-    return this.assetService.findComplexQuery(getByComplexQueryInput, paginationArgs);
+    const userInfo: UserInfo = { personId: user.userId, roles: user.roles };
+    return this.assetService.findComplexQuery(getByComplexQueryInput, userInfo, paginationArgs);
   }
 
   @Query(returns => Asset)

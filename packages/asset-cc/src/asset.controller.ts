@@ -1,10 +1,10 @@
-import { appConstants as c, checkValidModelIds, removeOwnerFromAmbassadorsArray, ChaincodeEvent, randomString } from '@solidary-chain/common-cc';
-import { Participant, getParticipantByIdentity } from '@solidary-chain/participant-cc';
+import { appConstants as c, ChaincodeEvent, checkValidModelIds, randomString, removeOwnerFromAmbassadorsArray, getOwnerAndAmbassadorUserFilter, UserInfo } from '@solidary-chain/common-cc';
+import { getParticipantByIdentity, Participant } from '@solidary-chain/participant-cc';
 import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
 import * as yup from 'yup';
-import { getEntity, checkUniqueField } from './utils';
 import { Asset } from './asset.model';
+import { checkUniqueField, getEntity } from './utils';
 
 @Controller('asset')
 export class AssetController extends ConvectorController<ChaincodeTx> {
@@ -134,15 +134,20 @@ export class AssetController extends ConvectorController<ChaincodeTx> {
   public async getComplexQuery(
     @Param(yup.object())
     complexQueryInput: any,
+    @Param(yup.object())
+    userInfo?: UserInfo,
   ): Promise<Asset | Asset[]> {
     if (!complexQueryInput || !complexQueryInput.filter) {
       throw new Error(c.EXCEPTION_ERROR_NO_COMPLEX_QUERY);
     }
+    const userFilter = getOwnerAndAmbassadorUserFilter(userInfo);
     const complexQuery: any = {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_ASSET,
         // spread arbitrary query filter
-        ...complexQueryInput.filter
+        ...complexQueryInput.filter,
+        // add userFilter
+        ...userFilter
       },
       // not useful
       // fields: (complexQueryInput.fields) ? complexQueryInput.fields : undefined,

@@ -6,6 +6,7 @@ import { AssetControllerBackEnd } from '../convector';
 import { NewAssetInput, UpdateAssetInput } from './dto';
 import { Asset } from './models';
 import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
+import { UserInfo } from '@solidary-chain/common-cc';
 
 @Injectable()
 export class AssetService {
@@ -52,9 +53,9 @@ export class AssetService {
     }
   }
 
-  async findComplexQuery(getByComplexQueryInput: GetByComplexQueryInput, paginationArgs: PaginationArgs): Promise<Asset | Asset[]> {
+  async findComplexQuery(getByComplexQueryInput: GetByComplexQueryInput, userInfo: UserInfo, paginationArgs: PaginationArgs): Promise<Asset | Asset[]> {
     // get fabric model with _props
-    const fabricModel: Array<FlatConvectorModel<AssetConvectorModel>> = await AssetControllerBackEnd.getComplexQuery(getByComplexQueryInput) as AssetConvectorModel[];
+    const fabricModel: Array<FlatConvectorModel<AssetConvectorModel>> = await AssetControllerBackEnd.getComplexQuery(getByComplexQueryInput, userInfo) as AssetConvectorModel[];
     // convert fabric model to convector model (remove _props)
     const convectorModel: AssetConvectorModel[] = fabricModel.map((e: AssetConvectorModel) => new AssetConvectorModel(e));
     // call common find method

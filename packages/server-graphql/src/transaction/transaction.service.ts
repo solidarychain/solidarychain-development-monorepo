@@ -6,7 +6,7 @@ import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
 import { TransactionControllerBackEnd } from '../convector';
 import { NewTransactionInput, GoodsInput, UpdateTransactionInput } from './dto';
 import { Transaction } from './models';
-import { GoodsInput as GoodsInputConvectorModel } from '@solidary-chain/common-cc';
+import { GoodsInput as GoodsInputConvectorModel, UserInfo } from '@solidary-chain/common-cc';
 
 @Injectable()
 export class TransactionService {
@@ -64,9 +64,9 @@ export class TransactionService {
     }
   }
 
-  async findComplexQuery(getByComplexQueryInput: GetByComplexQueryInput, paginationArgs: PaginationArgs): Promise<Transaction | Transaction[]> {
+  async findComplexQuery(getByComplexQueryInput: GetByComplexQueryInput, userInfo: UserInfo, paginationArgs: PaginationArgs): Promise<Transaction | Transaction[]> {
     // get fabric model with _props
-    const fabricModel: Array<FlatConvectorModel<TransactionConvectorModel>> = await TransactionControllerBackEnd.getComplexQuery(getByComplexQueryInput) as TransactionConvectorModel[];
+    const fabricModel: Array<FlatConvectorModel<TransactionConvectorModel>> = await TransactionControllerBackEnd.getComplexQuery(getByComplexQueryInput, userInfo) as TransactionConvectorModel[];
     // convert fabric model to convector model (remove _props)
     const convectorModel: TransactionConvectorModel[] = fabricModel.map((e: TransactionConvectorModel) => new TransactionConvectorModel(e));
     // call common find method

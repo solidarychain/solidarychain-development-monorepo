@@ -1,14 +1,15 @@
 import { NotFoundException, UseGuards, Logger } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'apollo-server-express';
-import { GqlAuthGuard } from '../auth/guards';
+import { GqlAuthGuard, GqlRolesGuard } from '../auth/guards';
 import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
 import { NewTransactionInput, UpdateTransactionInput } from './dto';
 import { Transaction } from './models';
 import { TransactionService } from './transaction.service';
-import { CurrentUser } from '../auth/decorators';
+import { CurrentUser, Roles } from '../auth/decorators';
 import CurrentUserPayload from '../common/types/current-user-payload';
 import { SubscriptionEvent } from '../common/enums';
+import { UserInfo, UserRoles } from '@solidary-chain/common-cc';
 
 const pubSub = new PubSub();
 
@@ -17,6 +18,8 @@ const pubSub = new PubSub();
 export class TransactionResolver {
   constructor(private readonly transactionService: TransactionService) { }
 
+  @Roles(UserRoles.ROLE_ADMIN)
+  @UseGuards(GqlRolesGuard)
   @Query(returns => [Transaction])
   transactions(
     @Args() paginationArgs: PaginationArgs,
@@ -24,12 +27,16 @@ export class TransactionResolver {
     return this.transactionService.findAll(paginationArgs);
   }
 
+
+  // TODO
   @Query(returns => [Transaction])
   transactionComplexQuery(
+    @CurrentUser() user: CurrentUserPayload,
     @Args('getByComplexQueryInput') getByComplexQueryInput: GetByComplexQueryInput,
     @Args() paginationArgs: PaginationArgs,
   ): Promise<Transaction | Transaction[]> {
-    return this.transactionService.findComplexQuery(getByComplexQueryInput, paginationArgs);
+    const userInfo: UserInfo = { personId: user.userId, roles: user.roles };
+    return this.transactionService.findComplexQuery(getByComplexQueryInput, userInfo, paginationArgs);
   }
 
   @Query(returns => Transaction)

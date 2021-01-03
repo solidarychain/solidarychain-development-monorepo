@@ -242,7 +242,6 @@ $ npx lerna run start:debug --scope @solidary-chain/server-graphql --stream
 - [Mango search in Arrays](https://stackoverflow.com/questions/43892556/mango-search-in-arrays)
 - [CouchDB query selector on string in array of elements](https://stackoverflow.com/questions/55169530/couchdb-query-selector-on-string-in-array-of-elements)
 
-
 > Use double quotes in fauxton else silent error, does nothing, or copy some values from result sets
 
 ```json
@@ -286,7 +285,7 @@ $ npx lerna run start:debug --scope @solidary-chain/server-graphql --stream
 
 elemMatch in a array of strings using "$eq", It will return all objects where ambassadors field equals id
 
-participants, causes are equal only change the type
+getComplexQuery/userFilter participants, causes are equal only change the type
 
 ```json
 {
@@ -306,7 +305,7 @@ participants, causes are equal only change the type
 }
 ```
 
-cause
+getComplexQuery/userFilter cause
 
 ```json
 {
@@ -314,7 +313,7 @@ cause
     "type": "com.chain.solidary.model.cause",
     "ambassadors": {
       "$elemMatch": {
-      "$eq": "4ea88521-031b-4279-9165-9c10e1839000"
+        "$eq": "4ea88521-031b-4279-9165-9c10e1839000"
       }
     }
   },
@@ -326,7 +325,7 @@ cause
 }
 ```
 
-asset
+getComplexQuery/userFilter asset owner ambassador+ambassador
 
 ```json
 {
@@ -346,7 +345,7 @@ asset
       },
       {
         "ambassadors": {
-          "$elemMatch": {}
+          "$eq": "4ea88521-031b-4279-9165-9c10e1839000"
         }
       }
     ]
@@ -359,7 +358,7 @@ asset
 }
 ```
 
-transaction
+getComplexQuery/userFilter transaction
 
 ```json
 {

@@ -175,6 +175,7 @@ export const isDecimal = (input: number): boolean => {
 export const hasRole = (roles: string[], role: UserRoles) => roles.some((e: UserRoles) => e === role);
 
 /**
+ * used in participants
  * compose userFilter with user as an ambassador
  */
 export const getAmbassadorUserFilter = (userInfo: UserInfo) => {
@@ -190,3 +191,73 @@ export const getAmbassadorUserFilter = (userInfo: UserInfo) => {
     }
   }
 }
+
+/**
+ * used in assets
+ * compose userFilter with user owner and ambassador combined
+ */
+export const getOwnerAndAmbassadorUserFilter = (userInfo: UserInfo) => {
+  if (hasRole(userInfo.roles, UserRoles.ROLE_ADMIN)) {
+    return {};
+  } else {
+    const ambassadorsFilter = getAmbassadorUserFilter(userInfo);
+    return {
+      $or: [
+        {
+          owner: {
+            entity: {
+              ...ambassadorsFilter
+            }
+          }
+        },
+        {
+          ...ambassadorsFilter
+        }
+      ]
+    }
+  }
+};
+
+/**
+ * used in transactions, match all input/output owner or ambassador
+ * compose userFilter with user input/output id and input/output ambassador combined
+ */
+export const getInputAndOutputAmbassadorUserFilter = (userInfo: UserInfo) => {
+  if (hasRole(userInfo.roles, UserRoles.ROLE_ADMIN)) {
+    return {};
+  } else {
+    const ambassadorsFilter = getAmbassadorUserFilter(userInfo);
+    return {
+      $or: [
+        {
+          input: {
+            entity: {
+              id: userInfo.personId
+            }
+          }
+        },
+        {
+          input: {
+            entity: {
+              ...ambassadorsFilter
+            }
+          }
+        },
+        {
+          output: {
+            entity: {
+              id: userInfo.personId
+            }
+          }
+        },
+        {
+          output: {
+            entity: {
+              ...ambassadorsFilter
+            }
+          }
+        }
+      ]
+    }
+  }
+};

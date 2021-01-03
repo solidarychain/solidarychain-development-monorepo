@@ -6,6 +6,7 @@ import { CauseControllerBackEnd } from '../convector';
 import { NewCauseInput, UpdateCauseInput } from './dto';
 import { Cause } from './models';
 import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
+import { UserInfo } from '@solidary-chain/common-cc';
 
 @Injectable()
 export class CauseService {
@@ -55,9 +56,9 @@ export class CauseService {
     }
   }
 
-  async findOngoing(date: number, paginationArgs: PaginationArgs): Promise<Cause | Cause[]> {
+  async findComplexQuery(getByComplexQueryInput: GetByComplexQueryInput, userInfo: UserInfo, paginationArgs: PaginationArgs): Promise<Cause | Cause[]> {
     // get fabric model with _props
-    const fabricModel: Array<FlatConvectorModel<CauseConvectorModel>> = await CauseControllerBackEnd.getOngoing(date) as CauseConvectorModel[];
+    const fabricModel: Array<FlatConvectorModel<CauseConvectorModel>> = await CauseControllerBackEnd.getComplexQuery(getByComplexQueryInput, userInfo) as CauseConvectorModel[];
     // convert fabric model to convector model (remove _props)
     const convectorModel: CauseConvectorModel[] = fabricModel.map((e: CauseConvectorModel) => new CauseConvectorModel(e));
     // call common find method
@@ -66,9 +67,9 @@ export class CauseService {
     return model;
   }
 
-  async findComplexQuery(getByComplexQueryInput: GetByComplexQueryInput, paginationArgs: PaginationArgs): Promise<Cause | Cause[]> {
+  async findOngoing(date: number, userInfo: UserInfo, paginationArgs: PaginationArgs): Promise<Cause | Cause[]> {
     // get fabric model with _props
-    const fabricModel: Array<FlatConvectorModel<CauseConvectorModel>> = await CauseControllerBackEnd.getComplexQuery(getByComplexQueryInput) as CauseConvectorModel[];
+    const fabricModel: Array<FlatConvectorModel<CauseConvectorModel>> = await CauseControllerBackEnd.getOngoing(date, userInfo) as CauseConvectorModel[];
     // convert fabric model to convector model (remove _props)
     const convectorModel: CauseConvectorModel[] = fabricModel.map((e: CauseConvectorModel) => new CauseConvectorModel(e));
     // call common find method

@@ -1,10 +1,10 @@
-import { appConstants as c, checkValidModelIds, GenericBalance, Goods, ChaincodeEvent, randomString  } from '@solidary-chain/common-cc';
+import { appConstants as c, checkValidModelIds, GenericBalance, Goods, ChaincodeEvent, randomString, getAmbassadorUserFilter, UserInfo } from '@solidary-chain/common-cc';
 import { getParticipantByIdentity, Participant } from '@solidary-chain/participant-cc';
 import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
 import * as yup from 'yup';
 import { Cause } from './cause.model';
-import { checkUniqueField, getEntity} from './utils';
+import { checkUniqueField, getEntity } from './utils';
 
 @Controller('cause')
 export class CauseController extends ConvectorController<ChaincodeTx> {
@@ -132,7 +132,10 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
   public async getOngoing(
     @Param(yup.number())
     date: number,
+    @Param(yup.object())
+    userInfo?: UserInfo,
   ): Promise<Cause | Cause[]> {
+    const userFilter = getAmbassadorUserFilter(userInfo);
     return await Cause.query(Cause, {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_CAUSE,
@@ -141,7 +144,9 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
         },
         endDate: {
           $gte: date
-        }
+        },
+        // add userFilter
+        ...userFilter
       }
     });
   }
@@ -153,15 +158,20 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
   public async getComplexQuery(
     @Param(yup.object())
     complexQueryInput: any,
+    @Param(yup.object())
+    userInfo?: UserInfo,
   ): Promise<Cause | Cause[]> {
     if (!complexQueryInput || !complexQueryInput.filter) {
       throw new Error(c.EXCEPTION_ERROR_NO_COMPLEX_QUERY);
     }
+    const userFilter = getAmbassadorUserFilter(userInfo);
     const complexQuery: any = {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_CAUSE,
         // spread arbitrary query filter
-        ...complexQueryInput.filter
+        ...complexQueryInput.filter,
+        // add userFilter
+        ...userFilter
       },
       // not useful
       // fields: (complexQueryInput.fields) ? complexQueryInput.fields : undefined,
@@ -170,5 +180,4 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
     const resultSet: Cause | Cause[] = await Cause.query(Cause, complexQuery);
     return resultSet;
   }
-
 }

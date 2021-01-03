@@ -6,7 +6,7 @@ import { ParticipantControllerBackEnd } from '../convector';
 import { NewParticipantInput, UpdateParticipantInput, ChangeParticipantIdentityData } from './dto';
 import { Participant } from './models';
 import { v4 as uuid } from 'uuid';
-import { UserInfo } from '../common/types/user-info';
+import { UserInfo } from '@solidary-chain/common-cc';
 
 @Injectable()
 export class ParticipantService {
