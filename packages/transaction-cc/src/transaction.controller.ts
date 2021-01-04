@@ -1,6 +1,6 @@
 import { Asset } from '@solidary-chain/asset-cc';
 import { Cause } from '@solidary-chain/cause-cc';
-import { appConstants as c, ChaincodeEvent, EntityType, GenericBalance, Goods, isDecimal, newUuid, getInputAndOutputAmbassadorUserFilter, UserInfo } from '@solidary-chain/common-cc';
+import { appConstants as c, ChaincodeEvent, EntityType, GenericBalance, Goods, isDecimal, newUuid, getInputAndOutputAmbassadorUserFilter, CurrentUser } from '@solidary-chain/common-cc';
 import { getParticipantByIdentity, Participant } from '@solidary-chain/participant-cc';
 import { Person, hashPassword } from '@solidary-chain/person-cc';
 import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
@@ -348,12 +348,12 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     @Param(yup.object())
     complexQueryInput: any,
     @Param(yup.object())
-    userInfo?: UserInfo,
+    user: CurrentUser
   ): Promise<Transaction | Transaction[]> {
     if (!complexQueryInput || !complexQueryInput.filter) {
       throw new Error(c.EXCEPTION_ERROR_NO_COMPLEX_QUERY);
     }
-    const userFilter = getInputAndOutputAmbassadorUserFilter(userInfo);
+    const userFilter = getInputAndOutputAmbassadorUserFilter(user);
     const complexQuery: any = {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_TRANSACTION,

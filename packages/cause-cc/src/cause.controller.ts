@@ -1,4 +1,4 @@
-import { appConstants as c, checkValidModelIds, GenericBalance, Goods, ChaincodeEvent, randomString, getAmbassadorUserFilter, UserInfo } from '@solidary-chain/common-cc';
+import { appConstants as c, checkValidModelIds, GenericBalance, Goods, ChaincodeEvent, randomString, getAmbassadorUserFilter, CurrentUser } from '@solidary-chain/common-cc';
 import { getParticipantByIdentity, Participant } from '@solidary-chain/participant-cc';
 import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
@@ -133,9 +133,9 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
     @Param(yup.number())
     date: number,
     @Param(yup.object())
-    userInfo?: UserInfo,
+    user: CurrentUser
   ): Promise<Cause | Cause[]> {
-    const userFilter = getAmbassadorUserFilter(userInfo);
+    const userFilter = getAmbassadorUserFilter(user);
     return await Cause.query(Cause, {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_CAUSE,
@@ -159,12 +159,12 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
     @Param(yup.object())
     complexQueryInput: any,
     @Param(yup.object())
-    userInfo?: UserInfo,
+    user: CurrentUser
   ): Promise<Cause | Cause[]> {
     if (!complexQueryInput || !complexQueryInput.filter) {
       throw new Error(c.EXCEPTION_ERROR_NO_COMPLEX_QUERY);
     }
-    const userFilter = getAmbassadorUserFilter(userInfo);
+    const userFilter = getAmbassadorUserFilter(user);
     const complexQuery: any = {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_CAUSE,

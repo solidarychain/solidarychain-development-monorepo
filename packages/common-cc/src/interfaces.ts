@@ -1,4 +1,5 @@
-export interface UserInfo {
-  personId: string,
-  roles: string[],
+export interface CurrentUser {
+  userId: string;
+  username: string;
+  roles: string[];
 };

@@ -3,7 +3,7 @@
 import { Common } from './models/common.model';
 import { v4 as uuid } from 'uuid';
 import * as cryptoJs from "crypto-js"
-import { UserInfo } from './interfaces';
+import { CurrentUser } from './interfaces';
 import { UserRoles } from './enums';
 
 // convert comma string float to float ex '1,81' to 1.81
@@ -178,14 +178,14 @@ export const hasRole = (roles: string[], role: UserRoles) => roles.some((e: User
  * used in participants
  * compose userFilter with user as an ambassador
  */
-export const getAmbassadorUserFilter = (userInfo: UserInfo) => {
-  if (hasRole(userInfo.roles, UserRoles.ROLE_ADMIN)) {
+export const getAmbassadorUserFilter = (user: CurrentUser) => {
+  if (hasRole(user.roles, UserRoles.ROLE_ADMIN)) {
     return {};
   } else {
     return {
       ambassadors: {
         $elemMatch: {
-          $eq: userInfo.personId,
+          $eq: user.userId,
         }
       }
     }
@@ -196,13 +196,20 @@ export const getAmbassadorUserFilter = (userInfo: UserInfo) => {
  * used in assets
  * compose userFilter with user owner and ambassador combined
  */
-export const getOwnerAndAmbassadorUserFilter = (userInfo: UserInfo) => {
-  if (hasRole(userInfo.roles, UserRoles.ROLE_ADMIN)) {
+export const getOwnerAndAmbassadorUserFilter = (user: CurrentUser) => {
+  if (hasRole(user.roles, UserRoles.ROLE_ADMIN)) {
     return {};
   } else {
-    const ambassadorsFilter = getAmbassadorUserFilter(userInfo);
+    const ambassadorsFilter = getAmbassadorUserFilter(user);
     return {
       $or: [
+        {
+          owner: {
+            entity: {
+              id: user.userId
+            }
+          }
+        },   
         {
           owner: {
             entity: {
@@ -222,17 +229,17 @@ export const getOwnerAndAmbassadorUserFilter = (userInfo: UserInfo) => {
  * used in transactions, match all input/output owner or ambassador
  * compose userFilter with user input/output id and input/output ambassador combined
  */
-export const getInputAndOutputAmbassadorUserFilter = (userInfo: UserInfo) => {
-  if (hasRole(userInfo.roles, UserRoles.ROLE_ADMIN)) {
+export const getInputAndOutputAmbassadorUserFilter = (user: CurrentUser) => {
+  if (hasRole(user.roles, UserRoles.ROLE_ADMIN)) {
     return {};
   } else {
-    const ambassadorsFilter = getAmbassadorUserFilter(userInfo);
+    const ambassadorsFilter = getAmbassadorUserFilter(user);
     return {
       $or: [
         {
           input: {
             entity: {
-              id: userInfo.personId
+              id: user.userId
             }
           }
         },
@@ -246,7 +253,7 @@ export const getInputAndOutputAmbassadorUserFilter = (userInfo: UserInfo) => {
         {
           output: {
             entity: {
-              id: userInfo.personId
+              id: user.userId
             }
           }
         },
