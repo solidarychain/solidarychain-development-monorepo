@@ -179,6 +179,13 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     await this.tx.stub.setEvent(ChaincodeEvent.PersonUpdateProfileEvent, person);
   }
 
+  /**
+   * this must be only used with citizenCard reader only, 
+   * else we can use fiscalNumber to mess with other data, ex send a fiscalNumber and send non user data to it
+   * it will use fiscalNumber to find user ALWAYS
+   * @param person 
+   * @param user 
+   */
   @Invokable()
   public async upsertCitizenCard(
     @Param(Person)
@@ -186,13 +193,23 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     @Param(yup.object())
     user: CurrentUser
   ) {
+    debugger;
     // check if sender is government
     let gov: Participant = await Participant.getOne(c.GOV_UUID);
     await checkIfSenderIsGovernment(gov, this.sender);
 
+    // check if is valid citizenCard data unique fields, else it fails
+    if (!person.documentNumber || !person.identityNumber || !person.socialSecurityNumber || !person.beneficiaryNumber || !person.pan) {
+      throw new Error('Invalid citizen card data!');
+    }
+
     // Retrieve to see if exists
     let upsertPerson: Person;
-    let getPerson: Person | Person[] = await Person.getByField('fiscalNumber', person.fiscalNumber, user);
+    let getPerson: Person | Person[];
+    // catch and ignore if fails, with this we can use empty object to register a news person
+    try {
+      getPerson = await Person.getByField('fiscalNumber', person.fiscalNumber, user);
+    } catch (error) { }
     // insert person
     if (!getPerson || (getPerson && (getPerson as Person[]).length < 1)) {
       upsertPerson = new Person(newUuid());
@@ -211,7 +228,7 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
       upsertPerson.volunteeringHoursBalance = new GenericBalance();
       upsertPerson.goodsStock = new Array<Goods>()
     }
-    // update person
+    // update person, must get old person and override fields that come in update
     else {
       upsertPerson = getPerson[0];
       // prevent fiscalNumber from change, assign old value to model, in this case even if we change fiscalNumber in upsert it never changes, but even if we hack fiscalNumber it fails in other unique fields after
@@ -219,7 +236,6 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     }
 
     // check unique fields, always check for inserts and updates
-    await checkUniqueField('fiscalNumber', person.documentNumber, true, upsertPerson.id);
     await checkUniqueField('documentNumber', person.documentNumber, true, upsertPerson.id);
     await checkUniqueField('identityNumber', person.identityNumber, true, upsertPerson.id);
     await checkUniqueField('socialSecurityNumber', person.socialSecurityNumber, true, upsertPerson.id);

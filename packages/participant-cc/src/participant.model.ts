@@ -59,28 +59,30 @@ export class Participant extends ConvectorModel<Participant> {
 
   // custom static implementation getById
   public static async getById(id: string, user: CurrentUser): Promise<Participant> {
-    let result: Participant | Participant[] = await this.getByFilter({ filter: { _id: id } }, user);
+    let resultSet: Participant | Participant[] = await this.getByFilter({ filter: { _id: id } }, user);
     // try get by code
-    if (!result[0]) {
-      result = await this.getByFilter({ filter: { 'code': id } }, user);
+    if (!resultSet[0]) {
+      resultSet = await this.getByFilter({ filter: { 'code': id } }, user);
     }
     // try get by fiscalNumber
-    if (!result[0]) {
-      result = await this.getByFilter({ filter: { 'fiscalNumber': id } }, user);
+    if (!resultSet[0]) {
+      resultSet = await this.getByFilter({ filter: { 'fiscalNumber': id } }, user);
     }
-    if (!result || !result[0] || !result[0].id) {
+    if (!resultSet || !resultSet[0] || !resultSet[0].id) {
       throw new Error(`No ${Participant.name.toLowerCase()} exists with that id ${id}`);
     }
-    return result[0];
+    // return only one record in findById
+    return resultSet[0];
   }
 
   // custom static implementation getByField
   public static async getByField(fieldName: string, fieldValue: string, user: CurrentUser): Promise<Participant | Participant[]> {
-    const result: Participant | Participant[] = await this.getByFilter({ filter: { [fieldName]: fieldValue } }, user);
-    if (!result || !result[0] || !result[0].id) {
+    const resultSet: Participant | Participant[] = await this.getByFilter({ filter: { [fieldName]: fieldValue } }, user);
+    if (!resultSet || !resultSet[0] || !resultSet[0].id) {
       throw new Error(`No ${Participant.name.toLowerCase()} exists with that fieldName: ${fieldName} and fieldValue ${fieldValue}`);
     }
-    return result[0];
+    // return recordSet
+    return resultSet;
   }
 
   // custom static implementation getByFilter
@@ -98,6 +100,7 @@ export class Participant extends ConvectorModel<Participant> {
       sort: (queryParams.sort) ? queryParams.sort : undefined,
     };
     const resultSet: Participant | Participant[] = await Participant.query(Participant, complexQuery);
+    // return recordSet
     return resultSet;
   }
 }

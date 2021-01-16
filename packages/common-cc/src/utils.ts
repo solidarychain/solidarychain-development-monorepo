@@ -175,6 +175,20 @@ export const isDecimal = (input: number): boolean => {
 export const hasRole = (roles: string[], role: UserRoles) => roles.some((e: UserRoles) => e === role);
 
 /**
+ * used in persons
+ * used to show only current user and keep it consistent with other models
+ */
+export const getCurrentUserFilter = (user: CurrentUser) => {
+  if (hasRole(user.roles, UserRoles.ROLE_ADMIN)) {
+    return {};
+  } else {
+    return {
+      _id: user.userId,
+    }
+  }
+}
+
+/**
  * used in participants and cause
  * compose userFilter with user as an ambassador
  */
@@ -209,7 +223,7 @@ export const getOwnerAndAmbassadorUserFilter = (user: CurrentUser) => {
               id: user.userId
             }
           }
-        },   
+        },
         {
           owner: {
             entity: {
@@ -220,6 +234,36 @@ export const getOwnerAndAmbassadorUserFilter = (user: CurrentUser) => {
         {
           ...ambassadorsFilter
         }
+      ]
+    }
+  }
+};
+
+/**
+ * used in causes, match all input owner or ambassador
+ * compose userFilter with user input id and input/output ambassador combined
+ */
+export const getInputAndAmbassadorUserFilter = (user: CurrentUser) => {
+  if (hasRole(user.roles, UserRoles.ROLE_ADMIN)) {
+    return {};
+  } else {
+    const ambassadorsFilter = getAmbassadorUserFilter(user);
+    return {
+      $or: [
+        {
+          input: {
+            entity: {
+              id: user.userId
+            }
+          }
+        },
+        {
+          input: {
+            entity: {
+              ...ambassadorsFilter
+            }
+          }
+        },
       ]
     }
   }

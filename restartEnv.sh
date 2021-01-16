@@ -15,16 +15,16 @@ CHAINCODE_NAME=solidary-chain-chaincode
 clear
 
 # lift hyperledger
-npm run env:clean
+# npm run env:clean
 npm run env:restart
 
 # optional build @solidary-chain/common-cc package if not already build previously, else fails in deploy smart contract/chaincode
 npx lerna run build --scope @solidary-chain/common-cc --stream
 
 # deploy smart contract/chaincode
-npm run cc:start -- ${CHAINCODE_NAME}
+# npm run cc:start -- ${CHAINCODE_NAME}
 # used to debug
-# npm run cc:start:debug -- ${CHAINCODE_NAME}
+npm run cc:start:debug -- ${CHAINCODE_NAME}
 
 # sleep 20 seconds
 sleep 20
@@ -50,7 +50,7 @@ sleep 20
 # npx lerna run build --scope @solidary-chain/transaction-cc
 
 # invoke some stuff
-npx hurl invoke ${CHAINCODE_NAME} person_get 4ea88521-031b-4279-9165-9c10e1839002
+npx hurl invoke ${CHAINCODE_NAME} person_get ${ADMN_ID}
 
 # start server/frontend
 # echo "start server-rest with: 'npx lerna run start:dev --scope @solidary-chain/server-rest --stream'"

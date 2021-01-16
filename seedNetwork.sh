@@ -32,36 +32,41 @@ BASE_CMD="docker exec cli peer chaincode invoke -C ${CHANNEL_ALL} -n ${CHAINCODE
 
 # overide .env vars, this way we keep old non network untoutched
 AMBASSADORS='[\"'${JOHN_ID}'\", \"'${JANE_ID}'\"]'
-ROLES='[\"'${ROLE_USER}'\",\"'${ROLE_GOV}'\",\"'${ROLE_ADMIN}'\"]'
+ROLES_ADMIN='[\"'${ROLE_USER}'\",\"'${ROLE_GOV}'\",\"'${ROLE_ADMIN}'\"]'
+ROLES_USER='[\"'${ROLE_USER}'\"]'
 TAGS='[\"red\", \"blue\"]'
 METADATA='{\"key\":\"value\"}'
 METADATA_INTERNAL='{\"key\":\"internal value\"}'
+CURRENT_USER_ADMIN_ROLE='{ \"userId\": \"'${ADMN_ID}'\", \"username\": \"admin\", \"roles\": '${ROLES_ADMIN}' }'
+CURRENT_USER_JOHNDOE_ROLE='{ \"userId\": \"'${JOHN_ID}'\", \"username\": \"johndoe\", \"roles\": '${ROLES_ADMIN}' }'
+CURRENT_USER_JANEDOE_ROLE='{ \"userId\": \"'${JANE_ID}'\", \"username\": \"janedoe\", \"roles\": '${ROLES_ADMIN}' }'
+CURRENT_USER_MIN_ROLE='{ \"userId\": \"'${MINI_ID}'\", \"username\": \"mini\", \"roles\": '${ROLES_ADMIN}' }'
 
 # participant gov
 echo "create participant ${GOV_NAME}..."
-${BASE_CMD} -c "{ \"Args\" : [\"participant_createWithParameters\", \"${GOV_ID}\", \"${GOV_CODE}\", \"${GOV_NAME}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"participant_createWithParameters\", \"${GOV_ID}\", \"${GOV_CODE}\", \"${GOV_NAME}\", \"${GOV_EMAIL}\", \"${GOV_NIF}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"participant_get\", \"${GOV_ID}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"participant_getByCode\", \"${GOV_CODE}\" ] }"
 ${SLEEP}
 
 # person admin
-ID=${ADMN_ID}
-FISCAL_NUMBER="PT999999990"
+ID="${ADMN_ID}"
+FISCAL_NUMBER="PT000000000"
 PHONE_NUMBER="+351936200000"
 FIRST_NAME="Super"
 LAST_NAME="User"
 USER_NAME="admin"
 EMAIL="${USER_NAME}@example.com"
-PAYLOAD='{\"id\":\"'${ID}'\",\"firstname\":\"'${FIRST_NAME}'\",\"lastname\":\"'${LAST_NAME}'\",\"fiscalNumber\":\"'${FISCAL_NUMBER}'\",\"mobilePhone\":\"'${PHONE_NUMBER}'\",\"otherInformation\":\"\",\"username\":\"'${USER_NAME}'\",\"password\":\"'${ADMIN_PASSWORD}'\",\"email\":\"'${EMAIL}'\"}'
+PAYLOAD='{\"id\":\"'${ID}'\",\"firstname\":\"'${FIRST_NAME}'\",\"lastname\":\"'${LAST_NAME}'\",\"fiscalNumber\":\"'${FISCAL_NUMBER}'\",\"mobilePhone\":\"'${PHONE_NUMBER}'\",\"otherInformation\":\"\",\"username\":\"'${USER_NAME}'\",\"password\":\"'${ADMIN_PASSWORD}'\",\"email\":\"'${EMAIL}'\", \"roles\":'${ROLES_ADMIN}'}'
 echo "create person ${USER_NAME}..."
-${BASE_CMD} -c "{ \"Args\" : [\"person_create\", \"${PAYLOAD}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"person_create\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}
 echo "get person ${USER_NAME}..."
-${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${ID}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}
 
 # person anonymous
-ID=${ANON_ID}
+ID="${ANON_ID}"
 FISCAL_NUMBER="PT999999990"
 PHONE_NUMBER="+351936200001"
 FIRST_NAME="Super"
@@ -70,10 +75,10 @@ USER_NAME="anonymous"
 EMAIL="${USER_NAME}@example.com"
 PAYLOAD='{\"id\":\"'${ID}'\",\"firstname\":\"'${FIRST_NAME}'\",\"lastname\":\"'${LAST_NAME}'\",\"fiscalNumber\":\"'${FISCAL_NUMBER}'\",\"mobilePhone\":\"'${PHONE_NUMBER}'\",\"otherInformation\":\"\",\"username\":\"'${USER_NAME}'\",\"password\":\"'${ADMIN_PASSWORD}'\",\"email\":\"'${EMAIL}'\"}'
 echo "create person ${USER_NAME}..."
-${BASE_CMD} -c "{ \"Args\" : [\"person_create\", \"${PAYLOAD}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"person_create\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}
 echo "get person ${USER_NAME}..."
-${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${ID}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}
 
 # person johndoe
@@ -91,10 +96,10 @@ SOCIAL_SECURITY_NUMBER="11103478242"
 PAN="0000036014662658"
 PAYLOAD='{\"id\":\"'${ID}'\",\"firstname\":\"'${FIRST_NAME}'\",\"lastname\":\"'${LAST_NAME}'\",\"beneficiaryNumber\":\"'${BENEFICIARY_NUMBER}'\",\"birthDate\":\"'${DATE}'\",\"cardVersion\":\"006.007.23\",\"country\":\"PRT\",\"documentNumber\":\"'${DOCUMENT_NUMBER}'\",\"documentType\":\"Cartão De Cidadão\",\"emissionDate\":\"'${DATE}'\",\"emittingEntity\":\"República Portuguesa\",\"expirationDate\":\"'${DATE}'\",\"fatherFirstname\":\"Alberto\",\"fatherLastname\":\"De Andrade Monteiro\",\"fiscalNumber\":\"'${FISCAL_NUMBER}'\",\"mobilePhone\":\"'${PHONE_NUMBER}'\",\"gender\":\"M\",\"height\":\"1.81\",\"identityNumber\":\"'${IDENTITY_NUMBER}'\",\"motherFirstname\":\"Maria Da Graça De Oliveira Mendes\",\"motherLastname\":\"Monteiro\",\"nationality\":\"PRT\",\"otherInformation\":\"\",\"pan\":\"'${PAN}'\",\"requestLocation\":\"CRCiv. Figueira da Foz\",\"socialSecurityNumber\":\"'${SOCIAL_SECURITY_NUMBER}'\",\"username\":\"'${USER_NAME}'\",\"password\":\"'${DEFAULT_PASSWORD}'\",\"email\":\"'${EMAIL}'\"}'
 echo "create person ${USER_NAME}..."
-${BASE_CMD} -c "{ \"Args\" : [\"person_create\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${ID}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"person_getByUsername\", \"${USER_NAME}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"person_getByFiscalnumber\", \"${FISCAL_NUMBER}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"person_create\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"person_getByUsername\", \"${USER_NAME}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"person_getByFiscalnumber\", \"${FISCAL_NUMBER}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}
 
 # exit full seed
@@ -105,33 +110,33 @@ fi
 # participant mit
 PAYLOAD='{\"id\":\"'${MIT_ID}'\",\"code\":\"'${MIT_CODE}'\",\"name\":\"'${MIT_NAME}'\",\"email\":\"'${MIT_EMAIL}'\",\"fiscalNumber\":\"'${MIT_NIF}'\"}'
 echo "create participant ${MIT_NAME}..."
-${BASE_CMD} -c "{ \"Args\" : [\"participant_create\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"participant_get\", \"${MIT_ID}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"participant_getByCode\", \"${MIT_CODE}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"participant_create\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"participant_get\", \"${MIT_ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"participant_getByCode\", \"${MIT_CODE}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}
 
 # participant naba
 PAYLOAD='{\"id\":\"'${NABA_ID}'\",\"code\":\"'${NABA_CODE}'\",\"name\":\"'${NABA_NAME}'\",\"email\":\"'${NABA_EMAIL}'\",\"fiscalNumber\":\"'${NABA_NIF}'\"}'
 echo "create participant ${NABA_NAME}..."
-${BASE_CMD} -c "{ \"Args\" : [\"participant_create\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"participant_get\", \"${NABA_ID}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"participant_getByCode\", \"${NABA_CODE}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"participant_create\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"participant_get\", \"${NABA_ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"participant_getByCode\", \"${NABA_CODE}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}
 
 # participant badb
 PAYLOAD='{\"id\":\"'${BADB_ID}'\",\"code\":\"'${BADB_CODE}'\",\"name\":\"'${BADB_NAME}'\",\"email\":\"'${BADB_EMAIL}'\",\"fiscalNumber\":\"'${BADB_NIF}'\"}'
 echo "create participant ${BADB_NAME}..."
-${BASE_CMD} -c "{ \"Args\" : [\"participant_create\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"participant_get\", \"${BADB_ID}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"participant_getByCode\", \"${BADB_CODE}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"participant_create\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"participant_get\", \"${BADB_ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"participant_getByCode\", \"${BADB_CODE}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}
 
 # participant godb
-PAYLOAD='{\"id\":\"'${GODB_ID}'\",\"code\":\"'${GODB_CODE}'\",\"name\":\"'${GODB_NAME}'\",,\"email\":\"'${GODB_EMAIL}'\"\"fiscalNumber\":\"'${GODB_NIF}'\"}'
+PAYLOAD='{\"id\":\"'${GODB_ID}'\",\"code\":\"'${GODB_CODE}'\",\"name\":\"'${GODB_NAME}'\",\"email\":\"'${GODB_EMAIL}'\",\"fiscalNumber\":\"'${GODB_NIF}'\"}'
 echo "create participant ${GODB_NAME}..."
-${BASE_CMD} -c "{ \"Args\" : [\"participant_create\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"participant_get\", \"${GODB_ID}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"participant_getByCode\", \"${GODB_CODE}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"participant_create\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"participant_get\", \"${GODB_ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"participant_getByCode\", \"${GODB_CODE}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}
 
 # person  janedoe
@@ -150,10 +155,10 @@ PAN="2000087384667639"
 DATE="61985473"
 PAYLOAD='{\"id\":\"'${ID}'\",\"firstname\":\"'${FIRST_NAME}'\",\"lastname\":\"'${LAST_NAME}'\",\"beneficiaryNumber\":\"'${BENEFICIARY_NUMBER}'\",\"birthDate\":\"'${DATE}'\",\"cardVersion\":\"006.007.23\",\"country\":\"PRT\",\"documentNumber\":\"'${DOCUMENT_NUMBER}'\",\"documentType\":\"Cartão De Cidadão\",\"emissionDate\":\"'${DATE}'\",\"emittingEntity\":\"República Portuguesa\",\"expirationDate\":\"'${DATE}'\",\"fatherFirstname\":\"Alberto\",\"fatherLastname\":\"De Andrade Monteiro\",\"fiscalNumber\":\"'${FISCAL_NUMBER}'\",\"mobilePhone\":\"'${PHONE_NUMBER}'\",\"gender\":\"M\",\"height\":\"1.81\",\"identityNumber\":\"'${IDENTITY_NUMBER}'\",\"motherFirstname\":\"Maria Da Graça De Oliveira Mendes\",\"motherLastname\":\"Monteiro\",\"nationality\":\"PRT\",\"otherInformation\":\"\",\"pan\":\"'${PAN}'\",\"requestLocation\":\"CRCiv. Figueira da Foz\",\"socialSecurityNumber\":\"'${SOCIAL_SECURITY_NUMBER}'\",\"username\":\"'${USER_NAME}'\",\"password\":\"'${DEFAULT_PASSWORD}'\",\"email\":\"'${EMAIL}'\"}'
 echo "create person ${USER_NAME}..."
-${BASE_CMD} -c "{ \"Args\" : [\"person_create\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${ID}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"person_getByUsername\", \"${USER_NAME}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"person_getByFiscalnumber\", \"${FISCAL_NUMBER}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"person_create\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"person_getByUsername\", \"${USER_NAME}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"person_getByFiscalnumber\", \"${FISCAL_NUMBER}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}
 
 # create person with minimal required data
@@ -163,32 +168,32 @@ PHONE_NUMBER="+351936200004"
 USER_NAME="${FISCAL_NUMBER}"
 PAYLOAD='{\"id\":\"'${ID}'\",\"fiscalNumber\":\"'${FISCAL_NUMBER}'\",\"mobilePhone\":\"'${PHONE_NUMBER}'\",\"username\":\"'${USER_NAME}'\", \"password\":\"'${DEFAULT_PASSWORD}'\"}'
 echo "create person ${USER_NAME}..."
-${BASE_CMD} -c "{ \"Args\" : [\"person_create\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${ID}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"person_getByUsername\", \"${USER_NAME}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"person_getByFiscalnumber\", \"${FISCAL_NUMBER}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"person_create\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"person_getByUsername\", \"${USER_NAME}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"person_getByFiscalnumber\", \"${FISCAL_NUMBER}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}
 
 # add atributes has org1 / admin
 echo "adding attribute 'birth-year' to johndoe as the Big Government identity"
 PAYLOAD='{\"id\": \"birth-year\", \"certifierID\": \"'${GOV_ID}'\", \"content\": { \"data\": \"1951\", \"work\": \"true\" }, \"issuedDate\": \"1554239270\" }'
-${BASE_CMD} -c "{ \"Args\" : [\"person_addAttribute\", \"${JOHN_ID}\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${JOHN_ID}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"person_addAttribute\", \"${JOHN_ID}\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${JOHN_ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}
 
 # add atrributes has org1 / admin
 echo "adding attribute 'birth-year' to janedoe as the Big Government identity"
 PAYLOAD='{\"id\": \"birth-year\", \"certifierID\": \"'${GOV_ID}'\", \"content\": { \"data\": \"1971\", \"work\": \"true\" }, \"issuedDate\": \"1554239280\" }'
-${BASE_CMD} -c "{ \"Args\" : [\"person_addAttribute\", \"${JANE_ID}\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${JANE_ID}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"person_addAttribute\", \"${JANE_ID}\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${JANE_ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}
 
 # participant godb
 PAYLOAD='{\"id\":\"'${POPB_ID}'\",\"code\":\"'${POPB_CODE}'\",\"name\":\"'${POPB_NAME}'\",\"email\":\"'${POPB_EMAIL}'\",\"fiscalNumber\":\"'${POPB_NIF}'\",\"ambassadors\":'${AMBASSADORS}'}'
 echo "create participant ${POPB_NAME}..."
-${BASE_CMD} -c "{ \"Args\" : [\"participant_create\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"participant_get\", \"${GODB_ID}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"participant_getByCode\", \"${GODB_CODE}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"participant_create\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"participant_get\", \"${GODB_ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"participant_getByCode\", \"${GODB_CODE}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}
 
 # create cause with all data (filter with date=1582414657)
@@ -203,8 +208,8 @@ END_DATE="1640995199"
 CAUSE_EMAIL="cause001@example.com"
 PAYLOAD='{\"id\":\"'${ID}'\",\"name\":\"'${CAUSE_NAME}'\",\"email\":\"'${CAUSE_EMAIL}'\",\"startDate\":\"'${START_DATE}'\",\"endDate\":\"'${END_DATE}'\",\"location\":\"'${LOCATION}'\",\"tags\":'${TAGS}',\"ambassadors\":'${AMBASSADORS}',\"metaData\":'${METADATA}',\"input\":{\"id\":\"'${INPUT_ID}'\",\"type\":\"'${INPUT_TYPE}'\"}}'
 echo "create cause ${CAUSE_NAME}..."
-${BASE_CMD} -c "{ \"Args\" : [\"cause_create\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"cause_get\", \"${ID}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"cause_create\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"cause_get\", \"${ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}
 
 # create cause with all data (filter with date=1582414657)
@@ -213,8 +218,8 @@ CAUSE_NAME="Cause002"
 CAUSE_EMAIL="cause002@example.com"
 PAYLOAD='{\"id\":\"'${ID}'\",\"name\":\"'${CAUSE_NAME}'\",\"email\":\"'${CAUSE_EMAIL}'\",\"startDate\":\"'${START_DATE}'\",\"endDate\":\"'${END_DATE}'\",\"location\":\"'${LOCATION}'\",\"tags\":'${TAGS}',\"ambassadors\":'${AMBASSADORS}',\"metaData\":'${METADATA}',\"input\":{\"id\":\"'${INPUT_ID}'\",\"type\":\"'${INPUT_TYPE}'\"}}'
 echo "create cause ${CAUSE_NAME}..."
-${BASE_CMD} -c "{ \"Args\" : [\"cause_create\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"cause_get\", \"${ID}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"cause_create\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"cause_get\", \"${ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}
 
 # create cause with minimal required data
@@ -224,8 +229,8 @@ INPUT_TYPE="${CONVECTOR_MODEL_PATH_PARTICIPANT}"
 INPUT_ID="${MIT_ID}"
 PAYLOAD='{\"id\":\"'${ID}'\",\"name\":\"'${CAUSE_NAME}'\",\"input\":{\"id\":\"'${INPUT_ID}'\",\"type\":\"'${INPUT_TYPE}'\"}}'
 echo "create cause ${CAUSE_NAME}..."
-${BASE_CMD} -c "{ \"Args\" : [\"cause_create\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"cause_get\", \"${ID}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"cause_create\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"cause_get\", \"${ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}
 
 # create funds transaction : gov to john 1.11: john is ambassador of PopBank it works
@@ -234,26 +239,27 @@ TRANSACTION_TYPE="TRANSFER_FUNDS"
 RESOURCE_TYPE="FUNDS"
 INPUT_TYPE="${CONVECTOR_MODEL_PATH_PARTICIPANT}"
 INPUT_ID="${POPB_ID}"
-OUTPUT_TYPE="${CONVECTOR_MODEL_PATH_PERSON}"
-OUTPUT_ID="${MINI_ID}"
-QUANTITY="1.11"
+OUTPUT_TYPE="${CONVECTOR_MODEL_PATH_CAUSE}"
+OUTPUT_ID="${CAUSE_001}"
+QUANTITY="11"
 CURRENCY="EUR"
-LOGGED_PERSON_ID="${JOHN_ID}"
-PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"resourceType\":\"'${RESOURCE_TYPE}'\",\"input\":{\"id\":\"'${INPUT_ID}'\",\"type\":\"'${INPUT_TYPE}'\"},\"output\":{\"id\":\"'${OUTPUT_ID}'\",\"type\":\"'${OUTPUT_TYPE}'\"},\"quantity\":\"'${QUANTITY}'\",\"currency\":\"'${CURRENCY}'\",\"location\":\"'${LOCATION}'\",\"tags\":'${TAGS}',\"loggedPersonId\":\"'${LOGGED_PERSON_ID}'\",\"metaData\":'${METADATA}',\"metaDataInternal\":'${METADATA_INTERNAL}'}'
+PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"resourceType\":\"'${RESOURCE_TYPE}'\",\"input\":{\"id\":\"'${INPUT_ID}'\",\"type\":\"'${INPUT_TYPE}'\"},\"output\":{\"id\":\"'${OUTPUT_ID}'\",\"type\":\"'${OUTPUT_TYPE}'\"},\"quantity\":\"'${QUANTITY}'\",\"currency\":\"'${CURRENCY}'\",\"location\":\"'${LOCATION}'\",\"tags\":'${TAGS}',\"metaData\":'${METADATA}',\"metaDataInternal\":'${METADATA_INTERNAL}'}'
 echo "create transaction ${ID}..."
-${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
 ${SLEEP}
 
 # create funds transaction : Cause001 to jane 1.11: john is ambassador of Cause001 it works
+# TODO Balance violation! when work with causes, you must supply a total amount lesser or equal than current funds balance. current funds balance is 0
 ID="acef70e5-cd25-4533-8392-9fa57e43cf33"
 INPUT_TYPE="${CONVECTOR_MODEL_PATH_CAUSE}"
 INPUT_ID="${CAUSE_001}"
-LOGGED_PERSON_ID="${JOHN_ID}"
-PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"resourceType\":\"'${RESOURCE_TYPE}'\",\"input\":{\"id\":\"'${INPUT_ID}'\",\"type\":\"'${INPUT_TYPE}'\"},\"output\":{\"id\":\"'${OUTPUT_ID}'\",\"type\":\"'${OUTPUT_TYPE}'\"},\"quantity\":\"'${QUANTITY}'\",\"currency\":\"'${CURRENCY}'\",\"location\":\"'${LOCATION}'\",\"loggedPersonId\":\"'${LOGGED_PERSON_ID}'\",\"metaData\":'${METADATA}',\"metaDataInternal\":'${METADATA_INTERNAL}'}'
+OUTPUT_TYPE="${CONVECTOR_MODEL_PATH_CAUSE}"
+OUTPUT_ID="${CAUSE_002}"
+PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"resourceType\":\"'${RESOURCE_TYPE}'\",\"input\":{\"id\":\"'${INPUT_ID}'\",\"type\":\"'${INPUT_TYPE}'\"},\"output\":{\"id\":\"'${OUTPUT_ID}'\",\"type\":\"'${OUTPUT_TYPE}'\"},\"quantity\":\"'${QUANTITY}'\",\"currency\":\"'${CURRENCY}'\",\"location\":\"'${LOCATION}'\",\"metaData\":'${METADATA}',\"metaDataInternal\":'${METADATA_INTERNAL}'}'
 echo "create transaction ${ID}..."
-${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
 ${SLEEP}
 
 # create volunteeringHours transaction : john 10hours to Cause001
@@ -265,11 +271,10 @@ INPUT_ID="${JOHN_ID}"
 OUTPUT_TYPE="${CONVECTOR_MODEL_PATH_CAUSE}"
 OUTPUT_ID="${CAUSE_001}"
 QUANTITY="10"
-LOGGED_PERSON_ID="${JOHN_ID}"
-PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"resourceType\":\"'${RESOURCE_TYPE}'\",\"input\":{\"id\":\"'${INPUT_ID}'\",\"type\":\"'${INPUT_TYPE}'\"},\"output\":{\"id\":\"'${OUTPUT_ID}'\",\"type\":\"'${OUTPUT_TYPE}'\"},\"quantity\":\"'${QUANTITY}'\",\"location\":\"'${LOCATION}'\",\"tags\":'${TAGS}',\"loggedPersonId\":\"'${LOGGED_PERSON_ID}'\",\"metaData\":'${METADATA}',\"metaDataInternal\":'${METADATA_INTERNAL}'}'
+PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"resourceType\":\"'${RESOURCE_TYPE}'\",\"input\":{\"id\":\"'${INPUT_ID}'\",\"type\":\"'${INPUT_TYPE}'\"},\"output\":{\"id\":\"'${OUTPUT_ID}'\",\"type\":\"'${OUTPUT_TYPE}'\"},\"quantity\":\"'${QUANTITY}'\",\"location\":\"'${LOCATION}'\",\"tags\":'${TAGS}',\"metaData\":'${METADATA}',\"metaDataInternal\":'${METADATA_INTERNAL}'}'
 echo "create transaction ${ID}..."
-${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
 ${SLEEP}
 
 # create volunteeringHours transaction : jane 20hours to Cause002
@@ -279,10 +284,10 @@ INPUT_ID="${JANE_ID}"
 OUTPUT_TYPE="${CONVECTOR_MODEL_PATH_CAUSE}"
 OUTPUT_ID="${CAUSE_002}"
 QUANTITY="20"
-PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"resourceType\":\"'${RESOURCE_TYPE}'\",\"input\":{\"id\":\"'${INPUT_ID}'\",\"type\":\"'${INPUT_TYPE}'\"},\"output\":{\"id\":\"'${OUTPUT_ID}'\",\"type\":\"'${OUTPUT_TYPE}'\"},\"quantity\":\"'${QUANTITY}'\",\"location\":\"'${LOCATION}'\",\"tags\":'${TAGS}',\"loggedPersonId\":\"'${LOGGED_PERSON_ID}'\",\"metaData\":'${METADATA}',\"metaDataInternal\":'${METADATA_INTERNAL}'}'
+PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"resourceType\":\"'${RESOURCE_TYPE}'\",\"input\":{\"id\":\"'${INPUT_ID}'\",\"type\":\"'${INPUT_TYPE}'\"},\"output\":{\"id\":\"'${OUTPUT_ID}'\",\"type\":\"'${OUTPUT_TYPE}'\"},\"quantity\":\"'${QUANTITY}'\",\"location\":\"'${LOCATION}'\",\"tags\":'${TAGS}',\"metaData\":'${METADATA}',\"metaDataInternal\":'${METADATA_INTERNAL}'}'
 echo "create transaction ${ID}..."
-${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}
 
 # create volunteeringHours transaction : jane 20hours to Cause002
@@ -290,10 +295,10 @@ ID="acef70e5-cd25-4533-8392-9fa57e43cf36"
 INPUT_TYPE="${CONVECTOR_MODEL_PATH_PERSON}"
 INPUT_ID="${JANE_ID}"
 QUANTITY="20"
-PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"resourceType\":\"'${RESOURCE_TYPE}'\",\"input\":{\"id\":\"'${INPUT_ID}'\",\"type\":\"'${INPUT_TYPE}'\"},\"output\":{\"id\":\"'${OUTPUT_ID}'\",\"type\":\"'${OUTPUT_TYPE}'\"},\"quantity\":\"'${QUANTITY}'\",\"location\":\"'${LOCATION}'\",\"tags\":'${TAGS}',\"loggedPersonId\":\"'${LOGGED_PERSON_ID}'\",\"metaData\":'${METADATA}',\"metaDataInternal\":'${METADATA_INTERNAL}'}'
+PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"resourceType\":\"'${RESOURCE_TYPE}'\",\"input\":{\"id\":\"'${INPUT_ID}'\",\"type\":\"'${INPUT_TYPE}'\"},\"output\":{\"id\":\"'${OUTPUT_ID}'\",\"type\":\"'${OUTPUT_TYPE}'\"},\"quantity\":\"'${QUANTITY}'\",\"location\":\"'${LOCATION}'\",\"tags\":'${TAGS}',\"metaData\":'${METADATA}',\"metaDataInternal\":'${METADATA_INTERNAL}'}'
 echo "create transaction ${ID}..."
-${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}
 
 # create asset with all data (filter with date=1582414657)
@@ -305,8 +310,8 @@ OWNER_TYPE="${CONVECTOR_MODEL_PATH_PERSON}"
 OWNER_ID="${JOHN_ID}"
 PAYLOAD='{\"id\":\"'${ID}'\",\"name\":\"'${ASSET_NAME}'\",\"description\":\"'${DESCRIPTION}'\",\"assetType\":\"'${ASSET_TYPE}'\",\"location\":\"'${LOCATION}'\",\"tags\":'${TAGS}',\"ambassadors\":'${AMBASSADORS}',\"metaData\":'${METADATA}',\"owner\":{\"id\":\"'${OWNER_ID}'\",\"type\":\"'${OWNER_TYPE}'\"}}'
 echo "create asset ${ID}..."
-${BASE_CMD} -c "{ \"Args\" : [\"asset_create\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"asset_get\", \"${ASSET_001_ID}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"asset_create\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"asset_get\", \"${ASSET_001_ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}
 
 # create asset with minimal data (filter with date=1582414657) and with ambassadors
@@ -317,8 +322,8 @@ OWNER_ID="${JOHN_ID}"
 OWNER_TYPE="${CONVECTOR_MODEL_PATH_PERSON}"
 PAYLOAD='{\"id\":\"'${ID}'\",\"name\":\"'${ASSET_NAME}'\",\"assetType\":\"'${ASSET_TYPE}'\",\"location\":\"'${LOCATION}'\",\"tags\":'${TAGS}',\"metaData\":'${METADATA}',\"owner\":{\"id\":\"'${OWNER_ID}'\",\"type\":\"'${OWNER_TYPE}'\"},\"ambassadors\":'${AMBASSADORS}'}'
 echo "create asset ${ID}..."
-${BASE_CMD} -c "{ \"Args\" : [\"asset_create\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"asset_get\", \"${ID}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"asset_create\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"asset_get\", \"${ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}
 
 # transaction asset from owner johndoe, with logged user janedoe, acting has an ambassador of johndoe, transfer to cause001 | require to send input id and type even if acting has an ambassador
@@ -331,19 +336,18 @@ INPUT_TYPE="${CONVECTOR_MODEL_PATH_PERSON}"
 INPUT_ID="${JOHN_ID}"
 OUTPUT_TYPE="${CONVECTOR_MODEL_PATH_CAUSE}"
 OUTPUT_ID="${CAUSE_001}"
-LOGGED_PERSON_ID="${JANE_ID}"
-PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"resourceType\":\"'${RESOURCE_TYPE}'\",\"input\":{\"id\":\"'${INPUT_ID}'\",\"type\":\"'${INPUT_TYPE}'\"},\"output\":{\"id\":\"'${OUTPUT_ID}'\",\"type\":\"'${OUTPUT_TYPE}'\"},\"location\":\"'${LOCATION}'\",\"metaData\":'${METADATA}',\"metaDataInternal\":'${METADATA_INTERNAL}',\"assetId\":\"'${ASSET_ID}'\",\"loggedPersonId\":\"'${LOGGED_PERSON_ID}'\"}'
+PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"resourceType\":\"'${RESOURCE_TYPE}'\",\"input\":{\"id\":\"'${INPUT_ID}'\",\"type\":\"'${INPUT_TYPE}'\"},\"output\":{\"id\":\"'${OUTPUT_ID}'\",\"type\":\"'${OUTPUT_TYPE}'\"},\"location\":\"'${LOCATION}'\",\"metaData\":'${METADATA}',\"metaDataInternal\":'${METADATA_INTERNAL}',\"assetId\":\"'${ASSET_ID}'\"}'
 echo "create transaction ${ID}..."
-${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
 ${SLEEP}
 
 # asset update: update asset and add janedoe to ambassadors, before below transfer, else it fails because asset don't have ambassador, is lost in lastest transfer
 AMBASSADORS_UPDATE='[\"'${JANE_ID}'\"]'
 PAYLOAD='{\"id\":\"'${ASSET_001_ID}'\",\"ambassadors\":'${AMBASSADORS_UPDATE}'}'
 echo "update asset ${ASSET_001_ID}..."
-${BASE_CMD} -c "{ \"Args\" : [\"asset_update\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"asset_get\", \"${ASSET_001_ID}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"asset_update\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"asset_get\", \"${ASSET_001_ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}
 
 # transaction asset from cause001, with logged user janedoe, acting has an ambassador of cause001, transfer to PopBank | require to send input id and type even if acting has an ambassador
@@ -352,19 +356,18 @@ INPUT_TYPE="${CONVECTOR_MODEL_PATH_CAUSE}"
 INPUT_ID="${CAUSE_001}"
 OUTPUT_TYPE="${CONVECTOR_MODEL_PATH_PARTICIPANT}"
 OUTPUT_ID="${POPB_ID}"
-LOGGED_PERSON_ID="${JANE_ID}"
-PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"resourceType\":\"'${RESOURCE_TYPE}'\",\"input\":{\"id\":\"'${INPUT_ID}'\",\"type\":\"'${INPUT_TYPE}'\"},\"output\":{\"id\":\"'${OUTPUT_ID}'\",\"type\":\"'${OUTPUT_TYPE}'\"},\"location\":\"'${LOCATION}'\",\"metaData\":'${METADATA}',\"metaDataInternal\":'${METADATA_INTERNAL}',\"assetId\":\"'${ASSET_ID}'\",\"loggedPersonId\":\"'${LOGGED_PERSON_ID}'\"}'
+PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"resourceType\":\"'${RESOURCE_TYPE}'\",\"input\":{\"id\":\"'${INPUT_ID}'\",\"type\":\"'${INPUT_TYPE}'\"},\"output\":{\"id\":\"'${OUTPUT_ID}'\",\"type\":\"'${OUTPUT_TYPE}'\"},\"location\":\"'${LOCATION}'\",\"metaData\":'${METADATA}',\"metaDataInternal\":'${METADATA_INTERNAL}',\"assetId\":\"'${ASSET_ID}'\"}'
 echo "create transaction ${ID}..."
-${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
 ${SLEEP}
 
 # asset update: update asset and add johndoe to ambassadors, before below transfer, else it fails because asset don't have ambassador, is lost in lastest transfer
 AMBASSADORS_UPDATE='[\"'${JOHN_ID}'\"]'
 PAYLOAD='{\"id\":\"'${ASSET_001_ID}'\",\"ambassadors\":'${AMBASSADORS_UPDATE}'}'
 echo "update asset ${ASSET_001_ID}..."
-${BASE_CMD} -c "{ \"Args\" : [\"asset_update\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"asset_get\", \"${ASSET_001_ID}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"asset_update\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"asset_get\", \"${ASSET_001_ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}
 
 # transaction asset from PopBank, with logged user johndoe, acting has an ambassador of PopBank, transfer to cause002 | require to send input id and type even if acting has an ambassador
@@ -373,11 +376,10 @@ INPUT_TYPE="${CONVECTOR_MODEL_PATH_PARTICIPANT}"
 INPUT_ID="${POPB_ID}"
 OUTPUT_TYPE="${CONVECTOR_MODEL_PATH_CAUSE}"
 OUTPUT_ID="${CAUSE_002}"
-LOGGED_PERSON_ID="${JOHN_ID}"
-PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"resourceType\":\"'${RESOURCE_TYPE}'\",\"input\":{\"id\":\"'${INPUT_ID}'\",\"type\":\"'${INPUT_TYPE}'\"},\"output\":{\"id\":\"'${OUTPUT_ID}'\",\"type\":\"'${OUTPUT_TYPE}'\"},\"location\":\"'${LOCATION}'\",\"metaData\":'${METADATA}',\"metaDataInternal\":'${METADATA_INTERNAL}',\"assetId\":\"'${ASSET_ID}'\",\"loggedPersonId\":\"'${LOGGED_PERSON_ID}'\"}'
+PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"resourceType\":\"'${RESOURCE_TYPE}'\",\"input\":{\"id\":\"'${INPUT_ID}'\",\"type\":\"'${INPUT_TYPE}'\"},\"output\":{\"id\":\"'${OUTPUT_ID}'\",\"type\":\"'${OUTPUT_TYPE}'\"},\"location\":\"'${LOCATION}'\",\"metaData\":'${METADATA}',\"metaDataInternal\":'${METADATA_INTERNAL}',\"assetId\":\"'${ASSET_ID}'\"}'
 echo "create transaction ${ID}..."
-${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
 ${SLEEP}
 
 # transaction of goods: person johnDoe to cause001
@@ -389,12 +391,11 @@ INPUT_ID="${JOHN_ID}"
 OUTPUT_TYPE="${CONVECTOR_MODEL_PATH_CAUSE}"
 OUTPUT_ID="${CAUSE_001}"
 # this must fail in type of TRANSFER_GOODS
-LOGGED_PERSON_ID="${JOHN_ID}"
 GOODS_INPUT='[{\"id\":\"80450045-d20d-4cdd-b937-c9bb46a48581\", \"code\":\"008\", \"barCode\":\"ean008\", \"name\":\"name008\", \"description\":\"description008\" ,\"quantity\":\"200\"}, {\"id\":\"80450045-d20d-4cdd-b937-c9bb46a48582\", \"code\":\"009\", \"barCode\":\"ean009\", \"name\":\"name009\", \"description\":\"description009\", \"quantity\":\"900\"}]'
-PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"resourceType\":\"'${RESOURCE_TYPE}'\",\"input\":{\"id\":\"'${INPUT_ID}'\",\"type\":\"'${INPUT_TYPE}'\"},\"output\":{\"id\":\"'${OUTPUT_ID}'\",\"type\":\"'${OUTPUT_TYPE}'\"},\"location\":\"'${LOCATION}'\",\"tags\":'${TAGS}',\"goodsInput\":'${GOODS_INPUT}',\"metaData\":'${METADATA}',\"metaDataInternal\":'${METADATA_INTERNAL}',\"loggedPersonId\":\"'${LOGGED_PERSON_ID}'\"}'
+PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"resourceType\":\"'${RESOURCE_TYPE}'\",\"input\":{\"id\":\"'${INPUT_ID}'\",\"type\":\"'${INPUT_TYPE}'\"},\"output\":{\"id\":\"'${OUTPUT_ID}'\",\"type\":\"'${OUTPUT_TYPE}'\"},\"location\":\"'${LOCATION}'\",\"tags\":'${TAGS}',\"goodsInput\":'${GOODS_INPUT}',\"metaData\":'${METADATA}',\"metaDataInternal\":'${METADATA_INTERNAL}'}'
 echo "create transaction ${ID}..."
-${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
 ${SLEEP}
 
 # transaction of goods: person janeDoe to cause001
@@ -402,10 +403,10 @@ ID="acef70e5-cd25-4533-8392-9fa57e43cf95"
 INPUT_ID="${JANE_ID}"
 LOGGED_PERSON_ID="${JANE_ID}"
 GOODS_INPUT='[{\"id\":\"80450045-d20d-4cdd-b937-c9bb46a48581\",\"code\": \"010\",\"barCode\": \"ean010\",\"name\": \"name010\",\"description\": \"description010\",\"quantity\": 10},{\"id\":\"80450045-d20d-4cdd-b937-c9bb46a48582\",\"code\": \"011\",\"barCode\": \"ean011\",\"name\": \"name011\",\"description\": \"description011\",\"quantity\": 11}]'
-PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"resourceType\":\"'${RESOURCE_TYPE}'\",\"input\":{\"id\":\"'${INPUT_ID}'\",\"type\":\"'${INPUT_TYPE}'\"},\"output\":{\"id\":\"'${OUTPUT_ID}'\",\"type\":\"'${OUTPUT_TYPE}'\"},\"location\":\"'${LOCATION}'\",\"tags\":'${TAGS}',\"goodsInput\":'${GOODS_INPUT}',\"metaData\":'${METADATA}',\"metaDataInternal\":'${METADATA_INTERNAL}',\"loggedPersonId\":\"'${LOGGED_PERSON_ID}'\"}'
+PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"resourceType\":\"'${RESOURCE_TYPE}'\",\"input\":{\"id\":\"'${INPUT_ID}'\",\"type\":\"'${INPUT_TYPE}'\"},\"output\":{\"id\":\"'${OUTPUT_ID}'\",\"type\":\"'${OUTPUT_TYPE}'\"},\"location\":\"'${LOCATION}'\",\"tags\":'${TAGS}',\"goodsInput\":'${GOODS_INPUT}',\"metaData\":'${METADATA}',\"metaDataInternal\":'${METADATA_INTERNAL}'}'
 echo "create transaction ${ID}..."
-${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\", \"${CURRENT_USER_JANEDOE_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\", \"${CURRENT_USER_JANEDOE_ROLE}\" ] }"
 ${SLEEP}
 
 # transaction of goods: cause001 to cause002 (must have goods in stock)
@@ -414,19 +415,19 @@ INPUT_ID="${CAUSE_001}"
 INPUT_TYPE="${CONVECTOR_MODEL_PATH_CAUSE}"
 OUTPUT_ID="${CAUSE_002}"
 GOODS_INPUT='[{\"id\":\"80450045-d20d-4cdd-b937-c9bb46a48581\",\"code\": \"008\",\"barCode\": \"ean008\",\"name\": \"name008\",\"description\": \"description008\",\"quantity\": 8},{\"id\":\"80450045-d20d-4cdd-b937-c9bb46a48582\",\"code\": \"009\",\"barCode\": \"ean009\",\"name\": \"name009\",\"description\": \"description009\",\"quantity\": 9},{\"id\":\"80450045-d20d-4cdd-b937-c9bb46a48581\",\"code\": \"010\",\"barCode\": \"ean010\",\"name\": \"name010\",\"description\": \"description010\",\"quantity\": 10},{\"id\":\"80450045-d20d-4cdd-b937-c9bb46a48582\",\"code\": \"011\",\"barCode\": \"ean011\",\"name\": \"name011\",\"description\": \"description011\",\"quantity\": 11}]'
-PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"resourceType\":\"'${RESOURCE_TYPE}'\",\"input\":{\"id\":\"'${INPUT_ID}'\",\"type\":\"'${INPUT_TYPE}'\"},\"output\":{\"id\":\"'${OUTPUT_ID}'\",\"type\":\"'${OUTPUT_TYPE}'\"},\"location\":\"'${LOCATION}'\",\"tags\":'${TAGS}',\"goodsInput\":'${GOODS_INPUT}',\"metaData\":'${METADATA}',\"metaDataInternal\":'${METADATA_INTERNAL}',\"loggedPersonId\":\"'${LOGGED_PERSON_ID}'\"}'
+PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"resourceType\":\"'${RESOURCE_TYPE}'\",\"input\":{\"id\":\"'${INPUT_ID}'\",\"type\":\"'${INPUT_TYPE}'\"},\"output\":{\"id\":\"'${OUTPUT_ID}'\",\"type\":\"'${OUTPUT_TYPE}'\"},\"location\":\"'${LOCATION}'\",\"tags\":'${TAGS}',\"goodsInput\":'${GOODS_INPUT}',\"metaData\":'${METADATA}',\"metaDataInternal\":'${METADATA_INTERNAL}'}'
 echo "create transaction ${ID}..."
-${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
 ${SLEEP}
 
 # transaction of goods: cause001 to cause002 (must have goods in stock)
 ID="acef70e5-cd25-4533-8392-9fa57e43cf18"
 GOODS_INPUT='[{\"id\":\"80450045-d20d-4cdd-b937-c9bb46a48581\",\"code\": \"008\",\"barCode\": \"ean008\",\"name\": \"name008CHANGE-FAIL\",\"description\": \"description008CHANGE-FAIL\",\"quantity\": 92},{\"id\":\"80450045-d20d-4cdd-b937-c9bb46a48582\",\"code\": \"009\",\"barCode\": \"ean009\",\"name\": \"name009CHANGE-FAIL\",\"description\": \"description009CHANGE-FAIL\",\"quantity\": 91}]'
-PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"resourceType\":\"'${RESOURCE_TYPE}'\",\"input\":{\"id\":\"'${INPUT_ID}'\",\"type\":\"'${INPUT_TYPE}'\"},\"output\":{\"id\":\"'${OUTPUT_ID}'\",\"type\":\"'${OUTPUT_TYPE}'\"},\"location\":\"'${LOCATION}'\",\"tags\":'${TAGS}',\"goodsInput\":'${GOODS_INPUT}',\"metaData\":'${METADATA}',\"metaDataInternal\":'${METADATA_INTERNAL}',\"loggedPersonId\":\"'${LOGGED_PERSON_ID}'\"}'
+PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"resourceType\":\"'${RESOURCE_TYPE}'\",\"input\":{\"id\":\"'${INPUT_ID}'\",\"type\":\"'${INPUT_TYPE}'\"},\"output\":{\"id\":\"'${OUTPUT_ID}'\",\"type\":\"'${OUTPUT_TYPE}'\"},\"location\":\"'${LOCATION}'\",\"tags\":'${TAGS}',\"goodsInput\":'${GOODS_INPUT}',\"metaData\":'${METADATA}',\"metaDataInternal\":'${METADATA_INTERNAL}'}'
 echo "create transaction ${ID}..."
-${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
 ${SLEEP}
 
 # transaction of goods: cause001 to participant gov (must have goods in stock), clean stocks, all 4 items will  be zeroed
@@ -434,10 +435,10 @@ ID="acef70e5-cd25-4533-8392-9fa57e43cf19"
 OUTPUT_TYPE="${CONVECTOR_MODEL_PATH_PARTICIPANT}"
 OUTPUT_ID="${GOV_ID}"
 GOODS_INPUT='[{\"id\":\"80450045-d20d-4cdd-b937-c9bb46a48581\",\"code\": \"008\",\"barCode\":\"ean008\",\"name\":\"name008CHANGE-FAIL\",\"description\":\"description008CHANGE-FAIL\",\"quantity\": 100},{\"id\":\"80450045-d20d-4cdd-b937-c9bb46a48582\",\"code\": \"009\",\"barCode\": \"ean009\",\"name\":\"name009\",\"description\":\"description009\",\"quantity\":800}]'
-PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"resourceType\":\"'${RESOURCE_TYPE}'\",\"input\":{\"id\":\"'${INPUT_ID}'\",\"type\":\"'${INPUT_TYPE}'\"},\"output\":{\"id\":\"'${OUTPUT_ID}'\",\"type\":\"'${OUTPUT_TYPE}'\"},\"location\":\"'${LOCATION}'\",\"tags\":'${TAGS}',\"goodsInput\":'${GOODS_INPUT}',\"metaData\":'${METADATA}',\"metaDataInternal\":'${METADATA_INTERNAL}',\"loggedPersonId\":\"'${LOGGED_PERSON_ID}'\"}'
+PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"resourceType\":\"'${RESOURCE_TYPE}'\",\"input\":{\"id\":\"'${INPUT_ID}'\",\"type\":\"'${INPUT_TYPE}'\"},\"output\":{\"id\":\"'${OUTPUT_ID}'\",\"type\":\"'${OUTPUT_TYPE}'\"},\"location\":\"'${LOCATION}'\",\"tags\":'${TAGS}',\"goodsInput\":'${GOODS_INPUT}',\"metaData\":'${METADATA}',\"metaDataInternal\":'${METADATA_INTERNAL}'}'
 echo "create transaction ${ID}..."
-${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
 ${SLEEP}
 
 # transaction of goods: cause002 to john (must have goods in stock), clean stocks, 010 and 011, leave 008 and 009 with 100units, with a ambassador
@@ -447,10 +448,10 @@ INPUT_ID="${CAUSE_002}"
 OUTPUT_TYPE="${CONVECTOR_MODEL_PATH_PERSON}"
 OUTPUT_ID="${JOHN_ID}"
 GOODS_INPUT='[{\"id\":\"80450045-d20d-4cdd-b937-c9bb46a48581\",\"code\": \"010\",\"barCode\": \"ean010\",\"name\": \"name010\",\"description\": \"description010\",\"quantity\": 10},{\"id\":\"80450045-d20d-4cdd-b937-c9bb46a48582\",\"code\": \"011\",\"barCode\": \"ean011\",\"name\": \"name011\",\"description\": \"description011\",\"quantity\": 11}]'
-PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"resourceType\":\"'${RESOURCE_TYPE}'\",\"input\":{\"id\":\"'${INPUT_ID}'\",\"type\":\"'${INPUT_TYPE}'\"},\"output\":{\"id\":\"'${OUTPUT_ID}'\",\"type\":\"'${OUTPUT_TYPE}'\"},\"location\":\"'${LOCATION}'\",\"tags\":'${TAGS}',\"goodsInput\":'${GOODS_INPUT}',\"metaData\":'${METADATA}',\"metaDataInternal\":'${METADATA_INTERNAL}',\"loggedPersonId\":\"'${LOGGED_PERSON_ID}'\"}'
+PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"resourceType\":\"'${RESOURCE_TYPE}'\",\"input\":{\"id\":\"'${INPUT_ID}'\",\"type\":\"'${INPUT_TYPE}'\"},\"output\":{\"id\":\"'${OUTPUT_ID}'\",\"type\":\"'${OUTPUT_TYPE}'\"},\"location\":\"'${LOCATION}'\",\"tags\":'${TAGS}',\"goodsInput\":'${GOODS_INPUT}',\"metaData\":'${METADATA}',\"metaDataInternal\":'${METADATA_INTERNAL}'}'
 echo "create transaction ${ID}..."
-${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
 ${SLEEP}
 
 # transaction of goods: jane to john : fraction numbers
@@ -458,10 +459,10 @@ ID="acef70e5-cd25-4533-8392-9fa57e43cf21"
 INPUT_TYPE="${CONVECTOR_MODEL_PATH_PERSON}"
 INPUT_ID="${JANE_ID}"
 GOODS_INPUT='[{\"id\":\"80450045-d20d-4cdd-b937-c9bb46a48581\",\"code\": \"010\",\"barCode\": \"ean010\",\"name\": \"name010\",\"description\": \"description010\",\"quantity\": 9.5},{\"id\":\"80450045-d20d-4cdd-b937-c9bb46a48582\",\"code\": \"011\",\"barCode\": \"ean011\",\"name\": \"name011\",\"description\": \"description011\",\"quantity\": 10.11}]'
-PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"resourceType\":\"'${RESOURCE_TYPE}'\",\"input\":{\"id\":\"'${INPUT_ID}'\",\"type\":\"'${INPUT_TYPE}'\"},\"output\":{\"id\":\"'${OUTPUT_ID}'\",\"type\":\"'${OUTPUT_TYPE}'\"},\"location\":\"'${LOCATION}'\",\"tags\":'${TAGS}',\"goodsInput\":'${GOODS_INPUT}',\"metaData\":'${METADATA}',\"metaDataInternal\":'${METADATA_INTERNAL}',\"loggedPersonId\":\"'${LOGGED_PERSON_ID}'\"}'
+PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"resourceType\":\"'${RESOURCE_TYPE}'\",\"input\":{\"id\":\"'${INPUT_ID}'\",\"type\":\"'${INPUT_TYPE}'\"},\"output\":{\"id\":\"'${OUTPUT_ID}'\",\"type\":\"'${OUTPUT_TYPE}'\"},\"location\":\"'${LOCATION}'\",\"tags\":'${TAGS}',\"goodsInput\":'${GOODS_INPUT}',\"metaData\":'${METADATA}',\"metaDataInternal\":'${METADATA_INTERNAL}'}'
 echo "create transaction ${ID}..."
-${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}
 
 # update participant gov: all updateable fields, require to be user 'chaincodeAdmin' with 'admin' attribute
@@ -471,8 +472,8 @@ METADATA_UPDATE='{\"key\":\"value updated\"}'
 METADATA_INTERNAL_UPDATE='{\"key\":\"internal value updated\"}'
 PAYLOAD='{\"id\":\"'${GOV_ID}'\",\"email\":\"'${EMAIL_UPDATE}'\",\"ambassadors\":'${AMBASSADORS_UPDATE}',\"metaData\":'${METADATA_UPDATE}',\"metaDataInternal\":'${METADATA_INTERNAL_UPDATE}'}'
 echo "update participant ${GOV_ID}..."
-${BASE_CMD} -c "{ \"Args\" : [\"participant_update\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"participant_update\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # MUST BE ADMIN
 # echo $PAYLOAD  | jq
 # npx hurl invoke ${CHAINCODE_NAME} participant_update "${PAYLOAD}" -u chaincodeAdmin
@@ -482,31 +483,31 @@ ${SLEEP}
 TAGS='[\"green\",\"cyan\",\"violet\"]'
 PAYLOAD='{\"id\":\"'${ASSET_001_ID}'\",\"ambassadors\":'${AMBASSADORS_UPDATE}',\"tags\":'${TAGS}',\"metaData\":'${METADATA_UPDATE}',\"metaDataInternal\":'${METADATA_INTERNAL_UPDATE}'}'
 echo "update asset ${ASSET_001_ID}..."
-${BASE_CMD} -c "{ \"Args\" : [\"asset_update\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"asset_get\", \"${ASSET_001_ID}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"asset_update\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"asset_get\", \"${ASSET_001_ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}
 
 # cause update cause001: all updateable fields
 EMAIL_UPDATE="cause001-updated@example.com"
 PAYLOAD='{\"id\":\"'${CAUSE_001}'\",\"email\":\"'${EMAIL_UPDATE}'\",\"ambassadors\":'${AMBASSADORS_UPDATE}',\"tags\":'${TAGS}',\"metaData\":'${METADATA_UPDATE}',\"metaDataInternal\":'${METADATA_INTERNAL_UPDATE}'}'
 echo "update cause ${CAUSE_001}..."
-${BASE_CMD} -c "{ \"Args\" : [\"cause_update\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"cause_get\", \"${CAUSE_001}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"cause_update\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"cause_get\", \"${CAUSE_001}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}
 
 # transaction update: all updateable fields
 PAYLOAD='{\"id\":\"'${TRANSACTION_001_ID}'\",\"metaDataInternal\":'${METADATA_INTERNAL_UPDATE}'}'
 # echo $PAYLOAD  | jq
 echo "update transaction ${TRANSACTION_001_ID}..."
-${BASE_CMD} -c "{ \"Args\" : [\"transaction_update\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${TRANSACTION_001_ID}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"transaction_update\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${TRANSACTION_001_ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}
 
 # person update mini: required admin user (acting has Gov)
 PAYLOAD='{\"id\":\"'${MINI_ID}'\",\"roles\":'${ROLES}',\"metaDataInternal\":'${METADATA_INTERNAL_UPDATE}'}'
 echo "update person ${MINI_ID}..."
-${BASE_CMD} -c "{ \"Args\" : [\"person_update\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${MINI_ID}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"person_update\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${MINI_ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}
 
 # person upsertCitizenCard: update existing user mini (minimal data): required admin user (acting has Gov)
@@ -536,8 +537,8 @@ REQUEST_LOCATION="CRCiv. Figueira da Foz"
 OTHER_INFORMATION="Other info...."
 PAYLOAD='{\"id\":\"'${MINI_ID}'\",\"documentNumber\": \"'${DOCUMENT_NUMBER}'\",\"identityNumber\": \"'${IDENTITY_NUMBER}'\",\"fiscalNumber\": \"'${FISCAL_NUMBER}'\",\"mobilePhone\":\"'${PHONE_NUMBER}'\",\"socialSecurityNumber\": \"'${SOCIAL_SECURITY_NUMBER}'\",\"beneficiaryNumber\": \"'${BENEFICIARY_NUMBER}'\",\"pan\": \"'${PAN}'\",\"firstname\": \"'${FIRSTNAME}'\",\"lastname\": \"'${LASTNAME}'\",\"gender\": \"'${GENDER}'\",\"height\": \"'${HEIGHT}'\",\"fatherFirstname\": \"'${FATHER_FIRSTNAME}'\",\"fatherLastname\": \"'${FATHER_LASTNAME}'\",\"motherFirstname\": \"'${MOTHER_FIRSTNAME}'\",\"motherLastname\": \"'${MOTHER_LASTNAME}'\",\"birthDate\": \"'${BIRTH_DATE}'\",\"nationality\": \"'${NATIONALITY}'\",\"country\": \"'${COUNTRY}'\",\"documentType\": \"'${DOCUMENT_TYPE}'\",\"cardVersion\": \"'${CARD_VERSION}'\",\"emissionDate\": \"'${EMISSION_DATE}'\",\"expirationDate\": \"'${EXPIRATION_DATE}'\",\"emittingEntity\": \"'${EMITTING_ENTITY}'\",\"requestLocation\": \"'${REQUEST_LOCATION}'\",\"otherInformation\": \"'${OTHER_INFORMATION}'\"}'
 echo "upsertCitizenCard person ${MINI_ID}..."
-${BASE_CMD} -c "{ \"Args\" : [\"person_upsertCitizenCard\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${MINI_ID}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"person_upsertCitizenCard\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${MINI_ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}
 
 # person_upsertCitizenCard: new person : non existing user: required admin user (acting has Gov)
@@ -569,8 +570,8 @@ REQUEST_LOCATION="CRCiv. Figueira da Foz"
 OTHER_INFORMATION="Other info...."
 PAYLOAD='{\"id\":\"'${ID}'\",\"documentNumber\": \"'${DOCUMENT_NUMBER}'\",\"identityNumber\": \"'${IDENTITY_NUMBER}'\",\"fiscalNumber\": \"'${FISCAL_NUMBER}'\",\"mobilePhone\":\"'${PHONE_NUMBER}'\",\"socialSecurityNumber\": \"'${SOCIAL_SECURITY_NUMBER}'\",\"beneficiaryNumber\": \"'${BENEFICIARY_NUMBER}'\",\"pan\": \"'${PAN}'\",\"firstname\": \"'${FIRSTNAME}'\",\"lastname\": \"'${LASTNAME}'\",\"gender\": \"'${GENDER}'\",\"height\": \"'${HEIGHT}'\",\"fatherFirstname\": \"'${FATHER_FIRSTNAME}'\",\"fatherLastname\": \"'${FATHER_LASTNAME}'\",\"motherFirstname\": \"'${MOTHER_FIRSTNAME}'\",\"motherLastname\": \"'${MOTHER_LASTNAME}'\",\"birthDate\": \"'${BIRTH_DATE}'\",\"nationality\": \"'${NATIONALITY}'\",\"country\": \"'${COUNTRY}'\",\"documentType\": \"'${DOCUMENT_TYPE}'\",\"cardVersion\": \"'${CARD_VERSION}'\",\"emissionDate\": \"'${EMISSION_DATE}'\",\"expirationDate\": \"'${EXPIRATION_DATE}'\",\"emittingEntity\": \"'${EMITTING_ENTITY}'\",\"requestLocation\": \"'${REQUEST_LOCATION}'\",\"otherInformation\": \"'${OTHER_INFORMATION}'\"}'
 echo "upsertCitizenCard new person..."
-${BASE_CMD} -c "{ \"Args\" : [\"person_upsertCitizenCard\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"person_getByFiscalnumber\", \"${FISCAL_NUMBER}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"person_upsertCitizenCard\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"person_getByFiscalnumber\", \"${FISCAL_NUMBER}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}
 
 # person updateProfile
@@ -586,16 +587,16 @@ PROFILE_UPDATE="Profile info...."
 METADATA_UPDATE='{\"key\":\"value updated\"}'
 PAYLOAD='{\"id\":\"'${MINI_ID}'\",\"email\":\"'${EMAIL_UPDATE}'\",\"mobilePhone\":\"'${MOBILE_PHONE_UPDATE}'\",\"postal\":\"'${POSTAL_UPDATE}'\",\"city\":\"'${CITY_UPDATE}'\",\"region\":\"'${REGION_UPDATE}'\",\"geoLocation\":\"'${GEO_LOCATION_UPDATE}'\",\"timezone\":\"'${TIMEZONE_UPDATE}'\",\"personalInfo\":\"'${PERSONAL_INFO_UPDATE}'\",\"profile\":\"'${PROFILE_UPDATE}'\",\"metaData\":'${METADATA_UPDATE}'}'
 echo "upsertCitizenCard person ${MINI_ID}..."
-${BASE_CMD} -c "{ \"Args\" : [\"person_updateProfile\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${MINI_ID}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"person_updateProfile\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${MINI_ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}
 
 # person updatePassword
 PASSWORD_UPDATE="87654321"
 PAYLOAD='{\"id\":\"'${MINI_ID}'\",\"password\":\"'${PASSWORD_UPDATE}'\"}'
 echo "updatePassword person ${MINI_ID}..."
-${BASE_CMD} -c "{ \"Args\" : [\"person_updatePassword\", \"${PAYLOAD}\" ] }"
-# ${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${MINI_ID}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"person_updatePassword\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
+# ${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${MINI_ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}
 
 exit 0
@@ -604,25 +605,25 @@ exit 0
 
 # persisted "createdDate": "1582410746061", "name":"Big Government"
 PAYLOAD='{\"filter\":{\"name\":\"Big Government\"},\"sort\":[{\"name\":\"asc\"}]}'
-${BASE_CMD} -c "{ \"Args\" : [\"participant_getComplexQuery\", \"${PAYLOAD}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"participant_getComplexQuery\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}
 
 # persisted "createdDate": "1582410790588", "username": "janedoe"
 PAYLOAD='{\"filter\":{\"username\":\"janedoe\",\"createdDate\":{\"$lte\":1582410790588,\"$gte\":1582410790588}},\"sort\":[{\"username\":\"asc\"}]}'
-${BASE_CMD} -c "{ \"Args\" : [\"person_getComplexQuery\", \"${PAYLOAD}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"person_getComplexQuery\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}
 
 # persisted "startDate": "1582414657", "endDate": "1582414657", "name":"Cause002b"
 PAYLOAD='{\"filter\":{\"name\":\"Cause002b\",\"startDate\":{\"$lte\":1582414657},\"endDate\":{\"$gte\":1582414657}},\"sort\":[{\"name\":\"asc\"}]}'
-${BASE_CMD} -c "{ \"Args\" : [\"cause_getComplexQuery\", \"${PAYLOAD}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"cause_getComplexQuery\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}
 
 # persisted "name":"Asset002" now use postfix code ex "Asset002 [acef70e5]"
 PAYLOAD='{\"filter\":{\"name\":\"Asset002\"},\"sort\":[{\"name\":\"asc\"}]}'
-${BASE_CMD} -c "{ \"Args\" : [\"asset_getComplexQuery\", \"${PAYLOAD}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"asset_getComplexQuery\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}
 
 # persisted "createdDate": "1582410817579", "currency": "EUR"
 PAYLOAD='{\"filter\":{\"currency\":\"EUR\",\"createdDate\":{\"$lte\":1582410817579,\"$gte\":1582410817579}},\"sort\":[{\"quantity\":\"asc\"}]}'
-${BASE_CMD} -c "{ \"Args\" : [\"transaction_getComplexQuery\", \"${PAYLOAD}\" ] }"
+${BASE_CMD} -c "{ \"Args\" : [\"transaction_getComplexQuery\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 ${SLEEP}

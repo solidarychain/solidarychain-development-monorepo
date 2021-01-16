@@ -311,17 +311,27 @@ getComplexQuery/userFilter cause
 {
   "selector": {
     "type": "com.chain.solidary.model.cause",
-    "ambassadors": {
-      "$elemMatch": {
-        "$eq": "4ea88521-031b-4279-9165-9c10e1839000"
+    "$or": [
+      {
+        "input": {
+          "entity": {
+            "id": "7d0ac09c-6e00-41e2-b152-a3a287115a81"
+          }
+        }
+      },
+      {
+        "input": {
+          "entity": {
+            "ambassadors": {
+              "$elemMatch": {
+                "$eq": "7d0ac09c-6e00-41e2-b152-a3a287115a81"
+              }
+            }
+          }
+        }
       }
-    }
-  },
-  "sort": [
-    {
-      "name": "asc"
-    }
-  ]
+    ]
+  }
 }
 ```
 

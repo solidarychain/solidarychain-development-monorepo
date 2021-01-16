@@ -4,50 +4,50 @@
 
 # TODO: clean up this file
 
-DEPLOYMENT_PATH=/srv/docker/hyperledger-fabric-extra_hosts-5orgs/fabric-samples/5node2channel/deployment
-CHAINCODE_DEPLOYMENT_PATH=/src/github.com/hyperledger/fabric/peer
-ABSOLUTE_PATH=/opt/gopath/src/github.com/chaincode/chaincode-solidary-chain-chaincode
+DEPLOYMENT_PATH="/srv/docker/hyperledger-fabric-extra_hosts-5orgs/fabric-samples/5node2channel/deployment"
+CHAINCODE_DEPLOYMENT_PATH="/src/github.com/hyperledger/fabric/peer"
+ABSOLUTE_PATH="/opt/gopath/src/github.com/chaincode/chaincode-solidary-chain-chaincode"
 # CHAINCODE=chaincode-solidary-chain-chaincode
 # ORDERER_IP=192.168.1.61
-PEER0_ORG1_IP=192.168.1.61
-PEER0_ORG2_IP=192.168.1.62
-PEER0_ORG3_IP=192.168.1.63
-PEER0_ORG4_IP=192.168.1.64
-PEER0_ORG5_IP=192.168.1.65
-PEER0_ORG1_ID=1
-PEER0_ORG2_ID=2
-PEER0_ORG3_ID=3
-PEER0_ORG4_ID=4
-PEER0_ORG5_ID=5
-PEER_CHAINCODE_PATH=/srv/docker/hyperledger-fabric-extra_hosts-5orgs/fabric-samples/chaincode
+PEER0_ORG1_IP="192.168.1.61"
+PEER0_ORG2_IP="192.168.1.62"
+PEER0_ORG3_IP="192.168.1.63"
+PEER0_ORG4_IP="192.168.1.64"
+PEER0_ORG5_IP="192.168.1.65"
+PEER0_ORG1_ID="1"
+PEER0_ORG2_ID="2"
+PEER0_ORG3_ID="3"
+PEER0_ORG4_ID="4"
+PEER0_ORG5_ID="5"
+PEER_CHAINCODE_PATH="/srv/docker/hyperledger-fabric-extra_hosts-5orgs/fabric-samples/chaincode"
 # deploy install/upgrade chaincode
-CHANNEL_ALL=channelall
-CHAINCODE_NAME=sccc
-CHAINCODE_CONVECTOR=solidary-chain-chaincode
-CHAINCODE_LANG=node
+CHANNEL_ALL="channelall"
+CHAINCODE_NAME="sccc"
+CHAINCODE_CONVECTOR="solidary-chain-chaincode"
+CHAINCODE_LANG="node"
 POLICY_CHANNEL_ALL="'Org1MSP.member', 'Org2MSP.member','Org3MSP.member','Org4MSP.member','Org5MSP.member'"
 # POLICY_CHANNEL_ALL="'Org1MSP.peer', 'Org2MSP.peer','Org3MSP.peer','Org4MSP.peer','Org5MSP.peer'"
-LANG=node
-CA_FILE=/var/hyperledger/configs/ordererOrganizations/example.com/orderers/orderer1.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+LANG="node"
+CA_FILE="/var/hyperledger/configs/ordererOrganizations/example.com/orderers/orderer1.example.com/msp/tlscacerts/tlsca.example.com-cert.pem"
 # tar tgz to push
-TGZ_FILENAME=chaincode-${CHAINCODE_CONVECTOR}.tgz
-TGZ_PATH=chaincode-${CHAINCODE_CONVECTOR}
+TGZ_FILENAME="chaincode-${CHAINCODE_CONVECTOR}.tgz"
+TGZ_PATH="chaincode-${CHAINCODE_CONVECTOR}"
 # check version
 # ssh -t ${PEER0_ORG1_IP} docker exec cli peer chaincode list --installed
 # invokes
-GOV_ID=c8ca045c-9d1b-407f-b9ae-31711758f2d0
-GOV_CODE=gov
+GOV_ID="c8ca045c-9d1b-407f-b9ae-31711758f2d0"
+GOV_CODE="gov"
 GOV_NAME="Big Government"
 # seed script
-SCRIPT_SEED=seedNetwork.sh
+SCRIPT_SEED="seedNetwork.sh"
 
 # press any key function
 press_any_key() {
-  read -n 1 -s -r -p "Press any key to continue";printf "\\n"
-  :;
-  # SEC=2
-  # echo "sleeping for ${SEC}sec..."
-  # sleep ${SEC}
+  # read -n 1 -s -r -p "Press any key to continue";printf "\\n"
+  # :;
+  SEC=2
+  echo "sleeping for ${SEC}sec..."
+  sleep ${SEC}
 }
 
 if [ $(node -v) != "v8.16.0" ]; then
@@ -64,7 +64,7 @@ fi
 # get chaincode peer id `docker ps --filter "name=net-peer0.org1.example.com-solidary-chain-chaincode-1.7" -q`
 # enter container `docker exec -it $(docker ps --filter "name=net-peer0.org1.example.com-solidary-chain-chaincode-1.8" -q) bash`
 # log container `docker container logs -f net-peer0.org1.example.com-solidary-chain-chaincode-1.8`
-VERSION="1.0"
+VERSION="1.3"
 # 1 build with hurley, 0 only when we want to skip restart hurley network to build the chaincode, with 0 we dont reBuild chaincode, good for just deploy to networks
 BUILD_WITH_HURLEY=1
 
@@ -77,6 +77,7 @@ if [ ${BUILD_WITH_HURLEY} -eq 1 ]; then
   # cleanup, remove pack after push to peers
   # rm ${TGZ_FILENAME} -r || true
   rm ${CHAINCODE_NAME}.pak || true
+  rm ${TGZ_PATH} -r || true
 fi
 
 # start
@@ -99,6 +100,7 @@ else
   BUILD_CC_ACTION="upgrade"
   DEPLOY_CC_ACTION="upgrade"
   if [ ${BUILD_WITH_HURLEY} -eq 1 ]; then
+    npm run env:restart
     npx lerna run build --scope @solidary-chain/common-cc --stream
     npm run cc:${BUILD_CC_ACTION} -- ${CHAINCODE_CONVECTOR} ${VERSION}  
   fi

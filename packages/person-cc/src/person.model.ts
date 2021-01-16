@@ -1,4 +1,4 @@
-import { appConstants as c, UserRoles, x509Identities, GenericBalance, Goods, CurrentUser } from '@solidary-chain/common-cc';
+import { appConstants as c, UserRoles, x509Identities, GenericBalance, Goods, CurrentUser, getCurrentUserFilter } from '@solidary-chain/common-cc';
 import { Participant } from '@solidary-chain/participant-cc';
 import { ConvectorModel, Default, FlatConvectorModel, ReadOnly, Required, Validate } from '@worldsibu/convector-core';
 import * as yup from 'yup';
@@ -225,40 +225,40 @@ export class Person extends ConvectorModel<Person> {
 
   // custom static implementation getById
   public static async getById(id: string, user: CurrentUser): Promise<Person> {
-    let result: Person | Person[] = await this.getByFilter({ filter: { _id: id } }, user);
+    let resultSet: Person | Person[] = await this.getByFilter({ filter: { _id: id } }, user);
     // try get by code
-    if (!result[0]) {
-      result = await this.getByFilter({ filter: { 'fiscalNumber': id } }, user);
+    if (!resultSet[0]) {
+      resultSet = await this.getByFilter({ filter: { 'fiscalNumber': id } }, user);
     }
     // try get by fiscalNumber
-    if (!result[0]) {
-      result = await this.getByFilter({ filter: { 'mobilePhone': id } }, user);
+    if (!resultSet[0]) {
+      resultSet = await this.getByFilter({ filter: { 'mobilePhone': id } }, user);
     }
-    if (!result || !result[0] || !result[0].id) {
+    if (!resultSet || !resultSet[0] || !resultSet[0].id) {
       throw new Error(`No ${Person.name.toLowerCase()} exists with that id ${id}`);
     }
-    return result[0];
+    // return only one record in findById
+    return resultSet[0];
   }
 
   // custom static implementation getByField
   public static async getByField(fieldName: string, fieldValue: string, user: CurrentUser): Promise<Person | Person[]> {
-    const result: Person | Person[] = await this.getByFilter({ filter: { [fieldName]: fieldValue } }, user);
-    if (!result || !result[0] || !result[0].id) {
+    const resultSet: Person | Person[] = await this.getByFilter({ filter: { [fieldName]: fieldValue } }, user);
+    if (!resultSet || !resultSet[0] || !resultSet[0].id) {
       throw new Error(`No ${Person.name.toLowerCase()} exists with that fieldName: ${fieldName} and fieldValue ${fieldValue}`);
     }
-    return result[0];
+    // return recordSet
+    return resultSet;
   }
 
   // custom static implementation getByFilter
   public static async getByFilter(queryParams: { filter?: any, sort?: any }, user: CurrentUser): Promise<Person | Person[]> {
-    // TODO: add userFilter
-    // const userFilter = getAmbassadorUserFilter(user);
+    const userFilter = getCurrentUserFilter(user);
     const complexQuery: any = {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_PERSON,
         // add userFilter
-        // TODO: add userFilter
-        // ...userFilter,
+        ...userFilter,
         // spread arbitrary query filter
         ...queryParams.filter,
       },
@@ -266,6 +266,7 @@ export class Person extends ConvectorModel<Person> {
       sort: (queryParams.sort) ? queryParams.sort : undefined,
     };
     const resultSet: Person | Person[] = await Person.query(Person, complexQuery);
+    // return recordSet
     return resultSet;
   }
 }

@@ -50,7 +50,7 @@ PHONE_NUMBER="+351936200000"
 USER_NAME="admin"
 EMAIL="${USER_NAME}@example.com"
 DATE="61985472"
-PAYLOAD="{\"id\":\"${ADMN_ID}\",\"fiscalNumber\":\"${FISCAL_NUMBER}\",\"mobilePhone\":\"${PHONE_NUMBER}\",\"otherInformation\":\"\",\"username\":\"${USER_NAME}\",\"password\":\"${ADMIN_PASSWORD}\",\"email\":\"${EMAIL}\"}"
+PAYLOAD="{\"id\":\"${ADMN_ID}\",\"fiscalNumber\":\"${FISCAL_NUMBER}\",\"mobilePhone\":\"${PHONE_NUMBER}\",\"otherInformation\":\"\",\"username\":\"${USER_NAME}\",\"password\":\"${ADMIN_PASSWORD}\",\"email\":\"${EMAIL}\", \"roles\": ${ROLES}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" -u admin
 # npx hurl invoke ${CHAINCODE_NAME} person_get ${JOHN_ID} "${CURRENT_USER_ADMIN_ROLE}" -u admin
@@ -241,21 +241,18 @@ OUTPUT_TYPE="${CONVECTOR_MODEL_PATH_CAUSE}"
 OUTPUT_ID="${CAUSE_001}"
 QUANTITY="11"
 CURRENCY="EUR"
-LOGGED_PERSON_ID="${JOHN_ID}"
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\",\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL}}"
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" "${CURRENT_USER_JOHNDOE_ROLE}" -u user1
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u user1
 
-# TODO Balance violation! when work with causes, you must supply a total amount lesser or equal than current funds balance. current funds balance is 0
 # create funds transaction : Cause001 to jane 11: john is ambassador of Cause001 it works
 ID="acef70e5-cd25-4533-8392-9fa57e43cf33"
 INPUT_TYPE="${CONVECTOR_MODEL_PATH_CAUSE}"
 INPUT_ID="${CAUSE_001}"
 OUTPUT_TYPE="${CONVECTOR_MODEL_PATH_CAUSE}"
 OUTPUT_ID="${CAUSE_002}"
-LOGGED_PERSON_ID="${JOHN_ID}"
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"loggedPersonId\":\"${LOGGED_PERSON_ID}\",\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL}}"
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" "${CURRENT_USER_JOHNDOE_ROLE}" -u admin
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u admin
@@ -269,10 +266,9 @@ INPUT_ID="${JOHN_ID}"
 OUTPUT_TYPE="${CONVECTOR_MODEL_PATH_CAUSE}"
 OUTPUT_ID="${CAUSE_001}"
 QUANTITY="10"
-LOGGED_PERSON_ID="${JOHN_ID}"
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\",\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL}}"
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL}}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" -u user1
+npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" "${CURRENT_USER_JOHNDOE_ROLE}" -u user1
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u user1
 
 # create volunteeringHours transaction : jane 20hours to Cause002
@@ -280,9 +276,9 @@ ID="acef70e5-cd25-4533-8392-9fa57e43cf35"
 INPUT_TYPE="${CONVECTOR_MODEL_PATH_PERSON}"
 INPUT_ID="${JANE_ID}"
 OUTPUT_TYPE="${CONVECTOR_MODEL_PATH_CAUSE}"
-OUTPUT_ID="${CAUSE_002}"
+OUTPUT_ID="${CAUSE_003}"
 QUANTITY="20"
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\",\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL}}"
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" -u user1
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u user1
@@ -292,7 +288,7 @@ ID="acef70e5-cd25-4533-8392-9fa57e43cf36"
 INPUT_TYPE="${CONVECTOR_MODEL_PATH_PERSON}"
 INPUT_ID="${JANE_ID}"
 QUANTITY="20"
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\",\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL}}"
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" -u user1
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u user1
@@ -320,7 +316,6 @@ PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"assetType\":\"${ASSET_TYPE}\",
 npx hurl invoke ${CHAINCODE_NAME} asset_create "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" -u admin
 # npx hurl invoke ${CHAINCODE_NAME} asset_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u admin
 
-# TODO Logged person is not the owner of the asset, is not an authorized asset ambassador, or asset owner ambassador
 # transaction asset from owner johndoe, with logged user janedoe, acting has an ambassador of johndoe, transfer to cause001 | require to send input id and type even if acting has an ambassador
 # here we lost asset ambassadors, when we transfer it
 ID="acef70e5-cd25-4533-8392-9fa57e43cf56"
@@ -331,11 +326,10 @@ INPUT_TYPE="${CONVECTOR_MODEL_PATH_PERSON}"
 INPUT_ID="${JOHN_ID}"
 OUTPUT_TYPE="${CONVECTOR_MODEL_PATH_CAUSE}"
 OUTPUT_ID="${CAUSE_001}"
-LOGGED_PERSON_ID="${JANE_ID}"
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL},\"assetId\":\"${ASSET_ID}\",\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL},\"assetId\":\"${ASSET_ID}\"}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" "${CURRENT_USER_JOHNDOE_ROLE}" -u user1
-# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u admin
+# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} "${CURRENT_USER_JOHNDOE_ROLE}" -u admin
 
 # asset update: update asset and add janedoe to ambassadors, before below transfer, else it fails because asset don't have ambassador, is lost in lastest transfer
 AMBASSADORS_UPDATE="[\"${JANE_ID}\"]"
@@ -343,21 +337,16 @@ PAYLOAD="{\"id\":\"${ASSET_001_ID}\",\"ambassadors\":${AMBASSADORS_UPDATE}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} asset_update "${PAYLOAD}" "${CURRENT_USER_JOHNDOE_ROLE}"
 
-# TODO Transaction input owner is not the owner of the asset, or the type os transaction don't match. Must match asset type and use the owner of asset has input for transaction
 # transaction asset from cause001, with logged user janedoe, acting has an ambassador of cause001, transfer to PopBank | require to send input id and type even if acting has an ambassador
 ID="acef70e5-cd25-4533-8392-9fa57e43cf57"
 INPUT_TYPE="${CONVECTOR_MODEL_PATH_CAUSE}"
 INPUT_ID="${CAUSE_001}"
 OUTPUT_TYPE="${CONVECTOR_MODEL_PATH_PARTICIPANT}"
 OUTPUT_ID="${POPB_ID}"
-LOGGED_PERSON_ID="${JANE_ID}"
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL},\"assetId\":\"${ASSET_ID}\",\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL},\"assetId\":\"${ASSET_ID}\"}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" "${CURRENT_USER_MINI_ROLE}" -u user1
-# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u admin
-# TODO must use user with access
-# TODO No participant exists with that id 0fcc878a-6900-49d9-9a29-dffd9b8dae3c
-# TODO SOMETIMES we must let pass the userInfo privileges for ex when we GET OUTPUT entities in transactions for ex
+npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" "${CURRENT_USER_JOHNDOE_ROLE}" -u user1
+# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} "${CURRENT_USER_JOHNDOE_ROLE}" -u admin
 
 # asset update: update asset and add johndoe to ambassadors, before below transfer, else it fails because asset don't have ambassador, is lost in lastest transfer
 AMBASSADORS_UPDATE="[\"${JOHN_ID}\"]"
@@ -365,18 +354,16 @@ PAYLOAD="{\"id\":\"${ASSET_001_ID}\",\"ambassadors\":${AMBASSADORS_UPDATE}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} asset_update "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}"
 
-# TODO Transaction input owner is not the owner of the asset, or the type os transaction don't match. Must match asset type and use the owner of asset has input for transaction
 # transaction asset from PopBank, with logged user johndoe, acting has an ambassador of PopBank, transfer to cause002 | require to send input id and type even if acting has an ambassador
 ID="acef70e5-cd25-4533-8392-9fa57e43cf61"
 INPUT_TYPE="${CONVECTOR_MODEL_PATH_PARTICIPANT}"
 INPUT_ID="${POPB_ID}"
 OUTPUT_TYPE="${CONVECTOR_MODEL_PATH_CAUSE}"
 OUTPUT_ID="${CAUSE_002}"
-LOGGED_PERSON_ID="${JOHN_ID}"
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL},\"assetId\":\"${ASSET_ID}\",\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL},\"assetId\":\"${ASSET_ID}\"}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" "${CURRENT_USER_JOHNDOE_ROLE}"
-# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u admin
+# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} "${CURRENT_USER_JOHNDOE_ROLE}" -u admin
 
 # transaction of goods: person johnDoe to cause001
 ID="acef70e5-cd25-4533-8392-9fa57e43cf94"
@@ -387,21 +374,19 @@ INPUT_ID="${JOHN_ID}"
 OUTPUT_TYPE="${CONVECTOR_MODEL_PATH_CAUSE}"
 OUTPUT_ID="${CAUSE_001}"
 # this must fail in type of TRANSFER_GOODS
-LOGGED_PERSON_ID="${JOHN_ID}"
 GOODS_INPUT='[{"id":"80450045-d20d-4cdd-b937-c9bb46a48581","code": "008","barCode": "ean008","name": "name008","description": "description008","quantity": 200},{"id":"80450045-d20d-4cdd-b937-c9bb46a48582","code": "009","barCode": "ean009","name": "name009","description": "description009","quantity": 900}]'
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"goodsInput\":${GOODS_INPUT},\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"goodsInput\":${GOODS_INPUT},\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL}}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" -u user1
+npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" "${CURRENT_USER_JOHNDOE_ROLE}" -u user1
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u admin
 
 # transaction of goods: person janeDoe to cause001
 ID="acef70e5-cd25-4533-8392-9fa57e43cf95"
 INPUT_ID="${JANE_ID}"
-LOGGED_PERSON_ID="${JANE_ID}"
 GOODS_INPUT='[{"id":"80450045-d20d-4cdd-b937-c9bb46a48581","code": "010","barCode": "ean010","name": "name010","description": "description010","quantity": 10},{"id":"80450045-d20d-4cdd-b937-c9bb46a48582","code": "011","barCode": "ean011","name": "name011","description": "description011","quantity": 11}]'
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"goodsInput\":${GOODS_INPUT},\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"goodsInput\":${GOODS_INPUT},\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL}}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" -u user1
+npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" "${CURRENT_USER_JANEDOE_ROLE}" -u user1
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u admin
 
 # transaction of goods: cause001 to cause002 (must have goods in stock)
@@ -410,7 +395,7 @@ INPUT_ID="${CAUSE_001}"
 INPUT_TYPE="${CONVECTOR_MODEL_PATH_CAUSE}"
 OUTPUT_ID="${CAUSE_002}"
 GOODS_INPUT='[{"id":"80450045-d20d-4cdd-b937-c9bb46a48581","code": "008","barCode": "ean008","name": "name008","description": "description008","quantity": 8},{"id":"80450045-d20d-4cdd-b937-c9bb46a48582","code": "009","barCode": "ean009","name": "name009","description": "description009","quantity": 9},{"id":"80450045-d20d-4cdd-b937-c9bb46a48581","code": "010","barCode": "ean010","name": "name010","description": "description010","quantity": 10},{"id":"80450045-d20d-4cdd-b937-c9bb46a48582","code": "011","barCode": "ean011","name": "name011","description": "description011","quantity": 11}]'
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"goodsInput\":${GOODS_INPUT},\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"goodsInput\":${GOODS_INPUT},\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" "${CURRENT_USER_JOHNDOE_ROLE}" -u user1
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u admin
@@ -418,18 +403,17 @@ npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" "${CURRENT_USE
 # transaction of goods: cause001 to cause002 (must have goods in stock)
 ID="acef70e5-cd25-4533-8392-9fa57e43cf18"
 GOODS_INPUT='[{"id":"80450045-d20d-4cdd-b937-c9bb46a48581","code": "008","barCode": "ean008","name": "name008CHANGE-FAIL","description": "description008CHANGE-FAIL","quantity": 92},{"id":"80450045-d20d-4cdd-b937-c9bb46a48582","code": "009","barCode": "ean009","name": "name009CHANGE-FAIL","description": "description009CHANGE-FAIL","quantity": 91}]'
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"goodsInput\":${GOODS_INPUT},\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"goodsInput\":${GOODS_INPUT},\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" "${CURRENT_USER_JOHNDOE_ROLE}" -u user1
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u admin
 
-# TODO No participant exists with that id c8ca045c-9d1b-407f-b9ae-31711758f2d0
 # transaction of goods: cause001 to participant gov (must have goods in stock), clean stocks, all 4 items will  be zeroed
 ID="acef70e5-cd25-4533-8392-9fa57e43cf19"
 OUTPUT_TYPE="${CONVECTOR_MODEL_PATH_PARTICIPANT}"
 OUTPUT_ID="${GOV_ID}"
 GOODS_INPUT='[{"id":"80450045-d20d-4cdd-b937-c9bb46a48581","code": "008","barCode": "ean008","name": "name008CHANGE-FAIL","description": "description008CHANGE-FAIL","quantity": 100},{"id":"80450045-d20d-4cdd-b937-c9bb46a48582","code": "009","barCode": "ean009","name": "name009","description": "description009","quantity": 800}]'
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"goodsInput\":${GOODS_INPUT},\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"goodsInput\":${GOODS_INPUT},\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" "${CURRENT_USER_JOHNDOE_ROLE}" -u user1
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u admin
@@ -441,7 +425,7 @@ INPUT_ID="${CAUSE_002}"
 OUTPUT_TYPE="${CONVECTOR_MODEL_PATH_PERSON}"
 OUTPUT_ID="${JOHN_ID}"
 GOODS_INPUT='[{"id":"80450045-d20d-4cdd-b937-c9bb46a48581","code": "010","barCode": "ean010","name": "name010","description": "description010","quantity": 10},{"id":"80450045-d20d-4cdd-b937-c9bb46a48582","code": "011","barCode": "ean011","name": "name011","description": "description011","quantity": 11}]'
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"goodsInput\":${GOODS_INPUT},\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"goodsInput\":${GOODS_INPUT},\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" "${CURRENT_USER_JOHNDOE_ROLE}" -u user1
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u admin
@@ -451,7 +435,7 @@ ID="acef70e5-cd25-4533-8392-9fa57e43cf21"
 INPUT_TYPE="${CONVECTOR_MODEL_PATH_PERSON}"
 INPUT_ID="${JANE_ID}"
 GOODS_INPUT='[{"id":"80450045-d20d-4cdd-b937-c9bb46a48581","code": "010","barCode": "ean010","name": "name010","description": "description010","quantity": 9.5},{"id":"80450045-d20d-4cdd-b937-c9bb46a48582","code": "011","barCode": "ean011","name": "name011","description": "description011","quantity": 10.11}]'
-PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"goodsInput\":${GOODS_INPUT},\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
+PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"goodsInput\":${GOODS_INPUT},\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL}}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" -u user1
 # npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u admin
@@ -503,7 +487,6 @@ PAYLOAD="{\"id\":\"${CAUSE_001}\",\"email\":\"${EMAIL_UPDATE}\",\"ambassadors\":
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} cause_update "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" 
 
-# TODO No transaction exists with that id 4ea88521-031b-4279-9165-9c10e1839000
 # transaction update: all updateable fields
 PAYLOAD="{\"id\":\"${TRANSACTION_001_ID}\",\"metaDataInternal\":${METADATA_INTERNAL_UPDATE}}"
 # echo $PAYLOAD  | jq
@@ -514,8 +497,7 @@ PAYLOAD="{\"id\":\"${MINI_ID}\",\"roles\":${ROLES},\"metaDataInternal\":${METADA
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} person_update "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}"  -u admin
 
-# TODO Cannot read property 'fiscalNumber' of undefined
-# person upsertCitizenCard: update existing user mini (minimal data): required admin user (acting has Gov)
+# person upsertCitizenCard: UPDATE existing user mini (minimal data): required admin user (acting has Gov)
 DOCUMENT_NUMBER="09879461 1 ZZ3"
 IDENTITY_NUMBER="098124620"
 FISCAL_NUMBER="PT182692152"
@@ -540,12 +522,11 @@ EXPIRATION_DATE="${DATE}"
 EMITTING_ENTITY="República Portuguesa"
 REQUEST_LOCATION="CRCiv. Figueira da Foz"
 OTHER_INFORMATION="Other info...."
-PAYLOAD="{\"id\":\"${MINI_ID}\",\"documentNumber\": \"${DOCUMENT_NUMBER}\",\"identityNumber\": \"${IDENTITY_NUMBER}\",\"fiscalNumber\": \"${FISCAL_NUMBER}\",\"socialSecurityNumber\": \"${SOCIAL_SECURITY_NUMBER}\",\"beneficiaryNumber\": \"${BENEFICIARY_NUMBER}\",\"pan\": \"${PAN}\",\"firstname\": \"${FIRSTNAME}\",\"lastname\": \"${LASTNAME}\",\"gender\": \"${GENDER}\",\"height\": \"${HEIGHT}\",\"fatherFirstname\": \"${FATHER_FIRSTNAME}\",\"fatherLastname\": \"${FATHER_LASTNAME}\",\"motherFirstname\": \"${MOTHER_FIRSTNAME}\",\"motherLastname\": \"${MOTHER_LASTNAME}\",\"birthDate\": \"${BIRTH_DATE}\",\"nationality\": \"${NATIONALITY}\",\"country\": \"${COUNTRY}\",\"documentType\": \"${DOCUMENT_TYPE}\",\"cardVersion\": \"${CARD_VERSION}\",\"emissionDate\": \"${EMISSION_DATE}\",\"expirationDate\": \"${EXPIRATION_DATE}\",\"emittingEntity\": \"${EMITTING_ENTITY}\",\"requestLocation\": \"${REQUEST_LOCATION}\",\"otherInformation\": \"${OTHER_INFORMATION}\"}"
+PAYLOAD="{\"fiscalNumber\": \"${FISCAL_NUMBER}\",\"documentNumber\": \"${DOCUMENT_NUMBER}\",\"identityNumber\": \"${IDENTITY_NUMBER}\",\"socialSecurityNumber\": \"${SOCIAL_SECURITY_NUMBER}\",\"beneficiaryNumber\": \"${BENEFICIARY_NUMBER}\",\"pan\": \"${PAN}\",\"firstname\": \"${FIRSTNAME}\",\"lastname\": \"${LASTNAME}\",\"gender\": \"${GENDER}\",\"height\": \"${HEIGHT}\",\"fatherFirstname\": \"${FATHER_FIRSTNAME}\",\"fatherLastname\": \"${FATHER_LASTNAME}\",\"motherFirstname\": \"${MOTHER_FIRSTNAME}\",\"motherLastname\": \"${MOTHER_LASTNAME}\",\"birthDate\": \"${BIRTH_DATE}\",\"nationality\": \"${NATIONALITY}\",\"country\": \"${COUNTRY}\",\"documentType\": \"${DOCUMENT_TYPE}\",\"cardVersion\": \"${CARD_VERSION}\",\"emissionDate\": \"${EMISSION_DATE}\",\"expirationDate\": \"${EXPIRATION_DATE}\",\"emittingEntity\": \"${EMITTING_ENTITY}\",\"requestLocation\": \"${REQUEST_LOCATION}\",\"otherInformation\": \"${OTHER_INFORMATION}\"}"
 # echo $PAYLOAD  | jq
 npx hurl invoke ${CHAINCODE_NAME} person_upsertCitizenCard "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" -u admin
 
-# TODO No person exists with that fieldName: fiscalNumber and fieldValue PT181192152
-# person_upsertCitizenCard: new person : non existing user: required admin user (acting has Gov)
+# person_upsertCitizenCard: NEW person : non existing user: required admin user (acting has Gov)
 DOCUMENT_NUMBER="09119461 1 ZZ3"
 IDENTITY_NUMBER="091124620"
 FISCAL_NUMBER="PT181192152"

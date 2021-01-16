@@ -59,7 +59,8 @@ export class Person {
   @IsDate()
   registrationDate: Date;
 
-  @Field()
+  // personUpsertCitizenCard don't have mobilePhone must leave nullable
+  @Field({ nullable: true })
   @IsDefined()
   mobilePhone: string;
 

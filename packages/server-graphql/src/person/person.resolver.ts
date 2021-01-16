@@ -1,22 +1,28 @@
-import { NotFoundException, UseGuards } from '@nestjs/common';
+import { Logger, NotFoundException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'apollo-server-express';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
-import { CurrentUser } from '../auth/decorators';
+import { CurrentUser, Roles } from '../auth/decorators';
 import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
 import { SubscriptionEvent } from '../common/enums';
 import CurrentUserPayload from '../common/types/current-user-payload';
 import { AddPersonAttributeInput, GetByAttributeInput, NewPersonInput, UpdatePersonInput, UpdatePersonPasswordInput, UpdatePersonProfileInput, UpsertCitizenCardInput } from './dto';
 import { Person } from './models';
 import { PersonService } from './person.service';
+import { appConstants as c } from '../constants';
+import { GqlRolesGuard } from '../auth/guards';
+import { UserRoles } from '@solidary-chain/common-cc';
 
 const pubSub = new PubSub();
 
+// don't use it globally, here we have some unguarded endpoints
 // @UseGuards(GqlAuthGuard)
 @Resolver(of => Person)
 export class PersonResolver {
   constructor(private readonly personService: PersonService) { }
 
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @UseGuards(GqlAuthGuard)
   @Query(returns => [Person])
   async persons(
@@ -26,6 +32,8 @@ export class PersonResolver {
     return this.personService.findAll(paginationArgs, user);
   }
 
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @UseGuards(GqlAuthGuard)
   @Query(returns => [Person])
   async personByAttribute(
@@ -36,6 +44,8 @@ export class PersonResolver {
     return this.personService.findByAttribute(getByAttributeInput, paginationArgs, user);
   }
 
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @UseGuards(GqlAuthGuard)
   @Query(returns => [Person])
   personComplexQuery(
@@ -46,6 +56,8 @@ export class PersonResolver {
     return this.personService.findComplexQuery(getByComplexQueryInput, paginationArgs, user);
   }
 
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @UseGuards(GqlAuthGuard)
   @Query(returns => Person)
   async personById(
@@ -53,12 +65,14 @@ export class PersonResolver {
     @CurrentUser() user: CurrentUserPayload,
   ): Promise<Person> {
     const person = await this.personService.findOneById(id, user);
-    if (!person) {
+    if (!person.id) {
       throw new NotFoundException(id);
     }
     return person;
   }
 
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @UseGuards(GqlAuthGuard)
   @Query(returns => Person)
   async personByUsername(
@@ -66,12 +80,14 @@ export class PersonResolver {
     @CurrentUser() user: CurrentUserPayload,
   ): Promise<Person> {
     const person = await this.personService.findOneByUsername(username, user);
-    if (!person) {
+    if (!person.id) {
       throw new NotFoundException(username);
     }
     return person;
   }
 
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @UseGuards(GqlAuthGuard)
   @Query(returns => Person)
   async personByFiscalNumber(
@@ -79,30 +95,38 @@ export class PersonResolver {
     @CurrentUser() user: CurrentUserPayload,
   ): Promise<Person> {
     const person = await this.personService.findOneByFiscalnumber(fiscalNumber, user);
-    if (!person) {
+    if (!person.id) {
       throw new NotFoundException(fiscalNumber);
     }
     return person;
   }
 
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @UseGuards(GqlAuthGuard)
   @Query(returns => Person)
   async personProfile(
     @CurrentUser() user: CurrentUserPayload,
   ): Promise<Person> {
-    return await this.personService.findOneByUsername(user.username, user);
+    const person = await this.personService.findOneByUsername(user.username, user);
+    if (!person.id) {
+      throw new NotFoundException(user.username);
+    }
+    return person;
   }
 
-  // unprotected method, person register don't use createdByPersonId
+  // unprotected method, person register don't use createdByPersonId, we must pass ADMIN_ROLE
   @Mutation(returns => Person)
   async personRegister(
     @Args('newPersonData') newPersonData: NewPersonInput,
   ): Promise<Person> {
-    const person = await this.personService.create(newPersonData, null);
+    const person = await this.personService.create(newPersonData, c.CURRENT_USER_ADMIN_ROLE);
     pubSub.publish(SubscriptionEvent.personAdded, { [SubscriptionEvent.personAdded]: person });
     return person;
   }
 
+  @Roles(UserRoles.ROLE_ADMIN)
+  @UseGuards(GqlRolesGuard)
   @UseGuards(GqlAuthGuard)
   @Mutation(returns => Person)
   async personAddAttribute(
@@ -115,6 +139,8 @@ export class PersonResolver {
     return person;
   }
 
+  @Roles(UserRoles.ROLE_ADMIN)
+  @UseGuards(GqlRolesGuard)
   @UseGuards(GqlAuthGuard)
   @Mutation(returns => Person)
   async personUpdate(
@@ -126,6 +152,8 @@ export class PersonResolver {
     return person;
   }
 
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @UseGuards(GqlAuthGuard)
   @Mutation(returns => Person)
   async personUpdatePassword(
@@ -137,6 +165,8 @@ export class PersonResolver {
     return person;
   }
 
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @UseGuards(GqlAuthGuard)
   @Mutation(returns => Person)
   async personUpdateProfile(
@@ -148,6 +178,7 @@ export class PersonResolver {
     return person;
   }
 
+  // unprotected method, person register don't use createdByPersonId, here we have catch getById in cc and let it pass
   @UseGuards(GqlAuthGuard)
   @Mutation(returns => Person)
   async personUpsertCitizenCard(
@@ -159,39 +190,64 @@ export class PersonResolver {
     return person;
   }
 
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @UseGuards(GqlAuthGuard)
   @Subscription(returns => Person)
-  personAdded() {
+  personAdded(
+    @CurrentUser() user: CurrentUserPayload,
+  ) {
+    // Logger.log(user.userId, PersonResolver.name);
     return pubSub.asyncIterator(SubscriptionEvent.personAdded);
   }
 
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @UseGuards(GqlAuthGuard)
   @Subscription(returns => Person)
-  personAttributeAdded() {
+  personAttributeAdded(
+    @CurrentUser() user: CurrentUserPayload,
+  ) {
     return pubSub.asyncIterator(SubscriptionEvent.personAttributeAdded);
   }
 
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @UseGuards(GqlAuthGuard)
   @Subscription(returns => Person)
-  personUpdated() {
+  personUpdated(
+    @CurrentUser() user: CurrentUserPayload,
+  ) {
     return pubSub.asyncIterator(SubscriptionEvent.personUpdated);
   }
 
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @UseGuards(GqlAuthGuard)
   @Subscription(returns => Person)
-  personPasswordUpdated() {
+  personPasswordUpdated(
+    @CurrentUser() user: CurrentUserPayload,
+  ) {
     return pubSub.asyncIterator(SubscriptionEvent.personPasswordUpdated);
   }
 
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @UseGuards(GqlAuthGuard)
   @Subscription(returns => Person)
-  personProfileUpdated() {
+  personProfileUpdated(
+    @CurrentUser() user: CurrentUserPayload,
+  ) {
     return pubSub.asyncIterator(SubscriptionEvent.personProfileUpdated);
   }
 
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @UseGuards(GqlAuthGuard)
   @Subscription(returns => Person)
-  personCitizenCardUpserted() {
+  personCitizenCardUpserted(
+    @CurrentUser() user: CurrentUserPayload,
+  ) {
     return pubSub.asyncIterator(SubscriptionEvent.personCitizenCardUpserted);
   }
 }

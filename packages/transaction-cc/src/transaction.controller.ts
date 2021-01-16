@@ -166,18 +166,15 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
         }
 
         // protection check if loggedPerson is the asset owner, or if loggedPerson in in assets authorized ambassador's, or in asset.owner.entity.ambassadors (when asset don't have ambassadors)
-        // all conditions must be false to throw, if one pass it don't throw
-        // TODO: must check if this is working
-        if ((transaction.input.entity as Participant | Person | Cause).id != loggedPerson.id
-          && (
-            // must check if ambassadors exists
-            !('ambassadors' in asset && asset.ambassadors.includes(loggedPerson.id))
-            // must check if ambassadors exists
-            && !('ambassadors' in asset.owner.entity && (asset.owner.entity as Participant | Cause).ambassadors.includes(loggedPerson.id))
-          )
+        // all conditions must be false to throw, if one pass it don't throw and let it pass
+        if ((transaction.input.entity as Participant | Person | Cause).id != loggedPerson.id &&
+          // must check if ambassadors exists
+          !('ambassadors' in asset && asset.ambassadors.includes(loggedPerson.id)) &&
+          // must check if ambassadors exists
+          !('ambassadors' in asset.owner.entity && (asset.owner.entity as Participant | Cause).ambassadors.includes(loggedPerson.id))
         ) {
           // debugMessage = `:debugMessage:transaction.input.id: ${transaction.input.id} != loggedPerson.id: ${loggedPerson.id} (${transaction.input.id != loggedPerson.id}}) - ${JSON.stringify(asset.ambassadors)}:${asset.ambassadors.includes(loggedPerson.id)}:(${!asset.ambassadors.includes(loggedPerson.id)})`;
-          throw new Error(`Logged person is not the owner of the asset, is not an authorized asset ambassador, or asset owner ambassador${debugMessage}`);
+          throw new Error(`Logged person is not the owner of the asset, or asset owner ambassador${debugMessage}, or is not an authorized asset ambassador`);
         }
 
         // REMOVED: not quantity and currency are optional, this way we can transfer assets and funds, like sell the asset
@@ -187,7 +184,6 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
         // }
 
         // assign new owner id and type
-        debugger;
         asset.owner.entity = transaction.output.entity;
         // assign which asset was transferred to transaction
         transaction.assetId = asset.id;
@@ -300,7 +296,7 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     user: CurrentUser
   ) {
     // Retrieve to see if exists
-    let existing = await Transaction.getById(user.userId, user);
+    let existing = await Transaction.getById(transaction.id, user);
 
     if (!existing || !existing.id) {
       throw new Error('No transaction exists with that id');

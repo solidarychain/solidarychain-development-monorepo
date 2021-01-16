@@ -6,6 +6,14 @@
 
 import { createParamDecorator } from '@nestjs/common';
 
+// used without subscriptions, here we ger user from request, in subscription we must use req or context
+// export const CurrentUser = createParamDecorator(
+//   (data, [root, args, ctx, info]) => ctx.req.user,
+// );
+
 export const CurrentUser = createParamDecorator(
-  (data, [root, args, ctx, info]) => ctx.req.user,
+  (data, [root, args, ctx, info]) => {
+    const req = (ctx.req) ? ctx.req : ctx.connection.context;
+    return req.user
+  },
 );

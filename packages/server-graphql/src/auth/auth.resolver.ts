@@ -2,13 +2,16 @@ import { UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'apollo-server-express';
 import { SubscriptionEvent } from '../common/enums';
+import CurrentUserPayload from '../common/types/current-user-payload';
 import SignJwtTokenPayload from '../common/types/sign-jwt-token-payload';
 import { LoginPersonInput } from '../person/dto';
 import { Person } from '../person/models/person.model';
 import { GqlContext } from '../types';
 import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
-import { GqlLocalAuthGuard } from './guards';
+import { CurrentUser, Roles } from './decorators';
+import { UserRoles } from './enums';
+import { GqlLocalAuthGuard, GqlRolesGuard } from './guards';
 import { AccessToken, PersonLoginResponse } from './models';
 
 const pubSub = new PubSub();
@@ -33,7 +36,6 @@ export class AuthResolver {
     // accessToken: add some person data to it, like id and roles
     const signJwtTokenDto: SignJwtTokenPayload = { ...loginPersonData, userId: person.id, roles: person.roles };
     const { accessToken } = await this.authService.signJwtToken(signJwtTokenDto);
-    // TODO: payload is assigned to context?
     // assign jwt Payload to context
     payload = this.authService.getJwtPayLoad(accessToken);
     // get incremented tokenVersion
@@ -67,8 +69,12 @@ export class AuthResolver {
     return true;
   }
 
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @Subscription(returns => String)
-  personLogged() {
+  personLogged(
+    @CurrentUser() user: CurrentUserPayload,    
+  ) {
     return pubSub.asyncIterator(SubscriptionEvent.personLogged);
   }
 }

@@ -47,7 +47,7 @@ export class AssetResolver {
     @CurrentUser() user: CurrentUserPayload,
   ): Promise<Asset> {
     const asset = await this.assetService.findOneById(id, user);
-    if (!asset) {
+    if (!asset.id) {
       throw new NotFoundException(id);
     }
     return asset;
@@ -80,14 +80,18 @@ export class AssetResolver {
   @Roles(UserRoles.ROLE_USER)
   @UseGuards(GqlRolesGuard)
   @Subscription(returns => Asset)
-  assetAdded() {
+  assetAdded(
+    @CurrentUser() user: CurrentUserPayload,    
+  ) {
     return pubSub.asyncIterator(SubscriptionEvent.assetAdded);
   }
 
   @Roles(UserRoles.ROLE_USER)
   @UseGuards(GqlRolesGuard)
   @Subscription(returns => Asset)
-  assetUpdated() {
+  assetUpdated(
+    @CurrentUser() user: CurrentUserPayload,    
+  ) {
     return pubSub.asyncIterator(SubscriptionEvent.assetUpdated);
   }
 }

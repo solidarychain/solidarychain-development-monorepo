@@ -1,4 +1,4 @@
-import { appConstants as c, CurrentUser, entitySchema, GenericBalance, getAmbassadorUserFilter, Goods } from '@solidary-chain/common-cc';
+import { appConstants as c, CurrentUser, entitySchema, GenericBalance, getInputAndAmbassadorUserFilter, Goods } from '@solidary-chain/common-cc';
 import { ConvectorModel, FlatConvectorModel, ReadOnly, Required, Validate } from '@worldsibu/convector-core';
 import * as yup from 'yup';
 import { x509Identities } from '@solidary-chain/common-cc';
@@ -74,25 +74,27 @@ export class Cause extends ConvectorModel<Cause> {
 
   // custom static implementation getById
   public static async getById(id: string, user: CurrentUser): Promise<Cause> {
-    const result: Cause | Cause[] = await this.getByFilter({ filter: { _id: id } }, user);
-    if (!result || !result[0] || !result[0].id) {
+    const resultSet: Cause | Cause[] = await this.getByFilter({ filter: { _id: id } }, user);
+    if (!resultSet || !resultSet[0] || !resultSet[0].id) {
       throw new Error(`No ${Cause.name.toLowerCase()} exists with that id ${id}`);
     }
-    return result[0];
+    // return only one record in findById
+    return resultSet[0];
   }
 
   // custom static implementation getByField
   public static async getByField(fieldName: string, fieldValue: string, user: CurrentUser): Promise<Cause | Cause[]> {
-    const result: Cause | Cause[] =  await this.getByFilter({ filter: { [fieldName]: fieldValue } }, user);
-    if (!result || !result[0] || !result[0].id) {
+    const resultSet: Cause | Cause[] =  await this.getByFilter({ filter: { [fieldName]: fieldValue } }, user);
+    if (!resultSet || !resultSet[0] || !resultSet[0].id) {
       throw new Error(`No ${Cause.name.toLowerCase()} exists with that fieldName: ${fieldName} and fieldValue ${fieldValue}`);
     }
-    return result[0];
+    // return recordSet
+    return resultSet;
   }
 
   // custom static implementation getByFilter
   public static async getByFilter(queryParams: { filter?: any, sort?: any }, user: CurrentUser): Promise<Cause | Cause[]> {
-    const userFilter = getAmbassadorUserFilter(user);
+    const userFilter = getInputAndAmbassadorUserFilter(user);
     const complexQuery: any = {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_CAUSE,
@@ -105,6 +107,7 @@ export class Cause extends ConvectorModel<Cause> {
       sort: (queryParams.sort) ? queryParams.sort : undefined,
     };
     const resultSet: Cause | Cause[] = await Cause.query(Cause, complexQuery);
+    // return recordSet
     return resultSet;
   }
 }

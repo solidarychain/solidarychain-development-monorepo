@@ -17,8 +17,7 @@ const pubSub = new PubSub();
 export class ParticipantResolver {
   constructor(private readonly participantService: ParticipantService) { }
 
-  // TODO
-  @Roles(UserRoles.ROLE_ADMIN)
+  @Roles(UserRoles.ROLE_USER)
   @UseGuards(GqlRolesGuard)
   @Query(returns => [Participant])
   participants(
@@ -28,7 +27,8 @@ export class ParticipantResolver {
     return this.participantService.findAll(paginationArgs, user);
   }
 
-  // TODO
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @Query(returns => [Participant])
   participantComplexQuery(
     @Args('getByComplexQueryInput') getByComplexQueryInput: GetByComplexQueryInput,
@@ -38,31 +38,36 @@ export class ParticipantResolver {
     return this.participantService.findComplexQuery(getByComplexQueryInput, paginationArgs, user);
   }
 
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @Query(returns => Participant)
   async participantById(
     @Args('id') id: string,
     @CurrentUser() user: CurrentUserPayload,
   ): Promise<Participant> {
     const participant = await this.participantService.findOneById(id, user);
-    if (!participant) {
+    if (!participant.id) {
       throw new NotFoundException(id);
     }
     return participant;
   }
 
-  @UseGuards(GqlAuthGuard)
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @Query(returns => Participant)
   async participantByCode(
     @Args('code') code: string,
     @CurrentUser() user: CurrentUserPayload,
   ): Promise<Participant> {
     const participant = await this.participantService.findOneByCode(code, user);
-    if (!participant) {
+    if (!participant.id) {
       throw new NotFoundException(code);
     }
     return participant;
   }
 
+  @Roles(UserRoles.ROLE_ADMIN)
+  @UseGuards(GqlRolesGuard)
   @Mutation(returns => Participant)
   async participantNew(
     @Args('newParticipantData') newParticipantData: NewParticipantInput,
@@ -75,6 +80,8 @@ export class ParticipantResolver {
     return participant;
   }
 
+  @Roles(UserRoles.ROLE_ADMIN)
+  @UseGuards(GqlRolesGuard)
   @Mutation(returns => Participant)
   async participantUpdate(
     @Args('updateParticipantData') updateParticipantData: UpdateParticipantInput,
@@ -85,6 +92,8 @@ export class ParticipantResolver {
     return participant;
   }
 
+  @Roles(UserRoles.ROLE_ADMIN)
+  @UseGuards(GqlRolesGuard)
   @Mutation(returns => Participant)
   async participantChangeIdentity(
     @Args('changeParticipantIdentityData') changeParticipantIdentityData: ChangeParticipantIdentityInput,
@@ -95,18 +104,30 @@ export class ParticipantResolver {
     return participant;
   }
 
+  @Roles(UserRoles.ROLE_ADMIN)
+  @UseGuards(GqlRolesGuard)
   @Subscription(returns => Participant)
-  participantAdded() {
+  participantAdded(
+    @CurrentUser() user: CurrentUserPayload,    
+  ) {
     return pubSub.asyncIterator(SubscriptionEvent.participantAdded);
   }
 
+  @Roles(UserRoles.ROLE_ADMIN)
+  @UseGuards(GqlRolesGuard)
   @Subscription(returns => Participant)
-  participantUpdated() {
+  participantUpdated(
+    @CurrentUser() user: CurrentUserPayload,    
+  ) {
     return pubSub.asyncIterator(SubscriptionEvent.participantUpdated);
   }
 
+  @Roles(UserRoles.ROLE_ADMIN)
+  @UseGuards(GqlRolesGuard)
   @Subscription(returns => Participant)
-  participantIdentityChanged() {
+  participantIdentityChanged(
+    @CurrentUser() user: CurrentUserPayload,    
+  ) {
     return pubSub.asyncIterator(SubscriptionEvent.participantIdentityChanged);
   }
 }

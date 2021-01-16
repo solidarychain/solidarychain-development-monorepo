@@ -18,8 +18,8 @@ const pubSub = new PubSub();
 export class TransactionResolver {
   constructor(private readonly transactionService: TransactionService) { }
 
-  // @Roles(UserRoles.ROLE_ADMIN)
-  // @UseGuards(GqlRolesGuard)
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @Query(returns => [Transaction])
   transactions(
     @Args() paginationArgs: PaginationArgs,
@@ -29,7 +29,8 @@ export class TransactionResolver {
   }
 
 
-  // TODO
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @Query(returns => [Transaction])
   transactionComplexQuery(
     @Args('getByComplexQueryInput') getByComplexQueryInput: GetByComplexQueryInput,
@@ -39,18 +40,22 @@ export class TransactionResolver {
     return this.transactionService.findComplexQuery(getByComplexQueryInput, paginationArgs, user);
   }
 
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @Query(returns => Transaction)
   async transactionById(
     @Args('id') id: string,
     @CurrentUser() user: CurrentUserPayload,
   ): Promise<Transaction> {
     const transaction = await this.transactionService.findOneById(id, user);
-    if (!transaction) {
+    if (!transaction.id) {
       throw new NotFoundException(id);
     }
     return transaction;
   }
 
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @Mutation(returns => Transaction)
   async transactionNew(
     @Args('newTransactionData') newTransactionData: NewTransactionInput,
@@ -63,6 +68,8 @@ export class TransactionResolver {
     return transaction;
   }
 
+  @Roles(UserRoles.ROLE_ADMIN)
+  @UseGuards(GqlRolesGuard)
   @Mutation(returns => Transaction)
   async transactionUpdate(
     @Args('updateTransactionData') updateTransactionData: UpdateTransactionInput,
@@ -73,13 +80,21 @@ export class TransactionResolver {
     return transaction;
   }
 
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @Subscription(returns => Transaction)
-  transactionAdded() {
+  transactionAdded(
+    @CurrentUser() user: CurrentUserPayload,    
+  ) {
     return pubSub.asyncIterator(SubscriptionEvent.transactionAdded);
   }
 
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @Subscription(returns => Transaction)
-  transactionUpdated() {
+  transactionUpdated(
+    @CurrentUser() user: CurrentUserPayload,    
+  ) {
     return pubSub.asyncIterator(SubscriptionEvent.transactionUpdated);
   }
 }

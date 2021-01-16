@@ -21,9 +21,8 @@ const pubSub = new PubSub();
 export class CauseResolver {
   constructor(private readonly causeService: CauseService) { }
 
-  // TODO
-  // @Roles(UserRoles.ROLE_ADMIN)
-  // @UseGuards(GqlRolesGuard)
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @Query(returns => [Cause])
   causes(
     @Args() paginationArgs: PaginationArgs,
@@ -32,16 +31,19 @@ export class CauseResolver {
     return this.causeService.findAll(paginationArgs, user);
   }
 
-  // TODO
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @Query(returns => [Cause])
   causeComplexQuery(
     @Args('getByComplexQueryInput') getByComplexQueryInput: GetByComplexQueryInput,
     @Args() paginationArgs: PaginationArgs,
     @CurrentUser() user: CurrentUserPayload,
-  ): Promise<Cause | Cause[]> {    
+  ): Promise<Cause | Cause[]> {
     return this.causeService.findComplexQuery(getByComplexQueryInput, paginationArgs, user);
   }
 
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @Query(returns => [Cause])
   causeOngoing(
     @Args('date') date: number,
@@ -51,18 +53,22 @@ export class CauseResolver {
     return this.causeService.findOngoing(date, paginationArgs, user);
   }
 
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @Query(returns => Cause)
   async causeById(
     @Args('id') id: string,
     @CurrentUser() user: CurrentUserPayload,
   ): Promise<Cause> {
     const cause = await this.causeService.findOneById(id, user);
-    if (!cause) {
+    if (!cause.id) {
       throw new NotFoundException(id);
     }
     return cause;
   }
 
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @Mutation(returns => Cause)
   async causeNew(
     @Args('newCauseData') newCauseData: NewCauseInput,
@@ -81,6 +87,8 @@ export class CauseResolver {
     return cause;
   }
 
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @Mutation(returns => Cause)
   async causeUpdate(
     @Args('updateCauseData') updateCauseData: UpdateCauseInput,
@@ -91,20 +99,29 @@ export class CauseResolver {
     return cause;
   }
 
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @Subscription(returns => Cause)
-  causeAdded() {
+  causeAdded(
+    @CurrentUser() user: CurrentUserPayload,
+  ) {
     return pubSub.asyncIterator(SubscriptionEvent.causeAdded);
   }
 
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @Subscription(returns => Cause)
-  causeUpdated() {
+  causeUpdated(
+    @CurrentUser() user: CurrentUserPayload,
+  ) {
     return pubSub.asyncIterator(SubscriptionEvent.causeUpdated);
   }
 
   // work but seems that we must create on subscription for each entity model, this way is better to listen to main create event and map data in frontend
-  // @UseGuards(GqlAuthGuard)
   // @Subscription(returns => GraphData)
-  // reactForceData() {
+  // reactForceData(
+  //   @CurrentUser() user: CurrentUserPayload,
+  // ) {
   //   return pubSub.asyncIterator(SubscriptionEvent.reactForceData);
   // }
 }

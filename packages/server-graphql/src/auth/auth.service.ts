@@ -18,7 +18,7 @@ export class AuthService {
   // called by GqlLocalAuthGuard
   async validateUser(username: string, pass: string): Promise<any> {
     const user = await this.usersService.findOneByUsername(username);
-    if (user) {
+    if (user && user.password) {
       const authorized = this.bcryptValidate(pass, user.password);
       if (authorized) {
         // this will remove password from result leaving all the other properties
