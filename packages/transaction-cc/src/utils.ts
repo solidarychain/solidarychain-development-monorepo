@@ -1,19 +1,19 @@
 import { Cause } from '@solidary-chain/cause-cc';
-import { appConstants as c, EntityType, GenericBalance, Goods, GoodsInput } from '@solidary-chain/common-cc';
+import { appConstants as c, CurrentUser, EntityType, GenericBalance, Goods, GoodsInput } from '@solidary-chain/common-cc';
 import { Participant } from '@solidary-chain/participant-cc';
 import { Person } from '@solidary-chain/person-cc';
 import { Transaction } from './transaction.model';
 
 // interface Entity and getEntity() function duplicated with asset, cause and transaction, to prevent circular dependencies, 
 // this way we leave common package clean of dependencies like person-cc and participant-cc
-export const getEntity = (entityType: EntityType, id: string, throwError: boolean = true): Promise<Participant | Person | Cause> => {
+export const getEntity = (entityType: EntityType, id: string, user: CurrentUser, throwError: boolean = true): Promise<Participant | Person | Cause> => {
   return new Promise(async (resolve, reject) => {
     try {
       // use trySwitch inner function, to solve problem `async await in switch case statement don't work`
       const trySwitch = async () => {
         switch (entityType) {
           case EntityType.Participant:
-            const participant = await Participant.getById(id);
+            const participant = await Participant.getById(id, user);
             if (!!participant && !participant.id) {
               // let it pass for participant and person, to create it if have fiscalNumber in transaction controller
               if (throwError) { throw new Error(`No participant found with id/fiscalNumber ${id}`); };
@@ -21,7 +21,7 @@ export const getEntity = (entityType: EntityType, id: string, throwError: boolea
             resolve(participant);
             break;
           case EntityType.Person:
-            const person = await Person.getById(id);
+            const person = await Person.getById(id, user);
             if (!person || !person.id) {
               // let it pass for participant and person, to create it if have fiscalNumber in transaction controller
               if (throwError) { throw new Error(`No person found with id/fiscalNumber/mobilePhone ${id}`); };
@@ -29,7 +29,7 @@ export const getEntity = (entityType: EntityType, id: string, throwError: boolea
             resolve(person);
             break;
           case EntityType.Cause:
-            const cause = await Cause.getById(id);
+            const cause = await Cause.getById(id, user);
             if (!cause || !cause.id) {
               throw new Error(`No cause found with id ${id}`);
             }

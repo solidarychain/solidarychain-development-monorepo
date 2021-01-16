@@ -6,11 +6,11 @@ import { ParticipantControllerBackEnd } from '../convector';
 import { NewParticipantInput, UpdateParticipantInput, ChangeParticipantIdentityData } from './dto';
 import { Participant } from './models';
 import { v4 as uuid } from 'uuid';
-import { UserInfo } from '@solidary-chain/common-cc';
+import CurrentUserPayload from '../common/types/current-user-payload';
 
 @Injectable()
 export class ParticipantService {
-  async create(data: NewParticipantInput): Promise<Participant> {
+  async create(data: NewParticipantInput, user: CurrentUserPayload): Promise<Participant> {
     try {
       // require to use or generate new id
       const newId: string =  (data.id) ? data.id : uuid();
@@ -23,51 +23,38 @@ export class ParticipantService {
         // require to inject values
         id: newId,
       });
-      await ParticipantControllerBackEnd.create(participantToCreate);
-      return this.findOneById(newId);
+      await ParticipantControllerBackEnd.create(participantToCreate, user);
+      return this.findOneById(newId, user);
     } catch (error) {
       throw error;
     }
   }
 
-  async update(data: UpdateParticipantInput): Promise<Participant> {
+  async update(data: UpdateParticipantInput, user: CurrentUserPayload): Promise<Participant> {
     try {
       // compose ConvectorModel from UpdateInput
       const participantToUpdate: ParticipantConvectorModel = new ParticipantConvectorModel({
         ...data
       });
-      await ParticipantControllerBackEnd.update(participantToUpdate);
-      return this.findOneById(data.id);
+      await ParticipantControllerBackEnd.update(participantToUpdate, user);
+      return this.findOneById(data.id, user);
     } catch (error) {
       throw error;
     }
   }
 
-  async changeIdentity(data: ChangeParticipantIdentityData): Promise<Participant> {
+  async changeIdentity(data: ChangeParticipantIdentityData, user: CurrentUserPayload): Promise<Participant> {
     try {
-      await ParticipantControllerBackEnd.changeIdentity(data.id, data.newIdentity);
-      return this.findOneById(data.id);
+      await ParticipantControllerBackEnd.changeIdentity(data.id, data.newIdentity, user);
+      return this.findOneById(data.id, user);
     } catch (error) {
       throw error;
     }
   }
 
-  async findAll(paginationArgs: PaginationArgs): Promise<Participant[]> {
-    try {
-      const convectorModel: Array<FlatConvectorModel<ParticipantConvectorModel[]>> = await ParticipantControllerBackEnd.getAll();
-      // require to map fabric model to graphql Participant[]
-      return (paginationArgs)
-        ? convectorModel.splice(paginationArgs.skip, paginationArgs.take) as Participant[]
-        : convectorModel as Participant[];
-    } catch (error) {
-      Logger.error(JSON.stringify(error));
-      throw error;
-    }
-  }
-
-  async findComplexQuery(getByComplexQueryInput: GetByComplexQueryInput, userInfo: UserInfo, paginationArgs: PaginationArgs): Promise<Participant | Participant[]> {
+  async findAll(paginationArgs: PaginationArgs, user: CurrentUserPayload): Promise<Participant | Participant[]> {
     // get fabric model with _props
-    const fabricModel: Array<FlatConvectorModel<ParticipantConvectorModel>> = await ParticipantControllerBackEnd.getComplexQuery(getByComplexQueryInput, userInfo) as ParticipantConvectorModel[];
+    const fabricModel: Array<FlatConvectorModel<ParticipantConvectorModel>> = await ParticipantControllerBackEnd.getAll(user) as ParticipantConvectorModel[];
     // convert fabric model to convector model (remove _props)
     const convectorModel: ParticipantConvectorModel[] = fabricModel.map((e: ParticipantConvectorModel) => new ParticipantConvectorModel(e));
     // call common find method
@@ -76,9 +63,20 @@ export class ParticipantService {
     return model;
   }
 
-  async findOneById(id: string): Promise<Participant> {
+  async findComplexQuery(getByComplexQueryInput: GetByComplexQueryInput, paginationArgs: PaginationArgs, user: CurrentUserPayload): Promise<Participant | Participant[]> {
     // get fabric model with _props
-    const fabricModel: ParticipantConvectorModel = await ParticipantControllerBackEnd.get(id);
+    const fabricModel: Array<FlatConvectorModel<ParticipantConvectorModel>> = await ParticipantControllerBackEnd.getComplexQuery(getByComplexQueryInput, user) as ParticipantConvectorModel[];
+    // convert fabric model to convector model (remove _props)
+    const convectorModel: ParticipantConvectorModel[] = fabricModel.map((e: ParticipantConvectorModel) => new ParticipantConvectorModel(e));
+    // call common find method
+    const model: Participant[] = await this.findBy(convectorModel, paginationArgs) as Participant[];
+    // return model
+    return model;
+  }
+
+  async findOneById(id: string, user: CurrentUserPayload): Promise<Participant> {
+    // get fabric model with _props
+    const fabricModel: ParticipantConvectorModel = await ParticipantControllerBackEnd.get(id, user);
     // convert fabric model to convector model (remove _props)
     const convectorModel: ParticipantConvectorModel = new ParticipantConvectorModel(fabricModel);
     // trick: must return convector model as a graphql model, to prevent property conversion problems
@@ -86,9 +84,9 @@ export class ParticipantService {
     return model;
   }
 
-  async findOneByCode(code: string): Promise<Participant> {
+  async findOneByCode(code: string, user: CurrentUserPayload): Promise<Participant> {
     // get fabric model with _props
-    const fabricModel: ParticipantConvectorModel | ParticipantConvectorModel[] = await ParticipantControllerBackEnd.getByCode(code) as ParticipantConvectorModel;
+    const fabricModel: ParticipantConvectorModel | ParticipantConvectorModel[] = await ParticipantControllerBackEnd.getByCode(code, user) as ParticipantConvectorModel;
     // convert fabric model to convector model (remove _props)
     const convectorModel: ParticipantConvectorModel = new ParticipantConvectorModel(fabricModel[0]);
     // trick: must return convector model as a graphql model, to prevent property conversion problems

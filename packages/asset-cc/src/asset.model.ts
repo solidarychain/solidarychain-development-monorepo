@@ -1,4 +1,4 @@
-import { appConstants as c, entitySchema, x509Identities } from '@solidary-chain/common-cc';
+import { appConstants as c, entitySchema, CurrentUser, x509Identities, getOwnerAndAmbassadorUserFilter } from '@solidary-chain/common-cc';
 import { Participant } from '@solidary-chain/participant-cc';
 import { ConvectorModel, FlatConvectorModel, ReadOnly, Required, Validate } from '@worldsibu/convector-core';
 import * as yup from 'yup';
@@ -58,31 +58,41 @@ export class Asset extends ConvectorModel<Asset> {
   @Validate(yup.string())
   public createdByPersonId?: string;
 
-  // send by graphql api
-  @Validate(yup.string())
-  public loggedPersonId?: string;
-
   // above implementation is equal in all models, only change the type and CONVECTOR_MODEL_PATH_${MODEL}
 
   // custom static implementation getById
-  public static async getById(id: string): Promise<Asset> {
-    const result: Asset | Asset[] = await this.getByFilter({ _id: id });
-    return (result) ? result[0] : null;
+  public static async getById(id: string, user: CurrentUser): Promise<Asset> {
+    const result: Asset | Asset[] = await this.getByFilter({ filter: { _id: id } }, user);
+    if (!result || !result[0] || !result[0].id) {
+      throw new Error(`No ${Asset.name.toLowerCase()} exists with that id ${id}`);
+    }
+    return result[0];
   }
 
   // custom static implementation getByField
-  public static async getByField(fieldName: string, fieldValue: string): Promise<Asset | Asset[]> {
-    return await this.getByFilter({ [fieldName]: fieldValue });
+  public static async getByField(fieldName: string, fieldValue: string, user: CurrentUser): Promise<Asset | Asset[]> {
+    const result: Asset | Asset[] =  await this.getByFilter({ filter: { [fieldName]: fieldValue } }, user);
+    if (!result || !result[0] || !result[0].id) {
+      throw new Error(`No ${Asset.name.toLowerCase()} exists with that fieldName: ${fieldName} and fieldValue ${fieldValue}`);
+    }
+    return result[0];
   }
 
   // custom static implementation getByFilter
-  public static async getByFilter(filter: any): Promise<Asset | Asset[]> {
-    const mangoQuery = {
+  public static async getByFilter(queryParams: { filter?: any, sort?: any }, user: CurrentUser): Promise<Asset | Asset[]> {
+    const userFilter = getOwnerAndAmbassadorUserFilter(user);
+    const complexQuery: any = {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_ASSET,
-        ...filter,
-      }
+        // add userFilter
+        ...userFilter,
+        // spread arbitrary query filter
+        ...queryParams.filter,
+      },
+      // fields: (queryParams.fields) ? queryParams.fields : undefined,
+      sort: (queryParams.sort) ? queryParams.sort : undefined,
     };
-    return await this.query(Asset, mangoQuery);
+    const resultSet: Asset | Asset[] = await Asset.query(Asset, complexQuery);
+    return resultSet;
   }
 }

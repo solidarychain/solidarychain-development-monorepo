@@ -84,6 +84,8 @@ export class ParticipantController extends ConvectorController {
     // if we invoke without it, it works, for now don't use `-u admin` user in invoke
     @Param(Participant)
     participant: Participant,
+    @Param(yup.object())
+    user: CurrentUser
   ) {
     // get participant if not gov, in case of gov it won't exists yet and will be without participant
     let gov: Participant;
@@ -98,7 +100,7 @@ export class ParticipantController extends ConvectorController {
     }
 
     // check if all ambassadors are valid persons, and update model.ambassadors with uuid's
-    participant.ambassadors = await checkValidModelIds(c.CONVECTOR_MODEL_PATH_PERSON, c.CONVECTOR_MODEL_PATH_PERSON_NAME, participant.ambassadors);
+    participant.ambassadors = await checkValidModelIds(c.CONVECTOR_MODEL_PATH_PERSON, c.CONVECTOR_MODEL_PATH_PERSON_NAME, participant.ambassadors, user);
 
     // check unique fields
     await checkUniqueField('_id', participant.id, true);
@@ -115,7 +117,7 @@ export class ParticipantController extends ConvectorController {
       status: true
     }];
     // assign createdByPersonId before delete loggedPersonId
-    participant.createdByPersonId = participant.loggedPersonId;
+    participant.createdByPersonId = user.userId;
     // add date in epoch unix time
     participant.createdDate = new Date().getTime();
 
@@ -123,9 +125,6 @@ export class ParticipantController extends ConvectorController {
     participant.fundsBalance = new GenericBalance();
     participant.volunteeringHoursBalance = new GenericBalance();
     participant.goodsStock = new Array<Goods>()
-
-    // clean non useful props, are required only receive id and entityType
-    delete participant.loggedPersonId;
 
     // always add gov participant, if its is not the gov itself, gov don't have participant
     if (gov) {
@@ -142,13 +141,15 @@ export class ParticipantController extends ConvectorController {
   public async update(
     @Param(Participant)
     participant: Participant,
+    @Param(yup.object())
+    user: CurrentUser
   ) {
     // Check permissions
     let isAdmin = this.fullIdentity.getAttributeValue('admin');
     let requesterMSP = this.fullIdentity.getMSPID();
 
     // Retrieve to see if exists
-    let existing = await Participant.getById(participant.id);
+    let existing = await Participant.getById(participant.id, user);
 
     if (!existing || !existing.id) {
       throw new Error('No participant exists with that id');
@@ -163,7 +164,7 @@ export class ParticipantController extends ConvectorController {
     }
 
     // check if all ambassadors are valid persons, and update model.ambassadors with uuid's
-    participant.ambassadors = await checkValidModelIds(c.CONVECTOR_MODEL_PATH_PERSON, c.CONVECTOR_MODEL_PATH_PERSON_NAME, participant.ambassadors);
+    participant.ambassadors = await checkValidModelIds(c.CONVECTOR_MODEL_PATH_PERSON, c.CONVECTOR_MODEL_PATH_PERSON_NAME, participant.ambassadors, user);
 
     // update fields
     existing.email = participant.email;
@@ -183,14 +184,16 @@ export class ParticipantController extends ConvectorController {
     @Param(yup.string())
     id: string,
     @Param(yup.string())
-    newIdentity: string
+    newIdentity: string,
+    @Param(yup.object())
+    user: CurrentUser
   ) {
     // Check permissions
     let isAdmin = this.fullIdentity.getAttributeValue('admin');
     let requesterMSP = this.fullIdentity.getMSPID();
 
     // Retrieve to see if exists
-    const existing = await Participant.getById(id);
+    const existing = await Participant.getById(id, user);
     // TODO: remove after confirm that above line works
     // const existing = await Participant.getOne(id);
 
@@ -235,28 +238,31 @@ export class ParticipantController extends ConvectorController {
   public async get(
     @Param(yup.string())
     id: string,
+    @Param(yup.object())
+    user: CurrentUser
   ): Promise<Participant> {
-    const existing = await Participant.query(Participant, {
-      selector: {
-        type: c.CONVECTOR_MODEL_PATH_PARTICIPANT,
-        id,
-        // all participants belong to gov participant, without filter participant we get all, inclusive the gov
-        // participant: {
-        //   id: participant.id
-        // }
-      }
-    });
-
-    // require to check if existing before try to access existing[0].id prop
-    if (!existing || !existing[0] || !existing[0].id) {
-      throw new Error(`No participant exists with that id!`);
-    }
-    return existing[0];
+    return await Participant.getById(id, user);
   }
 
   @Invokable()
-  public async getAll(): Promise<FlatConvectorModel<Participant>[]> {
-    return (await Participant.getAll(c.CONVECTOR_MODEL_PATH_PARTICIPANT)).map(participant => participant.toJSON() as any);
+  public async getAll(
+    @Param(yup.object())
+    user: CurrentUser
+  ): Promise<Participant | Participant[]> {
+    return await Participant.getByFilter({}, user);
+  }
+
+  /**
+   * get model with complex query filter
+   */
+  @Invokable()
+  public async getComplexQuery(
+    @Param(yup.object())
+    queryParams: any,
+    @Param(yup.object())
+    user: CurrentUser
+  ): Promise<Participant | Participant[]> {
+    return await Participant.getByFilter(queryParams, user);
   }
 
   /**
@@ -266,52 +272,15 @@ export class ParticipantController extends ConvectorController {
   public async getByCode(
     @Param(yup.string())
     code: string,
-  ): Promise<Participant | Participant[]> {
-    const existing = await Participant.query(Participant, {
-      selector: {
-        type: c.CONVECTOR_MODEL_PATH_PARTICIPANT,
-        code,
-        // all participants belong to gov participant, without filter participant we get all, inclusive the gov
-        // participant: {
-        //   id: participant.id
-        // }
-      }
-    });
-    // require to check if existing before try to access existing[0].id prop
-    if (!existing || !existing[0] || !existing[0].id) {
-      throw new Error(`No participant exists with that code ${code}`);
-    }
-    return existing;
-  }
-
-  /**
-   * get participants with complex query filter
-   */
-  @Invokable()
-  public async getComplexQuery(
-    @Param(yup.object())
-    complexQueryInput: any,
     @Param(yup.object())
     user: CurrentUser
   ): Promise<Participant | Participant[]> {
-    if (!complexQueryInput || !complexQueryInput.filter) {
-      throw new Error(c.EXCEPTION_ERROR_NO_COMPLEX_QUERY);
-    }
-    const userFilter = getAmbassadorUserFilter(user);
-    const complexQuery: any = {
-      selector: {
-        type: c.CONVECTOR_MODEL_PATH_PARTICIPANT,
-        // spread arbitrary query filter
-        ...complexQueryInput.filter,
-        // add userFilter
-        ...userFilter
-      },
-      // not useful
-      // fields: (complexQueryInput.fields) ? complexQueryInput.fields : undefined,
-      sort: (complexQueryInput.sort) ? complexQueryInput.sort : undefined,
+    const queryParams = {
+      filter: {
+        code
+      }
     };
-    const resultSet: Participant | Participant[] = await Participant.query(Participant, complexQuery);
-    return resultSet;
+    return await Participant.getByFilter(queryParams, user);
   }
 
   // wip: unstable, and only creates first entity and have the problem 'Just the government (participant with id gov) can create people'

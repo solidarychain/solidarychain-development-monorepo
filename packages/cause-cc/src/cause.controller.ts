@@ -11,7 +11,9 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
   @Invokable()
   public async create(
     @Param(Cause)
-    cause: Cause
+    cause: Cause,
+    @Param(yup.object())
+    user: CurrentUser
   ) {
     // get host participant from fingerprint
     const participant: Participant = await getParticipantByIdentity(this.sender);
@@ -20,7 +22,7 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
     }
 
     // check if all ambassadors are valid persons, and update model.ambassadors with uuid's
-    cause.ambassadors = await checkValidModelIds(c.CONVECTOR_MODEL_PATH_PERSON, c.CONVECTOR_MODEL_PATH_PERSON_NAME, cause.ambassadors);
+    cause.ambassadors = await checkValidModelIds(c.CONVECTOR_MODEL_PATH_PERSON, c.CONVECTOR_MODEL_PATH_PERSON_NAME, cause.ambassadors, user);
 
     // get postfix name this way we can have multiple causes with same name
     const postfixCode: string = randomString(10);
@@ -40,14 +42,14 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
       status: true
     }];
     // assign input
-    cause.input.entity = await getEntity(cause.input.type, cause.input.id);
+    cause.input.entity = await getEntity(cause.input.type, cause.input.id, user);
     // check if is a valid input from entity
     if (!cause.input.entity) {
       const entityType: string = cause.input.type.replace(`${c.CONVECTOR_MODEL_PATH_PREFIX}.`, '');
       throw new Error(`There is no entity of type '${entityType}' with Id '${cause.input.id}'`);
     }
     // assign createdByPersonId before delete loggedPersonId
-    cause.createdByPersonId = cause.loggedPersonId;
+    cause.createdByPersonId = user.userId;
     // add date in epoch unix time
     cause.createdDate = new Date().getTime();
 
@@ -59,7 +61,6 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
     // clean non useful props, are required only receive id and entityType
     delete cause.input.id;
     delete cause.input.type;
-    delete cause.loggedPersonId;
 
     // save cause
     await cause.save();
@@ -71,16 +72,18 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
   public async update(
     @Param(Cause)
     cause: Cause,
+    @Param(yup.object())
+    user: CurrentUser
   ) {
     // Retrieve to see if exists
-    let existing = await Cause.getById(cause.id);
+    let existing = await Cause.getById(cause.id, user);
 
     if (!existing || !existing.id) {
       throw new Error('No cause exists with that id');
     }
 
     // check if all ambassadors are valid persons, and update model.ambassadors with uuid's
-    cause.ambassadors = await checkValidModelIds(c.CONVECTOR_MODEL_PATH_PERSON, c.CONVECTOR_MODEL_PATH_PERSON_NAME, cause.ambassadors);
+    cause.ambassadors = await checkValidModelIds(c.CONVECTOR_MODEL_PATH_PERSON, c.CONVECTOR_MODEL_PATH_PERSON_NAME, cause.ambassadors, user);
 
     // update fields
     existing.email = cause.email;
@@ -104,25 +107,31 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
   public async get(
     @Param(yup.string())
     id: string,
+    @Param(yup.object())
+    user: CurrentUser
   ): Promise<Cause> {
-    // get host participant from fingerprint
-    // const participant: Participant = await getParticipantByIdentity(this.sender);
-    const existing = await Cause.query(Cause, {
-      selector: {
-        type: c.CONVECTOR_MODEL_PATH_CAUSE,
-        id,
-      }
-    });
-    // require to check if existing before try to access existing[0].id prop
-    if (!existing || !existing[0] || !existing[0].id) {
-      throw new Error(`No cause exists with that id ${id}`);
-    }
-    return existing[0];
+    return await Cause.getById(id, user);
   }
 
   @Invokable()
-  public async getAll(): Promise<FlatConvectorModel<Cause>[]> {
-    return (await Cause.getAll(c.CONVECTOR_MODEL_PATH_CAUSE)).map(cause => cause.toJSON() as any);
+  public async getAll(
+    @Param(yup.object())
+    user: CurrentUser
+  ): Promise<Cause | Cause[]> {
+    return await Cause.getByFilter({}, user);
+  }
+
+  /**
+   * get model with complex query filter
+   */
+  @Invokable()
+  public async getComplexQuery(
+    @Param(yup.object())
+    queryParams: any,
+    @Param(yup.object())
+    user: CurrentUser
+  ): Promise<Cause | Cause[]> {
+    return await Cause.getByFilter(queryParams, user);
   }
 
   /**
@@ -135,49 +144,16 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
     @Param(yup.object())
     user: CurrentUser
   ): Promise<Cause | Cause[]> {
-    const userFilter = getAmbassadorUserFilter(user);
-    return await Cause.query(Cause, {
-      selector: {
-        type: c.CONVECTOR_MODEL_PATH_CAUSE,
+    const queryParams = {
+      filter: {
         startDate: {
           $lte: date
         },
         endDate: {
           $gte: date
-        },
-        // add userFilter
-        ...userFilter
+        }
       }
-    });
-  }
-
-  /**
-   * get causes with complex query filter
-   */
-  @Invokable()
-  public async getComplexQuery(
-    @Param(yup.object())
-    complexQueryInput: any,
-    @Param(yup.object())
-    user: CurrentUser
-  ): Promise<Cause | Cause[]> {
-    if (!complexQueryInput || !complexQueryInput.filter) {
-      throw new Error(c.EXCEPTION_ERROR_NO_COMPLEX_QUERY);
-    }
-    const userFilter = getAmbassadorUserFilter(user);
-    const complexQuery: any = {
-      selector: {
-        type: c.CONVECTOR_MODEL_PATH_CAUSE,
-        // spread arbitrary query filter
-        ...complexQueryInput.filter,
-        // add userFilter
-        ...userFilter
-      },
-      // not useful
-      // fields: (complexQueryInput.fields) ? complexQueryInput.fields : undefined,
-      sort: (complexQueryInput.sort) ? complexQueryInput.sort : undefined,
     };
-    const resultSet: Cause | Cause[] = await Cause.query(Cause, complexQuery);
-    return resultSet;
+    return await Cause.getByFilter(queryParams, user);
   }
 }

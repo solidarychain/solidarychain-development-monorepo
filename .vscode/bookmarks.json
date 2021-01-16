@@ -33,7 +33,7 @@
 		"path": "$ROOTPATH$/packages/server-graphql/src/person/person.resolver.ts",
 		"bookmarks": [
 			{
-				"line": 83,
+				"line": 89,
 				"column": 2,
 				"label": ""
 			}
@@ -73,12 +73,12 @@
 		"path": "$ROOTPATH$/packages/server-graphql/src/person/person.service.ts",
 		"bookmarks": [
 			{
-				"line": 18,
+				"line": 19,
 				"column": 39,
 				"label": ""
 			},
 			{
-				"line": 30,
+				"line": 31,
 				"column": 48,
 				"label": ""
 			}
@@ -98,7 +98,7 @@
 		"path": "$ROOTPATH$/packages/transaction-cc/src/transaction.controller.ts",
 		"bookmarks": [
 			{
-				"line": 149,
+				"line": 153,
 				"column": 26,
 				"label": ""
 			}
@@ -138,18 +138,8 @@
 		"path": "$ROOTPATH$/packages/participant-cc/src/participant.controller.ts",
 		"bookmarks": [
 			{
-				"line": 100,
+				"line": 102,
 				"column": 68,
-				"label": ""
-			}
-		]
-	},
-	{
-		"path": "$ROOTPATH$/packages/participant-cc/src/participant.model.ts",
-		"bookmarks": [
-			{
-				"line": 63,
-				"column": 22,
 				"label": ""
 			}
 		]

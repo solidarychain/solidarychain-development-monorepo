@@ -1,16 +1,17 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Asset as AssetConvectorModel } from '@solidary-chain/asset-cc';
 import { Cause as CauseConvectorModel } from '@solidary-chain/cause-cc';
-import { getEnumValueFromEnumKey } from '@solidary-chain/common-cc';
+import { appConstants as cc } from '@solidary-chain/common-cc';
 import { Participant as ParticipantConvectorModel } from '@solidary-chain/participant-cc';
 import { Person as PersonConvectorModel } from '@solidary-chain/person-cc';
-import { Transaction as TransactionConvectorModel, TransactionType } from '@solidary-chain/transaction-cc';
+import { Transaction as TransactionConvectorModel } from '@solidary-chain/transaction-cc';
 import { FlatConvectorModel } from '@worldsibu/convector-core';
 import { AssetService } from '../asset/asset.service';
 import { Asset } from '../asset/models';
 import { CauseService } from '../cause/cause.service';
 import { Cause } from '../cause/models';
 import { PaginationArgs } from '../common/dto';
+import CurrentUserPayload from '../common/types/current-user-payload';
 import { AssetControllerBackEnd, CauseControllerBackEnd, ParticipantControllerBackEnd, PersonControllerBackEnd, TransactionControllerBackEnd } from '../convector';
 import { Participant } from '../participant/models';
 import { ParticipantService } from '../participant/participant.service';
@@ -21,7 +22,6 @@ import { TransactionService } from '../transaction/transaction.service';
 import { appConstants as c } from './constants';
 import { NodeColor, NodeType, NodeValue, RelationType } from './enums/graph-data';
 import { GraphData, GraphLink, GraphNode } from './models';
-import { appConstants as cc } from '@solidary-chain/common-cc';
 
 @Injectable()
 export class DashboardService {
@@ -66,14 +66,14 @@ export class DashboardService {
   // };
 
 
-  async getReactForceData(paginationArgs: PaginationArgs): Promise<GraphData> {
+  async getReactForceData(paginationArgs: PaginationArgs, user: CurrentUserPayload): Promise<GraphData> {
     const nodes: GraphNode[] = [];
     const links: GraphLink[] = [];
-    const participants = await this.findAllParticipants();
-    const persons = await this.findAllPersons();
-    const causes = await this.findAllCauses();
-    const assets = await this.findAllAssets();
-    const transactions = await this.findAllTransactions();
+    const participants = await this.findAllParticipants(null, user);
+    const persons = await this.findAllPersons(null, user);
+    const causes = await this.findAllCauses(null, user);
+    const assets = await this.findAllAssets(null, user);
+    const transactions = await this.findAllTransactions(null, user);
     // genesis
     nodes.push({ id: c.GENESIS_NODE_ID, group: NodeType.GENESIS, nodeVal: NodeValue.GENESIS, color: NodeColor.WHITE, label: 'Genesis' });
     // participants
@@ -151,58 +151,54 @@ export class DashboardService {
     };
   }
 
-  async findAllParticipants(paginationArgs?: PaginationArgs): Promise<Participant[]> {
+  async findAllParticipants(paginationArgs: PaginationArgs, user: CurrentUserPayload): Promise<Participant[]> {
     // get convector model
-    const flatConvectorModel: Array<FlatConvectorModel<ParticipantConvectorModel[]>> = await ParticipantControllerBackEnd.getAll();
-    // convert flat convector model to convector model
-    const convectorModel: ParticipantConvectorModel[] = flatConvectorModel.map((e: ParticipantConvectorModel) => new ParticipantConvectorModel(e));
+    const fabricModel: Array<FlatConvectorModel<ParticipantConvectorModel>> = await ParticipantControllerBackEnd.getAll(user) as ParticipantConvectorModel[];
+    // convert fabric model to convector model (remove _props)
+    const convectorModel: ParticipantConvectorModel[] = fabricModel.map((e: ParticipantConvectorModel) => new ParticipantConvectorModel(e));
     // call common find method
-    const model: Participant[] = await this.participantService.findBy(convectorModel, paginationArgs) as Participant[];
-    // return model
-    return model;
+    return await this.participantService.findBy(convectorModel, paginationArgs) as Participant[];
   }
 
-  async findAllPersons(paginationArgs?: PaginationArgs): Promise<Person[]> {
+  async findAllPersons(paginationArgs: PaginationArgs, user: CurrentUserPayload): Promise<Person[]> {
     // get convector model
-    const flatConvectorModel: Array<FlatConvectorModel<PersonConvectorModel[]>> = await PersonControllerBackEnd.getAll();
-    // convert flat convector model to convector model
-    const convectorModel: PersonConvectorModel[] = flatConvectorModel.map((e: PersonConvectorModel) => new PersonConvectorModel(e));
+    const fabricModel: Array<FlatConvectorModel<PersonConvectorModel>> = await PersonControllerBackEnd.getAll(user) as PersonConvectorModel[];
+    // convert fabric model to convector model (remove _props)
+    const convectorModel: PersonConvectorModel[] = fabricModel.map((e: PersonConvectorModel) => new PersonConvectorModel(e));
     // call common find method
-    const model: Person[] = await this.personService.findBy(convectorModel, paginationArgs) as Person[];
-    // return model
-    return model;
+    return await this.personService.findBy(convectorModel, paginationArgs) as Person[];
   }
 
-  async findAllCauses(paginationArgs?: PaginationArgs): Promise<Cause[]> {
+  async findAllCauses(paginationArgs: PaginationArgs, user: CurrentUserPayload): Promise<Cause[]> {
     // get convector model
-    const flatConvectorModel: Array<FlatConvectorModel<CauseConvectorModel[]>> = await CauseControllerBackEnd.getAll();
-    // convert flat convector model to convector model
-    const convectorModel: CauseConvectorModel[] = flatConvectorModel.map((e: CauseConvectorModel) => new CauseConvectorModel(e));
+    const fabricModel: Array<FlatConvectorModel<CauseConvectorModel>> = await CauseControllerBackEnd.getAll(user) as CauseConvectorModel[];
+    // convert fabric model to convector model (remove _props)
+    const convectorModel: CauseConvectorModel[] = fabricModel.map((e: CauseConvectorModel) => new CauseConvectorModel(e));
     // call common find method
-    const model: Cause[] = await this.causeService.findBy(convectorModel, paginationArgs) as Cause[];
-    // return model
-    return model;
+    return await this.causeService.findBy(convectorModel, paginationArgs) as Cause[];
   }
 
-  async findAllAssets(paginationArgs?: PaginationArgs): Promise<Asset[]> {
+  /**
+   * sync with packages/server-graphql/src/MODEL/MODEL.service.ts findAll
+   */
+  async findAllAssets(paginationArgs: PaginationArgs, user: CurrentUserPayload): Promise<Asset[]> {
     // get convector model
-    const flatConvectorModel: Array<FlatConvectorModel<AssetConvectorModel[]>> = await AssetControllerBackEnd.getAll();
-    // convert flat convector model to convector model
-    const convectorModel: AssetConvectorModel[] = flatConvectorModel.map((e: AssetConvectorModel) => new AssetConvectorModel(e));
+    const fabricModel: Array<FlatConvectorModel<AssetConvectorModel>> = await AssetControllerBackEnd.getAll(user) as AssetConvectorModel[];
+    // convert fabric model to convector model (remove _props)
+    const convectorModel: AssetConvectorModel[] = fabricModel.map((e: AssetConvectorModel) => new AssetConvectorModel(e));
     // call common find method
-    const model: Asset[] = await this.assetService.findBy(convectorModel, paginationArgs) as Asset[];
-    // return model
-    return model;
+    return await this.assetService.findBy(convectorModel, paginationArgs) as Asset[];
   }
 
-  async findAllTransactions(paginationArgs?: PaginationArgs): Promise<Transaction[]> {
+  /**
+   * sync with packages/server-graphql/src/MODEL/MODEL.service.ts findAll
+   */
+  async findAllTransactions(paginationArgs: PaginationArgs, user: CurrentUserPayload): Promise<Transaction[]> {
     // get convector model
-    const flatConvectorModel: Array<FlatConvectorModel<TransactionConvectorModel[]>> = await TransactionControllerBackEnd.getAll();
-    // convert flat convector model to convector model
-    const convectorModel: TransactionConvectorModel[] = flatConvectorModel.map((e: TransactionConvectorModel) => new TransactionConvectorModel(e));
+    const fabricModel: Array<FlatConvectorModel<TransactionConvectorModel>> = await TransactionControllerBackEnd.getAll(user) as TransactionConvectorModel[];
+    // convert fabric model to convector model (remove _props)
+    const convectorModel: TransactionConvectorModel[] = fabricModel.map((e: TransactionConvectorModel) => new TransactionConvectorModel(e));
     // call common find method
-    const model: Transaction[] = await this.transactionService.findBy(convectorModel, paginationArgs) as Transaction[];
-    // return model
-    return model;
+    return await this.transactionService.findBy(convectorModel, paginationArgs) as Transaction[];
   }
 }

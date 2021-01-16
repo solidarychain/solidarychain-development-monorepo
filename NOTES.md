@@ -325,13 +325,20 @@ getComplexQuery/userFilter cause
 }
 ```
 
-getComplexQuery/userFilter asset owner ambassador+ambassador
+getComplexQuery/userFilter asset owner | asset owner ambassador | ambassador
 
 ```json
 {
   "selector": {
     "type": "com.chain.solidary.model.asset",
     "$or": [
+      {
+        "owner": {
+          "entity": {
+            "id": "42a090f4-a2b1-4fcb-99bf-5bc8f2d1c1b3"
+          }
+        }
+      },   
       {
         "owner": {
           "entity": {

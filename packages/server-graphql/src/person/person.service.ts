@@ -7,10 +7,11 @@ import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
 import { PersonControllerBackEnd } from '../convector';
 import { AddPersonAttributeInput, GetByAttributeInput, NewPersonInput, UpdatePersonInput, UpdatePersonPasswordInput, UpdatePersonProfileInput, UpsertCitizenCardInput } from './dto';
 import { Person } from './models';
+import CurrentUserPayload from '../common/types/current-user-payload';
 
 @Injectable()
 export class PersonService {
-  async create(data: NewPersonInput): Promise<Person> {
+  async create(data: NewPersonInput, user: CurrentUserPayload | null): Promise<Person> {
     try {
       // require to use or generate new id
       const newId: string =  (data.id) ? data.id : uuid();
@@ -28,8 +29,8 @@ export class PersonService {
         emissionDate: ((data.emissionDate as unknown) as number),
         expirationDate: ((data.expirationDate as unknown) as number),
       });
-      await PersonControllerBackEnd.create(personToCreate);
-      return this.findOneById(newId);
+      await PersonControllerBackEnd.create(personToCreate, user);
+      return this.findOneById(newId, user);
     } catch (error) {
       // extract error message
       const errorMessage: string = (error.responses && error.responses[0].error.message) ? error.responses[0].error.message : error;
@@ -38,46 +39,46 @@ export class PersonService {
     }
   }
 
-  async update(data: UpdatePersonInput): Promise<Person> {
+  async update(data: UpdatePersonInput, user: CurrentUserPayload): Promise<Person> {
     try {
       // compose ConvectorModel from UpdateInput
       const personToUpdate: PersonConvectorModel = new PersonConvectorModel({
         ...data
       });
-      await PersonControllerBackEnd.update(personToUpdate);
-      return this.findOneById(data.id);
+      await PersonControllerBackEnd.update(personToUpdate, user);
+      return this.findOneById(data.id, user);
     } catch (error) {
       throw error;
     }
   }
 
-  async updatePassword(data: UpdatePersonPasswordInput): Promise<Person> {
+  async updatePassword(data: UpdatePersonPasswordInput, user: CurrentUserPayload): Promise<Person> {
     try {
       // compose ConvectorModel from Input
       const personToUpdate: PersonConvectorModel = new PersonConvectorModel({
         ...data
       });
-      await PersonControllerBackEnd.updatePassword(personToUpdate);
-      return this.findOneById(data.id);
+      await PersonControllerBackEnd.updatePassword(personToUpdate, user);
+      return this.findOneById(data.id, user);
     } catch (error) {
       throw error;
     }
   }
 
-  async updateProfile(data: UpdatePersonProfileInput): Promise<Person> {
+  async updateProfile(data: UpdatePersonProfileInput, user: CurrentUserPayload): Promise<Person> {
     try {
       // compose ConvectorModel from Input
       const personToUpdate: PersonConvectorModel = new PersonConvectorModel({
         ...data
       });
-      await PersonControllerBackEnd.updateProfile(personToUpdate);
-      return this.findOneById(data.id);
+      await PersonControllerBackEnd.updateProfile(personToUpdate, user);
+      return this.findOneById(data.id, user);
     } catch (error) {
       throw error;
     }
   }
 
-  async upsertCitizenCard(data: UpsertCitizenCardInput): Promise<Person> {
+  async upsertCitizenCard(data: UpsertCitizenCardInput, user: CurrentUserPayload): Promise<Person> {
     try {
       // require to use or generate new id
       const newId: string =  (data.id) ? data.id : uuid();
@@ -91,15 +92,15 @@ export class PersonService {
         emissionDate: ((data.emissionDate as unknown) as number),
         expirationDate: ((data.expirationDate as unknown) as number),
       });
-      await PersonControllerBackEnd.upsertCitizenCard(personToUpsert);
+      await PersonControllerBackEnd.upsertCitizenCard(personToUpsert, user);
       // we don't know the id, can be newId in case of a new record, or existing id, thats the reason why we use fiscalNumber
-      return this.findOneByFiscalnumber(data.fiscalNumber);
+      return this.findOneByFiscalnumber(data.fiscalNumber, user);
     } catch (error) {
       throw error;
     }
   }
 
-  async addAttribute(personId: string, addPersonAttributeInput: AddPersonAttributeInput): Promise<Person> {
+  async addAttribute(personId: string, addPersonAttributeInput: AddPersonAttributeInput, user: CurrentUserPayload): Promise<Person> {
     try {
       const attributeConvectorModel: AttributeConvectorModel = new AttributeConvectorModel(
         { ...addPersonAttributeInput },
@@ -107,27 +108,16 @@ export class PersonService {
       // leave above line has a reminder, this is the hack to use content when it
       // don't have a @Validate annotation, read comments on Attribute person-cc
       // attributeConvectorModel.content = addPersonAttributeInput.content;
-      await PersonControllerBackEnd.addAttribute(personId, attributeConvectorModel);
-      return this.findOneById(personId);
+      await PersonControllerBackEnd.addAttribute(personId, attributeConvectorModel, user);
+      return this.findOneById(personId, user);
     } catch (error) {
       throw error;
     }
   }
 
-  async findAll(paginationArgs: PaginationArgs): Promise<Person[]> {
-    // get convector model
-    const flatConvectorModel: Array<FlatConvectorModel<PersonConvectorModel[]>> = await PersonControllerBackEnd.getAll();
-    // convert flat convector model to convector model
-    const convectorModel: PersonConvectorModel[] = flatConvectorModel.map((e: PersonConvectorModel) => new PersonConvectorModel(e));
-    // call common find method
-    const model: Person[] = await this.findBy(convectorModel, paginationArgs) as Person[];
-    // return model
-    return model;
-  }
-
-  async findByAttribute({ id, content }: GetByAttributeInput, paginationArgs: PaginationArgs): Promise<Person | Person[]> {
+  async findAll(paginationArgs: PaginationArgs, user: CurrentUserPayload): Promise<Person | Person[]> {
     // get fabric model with _props
-    const fabricModel: PersonConvectorModel[] = await PersonControllerBackEnd.getByAttribute(id, content) as PersonConvectorModel[];
+    const fabricModel: Array<FlatConvectorModel<PersonConvectorModel>> = await PersonControllerBackEnd.getAll(user) as PersonConvectorModel[];
     // convert fabric model to convector model (remove _props)
     const convectorModel: PersonConvectorModel[] = fabricModel.map((e: PersonConvectorModel) => new PersonConvectorModel(e));
     // call common find method
@@ -136,9 +126,9 @@ export class PersonService {
     return model;
   }
 
-  async findComplexQuery(getByComplexQueryInput: GetByComplexQueryInput, paginationArgs: PaginationArgs): Promise<Person | Person[]> {
+  async findByAttribute({ id, content }: GetByAttributeInput, paginationArgs: PaginationArgs, user: CurrentUserPayload): Promise<Person | Person[]> {
     // get fabric model with _props
-    const fabricModel: Array<FlatConvectorModel<PersonConvectorModel>> = await PersonControllerBackEnd.getComplexQuery(getByComplexQueryInput) as PersonConvectorModel[];
+    const fabricModel: PersonConvectorModel[] = await PersonControllerBackEnd.getByAttribute(id, content, user) as PersonConvectorModel[];
     // convert fabric model to convector model (remove _props)
     const convectorModel: PersonConvectorModel[] = fabricModel.map((e: PersonConvectorModel) => new PersonConvectorModel(e));
     // call common find method
@@ -147,9 +137,20 @@ export class PersonService {
     return model;
   }
 
-  async findOneById(id: string): Promise<Person> {
+  async findComplexQuery(getByComplexQueryInput: GetByComplexQueryInput, paginationArgs: PaginationArgs, user: CurrentUserPayload): Promise<Person | Person[]> {
     // get fabric model with _props
-    const fabricModel: PersonConvectorModel = await PersonControllerBackEnd.get(id) as PersonConvectorModel;
+    const fabricModel: Array<FlatConvectorModel<PersonConvectorModel>> = await PersonControllerBackEnd.getComplexQuery(getByComplexQueryInput, user) as PersonConvectorModel[];
+    // convert fabric model to convector model (remove _props)
+    const convectorModel: PersonConvectorModel[] = fabricModel.map((e: PersonConvectorModel) => new PersonConvectorModel(e));
+    // call common find method
+    const model: Person[] = await this.findBy(convectorModel, paginationArgs) as Person[];
+    // return model
+    return model;
+  }
+
+  async findOneById(id: string, user: CurrentUserPayload): Promise<Person> {
+    // get fabric model with _props
+    const fabricModel: PersonConvectorModel = await PersonControllerBackEnd.get(id, user) as PersonConvectorModel;
     // convert fabric model to convector model (remove _props)
     const convectorModel: PersonConvectorModel = new PersonConvectorModel(fabricModel);
     // call common find method
@@ -157,9 +158,9 @@ export class PersonService {
     return model;
   }
 
-  async findOneByUsername(username: string): Promise<Person> {
+  async findOneByUsername(username: string, user: CurrentUserPayload): Promise<Person> {
     // get fabric model with _props
-    const fabricModel: PersonConvectorModel | PersonConvectorModel[] = await PersonControllerBackEnd.getByUsername(username) as PersonConvectorModel;
+    const fabricModel: PersonConvectorModel | PersonConvectorModel[] = await PersonControllerBackEnd.getByUsername(username, user) as PersonConvectorModel;
     // convert fabric model to convector model (remove _props)
     const convectorModel: PersonConvectorModel = new PersonConvectorModel(fabricModel[0]);
     // call common find method
@@ -168,9 +169,9 @@ export class PersonService {
     return model;
   }
 
-  async findOneByFiscalnumber(fiscalNumber: string): Promise<Person> {
+  async findOneByFiscalnumber(fiscalNumber: string, user: CurrentUserPayload): Promise<Person> {
     // get fabric model with _props
-    const fabricModel: PersonConvectorModel | PersonConvectorModel[] = await PersonControllerBackEnd.getByFiscalnumber(fiscalNumber) as PersonConvectorModel;
+    const fabricModel: PersonConvectorModel | PersonConvectorModel[] = await PersonControllerBackEnd.getByFiscalnumber(fiscalNumber, user) as PersonConvectorModel;
     // convert fabric model to convector model (remove _props)
     const convectorModel: PersonConvectorModel = new PersonConvectorModel(fabricModel[0]);
     // call common find method

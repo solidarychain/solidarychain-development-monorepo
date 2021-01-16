@@ -117,7 +117,7 @@ export const asyncForEach = async (array, callback) => {
  * @param modelName friendlyName used in show errors ex There is no Person(s) with Id(s)
  * @param modelIds array of model ids
  */
-export const checkValidModelIds = async (type: string, modelName: string, modelIds: string[]): Promise<string[]> => {
+export const checkValidModelIds = async (type: string, modelName: string, modelIds: string[], user: CurrentUser): Promise<string[]> => {
   // check if ambassadors are valid persons
   if (modelIds && modelIds.length > 0) {
     // init invalidIds array, this is used to store invalid ids inside asyncForEach loop
@@ -127,7 +127,7 @@ export const checkValidModelIds = async (type: string, modelName: string, modelI
     // require to use await asyncForEach to solve the problem of async/await and forEach()
     await asyncForEach(modelIds, async (id: string) => {
       // replace this with a richQuery, this way we don't need Person model in common, and with that we prevent circular dependencies
-      const model: Common = await Common.getById(type, id);
+      const model: Common = await Common.getById(type, id, user);
       if (!model) {
         // if is invalid push it to invalidIds
         invalidIds.push(id);
@@ -175,7 +175,7 @@ export const isDecimal = (input: number): boolean => {
 export const hasRole = (roles: string[], role: UserRoles) => roles.some((e: UserRoles) => e === role);
 
 /**
- * used in participants
+ * used in participants and cause
  * compose userFilter with user as an ambassador
  */
 export const getAmbassadorUserFilter = (user: CurrentUser) => {

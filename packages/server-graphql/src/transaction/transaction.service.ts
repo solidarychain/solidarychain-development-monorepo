@@ -1,16 +1,17 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { GoodsInput as GoodsInputConvectorModel } from '@solidary-chain/common-cc';
 import { Transaction as TransactionConvectorModel } from '@solidary-chain/transaction-cc';
 import { FlatConvectorModel } from '@worldsibu/convector-core-model';
 import { v4 as uuid } from 'uuid';
 import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
+import CurrentUserPayload from '../common/types/current-user-payload';
 import { TransactionControllerBackEnd } from '../convector';
-import { NewTransactionInput, GoodsInput, UpdateTransactionInput } from './dto';
+import { GoodsInput, NewTransactionInput, UpdateTransactionInput } from './dto';
 import { Transaction } from './models';
-import { GoodsInput as GoodsInputConvectorModel, UserInfo } from '@solidary-chain/common-cc';
 
 @Injectable()
 export class TransactionService {
-  async create(data: NewTransactionInput): Promise<Transaction> {
+  async create(data: NewTransactionInput, user: CurrentUserPayload): Promise<Transaction> {
     try {
       // require to use or generate new id
       const newId: string = (data.id) ? data.id : uuid();
@@ -31,42 +32,29 @@ export class TransactionService {
         // require to inject values
         id: newId,
       });
-      await TransactionControllerBackEnd.create(transactionToCreate);
-      return this.findOneById(newId);
+      await TransactionControllerBackEnd.create(transactionToCreate, user);
+      return this.findOneById(newId, user);
     } catch (error) {
       throw error;
     }
   }
 
-  async update(data: UpdateTransactionInput): Promise<Transaction> {
+  async update(data: UpdateTransactionInput, user: CurrentUserPayload): Promise<Transaction> {
     try {
       // compose ConvectorModel from UpdateInput
       const transactionToUpdate: TransactionConvectorModel = new TransactionConvectorModel({
         ...data
       });
-      await TransactionControllerBackEnd.update(transactionToUpdate);
-      return this.findOneById(data.id);
+      await TransactionControllerBackEnd.update(transactionToUpdate, user);
+      return this.findOneById(data.id, user);
     } catch (error) {
       throw error;
     }
   }
 
-  async findAll(paginationArgs: PaginationArgs): Promise<Transaction[]> {
-    try {
-      const convectorModel: Array<FlatConvectorModel<TransactionConvectorModel[]>> = await TransactionControllerBackEnd.getAll();
-      // require to map fabric model to graphql Transaction[]
-      return (paginationArgs)
-        ? convectorModel.splice(paginationArgs.skip, paginationArgs.take) as Transaction[]
-        : convectorModel as Transaction[];
-    } catch (error) {
-      Logger.error(JSON.stringify(error));
-      throw error;
-    }
-  }
-
-  async findComplexQuery(getByComplexQueryInput: GetByComplexQueryInput, userInfo: UserInfo, paginationArgs: PaginationArgs): Promise<Transaction | Transaction[]> {
+  async findAll(paginationArgs: PaginationArgs, user: CurrentUserPayload): Promise<Transaction | Transaction[]> {
     // get fabric model with _props
-    const fabricModel: Array<FlatConvectorModel<TransactionConvectorModel>> = await TransactionControllerBackEnd.getComplexQuery(getByComplexQueryInput, userInfo) as TransactionConvectorModel[];
+    const fabricModel: Array<FlatConvectorModel<TransactionConvectorModel>> = await TransactionControllerBackEnd.getAll(user) as TransactionConvectorModel[];
     // convert fabric model to convector model (remove _props)
     const convectorModel: TransactionConvectorModel[] = fabricModel.map((e: TransactionConvectorModel) => new TransactionConvectorModel(e));
     // call common find method
@@ -75,9 +63,20 @@ export class TransactionService {
     return model;
   }
 
-  async findOneById(id: string): Promise<Transaction> {
+  async findComplexQuery(getByComplexQueryInput: GetByComplexQueryInput, paginationArgs: PaginationArgs, user: CurrentUserPayload): Promise<Transaction | Transaction[]> {
     // get fabric model with _props
-    const fabricModel: TransactionConvectorModel = await TransactionControllerBackEnd.get(id);
+    const fabricModel: Array<FlatConvectorModel<TransactionConvectorModel>> = await TransactionControllerBackEnd.getComplexQuery(getByComplexQueryInput, user) as TransactionConvectorModel[];
+    // convert fabric model to convector model (remove _props)
+    const convectorModel: TransactionConvectorModel[] = fabricModel.map((e: TransactionConvectorModel) => new TransactionConvectorModel(e));
+    // call common find method
+    const model: Transaction[] = await this.findBy(convectorModel, paginationArgs) as Transaction[];
+    // return model
+    return model;
+  }
+
+  async findOneById(id: string, user: CurrentUserPayload): Promise<Transaction> {
+    // get fabric model with _props
+    const fabricModel: TransactionConvectorModel = await TransactionControllerBackEnd.get(id, user);
     // convert fabric model to convector model (remove _props)
     const convectorModel: TransactionConvectorModel = new TransactionConvectorModel(fabricModel);
     // trick: must return convector model as a graphql model, to prevent property conversion problems

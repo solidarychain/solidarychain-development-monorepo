@@ -1,4 +1,4 @@
-import { appConstants as c, UserRoles, x509Identities, GenericBalance, Goods } from '@solidary-chain/common-cc';
+import { appConstants as c, UserRoles, x509Identities, GenericBalance, Goods, CurrentUser } from '@solidary-chain/common-cc';
 import { Participant } from '@solidary-chain/participant-cc';
 import { ConvectorModel, Default, FlatConvectorModel, ReadOnly, Required, Validate } from '@worldsibu/convector-core';
 import * as yup from 'yup';
@@ -55,7 +55,7 @@ export class Person extends ConvectorModel<Person> {
   @Required()
   @Validate(GenericBalance.schema())
   public fundsBalance: GenericBalance;
-  
+
   @Required()
   @Validate(GenericBalance.schema())
   public volunteeringHoursBalance: GenericBalance;
@@ -63,16 +63,12 @@ export class Person extends ConvectorModel<Person> {
   @Required()
   @Validate(yup.array(Goods.schema()))
   public goodsStock: Array<FlatConvectorModel<Goods>>;
-  
+
   // TODO: can remove person don't use createdByPersonId
   // persisted with loggedPersonId
   // @Validate(yup.string())
   // public createdByPersonId?: string;
 
-  // send by graphql api
-  @Validate(yup.string())
-  public loggedPersonId?: string;
-  
   // extended non citizenCard data
 
   @Required()
@@ -228,32 +224,48 @@ export class Person extends ConvectorModel<Person> {
   // above implementation is equal in all models, only change the type and CONVECTOR_MODEL_PATH_${MODEL}
 
   // custom static implementation getById
-  public static async getById(id: string): Promise<Person> {
-    let result: Person | Person[] = await this.getByFilter({ _id: id });
+  public static async getById(id: string, user: CurrentUser): Promise<Person> {
+    let result: Person | Person[] = await this.getByFilter({ filter: { _id: id } }, user);
+    // try get by code
+    if (!result[0]) {
+      result = await this.getByFilter({ filter: { 'fiscalNumber': id } }, user);
+    }
     // try get by fiscalNumber
     if (!result[0]) {
-      result = await this.getByFilter({ 'fiscalNumber': id });
+      result = await this.getByFilter({ filter: { 'mobilePhone': id } }, user);
     }
-    // try get by mobilePhone
-    if (!result[0]) {
-      result = await this.getByFilter({ 'mobilePhone': id });
+    if (!result || !result[0] || !result[0].id) {
+      throw new Error(`No ${Person.name.toLowerCase()} exists with that id ${id}`);
     }
-    return (result) ? result[0] : null;
+    return result[0];
   }
 
   // custom static implementation getByField
-  public static async getByField(fieldName: string, fieldValue: string): Promise<Person | Person[]> {
-    return await this.getByFilter({ [fieldName]: fieldValue });
+  public static async getByField(fieldName: string, fieldValue: string, user: CurrentUser): Promise<Person | Person[]> {
+    const result: Person | Person[] = await this.getByFilter({ filter: { [fieldName]: fieldValue } }, user);
+    if (!result || !result[0] || !result[0].id) {
+      throw new Error(`No ${Person.name.toLowerCase()} exists with that fieldName: ${fieldName} and fieldValue ${fieldValue}`);
+    }
+    return result[0];
   }
 
   // custom static implementation getByFilter
-  public static async getByFilter(filter: any): Promise<Person | Person[]> {
-    const mangoQuery = {
+  public static async getByFilter(queryParams: { filter?: any, sort?: any }, user: CurrentUser): Promise<Person | Person[]> {
+    // TODO: add userFilter
+    // const userFilter = getAmbassadorUserFilter(user);
+    const complexQuery: any = {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_PERSON,
-        ...filter,
-      }
+        // add userFilter
+        // TODO: add userFilter
+        // ...userFilter,
+        // spread arbitrary query filter
+        ...queryParams.filter,
+      },
+      // fields: (queryParams.fields) ? queryParams.fields : undefined,
+      sort: (queryParams.sort) ? queryParams.sort : undefined,
     };
-    return await this.query(Person, mangoQuery);
+    const resultSet: Person | Person[] = await Person.query(Person, complexQuery);
+    return resultSet;
   }
 }

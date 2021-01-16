@@ -1,4 +1,4 @@
-import { appConstants as c, entitySchema, GenericBalance, Goods } from '@solidary-chain/common-cc';
+import { appConstants as c, CurrentUser, entitySchema, GenericBalance, getAmbassadorUserFilter, Goods } from '@solidary-chain/common-cc';
 import { ConvectorModel, FlatConvectorModel, ReadOnly, Required, Validate } from '@worldsibu/convector-core';
 import * as yup from 'yup';
 import { x509Identities } from '@solidary-chain/common-cc';
@@ -58,10 +58,6 @@ export class Cause extends ConvectorModel<Cause> {
   @Validate(yup.string())
   public createdByPersonId?: string;
 
-  // send by graphql api
-  @Validate(yup.string())
-  public loggedPersonId?: string;
-
   @Required()
   @Validate(GenericBalance.schema())
   public fundsBalance: GenericBalance;
@@ -77,24 +73,38 @@ export class Cause extends ConvectorModel<Cause> {
   // above implementation is equal in all models, only change the type and CONVECTOR_MODEL_PATH_${MODEL}
 
   // custom static implementation getById
-  public static async getById(id: string): Promise<Cause> {
-    const result: Cause | Cause[] = await this.getByFilter({ _id: id });
-    return (result) ? result[0] : null;
+  public static async getById(id: string, user: CurrentUser): Promise<Cause> {
+    const result: Cause | Cause[] = await this.getByFilter({ filter: { _id: id } }, user);
+    if (!result || !result[0] || !result[0].id) {
+      throw new Error(`No ${Cause.name.toLowerCase()} exists with that id ${id}`);
+    }
+    return result[0];
   }
 
   // custom static implementation getByField
-  public static async getByField(fieldName: string, fieldValue: string): Promise<Cause | Cause[]> {
-    return await this.getByFilter({ [fieldName]: fieldValue });
+  public static async getByField(fieldName: string, fieldValue: string, user: CurrentUser): Promise<Cause | Cause[]> {
+    const result: Cause | Cause[] =  await this.getByFilter({ filter: { [fieldName]: fieldValue } }, user);
+    if (!result || !result[0] || !result[0].id) {
+      throw new Error(`No ${Cause.name.toLowerCase()} exists with that fieldName: ${fieldName} and fieldValue ${fieldValue}`);
+    }
+    return result[0];
   }
 
   // custom static implementation getByFilter
-  public static async getByFilter(filter: any): Promise<Cause | Cause[]> {
-    const mangoQuery = {
+  public static async getByFilter(queryParams: { filter?: any, sort?: any }, user: CurrentUser): Promise<Cause | Cause[]> {
+    const userFilter = getAmbassadorUserFilter(user);
+    const complexQuery: any = {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_CAUSE,
-        ...filter,
-      }
+        // add userFilter
+        ...userFilter,
+        // spread arbitrary query filter
+        ...queryParams.filter,
+      },
+      // fields: (queryParams.fields) ? queryParams.fields : undefined,
+      sort: (queryParams.sort) ? queryParams.sort : undefined,
     };
-    return await this.query(Cause, mangoQuery);
+    const resultSet: Cause | Cause[] = await Cause.query(Cause, complexQuery);
+    return resultSet;
   }
 }

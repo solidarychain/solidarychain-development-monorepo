@@ -1,15 +1,15 @@
 import { NotFoundException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
+import { UserRoles } from '@solidary-chain/common-cc';
 import { PubSub } from 'apollo-server-express';
-import { NewAssetInput, UpdateAssetInput } from './dto';
-import { Asset } from './models';
-import { AssetService } from './asset.service';
+import { CurrentUser, Roles } from '../auth/decorators';
 import { GqlAuthGuard, GqlRolesGuard } from '../auth/guards';
 import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
-import { CurrentUser, Roles } from '../auth/decorators';
-import CurrentUserPayload from '../common/types/current-user-payload';
 import { SubscriptionEvent } from '../common/enums';
-import { UserRoles, UserInfo } from '@solidary-chain/common-cc';
+import CurrentUserPayload from '../common/types/current-user-payload';
+import { AssetService } from './asset.service';
+import { NewAssetInput, UpdateAssetInput } from './dto';
+import { Asset } from './models';
 
 const pubSub = new PubSub();
 
@@ -18,63 +18,74 @@ const pubSub = new PubSub();
 export class AssetResolver {
   constructor(private readonly assetService: AssetService) { }
 
-  // TODO
-  @Roles(UserRoles.ROLE_ADMIN)
+  @Roles(UserRoles.ROLE_USER)
   @UseGuards(GqlRolesGuard)
   @Query(returns => [Asset])
   assets(
     @Args() paginationArgs: PaginationArgs,
-  ): Promise<Asset[]> {
-    return this.assetService.findAll(paginationArgs);
+    @CurrentUser() user: CurrentUserPayload,
+  ): Promise<Asset | Asset[]> {
+    return this.assetService.findAll(paginationArgs, user);
   }
 
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @Query(returns => [Asset])
   assetComplexQuery(
-    @CurrentUser() user: CurrentUserPayload,
     @Args('getByComplexQueryInput') getByComplexQueryInput: GetByComplexQueryInput,
     @Args() paginationArgs: PaginationArgs,
+    @CurrentUser() user: CurrentUserPayload,
   ): Promise<Asset | Asset[]> {
-    const userInfo: UserInfo = { personId: user.userId, roles: user.roles };
-    return this.assetService.findComplexQuery(getByComplexQueryInput, userInfo, paginationArgs);
+    return this.assetService.findComplexQuery(getByComplexQueryInput, paginationArgs, user);
   }
 
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @Query(returns => Asset)
   async assetById(
     @Args('id') id: string,
+    @CurrentUser() user: CurrentUserPayload,
   ): Promise<Asset> {
-    const asset = await this.assetService.findOneById(id);
+    const asset = await this.assetService.findOneById(id, user);
     if (!asset) {
       throw new NotFoundException(id);
     }
     return asset;
   }
 
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @Mutation(returns => Asset)
   async assetNew(
-    @CurrentUser() user: CurrentUserPayload,
     @Args('newAssetData') newAssetData: NewAssetInput,
+    @CurrentUser() user: CurrentUserPayload,
   ): Promise<Asset> {
-    // inject username into newAssetData
-    newAssetData.loggedPersonId = user.userId;
-    const asset = await this.assetService.create(newAssetData);
+    const asset = await this.assetService.create(newAssetData, user);
     pubSub.publish(SubscriptionEvent.assetAdded, { [SubscriptionEvent.assetAdded]: asset });
     return asset;
   }
 
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @Mutation(returns => Asset)
   async assetUpdate(
     @Args('updateAssetData') updateAssetData: UpdateAssetInput,
+    @CurrentUser() user: CurrentUserPayload,
   ): Promise<Asset> {
-    const asset = await this.assetService.update(updateAssetData);
+    const asset = await this.assetService.update(updateAssetData, user);
     pubSub.publish(SubscriptionEvent.assetUpdated, { [SubscriptionEvent.assetUpdated]: asset });
     return asset;
   }
 
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @Subscription(returns => Asset)
   assetAdded() {
     return pubSub.asyncIterator(SubscriptionEvent.assetAdded);
   }
 
+  @Roles(UserRoles.ROLE_USER)
+  @UseGuards(GqlRolesGuard)
   @Subscription(returns => Asset)
   assetUpdated() {
     return pubSub.asyncIterator(SubscriptionEvent.assetUpdated);

@@ -1,6 +1,10 @@
 // Warn if changes model names, don't forget to change views ex
 // "map": "function(doc) {if (doc.type.toUpperCase() === 'com.chain.solidary.model.person'...
 
+import { UserRoles } from './enums';
+import { CurrentUser } from './interfaces';
+
+const CURRENT_USER_ADMIN_ROLE: CurrentUser = { userId: null, username: null, roles: [UserRoles.ROLE_ADMIN, UserRoles.ROLE_USER] };
 // this is used to detected ids in transactions that are fiscalNumbers, detected by prefix
 const FISCAL_NUMBER_VALID_PREFIX = ['PT', 'ES'];
 // used when create input person in transactions, when persons don't exists we create it on the fly
@@ -74,6 +78,7 @@ const REGEX_FISCAL_NUMBER: RegExp = /^[A-Z]{2}[0-9]{9}$/i;
 const EXCEPTION_ERROR_NO_COMPLEX_QUERY: string = 'You must supply a valid filter in complex query.';
 
 export const appConstants = {
+	CURRENT_USER_ADMIN_ROLE,
 	FISCAL_NUMBER_VALID_PREFIX,
 	PERSON_DEFAULT_MINIMAL_ENTITY_PASSWORD,
 	PERSON_DEFAULT_MINIMAL_ENTITY_MOBILE_PHONE,

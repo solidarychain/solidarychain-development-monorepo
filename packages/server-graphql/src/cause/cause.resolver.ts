@@ -12,7 +12,7 @@ import { SubscriptionEvent } from '../common/enums';
 import { GraphData } from '../dashboard/models';
 import { RelationType } from '../dashboard/enums';
 import { appConstants as c } from '../dashboard/constants';
-import { appConstants as cc, UserInfo, UserRoles } from '@solidary-chain/common-cc';
+import { appConstants as cc, UserRoles } from '@solidary-chain/common-cc';
 
 const pubSub = new PubSub();
 
@@ -22,41 +22,41 @@ export class CauseResolver {
   constructor(private readonly causeService: CauseService) { }
 
   // TODO
-  @Roles(UserRoles.ROLE_ADMIN)
-  @UseGuards(GqlRolesGuard)
+  // @Roles(UserRoles.ROLE_ADMIN)
+  // @UseGuards(GqlRolesGuard)
   @Query(returns => [Cause])
   causes(
     @Args() paginationArgs: PaginationArgs,
-  ): Promise<Cause[]> {
-    return this.causeService.findAll(paginationArgs);
+    @CurrentUser() user: CurrentUserPayload,
+  ): Promise<Cause | Cause[]> {
+    return this.causeService.findAll(paginationArgs, user);
   }
 
   // TODO
   @Query(returns => [Cause])
   causeComplexQuery(
-    @CurrentUser() user: CurrentUserPayload,
     @Args('getByComplexQueryInput') getByComplexQueryInput: GetByComplexQueryInput,
     @Args() paginationArgs: PaginationArgs,
-  ): Promise<Cause | Cause[]> {
-    const userInfo: UserInfo = { personId: user.userId, roles: user.roles };
-    return this.causeService.findComplexQuery(getByComplexQueryInput, userInfo, paginationArgs);
+    @CurrentUser() user: CurrentUserPayload,
+  ): Promise<Cause | Cause[]> {    
+    return this.causeService.findComplexQuery(getByComplexQueryInput, paginationArgs, user);
   }
 
   @Query(returns => [Cause])
   causeOngoing(
-    @CurrentUser() user: CurrentUserPayload,
     @Args('date') date: number,
     @Args() paginationArgs: PaginationArgs,
+    @CurrentUser() user: CurrentUserPayload,
   ): Promise<Cause | Cause[]> {
-    const userInfo: UserInfo = { personId: user.userId, roles: user.roles };
-    return this.causeService.findOngoing(date, userInfo, paginationArgs);
+    return this.causeService.findOngoing(date, paginationArgs, user);
   }
 
   @Query(returns => Cause)
   async causeById(
     @Args('id') id: string,
+    @CurrentUser() user: CurrentUserPayload,
   ): Promise<Cause> {
-    const cause = await this.causeService.findOneById(id);
+    const cause = await this.causeService.findOneById(id, user);
     if (!cause) {
       throw new NotFoundException(id);
     }
@@ -65,12 +65,12 @@ export class CauseResolver {
 
   @Mutation(returns => Cause)
   async causeNew(
-    @CurrentUser() user: CurrentUserPayload,
     @Args('newCauseData') newCauseData: NewCauseInput,
+    @CurrentUser() user: CurrentUserPayload,
   ): Promise<Cause> {
     // inject username into newCauseData
     newCauseData.loggedPersonId = user.userId;
-    const cause = await this.causeService.create(newCauseData);
+    const cause = await this.causeService.create(newCauseData, user);
     pubSub.publish(SubscriptionEvent.causeAdded, { [SubscriptionEvent.causeAdded]: cause });
     // TODO leave it maybe be useful in future
     // pubSub.publish(SubscriptionEvent.reactForceData, { [SubscriptionEvent.reactForceData]: {
@@ -84,8 +84,9 @@ export class CauseResolver {
   @Mutation(returns => Cause)
   async causeUpdate(
     @Args('updateCauseData') updateCauseData: UpdateCauseInput,
+    @CurrentUser() user: CurrentUserPayload,
   ): Promise<Cause> {
-    const cause = await this.causeService.update(updateCauseData);
+    const cause = await this.causeService.update(updateCauseData, user);
     pubSub.publish(SubscriptionEvent.causeUpdated, { [SubscriptionEvent.causeUpdated]: cause });
     return cause;
   }

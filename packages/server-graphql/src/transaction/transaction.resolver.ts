@@ -9,7 +9,7 @@ import { TransactionService } from './transaction.service';
 import { CurrentUser, Roles } from '../auth/decorators';
 import CurrentUserPayload from '../common/types/current-user-payload';
 import { SubscriptionEvent } from '../common/enums';
-import { UserInfo, UserRoles } from '@solidary-chain/common-cc';
+import { UserRoles } from '@solidary-chain/common-cc';
 
 const pubSub = new PubSub();
 
@@ -18,32 +18,33 @@ const pubSub = new PubSub();
 export class TransactionResolver {
   constructor(private readonly transactionService: TransactionService) { }
 
-  @Roles(UserRoles.ROLE_ADMIN)
-  @UseGuards(GqlRolesGuard)
+  // @Roles(UserRoles.ROLE_ADMIN)
+  // @UseGuards(GqlRolesGuard)
   @Query(returns => [Transaction])
   transactions(
     @Args() paginationArgs: PaginationArgs,
-  ): Promise<Transaction[]> {
-    return this.transactionService.findAll(paginationArgs);
+    @CurrentUser() user: CurrentUserPayload,
+  ): Promise<Transaction | Transaction[]> {
+    return this.transactionService.findAll(paginationArgs, user);
   }
 
 
   // TODO
   @Query(returns => [Transaction])
   transactionComplexQuery(
-    @CurrentUser() user: CurrentUserPayload,
     @Args('getByComplexQueryInput') getByComplexQueryInput: GetByComplexQueryInput,
     @Args() paginationArgs: PaginationArgs,
+    @CurrentUser() user: CurrentUserPayload,
   ): Promise<Transaction | Transaction[]> {
-    const userInfo: UserInfo = { personId: user.userId, roles: user.roles };
-    return this.transactionService.findComplexQuery(getByComplexQueryInput, userInfo, paginationArgs);
+    return this.transactionService.findComplexQuery(getByComplexQueryInput, paginationArgs, user);
   }
 
   @Query(returns => Transaction)
   async transactionById(
     @Args('id') id: string,
+    @CurrentUser() user: CurrentUserPayload,
   ): Promise<Transaction> {
-    const transaction = await this.transactionService.findOneById(id);
+    const transaction = await this.transactionService.findOneById(id, user);
     if (!transaction) {
       throw new NotFoundException(id);
     }
@@ -52,12 +53,12 @@ export class TransactionResolver {
 
   @Mutation(returns => Transaction)
   async transactionNew(
-    @CurrentUser() user: CurrentUserPayload,
     @Args('newTransactionData') newTransactionData: NewTransactionInput,
+    @CurrentUser() user: CurrentUserPayload,
   ): Promise<Transaction> {
     // inject username into newTransactionData
     newTransactionData.loggedPersonId = user.userId;
-    const transaction = await this.transactionService.create(newTransactionData);
+    const transaction = await this.transactionService.create(newTransactionData, user);
     pubSub.publish(SubscriptionEvent.transactionAdded, { [SubscriptionEvent.transactionAdded]: transaction });
     return transaction;
   }
@@ -65,8 +66,9 @@ export class TransactionResolver {
   @Mutation(returns => Transaction)
   async transactionUpdate(
     @Args('updateTransactionData') updateTransactionData: UpdateTransactionInput,
+    @CurrentUser() user: CurrentUserPayload,
   ): Promise<Transaction> {
-    const transaction = await this.transactionService.update(updateTransactionData);
+    const transaction = await this.transactionService.update(updateTransactionData, user);
     pubSub.publish(SubscriptionEvent.transactionUpdated, { [SubscriptionEvent.transactionUpdated]: transaction });
     return transaction;
   }

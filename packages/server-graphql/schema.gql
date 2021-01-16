@@ -94,7 +94,6 @@ input GetByComplexQueryInput {
   filter: JSONObject!
   fields: [String!]
   sort: [JSONObject!]
-  userInfo: [JSONObject!]
 }
 
 type Goods {

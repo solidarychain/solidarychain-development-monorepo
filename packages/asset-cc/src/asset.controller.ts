@@ -1,6 +1,6 @@
-import { appConstants as c, ChaincodeEvent, checkValidModelIds, randomString, removeOwnerFromAmbassadorsArray, getOwnerAndAmbassadorUserFilter, UserInfo } from '@solidary-chain/common-cc';
+import { appConstants as c, ChaincodeEvent, checkValidModelIds, randomString, removeOwnerFromAmbassadorsArray, CurrentUser } from '@solidary-chain/common-cc';
 import { getParticipantByIdentity, Participant } from '@solidary-chain/participant-cc';
-import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
+import { Controller, ConvectorController, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
 import * as yup from 'yup';
 import { Asset } from './asset.model';
@@ -11,7 +11,9 @@ export class AssetController extends ConvectorController<ChaincodeTx> {
   @Invokable()
   public async create(
     @Param(Asset)
-    asset: Asset
+    asset: Asset,
+    @Param(yup.object())
+    user: CurrentUser
   ) {
     // get host participant from fingerprint
     const participant: Participant = await getParticipantByIdentity(this.sender);
@@ -22,7 +24,7 @@ export class AssetController extends ConvectorController<ChaincodeTx> {
     // check if all ambassadors are valid persons, and update model.ambassadors with uuid's
     // optional: assets don't required ambassadors, check if first item in array is not ''
     if (asset.ambassadors && asset.ambassadors[0] !== '') {
-      asset.ambassadors = await checkValidModelIds(c.CONVECTOR_MODEL_PATH_PERSON, c.CONVECTOR_MODEL_PATH_PERSON_NAME, asset.ambassadors);
+      asset.ambassadors = await checkValidModelIds(c.CONVECTOR_MODEL_PATH_PERSON, c.CONVECTOR_MODEL_PATH_PERSON_NAME, asset.ambassadors, user);
     }
 
     // get postfix name this way we can have multiple assets with same name
@@ -42,14 +44,14 @@ export class AssetController extends ConvectorController<ChaincodeTx> {
       status: true
     }];
     // assign input
-    asset.owner.entity = await getEntity(asset.owner.type, asset.owner.id);
+    asset.owner.entity = await getEntity(asset.owner.type, asset.owner.id, user);
     // check if is a valid input from entity
     if (!asset.owner.entity) {
       const entityType: string = asset.owner.type.replace(`${c.CONVECTOR_MODEL_PATH_PREFIX}.`, '');
       throw new Error(`There is no entity of type '${entityType}' with Id '${asset.owner.id}'`);
     }
-    // assign createdByPersonId before delete loggedPersonId
-    asset.createdByPersonId = asset.loggedPersonId;
+    // assign createdByPersonId
+    asset.createdByPersonId = user.userId;
     // add date in epoch unix time
     asset.createdDate = new Date().getTime();
 
@@ -59,7 +61,6 @@ export class AssetController extends ConvectorController<ChaincodeTx> {
     // clean non useful props, are required only receive id and entityType
     delete asset.owner.id;
     delete asset.owner.type;
-    delete asset.loggedPersonId;
 
     // save asset
     await asset.save();
@@ -74,16 +75,18 @@ export class AssetController extends ConvectorController<ChaincodeTx> {
   public async update(
     @Param(Asset)
     asset: Asset,
+    @Param(yup.object())
+    user: CurrentUser
   ) {
     // Retrieve to see if exists
-    let existing = await Asset.getById(asset.id);
+    let existing = await Asset.getById(asset.id, user);
 
     if (!existing || !existing.id) {
       throw new Error('No asset exists with that id');
     }
 
     // check if all ambassadors are valid persons, and update model.ambassadors with uuid's
-    asset.ambassadors = await checkValidModelIds(c.CONVECTOR_MODEL_PATH_PERSON, c.CONVECTOR_MODEL_PATH_PERSON_NAME, asset.ambassadors);
+    asset.ambassadors = await checkValidModelIds(c.CONVECTOR_MODEL_PATH_PERSON, c.CONVECTOR_MODEL_PATH_PERSON_NAME, asset.ambassadors, user);
 
     // update fields
     existing.ambassadors = asset.ambassadors;
@@ -106,54 +109,30 @@ export class AssetController extends ConvectorController<ChaincodeTx> {
   public async get(
     @Param(yup.string())
     id: string,
+    @Param(yup.object())
+    user: CurrentUser
   ): Promise<Asset> {
-    // get host participant from fingerprint
-    // const participant: Participant = await getParticipantByIdentity(this.sender);
-    const existing = await Asset.query(Asset, {
-      selector: {
-        type: c.CONVECTOR_MODEL_PATH_ASSET,
-        id,
-      }
-    });
-    // require to check if existing before try to access existing[0].id prop
-    if (!existing || !existing[0] || !existing[0].id) {
-      throw new Error(`No asset exists with that id ${id}`);
-    }
-    return existing[0];
+    return await Asset.getById(id, user);
   }
 
   @Invokable()
-  public async getAll(): Promise<FlatConvectorModel<Asset>[]> {
-    return (await Asset.getAll(c.CONVECTOR_MODEL_PATH_ASSET)).map(asset => asset.toJSON() as any);
+  public async getAll(
+    @Param(yup.object())
+    user: CurrentUser
+  ): Promise<Asset | Asset[]> {
+    return await Asset.getByFilter({}, user);
   }
 
   /**
-   * get assets with complex query filter
+   * get model with complex query filter
    */
   @Invokable()
   public async getComplexQuery(
     @Param(yup.object())
-    complexQueryInput: any,
+    queryParams: any,
     @Param(yup.object())
-    userInfo?: UserInfo,
+    user: CurrentUser
   ): Promise<Asset | Asset[]> {
-    if (!complexQueryInput || !complexQueryInput.filter) {
-      throw new Error(c.EXCEPTION_ERROR_NO_COMPLEX_QUERY);
-    }
-    const userFilter = getOwnerAndAmbassadorUserFilter(userInfo);
-    const complexQuery: any = {
-      selector: {
-        type: c.CONVECTOR_MODEL_PATH_ASSET,
-        // spread arbitrary query filter
-        ...complexQueryInput.filter,
-        // add userFilter
-        ...userFilter
-      },
-      // not useful
-      // fields: (complexQueryInput.fields) ? complexQueryInput.fields : undefined,
-      sort: (complexQueryInput.sort) ? complexQueryInput.sort : undefined,
-    };
-    const resultSet: Asset | Asset[] = await Asset.query(Asset, complexQuery);
-    return resultSet;
+    return await Asset.getByFilter(queryParams, user);
   }
 }

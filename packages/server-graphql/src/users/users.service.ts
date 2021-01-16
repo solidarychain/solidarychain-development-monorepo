@@ -16,7 +16,7 @@ export class UsersService {
   ) { }
   async findOneByUsername(username: string): Promise<Person | undefined> {
     try {
-      return await this.personService.findOneByUsername(username);
+      return await this.personService.findOneByUsername(username, c.CURRENT_USER_ADMIN_ROLE);
     } catch (error) {
       Logger.error(JSON.stringify(error));
       const errorMessage: string = (error.responses[0]) ? error.responses[0].error.message : c.API_RESPONSE_INTERNAL_SERVER_ERROR;

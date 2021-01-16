@@ -21,8 +21,9 @@ export class PersonResolver {
   @Query(returns => [Person])
   async persons(
     @Args() paginationArgs: PaginationArgs,
-  ): Promise<Person[]> {
-    return this.personService.findAll(paginationArgs);
+    @CurrentUser() user: CurrentUserPayload,
+  ): Promise<Person | Person[]> {
+    return this.personService.findAll(paginationArgs, user);
   }
 
   @UseGuards(GqlAuthGuard)
@@ -30,8 +31,9 @@ export class PersonResolver {
   async personByAttribute(
     @Args('getByAttributeInput') getByAttributeInput: GetByAttributeInput,
     @Args() paginationArgs: PaginationArgs,
+    @CurrentUser() user: CurrentUserPayload,
   ): Promise<Person | Person[]> {
-    return this.personService.findByAttribute(getByAttributeInput, paginationArgs);
+    return this.personService.findByAttribute(getByAttributeInput, paginationArgs, user);
   }
 
   @UseGuards(GqlAuthGuard)
@@ -39,16 +41,18 @@ export class PersonResolver {
   personComplexQuery(
     @Args('getByComplexQueryInput') getByComplexQueryInput: GetByComplexQueryInput,
     @Args() paginationArgs: PaginationArgs,
+    @CurrentUser() user: CurrentUserPayload,
   ): Promise<Person | Person[]> {
-    return this.personService.findComplexQuery(getByComplexQueryInput, paginationArgs);
+    return this.personService.findComplexQuery(getByComplexQueryInput, paginationArgs, user);
   }
 
   @UseGuards(GqlAuthGuard)
   @Query(returns => Person)
   async personById(
     @Args('id') id: string,
+    @CurrentUser() user: CurrentUserPayload,
   ): Promise<Person> {
-    const person = await this.personService.findOneById(id);
+    const person = await this.personService.findOneById(id, user);
     if (!person) {
       throw new NotFoundException(id);
     }
@@ -59,8 +63,9 @@ export class PersonResolver {
   @Query(returns => Person)
   async personByUsername(
     @Args('username') username: string,
+    @CurrentUser() user: CurrentUserPayload,
   ): Promise<Person> {
-    const person = await this.personService.findOneByUsername(username);
+    const person = await this.personService.findOneByUsername(username, user);
     if (!person) {
       throw new NotFoundException(username);
     }
@@ -71,8 +76,9 @@ export class PersonResolver {
   @Query(returns => Person)
   async personByFiscalNumber(
     @Args('fiscalNumber') fiscalNumber: string,
+    @CurrentUser() user: CurrentUserPayload,
   ): Promise<Person> {
-    const person = await this.personService.findOneByFiscalnumber(fiscalNumber);
+    const person = await this.personService.findOneByFiscalnumber(fiscalNumber, user);
     if (!person) {
       throw new NotFoundException(fiscalNumber);
     }
@@ -84,7 +90,7 @@ export class PersonResolver {
   async personProfile(
     @CurrentUser() user: CurrentUserPayload,
   ): Promise<Person> {
-    return await this.personService.findOneByUsername(user.username);
+    return await this.personService.findOneByUsername(user.username, user);
   }
 
   // unprotected method, person register don't use createdByPersonId
@@ -92,7 +98,7 @@ export class PersonResolver {
   async personRegister(
     @Args('newPersonData') newPersonData: NewPersonInput,
   ): Promise<Person> {
-    const person = await this.personService.create(newPersonData);
+    const person = await this.personService.create(newPersonData, null);
     pubSub.publish(SubscriptionEvent.personAdded, { [SubscriptionEvent.personAdded]: person });
     return person;
   }
@@ -102,8 +108,9 @@ export class PersonResolver {
   async personAddAttribute(
     @Args('personId') personId: string,
     @Args('addPersonAttributeData') addPersonAttributeData: AddPersonAttributeInput,
+    @CurrentUser() user: CurrentUserPayload,
   ): Promise<Person> {
-    const person = await this.personService.addAttribute(personId, addPersonAttributeData);
+    const person = await this.personService.addAttribute(personId, addPersonAttributeData, user);
     pubSub.publish(SubscriptionEvent.personAttributeAdded, { [SubscriptionEvent.personAttributeAdded]: person });
     return person;
   }
@@ -112,8 +119,9 @@ export class PersonResolver {
   @Mutation(returns => Person)
   async personUpdate(
     @Args('updatePersonData') updatePersonData: UpdatePersonInput,
+    @CurrentUser() user: CurrentUserPayload,
   ): Promise<Person> {
-    const person = await this.personService.update(updatePersonData);
+    const person = await this.personService.update(updatePersonData, user);
     pubSub.publish(SubscriptionEvent.personUpdated, { [SubscriptionEvent.personUpdated]: person });
     return person;
   }
@@ -122,8 +130,9 @@ export class PersonResolver {
   @Mutation(returns => Person)
   async personUpdatePassword(
     @Args('updatePersonPasswordData') updatePersonPasswordData: UpdatePersonPasswordInput,
+    @CurrentUser() user: CurrentUserPayload,
   ): Promise<Person> {
-    const person = await this.personService.updatePassword(updatePersonPasswordData);
+    const person = await this.personService.updatePassword(updatePersonPasswordData, user);
     pubSub.publish(SubscriptionEvent.personPasswordUpdated, { [SubscriptionEvent.personPasswordUpdated]: person });
     return person;
   }
@@ -132,8 +141,9 @@ export class PersonResolver {
   @Mutation(returns => Person)
   async personUpdateProfile(
     @Args('updatePersonProfileData') updatePersonProfileData: UpdatePersonProfileInput,
+    @CurrentUser() user: CurrentUserPayload,
   ): Promise<Person> {
-    const person = await this.personService.updateProfile(updatePersonProfileData);
+    const person = await this.personService.updateProfile(updatePersonProfileData, user);
     pubSub.publish(SubscriptionEvent.personProfileUpdated, { [SubscriptionEvent.personProfileUpdated]: person });
     return person;
   }
@@ -142,8 +152,9 @@ export class PersonResolver {
   @Mutation(returns => Person)
   async personUpsertCitizenCard(
     @Args('upsertCitizenCardData') upsertCitizenCardData: UpsertCitizenCardInput,
+    @CurrentUser() user: CurrentUserPayload,
   ): Promise<Person> {
-    const person = await this.personService.upsertCitizenCard(upsertCitizenCardData);
+    const person = await this.personService.upsertCitizenCard(upsertCitizenCardData, user);
     pubSub.publish(SubscriptionEvent.personCitizenCardUpserted, { [SubscriptionEvent.personCitizenCardUpserted]: person });
     return person;
   }

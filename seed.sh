@@ -40,8 +40,8 @@ echo "Creating participant: Big Government"
 # first participant must be created with createWithParameters, if we use a model it fails, we must use here primitive string and not model objects else fails
 # this way we can use user admin without fail
 npx hurl invoke ${CHAINCODE_NAME} participant_createWithParameters "${GOV_ID}" "${GOV_CODE}" "${GOV_NAME}" "${GOV_EMAIL}" "${GOV_NIF}" -u admin
-# npx hurl invoke ${CHAINCODE_NAME} participant_get ${GOV_ID} -u admin
-# npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${GOV_CODE} -u admin
+# npx hurl invoke ${CHAINCODE_NAME} participant_get ${GOV_ID} "${CURRENT_USER_ADMIN_ROLE}" -u admin
+# npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${GOV_CODE} "${CURRENT_USER_ADMIN_ROLE}" -u admin
 
 # create admin with all data
 ID="${ADMN_ID}"
@@ -52,9 +52,9 @@ EMAIL="${USER_NAME}@example.com"
 DATE="61985472"
 PAYLOAD="{\"id\":\"${ADMN_ID}\",\"fiscalNumber\":\"${FISCAL_NUMBER}\",\"mobilePhone\":\"${PHONE_NUMBER}\",\"otherInformation\":\"\",\"username\":\"${USER_NAME}\",\"password\":\"${ADMIN_PASSWORD}\",\"email\":\"${EMAIL}\"}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" -u admin
-# npx hurl invoke ${CHAINCODE_NAME} person_get ${JOHN_ID} -u admin
-# npx hurl invoke ${CHAINCODE_NAME} person_getByUsername ${USER_NAME} -u admin
+npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" -u admin
+# npx hurl invoke ${CHAINCODE_NAME} person_get ${JOHN_ID} "${CURRENT_USER_ADMIN_ROLE}" -u admin
+# npx hurl invoke ${CHAINCODE_NAME} person_getByUsername ${USER_NAME} "${CURRENT_USER_ADMIN_ROLE}" -u admin
 
 # create admin with all data
 ID="${ANON_ID}"
@@ -65,9 +65,9 @@ EMAIL="${USER_NAME}@example.com"
 DATE="61985472"
 PAYLOAD="{\"id\":\"${ANON_ID}\",\"fiscalNumber\":\"${FISCAL_NUMBER}\",\"mobilePhone\":\"${PHONE_NUMBER}\",\"otherInformation\":\"\",\"username\":\"${USER_NAME}\",\"password\":\"${DEFAULT_PASSWORD}\",\"email\":\"${EMAIL}\"}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" -u admin
-# npx hurl invoke ${CHAINCODE_NAME} person_get ${JOHN_ID} -u admin
-# npx hurl invoke ${CHAINCODE_NAME} person_getByUsername ${USER_NAME} -u admin
+npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" -u admin
+# npx hurl invoke ${CHAINCODE_NAME} person_get ${JOHN_ID} "${CURRENT_USER_ADMIN_ROLE}" -u admin
+# npx hurl invoke ${CHAINCODE_NAME} person_getByUsername ${USER_NAME} "${CURRENT_USER_ADMIN_ROLE}" -u admin
 
 # create person with all data
 ID="${JOHN_ID}"
@@ -80,9 +80,9 @@ EMAIL="${USER_NAME}@example.com"
 DATE="61985472"
 PAYLOAD="{\"id\":\"${JOHN_ID}\",\"firstname\":\"${FIRST_NAME}\",\"lastname\":\"${LAST_NAME}\",\"beneficiaryNumber\":\"285191659\",\"birthDate\":\"${DATE}\",\"cardVersion\":\"006.007.23\",\"country\":\"PRT\",\"documentNumber\":\"09879462 0 ZZ3\",\"documentType\":\"Cartão De Cidadão\",\"emissionDate\":\"${DATE}\",\"emittingEntity\":\"República Portuguesa\",\"expirationDate\":\"${DATE}\",\"fatherFirstname\":\"Alberto\",\"fatherLastname\":\"De Andrade Monteiro\",\"fiscalNumber\":\"${FISCAL_NUMBER}\",\"mobilePhone\":\"${PHONE_NUMBER}\",\"gender\":\"M\",\"height\":\"1.81\",\"identityNumber\":\"098794620\",\"motherFirstname\":\"Maria Da Graça De Oliveira Mendes\",\"motherLastname\":\"Monteiro\",\"nationality\":\"PRT\",\"otherInformation\":\"\",\"pan\":\"0000036014662658\",\"requestLocation\":\"CRCiv. Figueira da Foz\",\"socialSecurityNumber\":\"11103478242\",\"username\":\"${USER_NAME}\",\"password\":\"${DEFAULT_PASSWORD}\",\"email\":\"${EMAIL}\"}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" -u admin
-# npx hurl invoke ${CHAINCODE_NAME} person_get ${JOHN_ID} -u admin
-# npx hurl invoke ${CHAINCODE_NAME} person_getByUsername ${USER_NAME} -u admin
+npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" -u admin
+# npx hurl invoke ${CHAINCODE_NAME} person_get ${JOHN_ID} "${CURRENT_USER_ADMIN_ROLE}" -u admin
+# npx hurl invoke ${CHAINCODE_NAME} person_getByUsername ${USER_NAME} "${CURRENT_USER_ADMIN_ROLE}" -u admin
 
 # exit full seed
 if [ "${result}" = "M" ]; then
@@ -98,10 +98,10 @@ EMAIL=${MIT_EMAIL}
 NIF=${MIT_NIF}
 PAYLOAD="{\"id\":\"${ID}\",\"code\":\"${CODE}\",\"name\":\"${NAME}\",\"email\":\"${EMAIL}\",\"fiscalNumber\":\"${NIF}\"}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} participant_create "${PAYLOAD}" -u admin
+npx hurl invoke ${CHAINCODE_NAME} participant_create "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" -u admin
 # there is no need for -u user1, it is the default
-# npx hurl invoke ${CHAINCODE_NAME} participant_get ${MIT_ID}
-# npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${MIT_CODE}
+# npx hurl invoke ${CHAINCODE_NAME} participant_get ${MIT_ID} "${CURRENT_USER_ADMIN_ROLE}"
+# npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${MIT_CODE} "${CURRENT_USER_ADMIN_ROLE}"
 
 # org2 : thiw will use org wait a little more until dev-peer0.org2.hurley.... is up
 
@@ -113,10 +113,10 @@ EMAIL=${NABA_EMAIL}
 NIF=${NABA_NIF}
 PAYLOAD="{\"id\":\"${ID}\",\"code\":\"${CODE}\",\"name\":\"${NAME}\",\"email\":\"${EMAIL}\",\"fiscalNumber\":\"${NIF}\"}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} participant_create "${PAYLOAD}"  -u user1 -o org1
+npx hurl invoke ${CHAINCODE_NAME} participant_create "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" -u user1 -o org1
 # there is no need for -u user1, it is the default
-# npx hurl invoke ${CHAINCODE_NAME} participant_get ${NABA_ID}
-# npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${NABA_CODE}
+# npx hurl invoke ${CHAINCODE_NAME} participant_get ${NABA_ID} "${CURRENT_USER_ADMIN_ROLE}"
+# npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${NABA_CODE} "${CURRENT_USER_ADMIN_ROLE}"
 
 # org3
 echo "Creating participant: Bad Bank"
@@ -127,10 +127,10 @@ EMAIL=${BADB_EMAIL}
 NIF=${BADB_NIF}
 PAYLOAD="{\"id\":\"${ID}\",\"code\":\"${CODE}\",\"name\":\"${NAME}\",\"email\":\"${EMAIL}\",\"fiscalNumber\":\"${NIF}\"}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} participant_create "${PAYLOAD}" -u user1 -o org2
+npx hurl invoke ${CHAINCODE_NAME} participant_create "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" -u user1 -o org2
 # there is no need for -u user1, it is the default
-# npx hurl invoke ${CHAINCODE_NAME} participant_get ${BADB_ID} -u admin
-# npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${BADB_CODE}
+# npx hurl invoke ${CHAINCODE_NAME} participant_get ${BADB_ID} "${CURRENT_USER_ADMIN_ROLE}" -u admin
+# npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${CODE} "${CURRENT_USER_ADMIN_ROLE}"
 
 # org4
 echo "Creating participant: God Bank"
@@ -141,10 +141,10 @@ EMAIL=${GODB_EMAIL}
 NIF=${GODB_NIF}
 PAYLOAD="{\"id\":\"${ID}\",\"code\":\"${CODE}\",\"name\":\"${NAME}\",\"email\":\"${EMAIL}\",\"fiscalNumber\":\"${NIF}\"}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} participant_create "${PAYLOAD}" -u user1 -o org2
+npx hurl invoke ${CHAINCODE_NAME} participant_create "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" -u user1 -o org2
 # there is no need for -u user1, it is the default
-# npx hurl invoke ${CHAINCODE_NAME} participant_get ${GODB_ID} -u user1 -o org2
-# npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${GODB_CODE}
+# npx hurl invoke ${CHAINCODE_NAME} participant_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u user1 -o org2
+# npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${CODE} "${CURRENT_USER_ADMIN_ROLE}"
 
 # create person with all data
 ID="${JANE_ID}"
@@ -157,8 +157,8 @@ EMAIL="${USER_NAME}@example.com"
 DATE="61985472"
 PAYLOAD="{\"id\":\"${JANE_ID}\",\"firstname\":\"${FIRST_NAME}\",\"lastname\":\"${LAST_NAME}\",\"beneficiaryNumber\":\"385191659\",\"birthDate\":\"${DATE}\",\"cardVersion\":\"006.007.23\",\"country\":\"PRT\",\"documentNumber\":\"19879462 0 ZZ3\",\"documentType\":\"Cartão De Cidadão\",\"emissionDate\":\"${DATE}\",\"emittingEntity\":\"República Portuguesa\",\"expirationDate\":\"${DATE}\",\"fatherFirstname\":\"Alberto\",\"fatherLastname\":\"De Andrade Monteiro\",\"fiscalNumber\":\"${FISCAL_NUMBER}\",\"mobilePhone\":\"${PHONE_NUMBER}\",\"gender\":\"M\",\"height\":\"1.81\",\"identityNumber\":\"198794620\",\"motherFirstname\":\"Maria Da Graça De Oliveira Mendes\",\"motherLastname\":\"Monteiro\",\"nationality\":\"PRT\",\"otherInformation\":\"\",\"pan\":\"0000036013272658\",\"requestLocation\":\"CRCiv. Figueira da Foz\",\"socialSecurityNumber\":\"21103478242\",\"username\":\"${USER_NAME}\",\"password\":\"${DEFAULT_PASSWORD}\",\"email\":\"${EMAIL}\",\"mobilePhone\":\"351936202288\",\"postal\":\"3080-032\",\"city\":\"Figueira da Foz\",\"region\":\"Coimbra\",\"geoLocation\":\"40.1508,-8.8618\",\"timezone\":\"Europe/Lisbon\",\"personalInfo\":\"Just an ordinary man\",\"profile\":{\"data\":${METADATA}}}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" -u admin
-# npx hurl invoke ${CHAINCODE_NAME} person_get ${JANE_ID} -u admin
+npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" -u admin
+# npx hurl invoke ${CHAINCODE_NAME} person_get ${JANE_ID} "${CURRENT_USER_ADMIN_ROLE}" -u admin
 
 # create person with minimal required data
 ID="${MINI_ID}"
@@ -168,19 +168,19 @@ PHONE_NUMBER="+351936200003"
 USER_NAME="${FISCAL_NUMBER}"
 PAYLOAD="{\"id\":\"${ID}\",\"fiscalNumber\":\"${FISCAL_NUMBER}\",\"mobilePhone\":\"${PHONE_NUMBER}\",\"username\":\"${USER_NAME}\", \"password\":\"${DEFAULT_PASSWORD}\"}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" -u admin
+npx hurl invoke ${CHAINCODE_NAME} person_create "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" -u admin
 # Must be executed by user admin else it belongs to other participant.id/MIT_ID and NOT GOV_ID? - `-u admin`
-# npx hurl invoke ${CHAINCODE_NAME} person_get ${ID} -u admin
-# npx hurl invoke ${CHAINCODE_NAME} person_getByUsername ${USER_NAME} -u admin
-# npx hurl invoke ${CHAINCODE_NAME} person_getByFiscalnumber ${FISCAL_NUMBER} -u admin
+# npx hurl invoke ${CHAINCODE_NAME} person_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u admin
+# npx hurl invoke ${CHAINCODE_NAME} person_getByUsername ${USER_NAME} "${CURRENT_USER_ADMIN_ROLE}" -u admin
+# npx hurl invoke ${CHAINCODE_NAME} person_getByFiscalnumber ${FISCAL_NUMBER} "${CURRENT_USER_ADMIN_ROLE}" -u admin
 
 # add atrributes has org1 / admin
 echo "Adding attribute 'birth-year' as the Big Government identity"
-npx hurl invoke ${CHAINCODE_NAME} person_addAttribute "${JOHN_ID}" "{\"id\": \"birth-year\", \"certifierID\": \"${GOV_ID}\", \"content\": \"1993\", \"issuedDate\": 1554239270 }" -u admin
+npx hurl invoke ${CHAINCODE_NAME} person_addAttribute "${JOHN_ID}" "{\"id\": \"birth-year\", \"certifierID\": \"${GOV_ID}\", \"content\": \"1993\", \"issuedDate\": 1554239270 }" "${CURRENT_USER_ADMIN_ROLE}" -u admin
 
 # add atrributes has org1 / admin
 echo "Adding attribute 'birth-year' as the Big Government identity"
-npx hurl invoke ${CHAINCODE_NAME} person_addAttribute "${JANE_ID}" "{\"id\": \"birth-year\", \"certifierID\": \"${GOV_ID}\", \"content\": \"1990\", \"issuedDate\": 1554239270 }" -u admin
+npx hurl invoke ${CHAINCODE_NAME} person_addAttribute "${JANE_ID}" "{\"id\": \"birth-year\", \"certifierID\": \"${GOV_ID}\", \"content\": \"1990\", \"issuedDate\": 1554239270 }" "${CURRENT_USER_ADMIN_ROLE}" -u admin
 
 # org5 : with ambassadors : required to be after persons
 echo "Creating participant: Pop Bank"
@@ -191,10 +191,10 @@ EMAIL=${POPB_EMAIL}
 NIF=${POPB_NIF}
 PAYLOAD="{\"id\":\"${ID}\",\"code\":\"${CODE}\",\"name\":\"${NAME}\",\"email\":\"${EMAIL}\",\"email\":\"${EMAIL}\",\"fiscalNumber\":\"${NIF}\",\"ambassadors\":${AMBASSADORS}}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} participant_create "${PAYLOAD}" -u user1 -o org2
+npx hurl invoke ${CHAINCODE_NAME} participant_create "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" -u user1 -o org2
 # there is no need for -u user1, it is the default
-# npx hurl invoke ${CHAINCODE_NAME} participant_get ${POPB_ID} -u user1 -o org2
-# npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${POPB_CODE}
+# npx hurl invoke ${CHAINCODE_NAME} participant_get ${POPB_ID} "${CURRENT_USER_ADMIN_ROLE}" -u user1 -o org2
+# npx hurl invoke ${CHAINCODE_NAME} participant_getByCode ${POPB_CODE} ${CURRENT_USER_ADMIN_ROLE}
 
 # create cause with all data (filter with date=1582414657)
 ID="${CAUSE_001}"
@@ -208,8 +208,8 @@ END_DATE="1640995199"
 PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"email\":\"cause001@example.com\",\"startDate\":\"${START_DATE}\",\"endDate\":\"${END_DATE}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"ambassadors\":${AMBASSADORS},\"metaData\":${METADATA},\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"}}"
 # echo $PAYLOAD  | jq
 # create and get with admin
-npx hurl invoke ${CHAINCODE_NAME} cause_create "${PAYLOAD}" -u admin
-# npx hurl invoke ${CHAINCODE_NAME} cause_get ${ID} -u admin
+npx hurl invoke ${CHAINCODE_NAME} cause_create "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" -u admin
+# npx hurl invoke ${CHAINCODE_NAME} cause_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u admin
 
 # create cause with all data (filter with date=1582414657)
 ID="${CAUSE_002}"
@@ -217,8 +217,8 @@ NAME="Cause002"
 TAGS="[\"black\", \"white\"]"
 PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"email\":\"cause002@example.com\",\"startDate\":\"${START_DATE}\",\"endDate\":\"${END_DATE}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"ambassadors\":${AMBASSADORS},\"metaData\":${METADATA},\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"}}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} cause_create "${PAYLOAD}" -u admin
-# npx hurl invoke ${CHAINCODE_NAME} cause_get ${ID} -u admin
+npx hurl invoke ${CHAINCODE_NAME} cause_create "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" -u admin
+# npx hurl invoke ${CHAINCODE_NAME} cause_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u admin
 
 # create cause with minimal required data
 ID="${CAUSE_003}"
@@ -228,8 +228,8 @@ INPUT_ID=${MIT_ID}
 PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"}}"
 # echo $PAYLOAD  | jq
 # with default user
-npx hurl invoke ${CHAINCODE_NAME} cause_create "${PAYLOAD}" -u admin
-# npx hurl invoke ${CHAINCODE_NAME} cause_get ${ID}
+npx hurl invoke ${CHAINCODE_NAME} cause_create "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" -u admin
+# npx hurl invoke ${CHAINCODE_NAME} cause_get "${CURRENT_USER_ADMIN_ROLE}" ${ID}
 
 # create funds transaction : gov to john 1.11: john is ambassador of PopBank it works
 ID="${TRANSACTION_001_ID}"
@@ -237,25 +237,28 @@ TRANSACTION_TYPE="TRANSFER_FUNDS"
 RESOURCE_TYPE="FUNDS"
 INPUT_TYPE="${CONVECTOR_MODEL_PATH_PARTICIPANT}"
 INPUT_ID="${POPB_ID}"
-OUTPUT_TYPE="${CONVECTOR_MODEL_PATH_PERSON}"
-OUTPUT_ID="${MINI_ID}"
-QUANTITY="1.11"
+OUTPUT_TYPE="${CONVECTOR_MODEL_PATH_CAUSE}"
+OUTPUT_ID="${CAUSE_001}"
+QUANTITY="11"
 CURRENCY="EUR"
 LOGGED_PERSON_ID="${JOHN_ID}"
 PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\",\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL}}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u user1
-# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u user1
+npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" "${CURRENT_USER_JOHNDOE_ROLE}" -u user1
+# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u user1
 
-# create funds transaction : Cause001 to jane 1.11: john is ambassador of Cause001 it works
+# TODO Balance violation! when work with causes, you must supply a total amount lesser or equal than current funds balance. current funds balance is 0
+# create funds transaction : Cause001 to jane 11: john is ambassador of Cause001 it works
 ID="acef70e5-cd25-4533-8392-9fa57e43cf33"
 INPUT_TYPE="${CONVECTOR_MODEL_PATH_CAUSE}"
 INPUT_ID="${CAUSE_001}"
+OUTPUT_TYPE="${CONVECTOR_MODEL_PATH_CAUSE}"
+OUTPUT_ID="${CAUSE_002}"
 LOGGED_PERSON_ID="${JOHN_ID}"
 PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"currency\":\"${CURRENCY}\",\"location\":\"${LOCATION}\",\"loggedPersonId\":\"${LOGGED_PERSON_ID}\",\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL}}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u admin
-# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
+npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" "${CURRENT_USER_JOHNDOE_ROLE}" -u admin
+# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u admin
 
 # create volunteeringHours transaction : john 10hours to Cause001
 ID="acef70e5-cd25-4533-8392-9fa57e43cf34"
@@ -269,8 +272,8 @@ QUANTITY="10"
 LOGGED_PERSON_ID="${JOHN_ID}"
 PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\",\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL}}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u user1
-# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u user1
+npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" -u user1
+# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u user1
 
 # create volunteeringHours transaction : jane 20hours to Cause002
 ID="acef70e5-cd25-4533-8392-9fa57e43cf35"
@@ -281,8 +284,8 @@ OUTPUT_ID="${CAUSE_002}"
 QUANTITY="20"
 PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\",\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL}}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u user1
-# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u user1
+npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" -u user1
+# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u user1
 
 # create volunteeringHours transaction : jane 20hours to Cause002
 ID="acef70e5-cd25-4533-8392-9fa57e43cf36"
@@ -291,8 +294,8 @@ INPUT_ID="${JANE_ID}"
 QUANTITY="20"
 PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"quantity\":\"${QUANTITY}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\",\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL}}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u user1
-# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u user1
+npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" -u user1
+# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u user1
 
 # create asset with all data (filter with date=1582414657)
 ID="${ASSET_001_ID}"
@@ -303,8 +306,8 @@ OWNER_TYPE="${CONVECTOR_MODEL_PATH_PERSON}"
 OWNER_ID="${JOHN_ID}"
 PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"description\":\"${DESCRIPTION}\",\"assetType\":\"${ASSET_TYPE}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"ambassadors\":${AMBASSADORS},\"metaData\":${METADATA},\"owner\":{\"id\":\"${OWNER_ID}\",\"type\":\"${OWNER_TYPE}\"}}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} asset_create "${PAYLOAD}" -u user1
-# npx hurl invoke ${CHAINCODE_NAME} asset_get ${ID}
+npx hurl invoke ${CHAINCODE_NAME} asset_create "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" -u user1
+# npx hurl invoke ${CHAINCODE_NAME} asset_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" 
 
 # create asset with minimal data (filter with date=1582414657) and with ambassadors
 ID="${ASSET_002_ID}"
@@ -314,9 +317,10 @@ OWNER_ID="${JOHN_ID}"
 OWNER_TYPE="${CONVECTOR_MODEL_PATH_PERSON}"
 PAYLOAD="{\"id\":\"${ID}\",\"name\":\"${NAME}\",\"assetType\":\"${ASSET_TYPE}\",\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"metaData\":${METADATA},\"owner\":{\"id\":\"${OWNER_ID}\",\"type\":\"${OWNER_TYPE}\"},\"ambassadors\":${AMBASSADORS}}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} asset_create "${PAYLOAD}" -u admin
-# npx hurl invoke ${CHAINCODE_NAME} asset_get ${ID} -u admin
+npx hurl invoke ${CHAINCODE_NAME} asset_create "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" -u admin
+# npx hurl invoke ${CHAINCODE_NAME} asset_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u admin
 
+# TODO Logged person is not the owner of the asset, is not an authorized asset ambassador, or asset owner ambassador
 # transaction asset from owner johndoe, with logged user janedoe, acting has an ambassador of johndoe, transfer to cause001 | require to send input id and type even if acting has an ambassador
 # here we lost asset ambassadors, when we transfer it
 ID="acef70e5-cd25-4533-8392-9fa57e43cf56"
@@ -330,15 +334,16 @@ OUTPUT_ID="${CAUSE_001}"
 LOGGED_PERSON_ID="${JANE_ID}"
 PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL},\"assetId\":\"${ASSET_ID}\",\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u user1
-# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
+npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" "${CURRENT_USER_JOHNDOE_ROLE}" -u user1
+# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u admin
 
 # asset update: update asset and add janedoe to ambassadors, before below transfer, else it fails because asset don't have ambassador, is lost in lastest transfer
 AMBASSADORS_UPDATE="[\"${JANE_ID}\"]"
 PAYLOAD="{\"id\":\"${ASSET_001_ID}\",\"ambassadors\":${AMBASSADORS_UPDATE}}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} asset_update "${PAYLOAD}"
+npx hurl invoke ${CHAINCODE_NAME} asset_update "${PAYLOAD}" "${CURRENT_USER_JOHNDOE_ROLE}"
 
+# TODO Transaction input owner is not the owner of the asset, or the type os transaction don't match. Must match asset type and use the owner of asset has input for transaction
 # transaction asset from cause001, with logged user janedoe, acting has an ambassador of cause001, transfer to PopBank | require to send input id and type even if acting has an ambassador
 ID="acef70e5-cd25-4533-8392-9fa57e43cf57"
 INPUT_TYPE="${CONVECTOR_MODEL_PATH_CAUSE}"
@@ -348,15 +353,19 @@ OUTPUT_ID="${POPB_ID}"
 LOGGED_PERSON_ID="${JANE_ID}"
 PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL},\"assetId\":\"${ASSET_ID}\",\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u user1
-# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
+npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" "${CURRENT_USER_MINI_ROLE}" -u user1
+# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u admin
+# TODO must use user with access
+# TODO No participant exists with that id 0fcc878a-6900-49d9-9a29-dffd9b8dae3c
+# TODO SOMETIMES we must let pass the userInfo privileges for ex when we GET OUTPUT entities in transactions for ex
 
 # asset update: update asset and add johndoe to ambassadors, before below transfer, else it fails because asset don't have ambassador, is lost in lastest transfer
 AMBASSADORS_UPDATE="[\"${JOHN_ID}\"]"
 PAYLOAD="{\"id\":\"${ASSET_001_ID}\",\"ambassadors\":${AMBASSADORS_UPDATE}}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} asset_update "${PAYLOAD}"
+npx hurl invoke ${CHAINCODE_NAME} asset_update "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}"
 
+# TODO Transaction input owner is not the owner of the asset, or the type os transaction don't match. Must match asset type and use the owner of asset has input for transaction
 # transaction asset from PopBank, with logged user johndoe, acting has an ambassador of PopBank, transfer to cause002 | require to send input id and type even if acting has an ambassador
 ID="acef70e5-cd25-4533-8392-9fa57e43cf61"
 INPUT_TYPE="${CONVECTOR_MODEL_PATH_PARTICIPANT}"
@@ -366,8 +375,8 @@ OUTPUT_ID="${CAUSE_002}"
 LOGGED_PERSON_ID="${JOHN_ID}"
 PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL},\"assetId\":\"${ASSET_ID}\",\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}"
-# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
+npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" "${CURRENT_USER_JOHNDOE_ROLE}"
+# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u admin
 
 # transaction of goods: person johnDoe to cause001
 ID="acef70e5-cd25-4533-8392-9fa57e43cf94"
@@ -382,8 +391,8 @@ LOGGED_PERSON_ID="${JOHN_ID}"
 GOODS_INPUT='[{"id":"80450045-d20d-4cdd-b937-c9bb46a48581","code": "008","barCode": "ean008","name": "name008","description": "description008","quantity": 200},{"id":"80450045-d20d-4cdd-b937-c9bb46a48582","code": "009","barCode": "ean009","name": "name009","description": "description009","quantity": 900}]'
 PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"goodsInput\":${GOODS_INPUT},\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u user1
-# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
+npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" -u user1
+# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u admin
 
 # transaction of goods: person janeDoe to cause001
 ID="acef70e5-cd25-4533-8392-9fa57e43cf95"
@@ -392,8 +401,8 @@ LOGGED_PERSON_ID="${JANE_ID}"
 GOODS_INPUT='[{"id":"80450045-d20d-4cdd-b937-c9bb46a48581","code": "010","barCode": "ean010","name": "name010","description": "description010","quantity": 10},{"id":"80450045-d20d-4cdd-b937-c9bb46a48582","code": "011","barCode": "ean011","name": "name011","description": "description011","quantity": 11}]'
 PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"goodsInput\":${GOODS_INPUT},\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u user1
-# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
+npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" -u user1
+# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u admin
 
 # transaction of goods: cause001 to cause002 (must have goods in stock)
 ID="acef70e5-cd25-4533-8392-9fa57e43cf16"
@@ -403,17 +412,18 @@ OUTPUT_ID="${CAUSE_002}"
 GOODS_INPUT='[{"id":"80450045-d20d-4cdd-b937-c9bb46a48581","code": "008","barCode": "ean008","name": "name008","description": "description008","quantity": 8},{"id":"80450045-d20d-4cdd-b937-c9bb46a48582","code": "009","barCode": "ean009","name": "name009","description": "description009","quantity": 9},{"id":"80450045-d20d-4cdd-b937-c9bb46a48581","code": "010","barCode": "ean010","name": "name010","description": "description010","quantity": 10},{"id":"80450045-d20d-4cdd-b937-c9bb46a48582","code": "011","barCode": "ean011","name": "name011","description": "description011","quantity": 11}]'
 PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"goodsInput\":${GOODS_INPUT},\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u user1
-# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
+npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" "${CURRENT_USER_JOHNDOE_ROLE}" -u user1
+# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u admin
 
 # transaction of goods: cause001 to cause002 (must have goods in stock)
 ID="acef70e5-cd25-4533-8392-9fa57e43cf18"
 GOODS_INPUT='[{"id":"80450045-d20d-4cdd-b937-c9bb46a48581","code": "008","barCode": "ean008","name": "name008CHANGE-FAIL","description": "description008CHANGE-FAIL","quantity": 92},{"id":"80450045-d20d-4cdd-b937-c9bb46a48582","code": "009","barCode": "ean009","name": "name009CHANGE-FAIL","description": "description009CHANGE-FAIL","quantity": 91}]'
 PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"goodsInput\":${GOODS_INPUT},\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u user1
-# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
+npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" "${CURRENT_USER_JOHNDOE_ROLE}" -u user1
+# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u admin
 
+# TODO No participant exists with that id c8ca045c-9d1b-407f-b9ae-31711758f2d0
 # transaction of goods: cause001 to participant gov (must have goods in stock), clean stocks, all 4 items will  be zeroed
 ID="acef70e5-cd25-4533-8392-9fa57e43cf19"
 OUTPUT_TYPE="${CONVECTOR_MODEL_PATH_PARTICIPANT}"
@@ -421,8 +431,8 @@ OUTPUT_ID="${GOV_ID}"
 GOODS_INPUT='[{"id":"80450045-d20d-4cdd-b937-c9bb46a48581","code": "008","barCode": "ean008","name": "name008CHANGE-FAIL","description": "description008CHANGE-FAIL","quantity": 100},{"id":"80450045-d20d-4cdd-b937-c9bb46a48582","code": "009","barCode": "ean009","name": "name009","description": "description009","quantity": 800}]'
 PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"goodsInput\":${GOODS_INPUT},\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u user1
-# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
+npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" "${CURRENT_USER_JOHNDOE_ROLE}" -u user1
+# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u admin
 
 # transaction of goods: cause002 to john (must have goods in stock), clean stocks, 010 and 011, leave 008 and 009 with 100units, with a ambassador
 ID="acef70e5-cd25-4533-8392-9fa57e43cf20"
@@ -433,8 +443,8 @@ OUTPUT_ID="${JOHN_ID}"
 GOODS_INPUT='[{"id":"80450045-d20d-4cdd-b937-c9bb46a48581","code": "010","barCode": "ean010","name": "name010","description": "description010","quantity": 10},{"id":"80450045-d20d-4cdd-b937-c9bb46a48582","code": "011","barCode": "ean011","name": "name011","description": "description011","quantity": 11}]'
 PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"goodsInput\":${GOODS_INPUT},\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u user1
-# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
+npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" "${CURRENT_USER_JOHNDOE_ROLE}" -u user1
+# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u admin
 
 # transaction of goods: jane to john : fraction numbers
 ID="acef70e5-cd25-4533-8392-9fa57e43cf21"
@@ -443,8 +453,8 @@ INPUT_ID="${JANE_ID}"
 GOODS_INPUT='[{"id":"80450045-d20d-4cdd-b937-c9bb46a48581","code": "010","barCode": "ean010","name": "name010","description": "description010","quantity": 9.5},{"id":"80450045-d20d-4cdd-b937-c9bb46a48582","code": "011","barCode": "ean011","name": "name011","description": "description011","quantity": 10.11}]'
 PAYLOAD="{\"id\":\"${ID}\",\"transactionType\":\"${TRANSACTION_TYPE}\",\"resourceType\":\"${RESOURCE_TYPE}\",\"input\":{\"id\":\"${INPUT_ID}\",\"type\":\"${INPUT_TYPE}\"},\"output\":{\"id\":\"${OUTPUT_ID}\",\"type\":\"${OUTPUT_TYPE}\"},\"location\":\"${LOCATION}\",\"tags\":${TAGS},\"goodsInput\":${GOODS_INPUT},\"metaData\":${METADATA},\"metaDataInternal\":${METADATA_INTERNAL},\"loggedPersonId\":\"${LOGGED_PERSON_ID}\"}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u user1
-# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} -u admin
+npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" -u user1
+# npx hurl invoke ${CHAINCODE_NAME} transaction_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u admin
 
 # TODO: add INDEXES to complex filters all _id, all type, 
 
@@ -466,9 +476,9 @@ npx hurl invoke ${CHAINCODE_NAME} transaction_create "${PAYLOAD}" -u user1
 # fingerprint:"3B:BA:99:47:DD:68:90:A4:DA:01:34:93:B0:74:C0:91:F4:30:0D:5B"
 
 # Must be executed by user admin else it belongs to other participant.id/MIT_ID and NOT GOV_ID? - `-u admin`
-# npx hurl invoke ${CHAINCODE_NAME} person_get ${ID} -u admin
-# npx hurl invoke ${CHAINCODE_NAME} person_getByUsername ${USER_NAME} -u admin
-# npx hurl invoke ${CHAINCODE_NAME} person_getByFiscalnumber ${FISCAL_NUMBER} -u admin
+# npx hurl invoke ${CHAINCODE_NAME} person_get ${ID} "${CURRENT_USER_ADMIN_ROLE}" -u admin
+# npx hurl invoke ${CHAINCODE_NAME} person_getByUsername ${USER_NAME} "${CURRENT_USER_ADMIN_ROLE}" -u admin
+# npx hurl invoke ${CHAINCODE_NAME} person_getByFiscalnumber ${FISCAL_NUMBER} "${CURRENT_USER_ADMIN_ROLE}" -u admin
 
 # register chaincodeAdmin before use it to prevent error `(node:11177) UnhandledPromiseRejectionWarning: Error: Cannot save null userContext.`
 node registerIdentitiesManager.js 
@@ -479,30 +489,32 @@ METADATA_UPDATE="{\"key\":\"value updated\"}"
 METADATA_INTERNAL_UPDATE="{\"key\":\"internal value updated\"}"
 PAYLOAD="{\"id\":\"${GOV_ID}\",\"email\":\"${EMAIL_UPDATE}\",\"ambassadors\":${AMBASSADORS_UPDATE},\"metaData\":${METADATA_UPDATE},\"metaDataInternal\":${METADATA_INTERNAL_UPDATE}}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} participant_update "${PAYLOAD}" -u chaincodeAdmin
+npx hurl invoke ${CHAINCODE_NAME} participant_update "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" -u chaincodeAdmin
 
 # asset update asset001: all updateable fields
 TAGS="[\"green\",\"cyan\",\"violet\"]"
 PAYLOAD="{\"id\":\"${ASSET_001_ID}\",\"ambassadors\":${AMBASSADORS_UPDATE},\"tags\":${TAGS},\"metaData\":${METADATA_UPDATE},\"metaDataInternal\":${METADATA_INTERNAL_UPDATE}}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} asset_update "${PAYLOAD}"
+npx hurl invoke ${CHAINCODE_NAME} asset_update "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" 
 
 # cause update cause001: all updateable fields
 EMAIL_UPDATE="cause001-updated@example.com"
 PAYLOAD="{\"id\":\"${CAUSE_001}\",\"email\":\"${EMAIL_UPDATE}\",\"ambassadors\":${AMBASSADORS_UPDATE},\"tags\":${TAGS},\"metaData\":${METADATA_UPDATE},\"metaDataInternal\":${METADATA_INTERNAL_UPDATE}}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} cause_update "${PAYLOAD}"
+npx hurl invoke ${CHAINCODE_NAME} cause_update "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" 
 
+# TODO No transaction exists with that id 4ea88521-031b-4279-9165-9c10e1839000
 # transaction update: all updateable fields
 PAYLOAD="{\"id\":\"${TRANSACTION_001_ID}\",\"metaDataInternal\":${METADATA_INTERNAL_UPDATE}}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} transaction_update "${PAYLOAD}"
+npx hurl invoke ${CHAINCODE_NAME} transaction_update "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" 
 
 # person update mini: required admin user (acting has Gov)
 PAYLOAD="{\"id\":\"${MINI_ID}\",\"roles\":${ROLES},\"metaDataInternal\":${METADATA_INTERNAL_UPDATE}}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} person_update "${PAYLOAD}" -u admin
+npx hurl invoke ${CHAINCODE_NAME} person_update "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}"  -u admin
 
+# TODO Cannot read property 'fiscalNumber' of undefined
 # person upsertCitizenCard: update existing user mini (minimal data): required admin user (acting has Gov)
 DOCUMENT_NUMBER="09879461 1 ZZ3"
 IDENTITY_NUMBER="098124620"
@@ -530,8 +542,9 @@ REQUEST_LOCATION="CRCiv. Figueira da Foz"
 OTHER_INFORMATION="Other info...."
 PAYLOAD="{\"id\":\"${MINI_ID}\",\"documentNumber\": \"${DOCUMENT_NUMBER}\",\"identityNumber\": \"${IDENTITY_NUMBER}\",\"fiscalNumber\": \"${FISCAL_NUMBER}\",\"socialSecurityNumber\": \"${SOCIAL_SECURITY_NUMBER}\",\"beneficiaryNumber\": \"${BENEFICIARY_NUMBER}\",\"pan\": \"${PAN}\",\"firstname\": \"${FIRSTNAME}\",\"lastname\": \"${LASTNAME}\",\"gender\": \"${GENDER}\",\"height\": \"${HEIGHT}\",\"fatherFirstname\": \"${FATHER_FIRSTNAME}\",\"fatherLastname\": \"${FATHER_LASTNAME}\",\"motherFirstname\": \"${MOTHER_FIRSTNAME}\",\"motherLastname\": \"${MOTHER_LASTNAME}\",\"birthDate\": \"${BIRTH_DATE}\",\"nationality\": \"${NATIONALITY}\",\"country\": \"${COUNTRY}\",\"documentType\": \"${DOCUMENT_TYPE}\",\"cardVersion\": \"${CARD_VERSION}\",\"emissionDate\": \"${EMISSION_DATE}\",\"expirationDate\": \"${EXPIRATION_DATE}\",\"emittingEntity\": \"${EMITTING_ENTITY}\",\"requestLocation\": \"${REQUEST_LOCATION}\",\"otherInformation\": \"${OTHER_INFORMATION}\"}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} person_upsertCitizenCard "${PAYLOAD}" -u admin
+npx hurl invoke ${CHAINCODE_NAME} person_upsertCitizenCard "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" -u admin
 
+# TODO No person exists with that fieldName: fiscalNumber and fieldValue PT181192152
 # person_upsertCitizenCard: new person : non existing user: required admin user (acting has Gov)
 DOCUMENT_NUMBER="09119461 1 ZZ3"
 IDENTITY_NUMBER="091124620"
@@ -559,7 +572,7 @@ REQUEST_LOCATION="CRCiv. Figueira da Foz"
 OTHER_INFORMATION="Other info...."
 PAYLOAD="{\"documentNumber\": \"${DOCUMENT_NUMBER}\",\"identityNumber\": \"${IDENTITY_NUMBER}\",\"fiscalNumber\": \"${FISCAL_NUMBER}\",\"socialSecurityNumber\": \"${SOCIAL_SECURITY_NUMBER}\",\"beneficiaryNumber\": \"${BENEFICIARY_NUMBER}\",\"pan\": \"${PAN}\",\"firstname\": \"${FIRSTNAME}\",\"lastname\": \"${LASTNAME}\",\"gender\": \"${GENDER}\",\"height\": \"${HEIGHT}\",\"fatherFirstname\": \"${FATHER_FIRSTNAME}\",\"fatherLastname\": \"${FATHER_LASTNAME}\",\"motherFirstname\": \"${MOTHER_FIRSTNAME}\",\"motherLastname\": \"${MOTHER_LASTNAME}\",\"birthDate\": \"${BIRTH_DATE}\",\"nationality\": \"${NATIONALITY}\",\"country\": \"${COUNTRY}\",\"documentType\": \"${DOCUMENT_TYPE}\",\"cardVersion\": \"${CARD_VERSION}\",\"emissionDate\": \"${EMISSION_DATE}\",\"expirationDate\": \"${EXPIRATION_DATE}\",\"emittingEntity\": \"${EMITTING_ENTITY}\",\"requestLocation\": \"${REQUEST_LOCATION}\",\"otherInformation\": \"${OTHER_INFORMATION}\"}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} person_upsertCitizenCard "${PAYLOAD}" -u admin
+npx hurl invoke ${CHAINCODE_NAME} person_upsertCitizenCard "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" -u admin
 
 # person updateProfile
 EMAIL_UPDATE="foobar@example.com"
@@ -574,24 +587,24 @@ PROFILE_UPDATE="Profile info...."
 METADATA_UPDATE="{\"key\":\"value updated\"}"
 PAYLOAD="{\"id\":\"${MINI_ID}\",\"email\":\"${EMAIL_UPDATE}\",\"mobilePhone\":\"${MOBILE_PHONE_UPDATE}\",\"postal\":\"${POSTAL_UPDATE}\",\"city\":\"${CITY_UPDATE}\",\"region\":\"${REGION_UPDATE}\",\"geoLocation\":\"${GEO_LOCATION_UPDATE}\",\"timezone\":\"${TIMEZONE_UPDATE}\",\"personalInfo\":\"${PERSONAL_INFO_UPDATE}\",\"profile\":\"${PROFILE_UPDATE}\",\"metaData\":${METADATA_UPDATE}}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} person_updateProfile "${PAYLOAD}"
+npx hurl invoke ${CHAINCODE_NAME} person_updateProfile "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" 
 
 # person updatePassword
 PASSWORD_UPDATE="87654321"
 PAYLOAD="{\"id\":\"${MINI_ID}\",\"password\":\"${PASSWORD_UPDATE}\"}"
 # echo $PAYLOAD  | jq
-npx hurl invoke ${CHAINCODE_NAME} person_updatePassword "${PAYLOAD}"
+npx hurl invoke ${CHAINCODE_NAME} person_updatePassword "${PAYLOAD}" "${CURRENT_USER_ADMIN_ROLE}" 
 
 # note las "{}" in getComplexQuery is the authenticated userInfo
 # note for escaped $lte, work with sort:[{name:"asc"}] and sort:["name"]
 # persisted "createdDate": "1582410746061", "name":"Big Government"
 # npx hurl invoke ${CHAINCODE_NAME} participant_getComplexQuery "{\"filter\":{\"name\":\"Big Government\",\"createdDate\":{\"\$lte\":1582410746061,\"\$gte\":1582410746061}},\"sort\":[{\"name\":\"asc\"}]}"
-npx hurl invoke ${CHAINCODE_NAME} participant_getComplexQuery "{\"filter\":{\"name\":\"Big Government\"},\"sort\":[{\"name\":\"asc\"}]}" "{}" "{}"
+npx hurl invoke ${CHAINCODE_NAME} participant_getComplexQuery "{\"filter\":{\"name\":\"Big Government\"},\"sort\":[{\"name\":\"asc\"}]}" "${CURRENT_USER_ADMIN_ROLE}"
 # persisted "createdDate": "1582410790588", "username": "janedoe"
-npx hurl invoke ${CHAINCODE_NAME} person_getComplexQuery "{\"filter\":{\"username\":\"janedoe\",\"createdDate\":{\"\$lte\":1582410790588,\"\$gte\":1582410790588}},\"sort\":[{\"username\":\"asc\"}]}" "{}"
+npx hurl invoke ${CHAINCODE_NAME} person_getComplexQuery "{\"filter\":{\"username\":\"janedoe\",\"createdDate\":{\"\$lte\":1582410790588,\"\$gte\":1582410790588}},\"sort\":[{\"username\":\"asc\"}]}" "${CURRENT_USER_ADMIN_ROLE}" 
 # persisted "startDate": "1582414657", "endDate": "1582414657", "name":"Cause002b"
-npx hurl invoke ${CHAINCODE_NAME} cause_getComplexQuery "{\"filter\":{\"name\":\"Cause002b\",\"startDate\":{\"\$lte\":1582414657},\"endDate\":{\"\$gte\":1582414657}},\"sort\":[{\"name\":\"asc\"}]}" "{}"
+npx hurl invoke ${CHAINCODE_NAME} cause_getComplexQuery "{\"filter\":{\"name\":\"Cause002b\",\"startDate\":{\"\$lte\":1582414657},\"endDate\":{\"\$gte\":1582414657}},\"sort\":[{\"name\":\"asc\"}]}" "${CURRENT_USER_ADMIN_ROLE}" 
 # persisted "name":"Asset002" now use postfix code ex "Asset002 [acef70e5]"
-npx hurl invoke ${CHAINCODE_NAME} asset_getComplexQuery "{\"filter\":{\"name\":\"Asset002\"},\"sort\":[{\"name\":\"asc\"}]}" "{}"
+npx hurl invoke ${CHAINCODE_NAME} asset_getComplexQuery "{\"filter\":{\"name\":\"Asset002\"},\"sort\":[{\"name\":\"asc\"}]}" "${CURRENT_USER_ADMIN_ROLE}" 
 # persisted "createdDate": "1582410817579", "currency": "EUR"
-npx hurl invoke ${CHAINCODE_NAME} transaction_getComplexQuery "{\"filter\":{\"currency\":\"EUR\",\"createdDate\":{\"\$lte\":1582410817579,\"\$gte\":1582410817579}},\"sort\":[{\"quantity\":\"asc\"}]}" "{}"
+npx hurl invoke ${CHAINCODE_NAME} transaction_getComplexQuery "{\"filter\":{\"currency\":\"EUR\",\"createdDate\":{\"\$lte\":1582410817579,\"\$gte\":1582410817579}},\"sort\":[{\"quantity\":\"asc\"}]}" "${CURRENT_USER_ADMIN_ROLE}" 

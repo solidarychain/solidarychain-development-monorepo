@@ -1,9 +1,9 @@
 import { Asset } from '@solidary-chain/asset-cc';
 import { Cause } from '@solidary-chain/cause-cc';
-import { appConstants as c, ChaincodeEvent, EntityType, GenericBalance, Goods, isDecimal, newUuid, getInputAndOutputAmbassadorUserFilter, CurrentUser } from '@solidary-chain/common-cc';
+import { appConstants as c, ChaincodeEvent, CurrentUser, EntityType, GenericBalance, Goods, isDecimal, newUuid } from '@solidary-chain/common-cc';
 import { getParticipantByIdentity, Participant } from '@solidary-chain/participant-cc';
-import { Person, hashPassword } from '@solidary-chain/person-cc';
-import { Controller, ConvectorController, FlatConvectorModel, Invokable, Param } from '@worldsibu/convector-core';
+import { hashPassword, Person } from '@solidary-chain/person-cc';
+import { Controller, ConvectorController, Invokable, Param } from '@worldsibu/convector-core';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
 import * as yup from 'yup';
 import { ResourceType, TransactionType } from './enums';
@@ -16,6 +16,8 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
   public async create(
     @Param(Transaction)
     transaction: Transaction,
+    @Param(yup.object())
+    user: CurrentUser
   ) {
     // use '' to prevent undefined when empty
     let debugMessage: string = '';
@@ -31,17 +33,19 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
       throw new Error('There is no participant with that identity');
     }
     // get loggedPerson from loggedPersonId
-    const loggedPerson: Person = await Person.getById(transaction.loggedPersonId);
+    const loggedPerson: Person = await Person.getById(user.userId, user);
     if (!!loggedPerson && !loggedPerson.id) {
       throw new Error('There is no logged user with that identity');
     }
 
     // participant
     transaction.participant = participant;
-    // assign input/output, don't throw error on input, used throwError=false
-    transaction.input.entity = await getEntity(transaction.input.type, transaction.input.id, false);
-    transaction.output.entity = await getEntity(transaction.output.type, transaction.output.id);
+    // assign input/output, don't throw error on input, used throwError=false, we required this to create users if not exists based on id, fiscalNumber etc
+    // we must pass admin user to find with unlimited privileges in input output transactions
+    transaction.input.entity = await getEntity(transaction.input.type, transaction.input.id, c.CURRENT_USER_ADMIN_ROLE, false);
+    transaction.output.entity = await getEntity(transaction.output.type, transaction.output.id, c.CURRENT_USER_ADMIN_ROLE);
 
+    debugger;
     // ambassador protection: if entity is participant or cause, the logged user must be a ambassador else throw error
     if (transaction.input.type === EntityType.Participant || transaction.input.type === EntityType.Cause) {
       if (!(transaction.input.entity as Participant | Cause).ambassadors || !(transaction.input.entity as Participant | Cause).ambassadors.find((id: string) => id === loggedPerson.id)) {
@@ -50,13 +54,13 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     }
 
     // protection required loggedPersonId
-    if (!transaction.loggedPersonId) {
-      throw new Error(`You must supply a loggedPersonId in transfers`);
+    if (!user.userId) {
+      throw new Error(`You must supply a userId in transfers`);
     }
 
     // protection check if ownerPerson exists 
     if (!loggedPerson && !loggedPerson.id) {
-      throw new Error(`There is no person with Id '${transaction.loggedPersonId}'`);
+      throw new Error(`There is no person with Id '${user.userId}'`);
     }
 
     // protect if any input/output has a missing id ot type
@@ -261,13 +265,12 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     // common post transaction for all modes
 
     // assign createdByPersonId before delete loggedPersonId
-    transaction.createdByPersonId = transaction.loggedPersonId;
+    transaction.createdByPersonId = user.userId;
     // clean non useful props, are required only to know sent entityType in payload, else they are stored in ledger
     delete transaction.input.id;
     delete transaction.output.id;
     delete transaction.input.type;
     delete transaction.output.type;
-    delete transaction.loggedPersonId;
     // add date in epoch unix time
     transaction.createdDate = new Date().getTime();
 
@@ -293,9 +296,11 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
   public async update(
     @Param(Transaction)
     transaction: Transaction,
+    @Param(yup.object())
+    user: CurrentUser
   ) {
     // Retrieve to see if exists
-    let existing = await Transaction.getById(transaction.id);
+    let existing = await Transaction.getById(user.userId, user);
 
     if (!existing || !existing.id) {
       throw new Error('No transaction exists with that id');
@@ -319,55 +324,30 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
   public async get(
     @Param(yup.string())
     id: string,
+    @Param(yup.object())
+    user: CurrentUser
   ): Promise<Transaction> {
-    // get host participant from fingerprint
-    // const participant: Participant = await getParticipantByIdentity(this.sender);
-    const existing = await Transaction.query(Transaction, {
-      selector: {
-        type: c.CONVECTOR_MODEL_PATH_TRANSACTION,
-        id,
-      }
-    });
-    // require to check if existing before try to access existing[0].id prop
-    if (!existing || !existing[0] || !existing[0].id) {
-      throw new Error(`No transaction exists with that id ${id}`);
-    }
-    return existing[0];
+    return await Transaction.getById(id, user);
   }
 
   @Invokable()
-  public async getAll(): Promise<FlatConvectorModel<Transaction>[]> {
-    return (await Transaction.getAll(c.CONVECTOR_MODEL_PATH_TRANSACTION)).map(transaction => transaction.toJSON() as any);
+  public async getAll(
+    @Param(yup.object())
+    user: CurrentUser
+  ): Promise<Transaction | Transaction[]> {
+    return await Transaction.getByFilter({}, user);
   }
 
   /**
-   * get participants with complex query filter
+   * get model with complex query filter
    */
   @Invokable()
   public async getComplexQuery(
     @Param(yup.object())
-    complexQueryInput: any,
+    queryParams: any,
     @Param(yup.object())
     user: CurrentUser
   ): Promise<Transaction | Transaction[]> {
-    if (!complexQueryInput || !complexQueryInput.filter) {
-      throw new Error(c.EXCEPTION_ERROR_NO_COMPLEX_QUERY);
-    }
-    const userFilter = getInputAndOutputAmbassadorUserFilter(user);
-    const complexQuery: any = {
-      selector: {
-        type: c.CONVECTOR_MODEL_PATH_TRANSACTION,
-        // spread arbitrary query filter
-        ...complexQueryInput.filter,
-        // add userFilter
-        ...userFilter
-      },
-      // not useful
-      // fields: (complexQueryInput.fields) ? complexQueryInput.fields : undefined,
-      sort: (complexQueryInput.sort) ? complexQueryInput.sort : undefined,
-    };
-    const resultSet: Transaction | Transaction[] = await Transaction.query(Transaction, complexQuery);
-    return resultSet;
+    return await Transaction.getByFilter(queryParams, user);
   }
-
 }

@@ -2,15 +2,15 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Asset as AssetConvectorModel } from '@solidary-chain/asset-cc';
 import { FlatConvectorModel } from '@worldsibu/convector-core-model';
 import { v4 as uuid } from 'uuid';
+import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
+import CurrentUserPayload from '../common/types/current-user-payload';
 import { AssetControllerBackEnd } from '../convector';
 import { NewAssetInput, UpdateAssetInput } from './dto';
 import { Asset } from './models';
-import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
-import { UserInfo } from '@solidary-chain/common-cc';
 
 @Injectable()
 export class AssetService {
-  async create(data: NewAssetInput): Promise<Asset> {
+  async create(data: NewAssetInput, user: CurrentUserPayload): Promise<Asset> {
     try {
       // require to use or generate new id
       const newId: string = (data.id) ? data.id : uuid();
@@ -20,42 +20,29 @@ export class AssetService {
         // require to inject values
         id: newId,
       });
-      await AssetControllerBackEnd.create(assetToCreate);
-      return this.findOneById(newId);
+      await AssetControllerBackEnd.create(assetToCreate, user);
+      return this.findOneById(newId, user);
     } catch (error) {
       throw error;
     }
   }
 
-  async update(data: UpdateAssetInput): Promise<Asset> {
+  async update(data: UpdateAssetInput, user: CurrentUserPayload): Promise<Asset> {
     try {
       // compose ConvectorModel from UpdateInput
       const assetToUpdate: AssetConvectorModel = new AssetConvectorModel({
         ...data
       });
-      await AssetControllerBackEnd.update(assetToUpdate);
-      return this.findOneById(data.id);
+      await AssetControllerBackEnd.update(assetToUpdate, user);
+      return this.findOneById(data.id, user);
     } catch (error) {
       throw error;
     }
   }
 
-  async findAll(paginationArgs: PaginationArgs): Promise<Asset[]> {
-    try {
-      const convectorModel: Array<FlatConvectorModel<AssetConvectorModel[]>> = await AssetControllerBackEnd.getAll();
-      // require to map fabric model to graphql Asset[]
-      return (paginationArgs)
-        ? convectorModel.splice(paginationArgs.skip, paginationArgs.take) as Asset[]
-        : convectorModel as Asset[];
-    } catch (error) {
-      Logger.error(JSON.stringify(error));
-      throw error;
-    }
-  }
-
-  async findComplexQuery(getByComplexQueryInput: GetByComplexQueryInput, userInfo: UserInfo, paginationArgs: PaginationArgs): Promise<Asset | Asset[]> {
+  async findAll(paginationArgs: PaginationArgs, user: CurrentUserPayload): Promise<Asset | Asset[]> {
     // get fabric model with _props
-    const fabricModel: Array<FlatConvectorModel<AssetConvectorModel>> = await AssetControllerBackEnd.getComplexQuery(getByComplexQueryInput, userInfo) as AssetConvectorModel[];
+    const fabricModel: Array<FlatConvectorModel<AssetConvectorModel>> = await AssetControllerBackEnd.getAll(user) as AssetConvectorModel[];
     // convert fabric model to convector model (remove _props)
     const convectorModel: AssetConvectorModel[] = fabricModel.map((e: AssetConvectorModel) => new AssetConvectorModel(e));
     // call common find method
@@ -64,9 +51,20 @@ export class AssetService {
     return model;
   }
 
-  async findOneById(id: string): Promise<Asset> {
+  async findComplexQuery(getByComplexQueryInput: GetByComplexQueryInput, paginationArgs: PaginationArgs, user: CurrentUserPayload): Promise<Asset | Asset[]> {
     // get fabric model with _props
-    const fabricModel: AssetConvectorModel = await AssetControllerBackEnd.get(id);
+    const fabricModel: Array<FlatConvectorModel<AssetConvectorModel>> = await AssetControllerBackEnd.getComplexQuery(getByComplexQueryInput, user) as AssetConvectorModel[];
+    // convert fabric model to convector model (remove _props)
+    const convectorModel: AssetConvectorModel[] = fabricModel.map((e: AssetConvectorModel) => new AssetConvectorModel(e));
+    // call common find method
+    const model: Asset[] = await this.findBy(convectorModel, paginationArgs) as Asset[];
+    // return model
+    return model;
+  }
+
+  async findOneById(id: string, user: CurrentUserPayload): Promise<Asset> {
+    // get fabric model with _props
+    const fabricModel: AssetConvectorModel = await AssetControllerBackEnd.get(id, user);
     // convert fabric model to convector model (remove _props)
     const convectorModel: AssetConvectorModel = new AssetConvectorModel(fabricModel);
     // trick: must return convector model as a graphql model, to prevent property conversion problems

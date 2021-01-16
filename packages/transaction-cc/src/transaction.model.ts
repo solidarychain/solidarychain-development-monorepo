@@ -1,4 +1,4 @@
-import { appConstants as c, entitySchema, x509Identities, Goods, GoodsInput } from '@solidary-chain/common-cc';
+import { appConstants as c, entitySchema, x509Identities, Goods, GoodsInput, CurrentUser, getInputAndOutputAmbassadorUserFilter } from '@solidary-chain/common-cc';
 import { Participant } from '@solidary-chain/participant-cc';
 import { ConvectorModel, FlatConvectorModel, ReadOnly, Required, Validate } from '@worldsibu/convector-core-model';
 import * as yup from 'yup';
@@ -74,34 +74,44 @@ export class Transaction extends ConvectorModel<Transaction> {
   public goods?: Array<FlatConvectorModel<Goods>>;
 
   // send by graphql api
-  @Validate(yup.string())
-  public loggedPersonId?: string;
-
-  // send by graphql api
   @Validate(yup.array().of(yup.object()))
   public goodsInput?: Array<GoodsInput>;
 
   // above implementation is equal in all models, only change the type and CONVECTOR_MODEL_PATH_${MODEL}
 
   // custom static implementation getById
-  public static async getById(id: string): Promise<Transaction> {
-    const result: Transaction | Transaction[] = await this.getByFilter({ _id: id });
-    return (result) ? result[0] : null;
+  public static async getById(id: string, user: CurrentUser): Promise<Transaction> {
+    const result: Transaction | Transaction[] = await this.getByFilter({ filter: { _id: id } }, user);
+    if (!result || !result[0] || !result[0].id) {
+      throw new Error(`No ${Transaction.name.toLowerCase()} exists with that id ${id}`);
+    }
+    return result[0];
   }
 
   // custom static implementation getByField
-  public static async getByField(fieldName: string, fieldValue: string): Promise<Transaction | Transaction[]> {
-    return await this.getByFilter({ [fieldName]: fieldValue });
+  public static async getByField(fieldName: string, fieldValue: string, user: CurrentUser): Promise<Transaction | Transaction[]> {
+    const result: Transaction | Transaction[] = await this.getByFilter({ filter: { [fieldName]: fieldValue } }, user);
+    if (!result || !result[0] || !result[0].id) {
+      throw new Error(`No ${Transaction.name.toLowerCase()} exists with that fieldName: ${fieldName} and fieldValue ${fieldValue}`);
+    }
+    return result[0];
   }
 
   // custom static implementation getByFilter
-  public static async getByFilter(filter: any): Promise<Transaction | Transaction[]> {
-    const mangoQuery = {
+  public static async getByFilter(queryParams: { filter?: any, sort?: any }, user: CurrentUser): Promise<Transaction | Transaction[]> {
+    const userFilter = getInputAndOutputAmbassadorUserFilter(user);
+    const complexQuery: any = {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_TRANSACTION,
-        ...filter,
-      }
+        // add userFilter
+        ...userFilter,
+        // spread arbitrary query filter
+        ...queryParams.filter,
+      },
+      // fields: (queryParams.fields) ? queryParams.fields : undefined,
+      sort: (queryParams.sort) ? queryParams.sort : undefined,
     };
-    return await this.query(Transaction, mangoQuery);
+    const resultSet: Transaction | Transaction[] = await Transaction.query(Transaction, complexQuery);
+    return resultSet;
   }
 }

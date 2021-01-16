@@ -8,6 +8,7 @@ import { FabricControllerAdapter } from '@worldsibu/convector-adapter-fabric';
 import { ClientFactory } from '@worldsibu/convector-core';
 import * as fs from 'fs';
 import { join, resolve } from 'path';
+import { appConstants as c} from './constants';
 import { envVariables as e } from './env';
 
 /**
@@ -40,7 +41,7 @@ export const TransactionControllerBackEnd = ClientFactory(TransactionController,
  */
 export async function InitServerIdentity() {
   await initAdapter;
-  const res = await ParticipantControllerBackEnd.get(e.identityId);
+  const res = await ParticipantControllerBackEnd.get(e.identityId, c.CURRENT_USER_ADMIN_ROLE);
   try {
     // convert fabric model to convector model (remove _props)
     const serverIdentity = new Participant(res).toJSON();
