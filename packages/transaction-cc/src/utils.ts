@@ -78,7 +78,7 @@ export const checkUniqueField = async (fieldName: string, fieldValue: string, re
  * when they don't have yet, the goods item in goodsStock, we need to create one and add it to the array
  * after we create the newItemGoods based on current goodsInput element, we just need to add balance and push to final arrays
  * @param goodsInput 
- * @param loggedPersonId 
+ * @param loggedPerson
  */
 const newGoodsItem = (goodsInput: GoodsInput, loggedPerson: Person): Goods => {
   const newItemGoods = new Goods(goodsInput.id);

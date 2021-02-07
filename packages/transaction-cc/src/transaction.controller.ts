@@ -32,7 +32,7 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     if (!!participant && !participant.id) {
       throw new Error('There is no participant with that identity');
     }
-    // get loggedPerson from loggedPersonId
+    // get loggedPerson from userId
     const loggedPerson: Person = await Person.getById(user.userId, user);
     if (!!loggedPerson && !loggedPerson.id) {
       throw new Error('There is no logged user with that identity');
@@ -53,7 +53,7 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
       }
     }
 
-    // protection required loggedPersonId
+    // protection required userId
     if (!user.userId) {
       throw new Error(`You must supply a userId in transfers`);
     }
@@ -260,7 +260,7 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
 
     // common post transaction for all modes
 
-    // assign createdByPersonId before delete loggedPersonId
+    // assign createdByPersonId from userId
     transaction.createdByPersonId = user.userId;
     // clean non useful props, are required only to know sent entityType in payload, else they are stored in ledger
     delete transaction.input.id;

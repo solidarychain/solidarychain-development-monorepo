@@ -54,7 +54,6 @@ export class Cause extends ConvectorModel<Cause> {
   @Validate(yup.number())
   public createdDate: number;
 
-  // persisted with loggedPersonId
   @Validate(yup.string())
   public createdByPersonId?: string;
 

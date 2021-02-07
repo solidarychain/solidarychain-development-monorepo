@@ -58,11 +58,6 @@ export class NewTransactionInput {
   @IsOptional()
   metaDataInternal: any;
 
-  // this is used to pass loggedIn userId to fabric
-  @Field({ nullable: true })
-  @IsOptional()
-  loggedPersonId: string;
-
   // optional: transfer assets
 
   @Field({ nullable: true })

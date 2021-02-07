@@ -6,9 +6,8 @@ set -a
 set +a
 
 # used manually
-# scp seedNetwork.sh 192.168.1.61:/tmp
-# scp seed.env 192.168.1.61:/tmp
-# enter node 1 and launch cd /tmp && ./seedNetwork.sh
+# scp seedNetwork.sh seed.env 192.168.1.61:/tmp
+# enter node 1 `ssh 192.168.1.61` and launch `cd /tmp && ./seedNetwork.sh`
 
 echo -n "> Do you wish to run minimal or full seed? (Minimal/Full/Cancel) " >&2
 while [ -z "${result}" ] ; do
@@ -20,12 +19,20 @@ while [ -z "${result}" ] ; do
   esac
 done
 
+# press any key function
+press_any_key() {
+  # read -n 1 -s -r -p "Press any key to continue";printf "\\n"
+  # :;
+  SEC=2
+  echo "sleeping for ${SEC}sec..."
+  sleep ${SEC}
+}
+
 # TODO: FIX queries, mutations and subscriptions
 # [] fix person_addAttribute, content is empty
 # TODO: ./deployChaincodeToNetwork.sh ask if want to seed ledger, WARN always create participant and an admin user, and johndoe
 # admin user with ROLE ADMIN
 # TODO: WIP -u chaincodeAdmin, how to send invokes with diferent users
-SLEEP="sleep 3"
 BASE_CMD="docker exec cli peer chaincode invoke -C ${CHANNEL_ALL} -n ${CHAINCODE_NAME} --tls --cafile ${CA_FILE}"
 # TODO: WIP chaincodeAdmin
 # BASE_CMD="docker exec -e \"CORE_PEER_MSPCONFIGPATH=${CLIENT_AUTH_ADMIN}\" cli peer chaincode invoke -C ${CHANNEL_ALL} -n ${CHAINCODE_NAME} --tls --cafile ${CA_FILE}"
@@ -47,7 +54,7 @@ echo "create participant ${GOV_NAME}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"participant_createWithParameters\", \"${GOV_ID}\", \"${GOV_CODE}\", \"${GOV_NAME}\", \"${GOV_EMAIL}\", \"${GOV_NIF}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"participant_get\", \"${GOV_ID}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"participant_getByCode\", \"${GOV_CODE}\" ] }"
-${SLEEP}
+press_any_key
 
 # person admin
 ID="${ADMN_ID}"
@@ -60,10 +67,10 @@ EMAIL="${USER_NAME}@example.com"
 PAYLOAD='{\"id\":\"'${ID}'\",\"firstname\":\"'${FIRST_NAME}'\",\"lastname\":\"'${LAST_NAME}'\",\"fiscalNumber\":\"'${FISCAL_NUMBER}'\",\"mobilePhone\":\"'${PHONE_NUMBER}'\",\"otherInformation\":\"\",\"username\":\"'${USER_NAME}'\",\"password\":\"'${ADMIN_PASSWORD}'\",\"email\":\"'${EMAIL}'\", \"roles\":'${ROLES_ADMIN}'}'
 echo "create person ${USER_NAME}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"person_create\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 echo "get person ${USER_NAME}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # person anonymous
 ID="${ANON_ID}"
@@ -76,10 +83,10 @@ EMAIL="${USER_NAME}@example.com"
 PAYLOAD='{\"id\":\"'${ID}'\",\"firstname\":\"'${FIRST_NAME}'\",\"lastname\":\"'${LAST_NAME}'\",\"fiscalNumber\":\"'${FISCAL_NUMBER}'\",\"mobilePhone\":\"'${PHONE_NUMBER}'\",\"otherInformation\":\"\",\"username\":\"'${USER_NAME}'\",\"password\":\"'${ADMIN_PASSWORD}'\",\"email\":\"'${EMAIL}'\"}'
 echo "create person ${USER_NAME}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"person_create\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 echo "get person ${USER_NAME}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # person johndoe
 ID="${JOHN_ID}"
@@ -100,7 +107,7 @@ ${BASE_CMD} -c "{ \"Args\" : [\"person_create\", \"${PAYLOAD}\", \"${CURRENT_USE
 # ${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"person_getByUsername\", \"${USER_NAME}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"person_getByFiscalnumber\", \"${FISCAL_NUMBER}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # exit full seed
 if [ "${result}" = "M" ]; then
@@ -113,7 +120,7 @@ echo "create participant ${MIT_NAME}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"participant_create\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"participant_get\", \"${MIT_ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"participant_getByCode\", \"${MIT_CODE}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # participant naba
 PAYLOAD='{\"id\":\"'${NABA_ID}'\",\"code\":\"'${NABA_CODE}'\",\"name\":\"'${NABA_NAME}'\",\"email\":\"'${NABA_EMAIL}'\",\"fiscalNumber\":\"'${NABA_NIF}'\"}'
@@ -121,7 +128,7 @@ echo "create participant ${NABA_NAME}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"participant_create\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"participant_get\", \"${NABA_ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"participant_getByCode\", \"${NABA_CODE}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # participant badb
 PAYLOAD='{\"id\":\"'${BADB_ID}'\",\"code\":\"'${BADB_CODE}'\",\"name\":\"'${BADB_NAME}'\",\"email\":\"'${BADB_EMAIL}'\",\"fiscalNumber\":\"'${BADB_NIF}'\"}'
@@ -129,7 +136,7 @@ echo "create participant ${BADB_NAME}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"participant_create\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"participant_get\", \"${BADB_ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"participant_getByCode\", \"${BADB_CODE}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # participant godb
 PAYLOAD='{\"id\":\"'${GODB_ID}'\",\"code\":\"'${GODB_CODE}'\",\"name\":\"'${GODB_NAME}'\",\"email\":\"'${GODB_EMAIL}'\",\"fiscalNumber\":\"'${GODB_NIF}'\"}'
@@ -137,7 +144,7 @@ echo "create participant ${GODB_NAME}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"participant_create\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"participant_get\", \"${GODB_ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"participant_getByCode\", \"${GODB_CODE}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # person  janedoe
 ID="${JANE_ID}"
@@ -159,7 +166,7 @@ ${BASE_CMD} -c "{ \"Args\" : [\"person_create\", \"${PAYLOAD}\", \"${CURRENT_USE
 # ${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"person_getByUsername\", \"${USER_NAME}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"person_getByFiscalnumber\", \"${FISCAL_NUMBER}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # create person with minimal required data
 ID="${MINI_ID}"
@@ -172,21 +179,21 @@ ${BASE_CMD} -c "{ \"Args\" : [\"person_create\", \"${PAYLOAD}\", \"${CURRENT_USE
 # ${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"person_getByUsername\", \"${USER_NAME}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"person_getByFiscalnumber\", \"${FISCAL_NUMBER}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # add atributes has org1 / admin
 echo "adding attribute 'birth-year' to johndoe as the Big Government identity"
 PAYLOAD='{\"id\": \"birth-year\", \"certifierID\": \"'${GOV_ID}'\", \"content\": { \"data\": \"1951\", \"work\": \"true\" }, \"issuedDate\": \"1554239270\" }'
 ${BASE_CMD} -c "{ \"Args\" : [\"person_addAttribute\", \"${JOHN_ID}\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${JOHN_ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # add atrributes has org1 / admin
 echo "adding attribute 'birth-year' to janedoe as the Big Government identity"
 PAYLOAD='{\"id\": \"birth-year\", \"certifierID\": \"'${GOV_ID}'\", \"content\": { \"data\": \"1971\", \"work\": \"true\" }, \"issuedDate\": \"1554239280\" }'
 ${BASE_CMD} -c "{ \"Args\" : [\"person_addAttribute\", \"${JANE_ID}\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${JANE_ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # participant godb
 PAYLOAD='{\"id\":\"'${POPB_ID}'\",\"code\":\"'${POPB_CODE}'\",\"name\":\"'${POPB_NAME}'\",\"email\":\"'${POPB_EMAIL}'\",\"fiscalNumber\":\"'${POPB_NIF}'\",\"ambassadors\":'${AMBASSADORS}'}'
@@ -194,7 +201,7 @@ echo "create participant ${POPB_NAME}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"participant_create\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"participant_get\", \"${GODB_ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"participant_getByCode\", \"${GODB_CODE}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # create cause with all data (filter with date=1582414657)
 ID="${CAUSE_001}"
@@ -210,7 +217,7 @@ PAYLOAD='{\"id\":\"'${ID}'\",\"name\":\"'${CAUSE_NAME}'\",\"email\":\"'${CAUSE_E
 echo "create cause ${CAUSE_NAME}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"cause_create\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"cause_get\", \"${ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # create cause with all data (filter with date=1582414657)
 ID="${CAUSE_002}"
@@ -220,7 +227,7 @@ PAYLOAD='{\"id\":\"'${ID}'\",\"name\":\"'${CAUSE_NAME}'\",\"email\":\"'${CAUSE_E
 echo "create cause ${CAUSE_NAME}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"cause_create\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"cause_get\", \"${ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # create cause with minimal required data
 ID="${CAUSE_003}"
@@ -231,7 +238,7 @@ PAYLOAD='{\"id\":\"'${ID}'\",\"name\":\"'${CAUSE_NAME}'\",\"input\":{\"id\":\"'$
 echo "create cause ${CAUSE_NAME}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"cause_create\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"cause_get\", \"${ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # create funds transaction : gov to john 1.11: john is ambassador of PopBank it works
 ID="${TRANSACTION_001_ID}"
@@ -247,7 +254,7 @@ PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"res
 echo "create transaction ${ID}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # create funds transaction : Cause001 to jane 1.11: john is ambassador of Cause001 it works
 # TODO Balance violation! when work with causes, you must supply a total amount lesser or equal than current funds balance. current funds balance is 0
@@ -260,7 +267,7 @@ PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"res
 echo "create transaction ${ID}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # create volunteeringHours transaction : john 10hours to Cause001
 ID="acef70e5-cd25-4533-8392-9fa57e43cf34"
@@ -275,7 +282,7 @@ PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"res
 echo "create transaction ${ID}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # create volunteeringHours transaction : jane 20hours to Cause002
 ID="acef70e5-cd25-4533-8392-9fa57e43cf35"
@@ -288,7 +295,7 @@ PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"res
 echo "create transaction ${ID}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # create volunteeringHours transaction : jane 20hours to Cause002
 ID="acef70e5-cd25-4533-8392-9fa57e43cf36"
@@ -299,7 +306,7 @@ PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"res
 echo "create transaction ${ID}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # create asset with all data (filter with date=1582414657)
 ID="${ASSET_001_ID}"
@@ -312,7 +319,7 @@ PAYLOAD='{\"id\":\"'${ID}'\",\"name\":\"'${ASSET_NAME}'\",\"description\":\"'${D
 echo "create asset ${ID}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"asset_create\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"asset_get\", \"${ASSET_001_ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # create asset with minimal data (filter with date=1582414657) and with ambassadors
 ID="${ASSET_002_ID}"
@@ -324,7 +331,7 @@ PAYLOAD='{\"id\":\"'${ID}'\",\"name\":\"'${ASSET_NAME}'\",\"assetType\":\"'${ASS
 echo "create asset ${ID}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"asset_create\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"asset_get\", \"${ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # transaction asset from owner johndoe, with logged user janedoe, acting has an ambassador of johndoe, transfer to cause001 | require to send input id and type even if acting has an ambassador
 # here we lost asset ambassadors, when we transfer it
@@ -340,7 +347,7 @@ PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"res
 echo "create transaction ${ID}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # asset update: update asset and add janedoe to ambassadors, before below transfer, else it fails because asset don't have ambassador, is lost in lastest transfer
 AMBASSADORS_UPDATE='[\"'${JANE_ID}'\"]'
@@ -348,7 +355,7 @@ PAYLOAD='{\"id\":\"'${ASSET_001_ID}'\",\"ambassadors\":'${AMBASSADORS_UPDATE}'}'
 echo "update asset ${ASSET_001_ID}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"asset_update\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"asset_get\", \"${ASSET_001_ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # transaction asset from cause001, with logged user janedoe, acting has an ambassador of cause001, transfer to PopBank | require to send input id and type even if acting has an ambassador
 ID="acef70e5-cd25-4533-8392-9fa57e43cf57"
@@ -360,7 +367,7 @@ PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"res
 echo "create transaction ${ID}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # asset update: update asset and add johndoe to ambassadors, before below transfer, else it fails because asset don't have ambassador, is lost in lastest transfer
 AMBASSADORS_UPDATE='[\"'${JOHN_ID}'\"]'
@@ -368,7 +375,7 @@ PAYLOAD='{\"id\":\"'${ASSET_001_ID}'\",\"ambassadors\":'${AMBASSADORS_UPDATE}'}'
 echo "update asset ${ASSET_001_ID}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"asset_update\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"asset_get\", \"${ASSET_001_ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # transaction asset from PopBank, with logged user johndoe, acting has an ambassador of PopBank, transfer to cause002 | require to send input id and type even if acting has an ambassador
 ID="acef70e5-cd25-4533-8392-9fa57e43cf61"
@@ -380,7 +387,7 @@ PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"res
 echo "create transaction ${ID}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # transaction of goods: person johnDoe to cause001
 ID="acef70e5-cd25-4533-8392-9fa57e43cf94"
@@ -396,7 +403,7 @@ PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"res
 echo "create transaction ${ID}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # transaction of goods: person janeDoe to cause001
 ID="acef70e5-cd25-4533-8392-9fa57e43cf95"
@@ -407,7 +414,7 @@ PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"res
 echo "create transaction ${ID}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\", \"${CURRENT_USER_JANEDOE_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\", \"${CURRENT_USER_JANEDOE_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # transaction of goods: cause001 to cause002 (must have goods in stock)
 ID="acef70e5-cd25-4533-8392-9fa57e43cf16"
@@ -419,7 +426,7 @@ PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"res
 echo "create transaction ${ID}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # transaction of goods: cause001 to cause002 (must have goods in stock)
 ID="acef70e5-cd25-4533-8392-9fa57e43cf18"
@@ -428,7 +435,7 @@ PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"res
 echo "create transaction ${ID}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # transaction of goods: cause001 to participant gov (must have goods in stock), clean stocks, all 4 items will  be zeroed
 ID="acef70e5-cd25-4533-8392-9fa57e43cf19"
@@ -439,7 +446,7 @@ PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"res
 echo "create transaction ${ID}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # transaction of goods: cause002 to john (must have goods in stock), clean stocks, 010 and 011, leave 008 and 009 with 100units, with a ambassador
 ID="acef70e5-cd25-4533-8392-9fa57e43cf20"
@@ -452,7 +459,7 @@ PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"res
 echo "create transaction ${ID}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\", \"${CURRENT_USER_JOHNDOE_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # transaction of goods: jane to john : fraction numbers
 ID="acef70e5-cd25-4533-8392-9fa57e43cf21"
@@ -463,7 +470,7 @@ PAYLOAD='{\"id\":\"'${ID}'\",\"transactionType\":\"'${TRANSACTION_TYPE}'\",\"res
 echo "create transaction ${ID}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"transaction_create\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # update participant gov: all updateable fields, require to be user 'chaincodeAdmin' with 'admin' attribute
 AMBASSADORS_UPDATE='[\"'${MINI_ID}'\"]'
@@ -477,7 +484,7 @@ ${BASE_CMD} -c "{ \"Args\" : [\"participant_update\", \"${PAYLOAD}\", \"${CURREN
 # MUST BE ADMIN
 # echo $PAYLOAD  | jq
 # npx hurl invoke ${CHAINCODE_NAME} participant_update "${PAYLOAD}" -u chaincodeAdmin
-${SLEEP}
+press_any_key
 
 # asset update asset001: all updateable fields
 TAGS='[\"green\",\"cyan\",\"violet\"]'
@@ -485,7 +492,7 @@ PAYLOAD='{\"id\":\"'${ASSET_001_ID}'\",\"ambassadors\":'${AMBASSADORS_UPDATE}',\
 echo "update asset ${ASSET_001_ID}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"asset_update\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"asset_get\", \"${ASSET_001_ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # cause update cause001: all updateable fields
 EMAIL_UPDATE="cause001-updated@example.com"
@@ -493,7 +500,7 @@ PAYLOAD='{\"id\":\"'${CAUSE_001}'\",\"email\":\"'${EMAIL_UPDATE}'\",\"ambassador
 echo "update cause ${CAUSE_001}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"cause_update\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"cause_get\", \"${CAUSE_001}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # transaction update: all updateable fields
 PAYLOAD='{\"id\":\"'${TRANSACTION_001_ID}'\",\"metaDataInternal\":'${METADATA_INTERNAL_UPDATE}'}'
@@ -501,14 +508,14 @@ PAYLOAD='{\"id\":\"'${TRANSACTION_001_ID}'\",\"metaDataInternal\":'${METADATA_IN
 echo "update transaction ${TRANSACTION_001_ID}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"transaction_update\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"transaction_get\", \"${TRANSACTION_001_ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # person update mini: required admin user (acting has Gov)
 PAYLOAD='{\"id\":\"'${MINI_ID}'\",\"roles\":'${ROLES}',\"metaDataInternal\":'${METADATA_INTERNAL_UPDATE}'}'
 echo "update person ${MINI_ID}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"person_update\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${MINI_ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # person upsertCitizenCard: update existing user mini (minimal data): required admin user (acting has Gov)
 DOCUMENT_NUMBER="09879461 1 ZZ3"
@@ -539,7 +546,7 @@ PAYLOAD='{\"id\":\"'${MINI_ID}'\",\"documentNumber\": \"'${DOCUMENT_NUMBER}'\",\
 echo "upsertCitizenCard person ${MINI_ID}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"person_upsertCitizenCard\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${MINI_ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # person_upsertCitizenCard: new person : non existing user: required admin user (acting has Gov)
 # require to use id here to send to chainCode, Model com.chain.solidary.model.person is missing the 'id' property
@@ -572,7 +579,7 @@ PAYLOAD='{\"id\":\"'${ID}'\",\"documentNumber\": \"'${DOCUMENT_NUMBER}'\",\"iden
 echo "upsertCitizenCard new person..."
 ${BASE_CMD} -c "{ \"Args\" : [\"person_upsertCitizenCard\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"person_getByFiscalnumber\", \"${FISCAL_NUMBER}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # person updateProfile
 EMAIL_UPDATE="foobar@example.com"
@@ -589,7 +596,7 @@ PAYLOAD='{\"id\":\"'${MINI_ID}'\",\"email\":\"'${EMAIL_UPDATE}'\",\"mobilePhone\
 echo "upsertCitizenCard person ${MINI_ID}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"person_updateProfile\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${MINI_ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # person updatePassword
 PASSWORD_UPDATE="87654321"
@@ -597,7 +604,7 @@ PAYLOAD='{\"id\":\"'${MINI_ID}'\",\"password\":\"'${PASSWORD_UPDATE}'\"}'
 echo "updatePassword person ${MINI_ID}..."
 ${BASE_CMD} -c "{ \"Args\" : [\"person_updatePassword\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
 # ${BASE_CMD} -c "{ \"Args\" : [\"person_get\", \"${MINI_ID}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 exit 0
 
@@ -606,24 +613,24 @@ exit 0
 # persisted "createdDate": "1582410746061", "name":"Big Government"
 PAYLOAD='{\"filter\":{\"name\":\"Big Government\"},\"sort\":[{\"name\":\"asc\"}]}'
 ${BASE_CMD} -c "{ \"Args\" : [\"participant_getComplexQuery\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # persisted "createdDate": "1582410790588", "username": "janedoe"
 PAYLOAD='{\"filter\":{\"username\":\"janedoe\",\"createdDate\":{\"$lte\":1582410790588,\"$gte\":1582410790588}},\"sort\":[{\"username\":\"asc\"}]}'
 ${BASE_CMD} -c "{ \"Args\" : [\"person_getComplexQuery\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # persisted "startDate": "1582414657", "endDate": "1582414657", "name":"Cause002b"
 PAYLOAD='{\"filter\":{\"name\":\"Cause002b\",\"startDate\":{\"$lte\":1582414657},\"endDate\":{\"$gte\":1582414657}},\"sort\":[{\"name\":\"asc\"}]}'
 ${BASE_CMD} -c "{ \"Args\" : [\"cause_getComplexQuery\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # persisted "name":"Asset002" now use postfix code ex "Asset002 [acef70e5]"
 PAYLOAD='{\"filter\":{\"name\":\"Asset002\"},\"sort\":[{\"name\":\"asc\"}]}'
 ${BASE_CMD} -c "{ \"Args\" : [\"asset_getComplexQuery\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key
 
 # persisted "createdDate": "1582410817579", "currency": "EUR"
 PAYLOAD='{\"filter\":{\"currency\":\"EUR\",\"createdDate\":{\"$lte\":1582410817579,\"$gte\":1582410817579}},\"sort\":[{\"quantity\":\"asc\"}]}'
 ${BASE_CMD} -c "{ \"Args\" : [\"transaction_getComplexQuery\", \"${PAYLOAD}\", \"${CURRENT_USER_ADMIN_ROLE}\" ] }"
-${SLEEP}
+press_any_key

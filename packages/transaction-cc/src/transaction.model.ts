@@ -51,7 +51,6 @@ export class Transaction extends ConvectorModel<Transaction> {
   @Validate(yup.number())
   public createdDate: number;
 
-  // persisted with loggedPersonId
   @Validate(yup.string())
   public createdByPersonId?: string;
 

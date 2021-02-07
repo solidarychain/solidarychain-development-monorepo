@@ -36,6 +36,7 @@
   - [Cannot determine GraphQL input type](#cannot-determine-graphql-input-type)
     - [Input types](#input-types)
   - [Error: Cannot return null for non-nullable field Subscription.reactForceDataAdded.](#error-cannot-return-null-for-non-nullable-field-subscriptionreactforcedataadded)
+  - [Problem: Error: 14 UNAVAILABLE: failed to connect to all addresses](#problem-error-14-unavailable-failed-to-connect-to-all-addresses)
 
 ## Start
 
@@ -737,3 +738,22 @@ reactForceData() {
 ```
 
 Update: seems that when I started I used `reactForceDataAdded` and not `reactForceData` in this is the main reason for epic faillure
+
+## Problem: Error: 14 UNAVAILABLE: failed to connect to all addresses
+
+everything, but in one restart server, without change anything start appear
+
+```shell
+$ npm run pkg:graphql:debug:network
+Context path with cryptographic materials exists +4ms
+@solidary-chain/server-graphql: 2021-02-07T16:57:49.762Z - error: [Channel.js]: Error: 14 UNAVAILABLE: failed to connect to all addresses
+```
+
+when try a `sanity-check.sh`, seems that was a connection problem
+
+```shell
+$ cd ~/Development/@SolidaryChain/solidarychain-production-network/fabric-samples/5node2channel/
+$ ./sanity-check.sh
+check md5sum
+ssh: connect to host 192.168.1.61 port 22: No route to host
+```

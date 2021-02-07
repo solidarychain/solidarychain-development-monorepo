@@ -41,7 +41,6 @@ export class Participant extends ConvectorModel<Participant> {
   @Validate(yup.number())
   public createdDate: number;
 
-  // persisted with loggedPersonId
   @Validate(yup.string())
   public createdByPersonId?: string;
 

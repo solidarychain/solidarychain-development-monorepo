@@ -54,7 +54,6 @@ export class Asset extends ConvectorModel<Asset> {
   @Validate(yup.number())
   public createdDate: number;
 
-  // persisted with loggedPersonId
   @Validate(yup.string())
   public createdByPersonId?: string;
 

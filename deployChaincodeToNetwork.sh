@@ -64,14 +64,14 @@ fi
 # get chaincode peer id `docker ps --filter "name=net-peer0.org1.example.com-solidary-chain-chaincode-1.7" -q`
 # enter container `docker exec -it $(docker ps --filter "name=net-peer0.org1.example.com-solidary-chain-chaincode-1.8" -q) bash`
 # log container `docker container logs -f net-peer0.org1.example.com-solidary-chain-chaincode-1.8`
-VERSION="1.3"
+VERSION="1.1"
 # 1 build with hurley, 0 only when we want to skip restart hurley network to build the chaincode, with 0 we dont reBuild chaincode, good for just deploy to networks
-BUILD_WITH_HURLEY=1
+BUILD_WITH_HURLEY="1"
 
 echo "confirm deploy '${CHAINCODE_CONVECTOR} ${VERSION}'"
 read -n 1 -s -r -p "Press any key to continue";printf "\\n"
 
-if [ ${BUILD_WITH_HURLEY} -eq 1 ]; then
+if [ ${BUILD_WITH_HURLEY} -eq "1" ]; then
   # always clean up chaincode path
   # rm ${TGZ_PATH} -r || true
   # cleanup, remove pack after push to peers
@@ -102,7 +102,7 @@ else
   if [ ${BUILD_WITH_HURLEY} -eq 1 ]; then
     npm run env:restart
     npx lerna run build --scope @solidary-chain/common-cc --stream
-    npm run cc:${BUILD_CC_ACTION} -- ${CHAINCODE_CONVECTOR} ${VERSION}  
+    npm run cc:${BUILD_CC_ACTION} -- ${CHAINCODE_CONVECTOR} ${VERSION}
   fi
 fi
 
@@ -122,6 +122,7 @@ do
   if [ $peer -eq 1 ]; then
     if [ ${BUILD_WITH_HURLEY} -eq 1 ]; then
       echo "bring peer0.org1.hurley.lab packaged ${CHAINCODE_CONVECTOR}.${VERSION} to local file system ${CHAINCODE_NAME}.pak"
+      # copy /var/hyperledger/production/chaincodes/solidary-chain-chaincode.1.0 to ./sccc.pak
       docker cp peer0.org1.hurley.lab:/var/hyperledger/production/chaincodes/${CHAINCODE_CONVECTOR}.${VERSION} ${CHAINCODE_NAME}.pak
       press_any_key
     fi
@@ -136,6 +137,7 @@ do
   echo "copy ${CHAINCODE_NAME}.pak to peer0Org${peer} deployment path"
   press_any_key
   scp ${CHAINCODE_NAME}.pak ${IP}:${DEPLOYMENT_PATH}
+  press_any_key
 
   # copy to container
   ssh ${IP} docker cp ${DEPLOYMENT_PATH}/${CHAINCODE_NAME}.pak cli:/opt/gopath/${CHAINCODE_DEPLOYMENT_PATH}/${CHAINCODE_NAME}.pak

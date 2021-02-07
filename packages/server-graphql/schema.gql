@@ -189,7 +189,6 @@ input NewAssetInput {
   tags: [String!]
   metaData: JSONObject
   metaDataInternal: JSONObject
-  loggedPersonId: String
 }
 
 input NewCauseInput {
@@ -203,7 +202,6 @@ input NewCauseInput {
   tags: [String!]
   metaData: JSONObject
   metaDataInternal: JSONObject
-  loggedPersonId: String
   input: JSONObject!
 }
 
@@ -216,7 +214,6 @@ input NewParticipantInput {
   ambassadors: [String!]
   metaData: JSONObject
   metaDataInternal: JSONObject
-  loggedPersonId: String
 }
 
 input NewPersonInput {
@@ -272,7 +269,6 @@ input NewTransactionInput {
   tags: [String!]
   metaData: JSONObject
   metaDataInternal: JSONObject
-  loggedPersonId: String
   assetId: String
   goods: [GoodsInput!]
 }

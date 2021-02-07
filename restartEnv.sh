@@ -5,7 +5,7 @@ if [ $(node -v) != "v8.16.0" ]; then
   exit 0
 fi
 
-CHAINCODE_NAME=solidary-chain-chaincode
+CHAINCODE_CONVECTOR=solidary-chain-chaincode
 
 # in case of problems invoke something mv hyperledger-fabric-network to /tmp
 # mv ~/hyperledger-fabric-network /tmp
@@ -22,9 +22,11 @@ npm run env:restart
 npx lerna run build --scope @solidary-chain/common-cc --stream
 
 # deploy smart contract/chaincode
-# npm run cc:start -- ${CHAINCODE_NAME}
+npm run cc:start -- ${CHAINCODE_CONVECTOR}
+# used to upgrade
+# npm run cc:upgrade -- ${CHAINCODE_CONVECTOR} 1.1
 # used to debug
-npm run cc:start:debug -- ${CHAINCODE_NAME}
+# npm run cc:start:debug -- ${CHAINCODE_CONVECTOR}
 
 # sleep 20 seconds
 sleep 20
@@ -50,7 +52,7 @@ sleep 20
 # npx lerna run build --scope @solidary-chain/transaction-cc
 
 # invoke some stuff
-npx hurl invoke ${CHAINCODE_NAME} person_get ${ADMN_ID}
+npx hurl invoke ${CHAINCODE_CONVECTOR} person_get ${ADMN_ID}
 
 # start server/frontend
 # echo "start server-rest with: 'npx lerna run start:dev --scope @solidary-chain/server-rest --stream'"

@@ -116,7 +116,7 @@ export class ParticipantController extends ConvectorController {
       fingerprint: this.sender,
       status: true
     }];
-    // assign createdByPersonId before delete loggedPersonId
+    // assign createdByPersonId form userId
     participant.createdByPersonId = user.userId;
     // add date in epoch unix time
     participant.createdDate = new Date().getTime();

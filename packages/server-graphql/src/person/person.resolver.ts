@@ -197,7 +197,6 @@ export class PersonResolver {
   personAdded(
     @CurrentUser() user: CurrentUserPayload,
   ) {
-    // Logger.log(user.userId, PersonResolver.name);
     return pubSub.asyncIterator(SubscriptionEvent.personAdded);
   }
 

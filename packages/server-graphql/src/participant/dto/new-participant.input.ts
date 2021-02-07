@@ -40,9 +40,4 @@ export class NewParticipantInput {
   @Field(type => GraphQLJSONObject, { nullable: true })
   @IsOptional()
   metaDataInternal: any;
-
-  // this is used to pass loggedIn userId to fabric
-  @Field({ nullable: true })
-  @IsOptional()
-  loggedPersonId: string;
 }

@@ -61,14 +61,12 @@ export class TransactionResolver {
     @Args('newTransactionData') newTransactionData: NewTransactionInput,
     @CurrentUser() user: CurrentUserPayload,
   ): Promise<Transaction> {
-    // inject username into newTransactionData
-    newTransactionData.loggedPersonId = user.userId;
     const transaction = await this.transactionService.create(newTransactionData, user);
     pubSub.publish(SubscriptionEvent.transactionAdded, { [SubscriptionEvent.transactionAdded]: transaction });
     return transaction;
   }
 
-  @Roles(UserRoles.ROLE_ADMIN)
+  @Roles(UserRoles.ROLE_USER)
   @UseGuards(GqlRolesGuard)
   @Mutation(returns => Transaction)
   async transactionUpdate(

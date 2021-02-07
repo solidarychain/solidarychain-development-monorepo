@@ -64,11 +64,6 @@ export class Person extends ConvectorModel<Person> {
   @Validate(yup.array(Goods.schema()))
   public goodsStock: Array<FlatConvectorModel<Goods>>;
 
-  // TODO: can remove person don't use createdByPersonId
-  // persisted with loggedPersonId
-  // @Validate(yup.string())
-  // public createdByPersonId?: string;
-
   // extended non citizenCard data
 
   @Required()

@@ -91,6 +91,7 @@
   - [Problem: Jest error TS1005: ';' expected.](#problem-jest-error-ts1005--expected)
   - [Problem launching Hurley with deprecated `hyperledger/fabric-ccenv`](#problem-launching-hurley-with-deprecated-hyperledgerfabric-ccenv)
   - [Problem enroll admin and users](#problem-enroll-admin-and-users)
+  - [error code 500, msg could not find chaincode with name 'solidary-chain-chaincode'](#error-code-500-msg-could-not-find-chaincode-with-name-solidary-chain-chaincode)
 
 This is a simple NestJs starter, based on above links, I only extended it with a few things like **swagger api**, **https**, **jwt**, and other stuff, thanks m8s
 
@@ -3539,3 +3540,61 @@ $ tree /home/mario/hyperledger-fabric-network/.hfc-org1/
 ├── admin
 └── user1
 ```
+
+## error code 500, msg could not find chaincode with name 'solidary-chain-chaincode'
+
+```shell
+$ npm run env:clean
+$ ./deployChaincodeToNetwork.sh
+
+Installing Chaincode solidary-chain-chaincode version 1.3 at org1
+2021-01-23 16:48:30.234 WET [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+2021-01-23 16:48:30.234 WET [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+2021-01-23 16:48:30.284 WET [chaincodeCmd] install -> INFO 003 Installed remotely response:<status:200 payload:"OK" > 
+Installed Chaincode solidary-chain-chaincode version 1.3  at org1
+Upgrading Chaincode solidary-chain-chaincode version 1.3 at org1 for channel ch1
+It may take a few minutes depending on the chaincode dependencies
+2021-01-23 16:48:40.361 WET [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+2021-01-23 16:48:40.361 WET [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+Error: could not assemble transaction, err proposal response was not successful, error code 500, msg could not find chaincode with name 'solidary-chain-chaincode'
+[hurley] - Found error while running script!
+(node:14305) UnhandledPromiseRejectionWarning: Error: Errors found in script, stopping execution
+    at Object.<anonymous> (/media/mario/storage/Home/Documents/Development/@SolidaryChain/solidarychain-development-monorepo/node_modules/@worldsibu/hurley/dist/utils/sysWrapper.js:116:27)
+    at step (/media/mario/storage/Home/Documents/Development/@SolidaryChain/solidarychain-development-monorepo/node_modules/tslib/tslib.js:136:27)
+    at Object.next (/media/mario/storage/Home/Documents/Development/@SolidaryChain/solidarychain-development-monorepo/node_modules/tslib/tslib.js:117:57)
+    at /media/mario/storage/Home/Documents/Development/@SolidaryChain/solidarychain-development-monorepo/node_modules/tslib/tslib.js:110:75
+    at new Promise (<anonymous>)
+    at Object.__awaiter (/media/mario/storage/Home/Documents/Development/@SolidaryChain/solidarychain-development-monorepo/node_modules/tslib/tslib.js:106:16)
+    at Object.execContent (/media/mario/storage/Home/Documents/Development/@SolidaryChain/solidarychain-development-monorepo/node_modules/@worldsibu/hurley/dist/utils/sysWrapper.js:112:24)
+    at UpgradeChaincodeShGenerator.BaseGenerator.run (/media/mario/storage/Home/Documents/Development/@SolidaryChain/solidarychain-development-monorepo/node_modules/@worldsibu/hurley/dist/generators/base.js:18:40)
+    at ChaincodeGenerator.upgrade (/media/mario/storage/Home/Documents/Development/@SolidaryChain/solidarychain-development-monorepo/node_modules/@worldsibu/hurley/dist/generators/chaincodegenerator.js:62:35)
+    at ChaincodeCLI.<anonymous> (/media/mario/storage/Home/Documents/Development/@SolidaryChain/solidarychain-development-monorepo/node_modules/@worldsibu/hurley/dist/cli.js:397:55)
+(node:14305) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 3)
+(node:14305) [DEP0018] DeprecationWarning: Unhandled promise rejections are deprecated. In the future, promise rejections that are not handled will terminate the Node.js process with a non-zero exit code.
+bring peer0.org1.hurley.lab packaged solidary-chain-chaincode.1.3 to local file system sccc.pak
+Press any key to continue
+
+# notethis occurs because we clean up or restart hurley network, and try use `./deployChaincodeToNetwork.sh` with a version greater that `1.0`, and it works in upgrade, but without start version, for this to work fix with
+
+# generate starter version
+npm run cc:start -- ${CHAINCODE_CONVECTOR}
+[hurley] - installing smart contract located at /media/mario/storage/Home/Documents/Development/@SolidaryChain/solidarychain-development-monorepo/chaincode-solidary-chain-chaincode
+Installing Chaincode solidary-chain-chaincode version 1.0 at org1
+2021-01-23 16:53:37.666 WET [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+2021-01-23 16:53:37.666 WET [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+2021-01-23 16:53:37.728 WET [chaincodeCmd] install -> INFO 003 Installed remotely response:<status:200 payload:"OK" > 
+Installed Chaincode solidary-chain-chaincode version 1.0 at org1
+Instantiating Chaincode at org1 for channel ch1
+It may take a few minutes depending on the chaincode dependencies
+2021-01-23 16:53:47.804 WET [chaincodeCmd] checkChaincodeCmdParams -> INFO 001 Using default escc
+2021-01-23 16:53:47.804 WET [chaincodeCmd] checkChaincodeCmdParams -> INFO 002 Using default vscc
+Instantiated Chaincode at org1
+
+# now deployChaincodeToNetwork ex with version 1.3
+$ ./deployChaincodeToNetwork.sh
+
+$ ssh -t 192.168.1.61 "docker exec cli peer chaincode list -C channelall --instantiated" | grep solidary-chain-chaincode
+Name: solidary-chain-chaincode, Version: 1.3, Path: /media/mario/storage/Home/Documents/Development/@SolidaryChain/solidarychain-development-monorepo/chaincode-solidary-chain-chaincode, Escc: escc, Vscc: vscc
+```
+
+> It fails with same error, bu chaincode is deployed in production and works??? another one that leaves to haunt in future

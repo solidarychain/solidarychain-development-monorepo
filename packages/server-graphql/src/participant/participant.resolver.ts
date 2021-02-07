@@ -1,4 +1,4 @@
-import { NotFoundException, UseGuards } from '@nestjs/common';
+import { Logger, NotFoundException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'apollo-server-express';
 import { CurrentUser, Roles } from '../auth/decorators';
@@ -66,21 +66,19 @@ export class ParticipantResolver {
     return participant;
   }
 
-  @Roles(UserRoles.ROLE_ADMIN)
+  @Roles(UserRoles.ROLE_USER)
   @UseGuards(GqlRolesGuard)
   @Mutation(returns => Participant)
   async participantNew(
     @Args('newParticipantData') newParticipantData: NewParticipantInput,
     @CurrentUser() user: CurrentUserPayload,
   ): Promise<Participant> {
-    // inject username into newTransactionData
-    newParticipantData.loggedPersonId = user.userId;
     const participant = await this.participantService.create(newParticipantData, user);
     pubSub.publish(SubscriptionEvent.participantAdded, { [SubscriptionEvent.participantAdded]: participant });
     return participant;
   }
 
-  @Roles(UserRoles.ROLE_ADMIN)
+  @Roles(UserRoles.ROLE_USER)
   @UseGuards(GqlRolesGuard)
   @Mutation(returns => Participant)
   async participantUpdate(
@@ -104,7 +102,7 @@ export class ParticipantResolver {
     return participant;
   }
 
-  @Roles(UserRoles.ROLE_ADMIN)
+  @Roles(UserRoles.ROLE_USER)
   @UseGuards(GqlRolesGuard)
   @Subscription(returns => Participant)
   participantAdded(
@@ -113,7 +111,7 @@ export class ParticipantResolver {
     return pubSub.asyncIterator(SubscriptionEvent.participantAdded);
   }
 
-  @Roles(UserRoles.ROLE_ADMIN)
+  @Roles(UserRoles.ROLE_USER)
   @UseGuards(GqlRolesGuard)
   @Subscription(returns => Participant)
   participantUpdated(
@@ -122,7 +120,7 @@ export class ParticipantResolver {
     return pubSub.asyncIterator(SubscriptionEvent.participantUpdated);
   }
 
-  @Roles(UserRoles.ROLE_ADMIN)
+  @Roles(UserRoles.ROLE_USER)
   @UseGuards(GqlRolesGuard)
   @Subscription(returns => Participant)
   participantIdentityChanged(

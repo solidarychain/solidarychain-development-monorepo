@@ -74,8 +74,6 @@ export class CauseResolver {
     @Args('newCauseData') newCauseData: NewCauseInput,
     @CurrentUser() user: CurrentUserPayload,
   ): Promise<Cause> {
-    // inject username into newCauseData
-    newCauseData.loggedPersonId = user.userId;
     const cause = await this.causeService.create(newCauseData, user);
     pubSub.publish(SubscriptionEvent.causeAdded, { [SubscriptionEvent.causeAdded]: cause });
     // TODO leave it maybe be useful in future
