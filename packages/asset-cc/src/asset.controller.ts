@@ -43,8 +43,8 @@ export class AssetController extends ConvectorController<ChaincodeTx> {
       fingerprint: this.sender,
       status: true
     }];
-    // assign input
-    asset.owner.entity = await getEntity(asset.owner.type, asset.owner.id, user);
+    // assign input: require to use admin to have access to all entities, this way we can get owner
+    asset.owner.entity = await getEntity(asset.owner.type, asset.owner.id, c.CURRENT_USER_ADMIN_ROLE);
     // check if is a valid input from entity
     if (!asset.owner.entity) {
       const entityType: string = asset.owner.type.replace(`${c.CONVECTOR_MODEL_PATH_PREFIX}.`, '');

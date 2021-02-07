@@ -189,7 +189,7 @@ export const getCurrentUserFilter = (user: CurrentUser) => {
 }
 
 /**
- * used in participants and cause
+ * shared to be used in others get filters functions
  * compose userFilter with user as an ambassador
  */
 export const getAmbassadorUserFilter = (user: CurrentUser) => {
@@ -207,6 +207,28 @@ export const getAmbassadorUserFilter = (user: CurrentUser) => {
 }
 
 /**
+ * used in participants
+ * compose userFilter with createdByPersonId and ambassador combined
+ */
+export const getCreatedByAndAmbassadorUserFilter = (user: CurrentUser) => {
+  if (hasRole(user.roles, UserRoles.ROLE_ADMIN)) {
+    return {};
+  } else {
+    const ambassadorsFilter = getAmbassadorUserFilter(user);
+    return {
+      $or: [
+        {
+          createdByPersonId: user.userId
+        },
+        {
+          ...ambassadorsFilter
+        }
+      ]
+    }
+  }
+};
+
+/**
  * used in assets
  * compose userFilter with user owner and ambassador combined
  */
@@ -217,6 +239,9 @@ export const getOwnerAndAmbassadorUserFilter = (user: CurrentUser) => {
     const ambassadorsFilter = getAmbassadorUserFilter(user);
     return {
       $or: [
+        {
+          createdByPersonId: user.userId
+        },
         {
           owner: {
             entity: {
@@ -251,6 +276,9 @@ export const getInputAndAmbassadorUserFilter = (user: CurrentUser) => {
     return {
       $or: [
         {
+          createdByPersonId: user.userId
+        },        
+        {
           input: {
             entity: {
               id: user.userId
@@ -280,6 +308,9 @@ export const getInputAndOutputAmbassadorUserFilter = (user: CurrentUser) => {
     const ambassadorsFilter = getAmbassadorUserFilter(user);
     return {
       $or: [
+        {
+          createdByPersonId: user.userId
+        },        
         {
           input: {
             entity: {

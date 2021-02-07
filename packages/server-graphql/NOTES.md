@@ -25,6 +25,7 @@
     - [1. Add connection to GqlContext](#1-add-connection-to-gqlcontext)
     - [2. change AppModule with subscriptions and forRootAsync](#2-change-appmodule-with-subscriptions-and-forrootasync)
     - [3. Change GqlAuthGuard to return subscription connection.context.headers to passport-jwt service](#3-change-gqlauthguard-to-return-subscription-connectioncontextheaders-to-passport-jwt-service)
+    - [4. How to used filtered subscriptions with currentUser or UserRoles.ROLE_ADMIN](#4-how-to-used-filtered-subscriptions-with-currentuser-or-userrolesrole_admin)
   - [YUP Validation notes](#yup-validation-notes)
   - [Currency codes iso4217](#currency-codes-iso4217)
   - [Add new module to nestjs graphql](#add-new-module-to-nestjs-graphql)
@@ -538,6 +539,35 @@ export class GqlAuthGuard extends AuthGuard('jwt') {
 ```
 
 done
+
+### 4. How to used filtered subscriptions with currentUser or UserRoles.ROLE_ADMIN
+
+2021-02-07 18:43:59
+
+- [Subscriptions](https://www.apollographql.com/docs/apollo-server/data/subscriptions/)
+- [Documentation | NestJS - A progressive Node.js framework](https://docs.nestjs.com/graphql/subscriptions)
+- [Subscription filter not working · Issue #164 · nestjs/graphql](https://github.com/nestjs/graphql/issues/164)
+
+the first implement is in `asset.resolver.ts`, **the trick to get user in filter is get context**,
+with this the subscription only be published to the user that created it
+
+```typescript
+@Roles(UserRoles.ROLE_USER)
+@UseGuards(GqlRolesGuard)
+@Subscription(returns => Asset, {
+  filter: (payload, variables: any, ctx: any) => {
+    Logger.log(`payload: [${payload[SubscriptionEvent.assetAdded].createdByPersonId}]`);
+    Logger.log(`variables: [${JSON.stringify(ctx.connection.context.user, undefined, 2)}]`);
+    return payload[SubscriptionEvent.assetAdded].createdByPersonId === ctx.connection.context.user.userId
+      || hasRole(ctx.connection.context.user.roles, UserRoles.ROLE_ADMIN);
+  }
+})
+assetAdded(
+  @CurrentUser() user: CurrentUserPayload,
+) {
+  return pubSub.asyncIterator(SubscriptionEvent.assetAdded);
+}
+```
 
 ## YUP Validation notes
 

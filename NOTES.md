@@ -314,6 +314,9 @@ getComplexQuery/userFilter cause
     "type": "com.chain.solidary.model.cause",
     "$or": [
       {
+        "createdByPersonId": "42a090f4-a2b1-4fcb-99bf-5bc8f2d1c1b3"
+      },        
+      {
         "input": {
           "entity": {
             "id": "7d0ac09c-6e00-41e2-b152-a3a287115a81"
@@ -343,6 +346,9 @@ getComplexQuery/userFilter asset owner | asset owner ambassador | ambassador
   "selector": {
     "type": "com.chain.solidary.model.asset",
     "$or": [
+      {
+        "createdByPersonId": "42a090f4-a2b1-4fcb-99bf-5bc8f2d1c1b3"
+      },        
       {
         "owner": {
           "entity": {
@@ -383,6 +389,9 @@ getComplexQuery/userFilter transaction
   "selector": {
     "type": "com.chain.solidary.model.transaction",
     "$or": [
+      {
+        "createdByPersonId": "42a090f4-a2b1-4fcb-99bf-5bc8f2d1c1b3"
+      },        
       {
         "input": {
           "entity": {

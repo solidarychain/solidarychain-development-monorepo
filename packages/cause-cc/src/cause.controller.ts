@@ -41,8 +41,8 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
       fingerprint: this.sender,
       status: true
     }];
-    // assign input
-    cause.input.entity = await getEntity(cause.input.type, cause.input.id, user);
+    // assign input: require to use admin to have access to all entities, this way we can get owner
+    cause.input.entity = await getEntity(cause.input.type, cause.input.id, c.CURRENT_USER_ADMIN_ROLE);
     // check if is a valid input from entity
     if (!cause.input.entity) {
       const entityType: string = cause.input.type.replace(`${c.CONVECTOR_MODEL_PATH_PREFIX}.`, '');

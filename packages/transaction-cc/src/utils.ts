@@ -15,7 +15,7 @@ export const getEntity = (entityType: EntityType, id: string, user: CurrentUser,
           case EntityType.Participant:
             const participant = await Participant.getById(id, user);
             if (!!participant && !participant.id) {
-              // let it pass for participant and person, to create it if have fiscalNumber in transaction controller
+              // let it pass for participant and person, if not exists it will create a new entity if have fiscalNumber in transaction output
               if (throwError) { throw new Error(`No participant found with id/fiscalNumber ${id}`); };
             }
             resolve(participant);
@@ -23,7 +23,7 @@ export const getEntity = (entityType: EntityType, id: string, user: CurrentUser,
           case EntityType.Person:
             const person = await Person.getById(id, user);
             if (!person || !person.id) {
-              // let it pass for participant and person, to create it if have fiscalNumber in transaction controller
+              // let it pass for participant and person, if not exists it will create a new entity if have fiscalNumber in transaction output
               if (throwError) { throw new Error(`No person found with id/fiscalNumber/mobilePhone ${id}`); };
             }
             resolve(person);

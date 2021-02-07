@@ -102,11 +102,18 @@ export class ParticipantResolver {
     return participant;
   }
 
+
+  debug = (payload, variables) => {
+    Logger.log(`payload: [${JSON.stringify(payload, undefined, 2)}]`);
+    Logger.log(`variables: [${JSON.stringify(variables, undefined, 2)}]`);
+    return variables.userId;
+  }
+
   @Roles(UserRoles.ROLE_USER)
   @UseGuards(GqlRolesGuard)
   @Subscription(returns => Participant)
   participantAdded(
-    @CurrentUser() user: CurrentUserPayload,    
+    @CurrentUser() user: CurrentUserPayload,
   ) {
     return pubSub.asyncIterator(SubscriptionEvent.participantAdded);
   }
@@ -115,7 +122,7 @@ export class ParticipantResolver {
   @UseGuards(GqlRolesGuard)
   @Subscription(returns => Participant)
   participantUpdated(
-    @CurrentUser() user: CurrentUserPayload,    
+    @CurrentUser() user: CurrentUserPayload,
   ) {
     return pubSub.asyncIterator(SubscriptionEvent.participantUpdated);
   }
@@ -124,7 +131,7 @@ export class ParticipantResolver {
   @UseGuards(GqlRolesGuard)
   @Subscription(returns => Participant)
   participantIdentityChanged(
-    @CurrentUser() user: CurrentUserPayload,    
+    @CurrentUser() user: CurrentUserPayload,
   ) {
     return pubSub.asyncIterator(SubscriptionEvent.participantIdentityChanged);
   }

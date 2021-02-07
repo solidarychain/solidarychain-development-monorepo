@@ -1,6 +1,6 @@
-import { NotFoundException, UseGuards } from '@nestjs/common';
+import { Logger, NotFoundException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
-import { UserRoles } from '@solidary-chain/common-cc';
+import { hasRole, UserRoles } from '@solidary-chain/common-cc';
 import { PubSub } from 'apollo-server-express';
 import { CurrentUser, Roles } from '../auth/decorators';
 import { GqlAuthGuard, GqlRolesGuard } from '../auth/guards';
@@ -79,9 +79,23 @@ export class AssetResolver {
 
   @Roles(UserRoles.ROLE_USER)
   @UseGuards(GqlRolesGuard)
-  @Subscription(returns => Asset)
+  @Subscription(returns => Asset, {
+    filter: (payload, variables: any, ctx: any) => {
+      // Logger.log(`payload: [${JSON.stringify(payload[SubscriptionEvent.assetAdded], undefined, 2)}]`);
+      // Logger.log(`${payload[SubscriptionEvent.assetAdded].owner.entity.id} === ${ctx.connection.context.user.userId}`);
+      // Logger.log(`payload[SubscriptionEvent.assetAdded].ambassadors: [${JSON.stringify(payload[SubscriptionEvent.assetAdded].ambassadors, undefined, 2)}]`);
+      // Logger.log(`ctx.connection.context.user.userId: [${ctx.connection.context.user.userId}]`);
+      // Logger.log(`${ctx.connection.context.user.userId} includes ${payload[SubscriptionEvent.assetAdded].ambassadors.includes(ctx.connection.context.user.userId)}\n`);
+      // user must be creator, owner, ambassador or have adminRole
+      return payload[SubscriptionEvent.assetAdded].createdByPersonId === ctx.connection.context.user.userId
+        || payload[SubscriptionEvent.assetAdded].owner.entity.id === ctx.connection.context.user.userId
+        || payload[SubscriptionEvent.assetAdded].ambassadors.includes(ctx.connection.context.user.userId)
+        || hasRole(ctx.connection.context.user.roles, UserRoles.ROLE_ADMIN)
+        ;
+    }
+  })
   assetAdded(
-    @CurrentUser() user: CurrentUserPayload,    
+    @CurrentUser() user: CurrentUserPayload,
   ) {
     return pubSub.asyncIterator(SubscriptionEvent.assetAdded);
   }
@@ -90,7 +104,7 @@ export class AssetResolver {
   @UseGuards(GqlRolesGuard)
   @Subscription(returns => Asset)
   assetUpdated(
-    @CurrentUser() user: CurrentUserPayload,    
+    @CurrentUser() user: CurrentUserPayload,
   ) {
     return pubSub.asyncIterator(SubscriptionEvent.assetUpdated);
   }

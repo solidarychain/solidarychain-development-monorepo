@@ -1,4 +1,4 @@
-import { appConstants as c, x509Identities, GenericBalance, Goods, CurrentUser, getAmbassadorUserFilter } from '@solidary-chain/common-cc';
+import { appConstants as c, x509Identities, GenericBalance, Goods, CurrentUser, getCreatedByAndAmbassadorUserFilter } from '@solidary-chain/common-cc';
 import { ConvectorModel, FlatConvectorModel, ReadOnly, Required, Validate } from '@worldsibu/convector-core';
 import * as yup from 'yup';
 
@@ -86,7 +86,7 @@ export class Participant extends ConvectorModel<Participant> {
 
   // custom static implementation getByFilter
   public static async getByFilter(queryParams: { filter?: any, sort?: any }, user: CurrentUser): Promise<Participant | Participant[]> {
-    const userFilter = getAmbassadorUserFilter(user);
+    const userFilter = getCreatedByAndAmbassadorUserFilter(user);
     const complexQuery: any = {
       selector: {
         type: c.CONVECTOR_MODEL_PATH_PARTICIPANT,

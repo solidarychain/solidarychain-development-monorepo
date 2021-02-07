@@ -1,6 +1,8 @@
 #!/bin/bash
 
 # before deploy if we need to build the chaincode we must have a running hurley network
+# and must have start build in chaincode v1.0, only after this we can upgrade to next versions
+# ralways `un npm run cc:start -- ${CHAINCODE_CONVECTOR}` before run `deployChaincodeToNetwork.sh` if we are in a new hurley network
 
 # TODO: clean up this file
 
@@ -64,7 +66,7 @@ fi
 # get chaincode peer id `docker ps --filter "name=net-peer0.org1.example.com-solidary-chain-chaincode-1.7" -q`
 # enter container `docker exec -it $(docker ps --filter "name=net-peer0.org1.example.com-solidary-chain-chaincode-1.8" -q) bash`
 # log container `docker container logs -f net-peer0.org1.example.com-solidary-chain-chaincode-1.8`
-VERSION="1.1"
+VERSION="1.5"
 # 1 build with hurley, 0 only when we want to skip restart hurley network to build the chaincode, with 0 we dont reBuild chaincode, good for just deploy to networks
 BUILD_WITH_HURLEY="1"
 
