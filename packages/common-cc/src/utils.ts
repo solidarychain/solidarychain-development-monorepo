@@ -217,9 +217,9 @@ export const getCreatedByAndAmbassadorUserFilter = (user: CurrentUser) => {
     const ambassadorsFilter = getAmbassadorUserFilter(user);
     return {
       $or: [
-        {
-          createdByPersonId: user.userId
-        },
+        // {
+        //   createdByPersonId: user.userId
+        // },
         {
           ...ambassadorsFilter
         }
@@ -239,9 +239,9 @@ export const getOwnerAndAmbassadorUserFilter = (user: CurrentUser) => {
     const ambassadorsFilter = getAmbassadorUserFilter(user);
     return {
       $or: [
-        {
-          createdByPersonId: user.userId
-        },
+        // {
+        //   createdByPersonId: user.userId
+        // },
         {
           owner: {
             entity: {
@@ -275,9 +275,9 @@ export const getInputAndAmbassadorUserFilter = (user: CurrentUser) => {
     const ambassadorsFilter = getAmbassadorUserFilter(user);
     return {
       $or: [
-        {
-          createdByPersonId: user.userId
-        },        
+        // {
+        //   createdByPersonId: user.userId
+        // },        
         {
           input: {
             entity: {
@@ -308,9 +308,9 @@ export const getInputAndOutputAmbassadorUserFilter = (user: CurrentUser) => {
     const ambassadorsFilter = getAmbassadorUserFilter(user);
     return {
       $or: [
-        {
-          createdByPersonId: user.userId
-        },        
+        // {
+        //   createdByPersonId: user.userId
+        // },        
         {
           input: {
             entity: {

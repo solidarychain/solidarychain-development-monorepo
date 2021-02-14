@@ -1,3 +1,4 @@
+import { appConstants as cc } from '@solidary-chain/common-cc';
 import { Injectable, Logger } from '@nestjs/common';
 import { Asset as AssetConvectorModel } from '@solidary-chain/asset-cc';
 import { FlatConvectorModel } from '@worldsibu/convector-core-model';
@@ -21,7 +22,8 @@ export class AssetService {
         id: newId,
       });
       await AssetControllerBackEnd.create(assetToCreate, user);
-      return this.findOneById(newId, user);
+      // require to use admin, because we can create a asset for other person, and this prevent we get error `No asset exists with that id ..`
+      return this.findOneById(newId, cc.CURRENT_USER_ADMIN_ROLE);
     } catch (error) {
       throw error;
     }

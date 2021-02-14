@@ -1,12 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cause as CauseConvectorModel } from '@solidary-chain/cause-cc';
+import { appConstants as cc } from '@solidary-chain/common-cc';
 import { FlatConvectorModel } from '@worldsibu/convector-core-model';
 import { v4 as uuid } from 'uuid';
+import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
+import CurrentUserPayload from '../common/types/current-user-payload';
 import { CauseControllerBackEnd } from '../convector';
 import { NewCauseInput, UpdateCauseInput } from './dto';
 import { Cause } from './models';
-import { GetByComplexQueryInput, PaginationArgs } from '../common/dto';
-import CurrentUserPayload from '../common/types/current-user-payload';
 
 @Injectable()
 export class CauseService {
@@ -24,7 +25,8 @@ export class CauseService {
         endDate: ((data.endDate as unknown) as number),
       });
       await CauseControllerBackEnd.create(causeToCreate, user);
-      return this.findOneById(newId, user);
+      // require to use admin, because we can create a cause for other person, and this prevent we get error `No cause exists with that id ..`
+      return this.findOneById(newId, cc.CURRENT_USER_ADMIN_ROLE);
     } catch (error) {
       throw error;
     }

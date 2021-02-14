@@ -78,10 +78,6 @@ export class CauseController extends ConvectorController<ChaincodeTx> {
     // Retrieve to see if exists
     let existing = await Cause.getById(cause.id, user);
 
-    if (!existing || !existing.id) {
-      throw new Error('No cause exists with that id');
-    }
-
     // check if all ambassadors are valid persons, and update model.ambassadors with uuid's
     cause.ambassadors = await checkValidModelIds(c.CONVECTOR_MODEL_PATH_PERSON, c.CONVECTOR_MODEL_PATH_PERSON_NAME, cause.ambassadors, user);
 

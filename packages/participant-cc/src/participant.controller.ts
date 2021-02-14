@@ -151,10 +151,6 @@ export class ParticipantController extends ConvectorController {
     // Retrieve to see if exists
     let existing = await Participant.getById(participant.id, user);
 
-    if (!existing || !existing.id) {
-      throw new Error('No participant exists with that id');
-    }
-
     if (existing.msp != requesterMSP) {
       throw new Error('Unauthorized. MSPs do not match');
     }
@@ -194,12 +190,6 @@ export class ParticipantController extends ConvectorController {
 
     // Retrieve to see if exists
     const existing = await Participant.getById(id, user);
-    // TODO: remove after confirm that above line works
-    // const existing = await Participant.getOne(id);
-
-    if (!existing || !existing.id) {
-      throw new Error('No participant exists with that id');
-    }
 
     if (existing.msp != requesterMSP) {
       throw new Error('Unauthorized. MSPs do not match');

@@ -81,10 +81,6 @@ export class AssetController extends ConvectorController<ChaincodeTx> {
     // Retrieve to see if exists
     let existing = await Asset.getById(asset.id, user);
 
-    if (!existing || !existing.id) {
-      throw new Error('No asset exists with that id');
-    }
-
     // check if all ambassadors are valid persons, and update model.ambassadors with uuid's
     asset.ambassadors = await checkValidModelIds(c.CONVECTOR_MODEL_PATH_PERSON, c.CONVECTOR_MODEL_PATH_PERSON_NAME, asset.ambassadors, user);
 

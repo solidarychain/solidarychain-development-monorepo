@@ -276,18 +276,6 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
     await this.tx.stub.setEvent(ChaincodeEvent.TransactionCreatedEvent, transaction);
   }
 
-  // @Invokable()
-  // public async get(
-  //   @Param(yup.string())
-  //   id: string
-  // ) {
-  //   const existing = await Transaction.getOne(id);
-  //   if (!existing || !existing.id) {
-  //     throw new Error(`No transaction exists with that id ${id}`);
-  //   }
-  //   return existing;
-  // }
-
   @Invokable()
   public async update(
     @Param(Transaction)
@@ -297,10 +285,6 @@ export class TransactionController extends ConvectorController<ChaincodeTx> {
   ) {
     // Retrieve to see if exists
     let existing = await Transaction.getById(transaction.id, user);
-
-    if (!existing || !existing.id) {
-      throw new Error('No transaction exists with that id');
-    }
 
     // update fields
     existing.metaDataInternal = transaction.metaDataInternal;

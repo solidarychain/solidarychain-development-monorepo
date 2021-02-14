@@ -71,10 +71,6 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     // Retrieve to see if exists
     let existing = await Person.getById(person.id, user);
 
-    if (!existing || !existing.id) {
-      throw new Error('No person exists with that id');
-    }
-
     // update fields
     existing.roles = person.roles;
     existing.metaDataInternal = person.metaDataInternal;
@@ -99,10 +95,6 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     // Retrieve to see if exists
     let existing = await Person.getById(person.id, user);
 
-    if (!existing || !existing.id) {
-      throw new Error('No person exists with that id');
-    }
-
     // update fields
     existing.password = hashPassword(person.password);
 
@@ -126,10 +118,6 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
     // Retrieve to see if exists
     let existing = await Person.getById(person.id, user);
 
-    if (!existing || !existing.id) {
-      throw new Error('No person exists with that id');
-    }
-
     // update fields
     existing.roles = person.roles;
 
@@ -152,10 +140,6 @@ export class PersonController extends ConvectorController<ChaincodeTx> {
   ) {
     // Retrieve to see if exists
     let existing = await Person.getById(person.id, user);
-
-    if (!existing || !existing.id) {
-      throw new Error('No person exists with that id');
-    }
 
     // check unique fields
     await checkUniqueField('email', person.email, true, person.id);
