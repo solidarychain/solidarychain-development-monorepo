@@ -12,6 +12,6 @@
   "dependencies": {
     "esm": "^3.2.25",
     "graphql": "^15.4.0",
-    "graphql-request": "^3.4.0"
+    "graphql-request": "^3.5.0"
   }
 }
