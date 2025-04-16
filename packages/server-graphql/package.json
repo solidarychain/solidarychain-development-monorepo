@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@nest-middlewares/cookie-parser": "^6.0.0",
-    "@nestjs/common": "6.11.8",
+    "@nestjs/common": "11.0.16",
     "@nestjs/core": "6.11.8",
     "@nestjs/graphql": "6.6.1",
     "@nestjs/jwt": "6.1.2",
